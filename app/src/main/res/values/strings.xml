@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">PUBG BattleGuide</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="aboutLibraries_description_showIcon">true</string>
+    <string name="aboutLibraries_description_showVersion">true</string>
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">edOv17CHPl2kiu3d8BbRhzAS2</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">aPjELlexwiTF5P6ihTPgzExRw1rllKT3JhjMScP91RAwmAo19I</string>
+</resources>

@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="DAMAGE (100HP TOTAL)"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/md_light_dividers" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp">
+
+
+                <TextView
+                    android:id="@+id/vest01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv2"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="NO VEST"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/vest02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv2"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/vest11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv3"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv3"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="LVL 1 VEST"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/vest12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv3"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/vest21"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv4"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv4"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="LVL 2 VEST"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/vest22"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv4"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/vest31"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv5"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv5"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="LVL 3 VEST"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/vest32"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv5"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/helmet01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv6"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv6"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="NO HELMET"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/helmet02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv6"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/helmet11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv7"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv7"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="LVL 1 HELMET"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/helmet12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv7"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/helmet21"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv8"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv8"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="LVL 2 HELMET"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/helmet22"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv8"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/helmet31"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv9"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv9"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="LVL 3 HELMET"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/helmet32"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv9"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="OVERVIEW"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/md_light_dividers" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp">
+
+
+                <TextView
+                    android:id="@+id/ammo1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv1"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv1"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="AMMO"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ammo2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv1"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/ammoMag1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv2"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="AMMO PER MAG"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ammoMag2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv2"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/damage1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv3"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv3"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="DAMAGE"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/damage2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv3"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/speed1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv4"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv4"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="SPEED"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/speed2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv4"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/power1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv5"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv5"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="POWER"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/power2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv5"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/range1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv6"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv6"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="RANGE"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/range2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv6"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/tbs1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv7"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv7"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="TBS"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tbs2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv7"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/burst1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv8"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv8"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="BURST SHOTS"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/burst2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv8"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/burstD1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv9"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv9"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="BURST DELAY"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/burstD2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv9"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/pickup1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv10"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv10"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="PICKUP DELAY"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pickup2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv10"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/ready1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv11"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv11"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="READY DELAY"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ready2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv11"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/firing1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv12"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv12"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="FIRING MODES"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/firing2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv12"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/reload1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv13"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv13"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="RELOAD (FULL)"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/reload2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv13"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/reloadTac1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv14"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv14"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="RELOAD (TAC)"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/reloadTac2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv14"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/reloadM1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv15"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv15"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="RELOAD METHOD"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/reloadM2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv15"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

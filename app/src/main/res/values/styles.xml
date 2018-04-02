@@ -1,0 +1,27 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="MaterialDrawerTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+    </style>
+
+    <style name="CompareTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+    </style>
+
+</resources>

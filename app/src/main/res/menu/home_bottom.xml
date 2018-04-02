@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pc_menu"
+        android:icon="@drawable/windows"
+        android:title="Windows" />
+
+    <!--<item-->
+    <!--android:id="@+id/xbox_menu"-->
+    <!--android:icon="@drawable/xbox"-->
+    <!--android:title="XBOX" />-->
+</menu>
