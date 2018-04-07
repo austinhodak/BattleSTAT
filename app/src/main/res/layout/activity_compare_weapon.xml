@@ -41,7 +41,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/appodealBannerView"
+        android:layout_above="@+id/adView"
         android:layout_below="@+id/appbar">
 
         <LinearLayout
@@ -144,12 +144,5 @@
         android:visibility="gone"
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-1946691221734928/8767999084" />
-
-    <com.appodeal.ads.BannerView
-        android:id="@+id/appodealBannerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone" />
 
 </RelativeLayout>

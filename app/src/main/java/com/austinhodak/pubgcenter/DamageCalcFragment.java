@@ -157,7 +157,7 @@ public class DamageCalcFragment extends Fragment {
                         @Override
                         public void onEvent(final DocumentSnapshot documentSnapshot,
                                 final FirebaseFirestoreException e) {
-                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                            if (documentSnapshot != null && documentSnapshot.exists() && getActivity().getApplicationContext() != null) {
                                 if (documentSnapshot.contains("icon")) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(documentSnapshot.getString("icon"));

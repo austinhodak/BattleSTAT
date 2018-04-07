@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:frisson="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.intrusoft.library.FrissonView
-        android:id="@+id/wave_head"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        frisson:alphaValue="70"
-        frisson:autoTint="true"
-        frisson:src="@drawable/header2"
-        frisson:tideCount="3"
-        frisson:tideHeight="50dp" />
 
 </RelativeLayout>

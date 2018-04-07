@@ -56,10 +56,4 @@
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-1946691221734928/7197248183" />
 
-    <com.appodeal.ads.BannerView
-        android:id="@+id/appodealBannerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
 </LinearLayout>

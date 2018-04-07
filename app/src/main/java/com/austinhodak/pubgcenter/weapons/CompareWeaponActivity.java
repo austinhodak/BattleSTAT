@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.appodeal.ads.Appodeal;
 import com.austinhodak.pubgcenter.R;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -146,7 +145,6 @@ public class CompareWeaponActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compare_weapon);
         ButterKnife.bind(this);
-        Appodeal.setBannerViewId(R.id.appodealBannerView);
 
         Typeface phosphate = Typeface.createFromAsset(getAssets(), "fonts/Phosphate-Solid.ttf");
         title.setTypeface(phosphate);
@@ -181,7 +179,6 @@ public class CompareWeaponActivity extends AppCompatActivity {
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
             //loadAds();
-            Appodeal.show(this, Appodeal.BANNER_VIEW);
         }
     }
 
@@ -197,6 +194,118 @@ public class CompareWeaponActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
+    private void compareDamages(Damage data, IViewInjector injector) {
+        if (data != null && data.getWeapon1() != null && data.getWeapon2() != null) {
+            DocumentSnapshot weapon1 = data.getWeapon1();
+            DocumentSnapshot weapon2 = data.getWeapon2();
+
+            if (weapon1.exists() && weapon2.exists()) {
+                if (weapon1.contains("body0") && weapon2.contains("body0")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("body0"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("body0"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.vest01)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.vest02)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+
+                if (weapon1.contains("body1") && weapon2.contains("body1")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("body1"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("body1"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.vest11)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.vest12)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+
+                if (weapon1.contains("body2") && weapon2.contains("body2")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("body2"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("body2"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.vest21)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.vest22)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+
+                if (weapon1.contains("body3") && weapon2.contains("body3")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("body3"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("body3"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.vest31)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.vest32)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+
+                if (weapon1.contains("head0") && weapon2.contains("head0")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("head0"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("head0"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.helmet01)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.helmet02)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+
+                if (weapon1.contains("head1") && weapon2.contains("head1")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("head1"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("head1"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.helmet11)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.helmet12)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+
+                if (weapon1.contains("head2") && weapon2.contains("head2")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("head2"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("head2"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.helmet21)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.helmet22)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+
+                if (weapon1.contains("head3") && weapon2.contains("head3")) {
+                    double weapon1D = Double.parseDouble(weapon1.getString("head3"));
+                    double weapon2D = Double.parseDouble(weapon2.getString("head3"));
+
+                    if (weapon1D > weapon2D) {
+                        ((TextView) injector.findViewById(R.id.helmet31)).setTypeface(null, Typeface.BOLD);
+                    } else if (weapon1D == weapon2D) {
+
+                    } else {
+                        ((TextView) injector.findViewById(R.id.helmet32)).setTypeface(null, Typeface.BOLD);
+                    }
+                }
+            }
+        }
+    }
 
     private void loadAds() {
         mAdView.setVisibility(View.GONE);
@@ -468,7 +577,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Snacky.builder().error().setText("Whoops, something went wrong.").show();
+                    Snacky.builder().setActivity(CompareWeaponActivity.this).error().setText("Whoops, something went wrong.").show();
                 }
             }
         }).register(R.layout.compare_card_damage, new SlimInjector<Damage>() {
@@ -545,13 +654,14 @@ public class CompareWeaponActivity extends AppCompatActivity {
                             injector.text(R.id.helmet32, weapon2.getString("head3"));
                         }
                     }
+
+                    compareDamages(data, injector);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Snacky.builder().error().setText("Whoops, something went wrong.").show();
+                    Snacky.builder().setActivity(CompareWeaponActivity.this).error().setText("Whoops, something went wrong.").show();
                 }
             }
         }).attachTo(mRecyclerView);
     }
-
 
 }

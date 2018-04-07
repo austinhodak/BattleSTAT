@@ -21,9 +21,7 @@ class HomeFragmentBottom : Fragment() {
         // Inflate the layout for this fragment
         view.findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnNavigationItemSelectedListener { menuitem: MenuItem ->
             when (menuitem.itemId) {
-                R.id.pc_menu ->
-                    // TODO
-                {
+                R.id.pc_menu -> {
                     val homeFragment2 = WindowsUpdatesFragment()
                     activity!!.supportFragmentManager.beginTransaction().replace(R.id.home_frame, homeFragment2)
                             .commit()

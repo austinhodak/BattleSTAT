@@ -2,14 +2,10 @@ package com.austinhodak.pubgcenter;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.intrusoft.library.FrissonView;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    @BindView(R.id.wave_head)
-    FrissonView mFrissonView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

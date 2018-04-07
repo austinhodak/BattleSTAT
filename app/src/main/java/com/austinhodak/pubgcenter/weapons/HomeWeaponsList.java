@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,14 +19,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.NativeAd;
-import com.appodeal.ads.NativeCallbacks;
-import com.appodeal.ads.native_ad.views.NativeAdViewAppWall;
 import com.austinhodak.pubgcenter.R;
 import com.austinhodak.pubgcenter.WeaponDetailActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,9 +56,9 @@ public class HomeWeaponsList extends Fragment {
 
     RecyclerView mRecyclerView;
 
-    private NativeAd currentAd;
-
     private boolean isFavoriteTab = false;
+
+    private boolean lightTesting = false;
 
     private SharedPreferences mSharedPreferences;
 
@@ -75,6 +73,15 @@ public class HomeWeaponsList extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_weapons_list, container, false);
+
+        //        lightTesting = FirebaseRemoteConfig.getInstance().getBoolean("light_version");
+        //        if (lightTesting) {
+        //            //User is in the light version test group, update UI.
+        //            view = inflater.inflate(R.layout.home_weapons_list_light, container, false);
+        //        } else {
+        //            view = inflater.inflate(R.layout.home_weapons_list, container, false);
+        //        }
+
         ButterKnife.bind(this, view);
 
         mSharedPreferences = getActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
@@ -83,44 +90,9 @@ public class HomeWeaponsList extends Fragment {
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
             //loadAds();
-            Appodeal.cache(getActivity(), Appodeal.NATIVE, 1);
-            Appodeal.setNativeCallbacks(new NativeCallbacks() {
-                @Override
-                public void onNativeClicked(final NativeAd nativeAd) {
-
-                }
-
-                @Override
-                public void onNativeFailedToLoad() {
-
-                }
-
-                @Override
-                public void onNativeLoaded() {
-                    if (isAdLoaded) {
-                        return;
-                    }
-
-                    try {
-                        isAdLoaded = true;
-                        currentAd = Appodeal.getNativeAds(1).get(0);
-                        data.add(currentAd);
-                        if (slimAdapter != null) {
-                            slimAdapter.updateData(data);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        isAdLoaded = false;
-
-                    }
-                }
-
-                @Override
-                public void onNativeShown(final NativeAd nativeAd) {
-
-                }
-            });
         }
+
+        loadRemoteConfig();
 
         return view;
     }
@@ -134,8 +106,26 @@ public class HomeWeaponsList extends Fragment {
                 isFavoriteTab = getArguments().getBoolean("isFavoriteTab");
             }
 
-            setupAdapter(position);
+            mProgressBar.setVisibility(View.VISIBLE);
+
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                FirebaseAuth.getInstance().addAuthStateListener(new AuthStateListener() {
+                    @Override
+                    public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
+                        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                            setupAdapter(position);
+                        }
+                    }
+                });
+            } else {
+                setupAdapter(position);
+            }
         }
+    }
+
+    private void loadRemoteConfig() {
+        //boolean
+
     }
 
     private void loadWeapons(final int position) {
@@ -201,10 +191,6 @@ public class HomeWeaponsList extends Fragment {
                             }
                         });
             }
-
-            if (currentAd != null) {
-                data.add(currentAd);
-            }
         } else {
             db.collection("weapons").document(doc).collection("weapons").orderBy("weapon_name")
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -221,10 +207,6 @@ public class HomeWeaponsList extends Fragment {
                                 }
                             }
 
-                            if (currentAd != null) {
-                                data.add(currentAd);
-                            }
-
                             slimAdapter.updateData(data);
                         }
                     });
@@ -235,6 +217,12 @@ public class HomeWeaponsList extends Fragment {
 
     private void setupAdapter(final int position) {
         final Set<String> favs = mSharedPreferences.getStringSet("favoriteWeapons", null);
+
+        //int layout = R.layout.weapon_list_item_card;
+
+        if (lightTesting) {
+            //    layout = R.layout.weapon_list_item_card_light1;
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -260,7 +248,9 @@ public class HomeWeaponsList extends Fragment {
                                     Glide.with(getActivity())
                                             .using(new FirebaseImageLoader())
                                             .load(gsReference)
+                                            //.asBitmap()
                                             .placeholder(R.drawable.icons8_rifle)
+                                            //.diskCacheStrategy(DiskCacheStrategy.RESULT)
                                             .into(icon);
 
                                 }
@@ -312,25 +302,44 @@ public class HomeWeaponsList extends Fragment {
                                     }
                                 }
 
+                                injector.gone(R.id.fav_icon);
                                 if (favs != null && favs.contains(data.getReference().getPath())) {
                                     injector.visible(R.id.fav_icon);
                                 }
 
+                                injector.gone(R.id.heart_icon);
                                 if (mSharedPreferences.contains(data.getReference().getPath() + "-like") && mSharedPreferences
                                         .getBoolean(data.getReference().getPath() + "-like", false)) {
                                     injector.visible(R.id.heart_icon);
                                 }
+
+                                injector.gone(R.id.weapon_airdrop_icon);
+                                injector.gone(R.id.weapon_best_icon);
+
+                                if (data.contains("airDropOnly") && data.get("airDropOnly") != null) {
+                                    if (data.getBoolean("airDropOnly")) {
+                                        Glide.with(getActivity()).load(R.drawable.ic_parachute)
+                                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                                .into((ImageView) injector.findViewById(R.id.weapon_airdrop_icon));
+                                        injector.visible(R.id.weapon_airdrop_icon);
+                                    } else {
+                                        injector.gone(R.id.weapon_airdrop_icon);
+                                    }
+                                }
+
+                                if (data.contains("bestInClass") && data.get("bestInClass") != null) {
+                                    if (data.getBoolean("bestInClass")) {
+                                        Glide.with(getActivity()).load(R.drawable.icons8_trophy)
+                                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                                .into((ImageView) injector.findViewById(R.id.weapon_best_icon));
+                                        injector.visible(R.id.weapon_best_icon);
+                                    } else {
+                                        injector.gone(R.id.weapon_best_icon);
+                                    }
+                                }
                             }
                         })
-                .register(R.layout.ad_list_item_card, new SlimInjector<NativeAd>() {
-                    @Override
-                    public void onInject(@NonNull final NativeAd nativeAd, @NonNull final IViewInjector injector) {
-                        CardView cardView = (CardView) injector.findViewById(R.id.card);
-                        NativeAdViewAppWall nativeAdView = new NativeAdViewAppWall(getActivity(), nativeAd);
-                        nativeAdView.showSponsored(true);
-                        cardView.addView(nativeAdView);
-                    }
-                }).updateData(data).attachTo(mRecyclerView);
+                .updateData(data).attachTo(mRecyclerView);
 
         loadWeapons(position);
     }

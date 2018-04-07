@@ -8,12 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -106,6 +108,8 @@ public class HomeConsumablesList extends Fragment {
                                 injector.text(R.id.weaponItemName,
                                         data.getString("name"));
 
+                                subtitle.setMaxLines(10);
+
                                 if (data.get("icon") != null) {
                                     try {
                                         StorageReference gsReference = storage
@@ -121,7 +125,31 @@ public class HomeConsumablesList extends Fragment {
 
                                 }
 
-                                injector.gone(R.id.weaponItemSubtitle);
+                                if (data.contains("cast_time") && data.get("cast_time") != null) {
+                                    injector.text(R.id.weaponItemSubtitle, data.getString("cast_time") + " Seconds Cast Time");
+                                } else {
+                                    injector.gone(R.id.weaponItemSubtitle);
+                                }
+
+                                injector.clicked(R.id.top_layout, new OnClickListener() {
+                                    @Override
+                                    public void onClick(final View view) {
+                                        if (data.contains("desc")) {
+                                            String stats = "";
+                                            stats = data.getString("desc");
+                                            stats = stats.replace("<br>", "\n");
+                                            MaterialDialog materialDialog = new MaterialDialog.Builder(getActivity())
+                                                    .title(data.getString("name"))
+                                                    .content(stats)
+                                                    .contentColorRes(R.color.md_white_1000)
+                                                    .positiveText("OK")
+                                                    .build();
+
+                                            materialDialog.show();
+                                        }
+
+                                    }
+                                });
                             }
                         })
                 .register(R.layout.weapon_list_header, new SlimInjector<String>() {

@@ -48,7 +48,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -73,7 +73,7 @@
             android:layout_weight="1"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
@@ -83,11 +83,5 @@
         android:visibility="gone"
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-1946691221734928/7090864026" />
-
-    <com.appodeal.ads.BannerView
-        android:id="@+id/appodealBannerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
 </LinearLayout>

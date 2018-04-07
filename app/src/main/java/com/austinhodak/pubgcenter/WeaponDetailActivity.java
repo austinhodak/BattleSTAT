@@ -3,8 +3,11 @@ package com.austinhodak.pubgcenter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -22,8 +25,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.InterstitialCallbacks;
 import com.austinhodak.pubgcenter.weapons.CompareWeaponPicker;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailCamera;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailDeviation;
@@ -136,7 +137,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
     FirebaseAnalytics mFirebaseAnalytics;
 
     @BindView(R.id.rl)
-    FrameLayout mRelativeLayout;
+    CoordinatorLayout mRelativeLayout;
 
     SharedPreferences mSharedPreferences;
 
@@ -159,7 +160,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weapon_detail_activity);
         ButterKnife.bind(this);
-        Appodeal.setBannerViewId(R.id.appodealBannerView);
 
         Typeface phosphate = Typeface.createFromAsset(getAssets(), "fonts/Phosphate-Solid.ttf");
         title.setTypeface(phosphate);
@@ -191,7 +191,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
             //loadAds();
-            Appodeal.show(this, Appodeal.BANNER_VIEW);
         }
 
         compareFAB.setOnClickListener(new OnClickListener() {
@@ -208,7 +207,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Appodeal.onResume(this, Appodeal.BANNER);
     }
 
     @Override
@@ -218,38 +216,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
             int viewCount = mSharedPreferences.getInt("weaponDetailAdCount", 1);
             if (viewCount >= 5) {
                 //Show interstitial
-                if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
-                    Appodeal.show(this, Appodeal.INTERSTITIAL);
-                    mSharedPreferences.edit().putInt("weaponDetailAdCount", 1).apply();
-                }
-
-                Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
-                    @Override
-                    public void onInterstitialClicked() {
-                        Log.d("Appodeal", "onInterstitialClicked");
-                    }
-
-                    @Override
-                    public void onInterstitialClosed() {
-                        Log.d("Appodeal", "onInterstitialClosed");
-                    }
-
-                    @Override
-                    public void onInterstitialFailedToLoad() {
-                        Log.d("Appodeal", "onInterstitialFailedToLoad");
-                    }
-
-                    @Override
-                    public void onInterstitialLoaded(boolean isPrecache) {
-                        Log.d("Appodeal", "onInterstitialLoaded");
-                    }
-
-                    @Override
-                    public void onInterstitialShown() {
-                        Log.d("Appodeal", "onInterstitialShown");
-                    }
-                });
-
             } else {
                 mSharedPreferences.edit().putInt("weaponDetailAdCount", viewCount + 1).apply();
             }
@@ -283,7 +249,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
                         mSharedPreferences.edit().putStringSet("favoriteWeapons", favsNew).apply();
                     }
 
-                    Snacky.builder().setActivity(this).setText("Added to favorites").build().show();
+                    Snacky.builder().setView(mRelativeLayout).setText("Added to favorites").build().show();
 
                 } else {
                     item.setIcon(R.drawable.ic_star_border_24dp);
@@ -324,7 +290,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.d("LIKE", e.getMessage());
-                            Snacky.builder().setActivity(WeaponDetailActivity.this).setText("Error Liking Weapon").error();
+                            Snacky.builder().setView(mRelativeLayout).setText("Error Liking Weapon").error();
                             item.setIcon(R.drawable.ic_favorite_border_24dp);
                         }
                     });
@@ -358,6 +324,12 @@ public class WeaponDetailActivity extends AppCompatActivity {
                     });
                 }
                 break;
+            case R.id.compare_menu:
+                Intent intent = new Intent(WeaponDetailActivity.this, CompareWeaponPicker.class);
+                intent.putExtra("firstWeapon", weaponID);
+                intent.putExtra("weapon_name", getIntent().getStringExtra("weaponName"));
+                startActivity(intent);
+                break;
         }
         return false;
     }
@@ -382,6 +354,14 @@ public class WeaponDetailActivity extends AppCompatActivity {
                 alertMenuItem.setIcon(R.drawable.ic_star_border_24dp);
             }
         }
+
+        if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
+            MenuItem compare = menu.findItem(R.id.compare_menu);
+            compare.setVisible(true);
+
+            compareFAB.setVisibility(View.GONE);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 

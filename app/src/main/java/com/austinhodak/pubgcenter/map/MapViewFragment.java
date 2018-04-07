@@ -69,6 +69,9 @@ public class MapViewFragment extends Fragment {
             case 1:
                 Glide.with(getActivity()).load(R.drawable.pubg_miramar).into(mMapView);
                 break;
+            case 2:
+                Glide.with(getActivity()).load(R.drawable.savage_map).into(mMapView);
+                break;
         }
     }
 

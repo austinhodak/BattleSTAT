@@ -105,6 +105,8 @@ public class HomeEquipmentList extends Fragment {
                                 injector.text(R.id.weaponItemName,
                                         data.getString("name"));
 
+                                subtitle.setMaxLines(10);
+
                                 if (data.get("icon") != null) {
                                     try {
                                         StorageReference gsReference = storage

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -17,9 +18,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.android.vending.billing.IInAppBillingService
 import com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_OK
-import com.appodeal.ads.Appodeal
 import com.austinhodak.pubgcenter.ammo.HomeAmmoList
 import com.austinhodak.pubgcenter.attachments.HomeAttachmentsFragment
+import com.austinhodak.pubgcenter.info.ControlsFragment
+import com.austinhodak.pubgcenter.loadout.LoadoutBestTabs
 import com.austinhodak.pubgcenter.loadout.LoadoutCreateMain
 import com.austinhodak.pubgcenter.map.MapViewFragment
 import com.austinhodak.pubgcenter.weapons.HomeWeaponsFragment
@@ -27,8 +29,11 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.marcoscg.ratedialog.RateDialog
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -37,12 +42,12 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
-import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import kotlinx.android.synthetic.main.activity_main.toolbar_title
+import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,6 +57,8 @@ class MainActivity : AppCompatActivity() {
     private var iap: IInAppBillingService? = null
 
     private lateinit var mSharedPreferences: SharedPreferences
+
+    private val removeAds = PrimaryDrawerItem().withIdentifier(9001).withName("Remove Ads").withIcon(R.drawable.icons8_remove_ads_96).withSelectable(false)
 
     private var serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
@@ -65,6 +72,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -73,21 +82,14 @@ class MainActivity : AppCompatActivity() {
         toolbar_title.typeface = phosphate
         toolbar_title.text = "Weapons"
 
-        val resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
-        if (resultCode != ConnectionResult.SUCCESS) {
-            GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this)
+        if (!isGooglePlayServicesAvailable(this)) {
+
+            return
         }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
-
-        try {
-            val appKey = "d3075b30dfee1acd300873e535ca0e22b8baf89da92f1890"
-            Appodeal.disableLocationPermissionCheck()
-            Appodeal.initialize(this, appKey, Appodeal.NATIVE or Appodeal.INTERSTITIAL or Appodeal.BANNER)
-            Appodeal.setBannerViewId(R.id.appodealBannerView)
-            Appodeal.set728x90Banners(false)
-        } catch (e: Exception) {
-        }
 
         MobileAds.initialize(this, "ca-app-pub-1946691221734928~1341566099")
 
@@ -95,12 +97,20 @@ class MainActivity : AppCompatActivity() {
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
             //loadAds()
-            Appodeal.show(this, Appodeal.BANNER_VIEW)
+        }
+
+        if (mAuth == null) {
+            mAuth = FirebaseAuth.getInstance()
+        }
+
+        if (mAuth != null && mAuth?.currentUser == null) {
+            mAuth!!.signInAnonymously()
+                    .addOnCompleteListener(this) {
+
+                    }
         }
 
         setupDrawer()
-
-        mAuth = FirebaseAuth.getInstance()
 
         val serviceIntent = Intent("com.android.vending.billing.InAppBillingService.BIND")
         serviceIntent.`package` = "com.android.vending"
@@ -123,6 +133,7 @@ class MainActivity : AppCompatActivity() {
                     result.removeItem(9001)
                 } else {
                     mSharedPreferences.edit().putBoolean("removeAds", false).apply()
+                    result.addStickyFooterItem(removeAds)
                 }
             }
         } catch (e: Exception) {
@@ -137,19 +148,11 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if (mAuth == null) {
-            mAuth = FirebaseAuth.getInstance()
-        }
 
-        if (mAuth != null && mAuth?.currentUser == null) {
-            mAuth?.signInAnonymously()
-                    ?.addOnCompleteListener(this) { }
-        }
     }
 
     public override fun onResume() {
         super.onResume()
-        Appodeal.onResume(this, Appodeal.BANNER)
     }
 
     override fun onDestroy() {
@@ -205,8 +208,8 @@ class MainActivity : AppCompatActivity() {
                 .withActivity(this)
                 //.withHeaderBackground(R.drawable.header1)
                 .addProfiles(
-                        ProfileDrawerItem().withName("PUBG BattleGuide").withEmail("Level 1 (Free)").withIcon(R.drawable.icon1),
-                        ProfileSettingDrawerItem().withName("Upgrade").withIcon(R.drawable.icons8_buy_upgrade_96)
+                        ProfileDrawerItem().withName("BattleGuide for PUBG").withEmail("Level 1 (Free)").withIcon(R.drawable.icon1)
+                        //ProfileSettingDrawerItem().withName("Upgrade").withIcon(R.drawable.icons8_buy_upgrade_96)
                 )
                 .withOnAccountHeaderListener { view, profile, currentProfile -> false }
                 .build()
@@ -215,10 +218,10 @@ class MainActivity : AppCompatActivity() {
 
         val badge = BadgeStyle().withTextColorRes(R.color.md_black_1000).withColorRes(R.color.md_white_1000)
 
-        val home = PrimaryDrawerItem().withIdentifier(100).withName("Game Updates").withIcon(R.drawable.update1)
+        val updates = SecondaryDrawerItem().withIdentifier(100).withName("Game Updates").withIcon(R.drawable.update1)
         val map1 = SecondaryDrawerItem().withIdentifier(200).withName("Erangel").withBadge("ORIGINAL")
         val map2 = SecondaryDrawerItem().withIdentifier(201).withName("Miramar").withBadge("NEW")
-
+        val map3 = SecondaryDrawerItem().withIdentifier(202).withName("Savage").withBadge("IN DEV")
 
         val weapons = PrimaryDrawerItem().withIdentifier(1).withName("Weapons").withIcon(R.drawable.icons8_rifle).withIconTintingEnabled(false)
         val attachment = PrimaryDrawerItem().withIdentifier(2).withName("Attachments").withIcon(R.drawable.icons8_magazine).withIconTintingEnabled(false)
@@ -228,7 +231,7 @@ class MainActivity : AppCompatActivity() {
 
         val settings = SecondaryDrawerItem().withIdentifier(901).withName("About").withSelectable(false).withIcon(R.drawable.icons8_info)
 
-        val removeAds = PrimaryDrawerItem().withIdentifier(9001).withName("Remove Ads").withIcon(R.drawable.icons8_remove_ads_96).withSelectable(false)
+        //SecondaryDrawerItem().withName("Create a Loadout").withIcon(R.drawable.loadout_create),
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -241,11 +244,15 @@ class MainActivity : AppCompatActivity() {
                         equipment,
                         consumables,
                         DividerDrawerItem(),
+                        PrimaryDrawerItem().withName("Controls").withIcon(R.drawable.icons8_game_controller_96).withIdentifier(997),
                         PrimaryDrawerItem().withName("Damage Calculator").withIcon(R.drawable.shield).withIdentifier(998).withSelectable(false),
-                        home,
-                        ExpandableDrawerItem().withName("Maps").withSelectable(false).withIcon(R.drawable.map_96).withSubItems(map1, map2),
+                        ExpandableDrawerItem().withName("Loadouts").withSelectable(false).withIcon(R.drawable.icon_sack).withSubItems(SecondaryDrawerItem().withIdentifier(301).withName("Best Loadouts").withIcon(R.drawable.loadout_star)),
+                        ExpandableDrawerItem().withName("Maps").withSelectable(false).withIcon(R.drawable.map_96).withSubItems(map1, map2, map3),
                         DividerDrawerItem(),
-                        settings
+                        updates,
+                        DividerDrawerItem(),
+                        settings,
+                        SecondaryDrawerItem().withName("Send Suggestion").withIcon(R.drawable.icon_hint).withSelectable(false).withIdentifier(501)
                 )
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     if (drawerItem.identifier.toString() == "100") {
@@ -256,6 +263,12 @@ class MainActivity : AppCompatActivity() {
                         toolbar_title.text = "Updates"
 
                         updateToolbarElevation(15f)
+
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "game_updates")
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
 
                     if (drawerItem.identifier.toString() == "1") {
@@ -266,6 +279,12 @@ class MainActivity : AppCompatActivity() {
                         toolbar_title.text = "Weapons"
 
                         updateToolbarElevation(0f)
+
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "weapons_home")
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
 
                     if (drawerItem.identifier.toString() == "2") {
@@ -286,6 +305,12 @@ class MainActivity : AppCompatActivity() {
                         toolbar_title.text = "Ammo"
 
                         updateToolbarElevation(15f)
+
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "ammo_home")
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
 
                     if (drawerItem.identifier.toString() == "4") {
@@ -296,6 +321,12 @@ class MainActivity : AppCompatActivity() {
                         toolbar_title.text = "Consumables"
 
                         updateToolbarElevation(15f)
+
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "consumables_home")
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
 
                     if (drawerItem.identifier.toString() == "5") {
@@ -306,6 +337,12 @@ class MainActivity : AppCompatActivity() {
                         toolbar_title.text = "Equipment"
 
                         updateToolbarElevation(15f)
+
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "equipment_home")
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
 
                     if (drawerItem.identifier.toString() == "200") {
@@ -318,6 +355,12 @@ class MainActivity : AppCompatActivity() {
 
                         toolbar_title.text = "Erangel"
                         updateToolbarElevation(15f)
+
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "map_erangel")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
 
                     }
 
@@ -332,21 +375,65 @@ class MainActivity : AppCompatActivity() {
                         toolbar_title.text = "Miramar"
                         updateToolbarElevation(15f)
 
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "map_miramar")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
+
+                    }
+
+                    if (drawerItem.identifier.toString() == "202") {
+                        val mapFrag = MapViewFragment()
+                        val bundle = Bundle()
+                        bundle.putInt("map", 2)
+                        mapFrag.arguments = bundle
+                        supportFragmentManager.beginTransaction().replace(R.id.main_frame, mapFrag)
+                                .commit()
+
+                        toolbar_title.text = "Savage"
+                        updateToolbarElevation(15f)
+
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "map_savage")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
+
+                    }
+
+                    if (drawerItem.identifier.toString() == "997") {
+                        val controlsFragment = ControlsFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_frame, controlsFragment)
+                                .commit()
+
+                        toolbar_title.text = "Controls"
+
+                        updateToolbarElevation(15f)
+
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "controls_home")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
                     }
 
                     if (drawerItem.identifier.toString() == "901") {
-//                        LibsBuilder()
-//                                //provide a style (optional) (LIGHT, DARK, LIGHT_DARK_TOOLBAR)
-//                                .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-//                                //start the activity
-//                                .withActivityTitle("PUBG BattleGuide")
-//                                .withAboutDescription("<b>Changelog v0.3.0 • 02/13/2018</b><br><br>" +
-//                                        "• New Damage Calculator!<br>")
-//                                .start(this)
-
-                        val intent = Intent(this, ProfileActivity::class.java)
-                        startActivity(intent)
-
+                        LibsBuilder()
+                                //provide a style (optional) (LIGHT, DARK, LIGHT_DARK_TOOLBAR)
+                                .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                                //start the activity
+                                .withActivityTitle("BattleGuide for PUBG")
+                                .withAboutDescription("<b>Changelog v0.5.0 • 04/05/2018</b><br><br>" +
+                                        "• Added parachute icon to weapons that are only found in air drops.<br>" +
+                                        "• Controls section now has all controls.<br>" +
+                                        "• Added \"Send Suggestion\" button in drawer (Send them!)<br>" +
+                                        "• Compare weapons button now works on Android 4.4.4 & below.<br>" +
+                                        "• Added Flare Gun + Description<br>" +
+                                        "• Added New \"Savage\" Map<br>" +
+                                        "• Added a Best Loadouts Section<br>" +
+                                        "• Squashin' Bugs ᕙ( ^ ₒ^ c)<br>")
+                                .start(this)
                     }
 
                     if (drawerItem.identifier.toString() == "999") {
@@ -357,6 +444,12 @@ class MainActivity : AppCompatActivity() {
                     if (drawerItem.identifier.toString() == "998") {
                         val intent = Intent(this, DamageCalcActivity::class.java)
                         startActivity(intent)
+
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "damage_calc")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
                     }
 
                     if (drawerItem.identifier.toString() == "9001") {
@@ -372,6 +465,43 @@ class MainActivity : AppCompatActivity() {
                                     REQUEST_CODE, Intent(), Integer.valueOf(0)!!, Integer.valueOf(0)!!,
                                     Integer.valueOf(0)!!)
                         }
+
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "remove_ads")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
+                    }
+
+                    if (drawerItem.identifier.toString() == "501") {
+                        val mailto = "mailto:fireappsdev@gmail.com" +
+                                "?subject=" + Uri.encode("BattleGuide for PUBG Suggestion")
+
+                        val emailIntent = Intent(Intent.ACTION_SENDTO)
+                        emailIntent.data = Uri.parse(mailto)
+                        startActivity(emailIntent)
+
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "suggestion")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
+                    }
+
+                    if (drawerItem.identifier.toString() == "301") {
+                        val loadoutBest = LoadoutBestTabs()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_frame, loadoutBest)
+                                .commit()
+
+                        toolbar_title.text = "Best Loadouts"
+
+                        updateToolbarElevation(0f)
+
+                        val bundle2 = Bundle()
+                        bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                                "best_loadouts")
+                        bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
+                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
                     }
                     false
                 }
@@ -381,7 +511,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
-            result.addStickyFooterItem(removeAds)
+            //result.addStickyFooterItem(removeAds)
         }
     }
 
@@ -396,7 +526,7 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 mSharedPreferences.edit().putBoolean("removeAds", true).apply()
                 loadPurchases()
-                Snacky.builder().info().setText("Thanks! Please restart the app to remove ads!").show()
+                Snacky.builder().setActivity(this).info().setText("Thanks! Please restart the app to remove ads!").show()
             }
         }
     }
@@ -406,7 +536,10 @@ class MainActivity : AppCompatActivity() {
         val status = googleApiAvailability.isGooglePlayServicesAvailable(activity)
         if (status != ConnectionResult.SUCCESS) {
             if (googleApiAvailability.isUserResolvableError(status)) {
-                //googleApiAvailability.getErrorDialog(activity, status, 2404).show()
+                googleApiAvailability.getErrorDialog(activity, status, 2404).show()
+            } else {
+                toast("Google Play Services must be installed for this app to work.")
+                finish()
             }
             return false
         }

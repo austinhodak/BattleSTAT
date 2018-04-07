@@ -2,11 +2,16 @@ package com.austinhodak.pubgcenter;
 
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import io.fabric.sdk.android.Fabric;
 
 public class Application extends MultiDexApplication {
@@ -21,19 +26,25 @@ public class Application extends MultiDexApplication {
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build();
 
-        Fabric.with(this, crashlyticsKit);
+        if (BuildConfig.DEBUG) {
+            Fabric.with(this, crashlyticsKit);
+            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+        } else {
+            Fabric.with(this, crashlyticsKit, new Answers());
+            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true);
+        }
 
-        FirebaseApp.initializeApp(this);
+        FirebaseApp.getInstance();
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
                 .build();
         FirebaseFirestore.getInstance().setFirestoreSettings(settings);
 
-        sharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
-        //sharedPreferences.edit().putBoolean("removeAds", false).apply();
+        FirebaseRemoteConfig.getInstance().fetch();
+        FirebaseRemoteConfig.getInstance().activateFetched();
 
-        //Log.d("TOKEN", FirebaseInstanceId.getInstance().getToken());
-
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("NOTIID", "Refreshed token: " + refreshedToken);
     }
 }

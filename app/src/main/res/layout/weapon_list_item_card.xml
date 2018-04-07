@@ -15,11 +15,12 @@
         app:cardBackgroundColor="@color/cardview_dark_background">
 
         <RelativeLayout
+
             android:id="@+id/top_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
             android:paddingBottom="4dp"
             android:paddingTop="4dp">
 
@@ -47,23 +48,46 @@
                 android:layout_toRightOf="@+id/helmetItem64"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/weaponItemName"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingTop="2dp"
-                    android:textColor="#FFF"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/weaponItemName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:paddingTop="2dp"
+                        android:textColor="#FFF"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/weapon_airdrop_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="1"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/weapon_best_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="1"
+                        android:visibility="gone" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/weaponItemSubtitle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="marquee"
                     android:maxLines="2"
