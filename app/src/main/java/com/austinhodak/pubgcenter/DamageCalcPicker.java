@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -208,8 +206,7 @@ public class DamageCalcPicker extends AppCompatActivity {
                                 StorageReference gsReference = storage
                                         .getReferenceFromUrl(data.getString("icon"));
 
-                                Glide.with(DamageCalcPicker.this)
-                                        .using(new FirebaseImageLoader())
+                                GlideApp.with(DamageCalcPicker.this)
                                         .load(gsReference)
                                         .placeholder(R.drawable.icons8_rifle)
                                         .into(icon);
@@ -227,8 +224,7 @@ public class DamageCalcPicker extends AppCompatActivity {
                                         StorageReference gsReference = storage
                                                 .getReferenceFromUrl(data.getString("icon"));
 
-                                        Glide.with(DamageCalcPicker.this)
-                                                .using(new FirebaseImageLoader())
+                                        GlideApp.with(DamageCalcPicker.this)
                                                 .load(gsReference)
                                                 .placeholder(R.drawable.vest)
                                                 .into(icon);
@@ -238,8 +234,7 @@ public class DamageCalcPicker extends AppCompatActivity {
                                         StorageReference gsReference = storage
                                                 .getReferenceFromUrl(data.getString("icon"));
 
-                                        Glide.with(DamageCalcPicker.this)
-                                                .using(new FirebaseImageLoader())
+                                        GlideApp.with(DamageCalcPicker.this)
                                                 .load(gsReference)
                                                 .placeholder(R.drawable.icons8_helmet)
                                                 .into(icon);
@@ -250,8 +245,7 @@ public class DamageCalcPicker extends AppCompatActivity {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(data.getString("icon"));
 
-                                    Glide.with(DamageCalcPicker.this)
-                                            .using(new FirebaseImageLoader())
+                                    GlideApp.with(DamageCalcPicker.this)
                                             .load(gsReference)
                                             .into(icon);
 

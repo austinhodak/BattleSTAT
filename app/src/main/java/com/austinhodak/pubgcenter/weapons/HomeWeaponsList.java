@@ -15,15 +15,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.austinhodak.pubgcenter.GlideApp;
 import com.austinhodak.pubgcenter.R;
 import com.austinhodak.pubgcenter.WeaponDetailActivity;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -227,26 +226,25 @@ public class HomeWeaponsList extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         slimAdapter = SlimAdapter.create()
-                .register(R.layout.weapon_list_item_card,
+                .register(R.layout.testing,
                         new SlimInjector<DocumentSnapshot>() {
                             @Override
                             public void onInject(@NonNull final DocumentSnapshot data, @NonNull final IViewInjector injector) {
 
                                 TextView subtitle = (TextView) injector
-                                        .findViewById(R.id.weaponItemSubtitle);
+                                        .findViewById(R.id.weapon_subtitle);
 
                                 ImageView icon = (ImageView) injector
-                                        .findViewById(R.id.helmetItem64);
+                                        .findViewById(R.id.weapon_icon);
 
-                                injector.text(R.id.weaponItemName,
+                                injector.text(R.id.weapon_title,
                                         data.getString("weapon_name"));
 
                                 if (data.get("icon") != null) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(data.getString("icon"));
 
-                                    Glide.with(getActivity())
-                                            .using(new FirebaseImageLoader())
+                                    GlideApp.with(getActivity())
                                             .load(gsReference)
                                             //.asBitmap()
                                             .placeholder(R.drawable.icons8_rifle)
@@ -255,36 +253,51 @@ public class HomeWeaponsList extends Fragment {
 
                                 }
 
-                                injector.text(R.id.weaponItemSubtitle, "");
+                                injector.text(R.id.weapon_subtitle, "");
 
                                 if (data.getString("ammo") != null) {
-                                    injector.text(R.id.weaponItemSubtitle,
+                                    injector.text(R.id.weapon_subtitle,
                                             data.getString("ammo"));
                                 }
 
                                 if (data.getString("damageBody0") != null) {
-                                    if (subtitle.getText().length() != 0) {
-                                        injector.text(R.id.weaponItemSubtitle,
-                                                subtitle.getText() + " • Body: " + data
-                                                        .getString("damageBody0"));
-                                    } else {
-                                        injector.text(R.id.weaponItemSubtitle,
-                                                subtitle.getText() + "Body: " + data
-                                                        .getString("damageBody0"));
-                                    }
+                                    injector.text(R.id.weapon_body_dmg,
+                                            data
+                                                    .getString("damageBody0"));
+                                } else {
+                                    injector.text(R.id.weapon_body_dmg, "N/A");
+
+                                    LinearLayout linearLayout = (LinearLayout) injector.findViewById(R.id.weapon_body_dmg).getParent();
+                                    linearLayout.setVisibility(View.GONE);
                                 }
 
                                 if (data.getString("damageHead0") != null) {
-                                    injector.text(R.id.weaponItemSubtitle,
-                                            subtitle.getText() + " • Head: " + data
+                                    injector.text(R.id.weapon_head_dmg,
+                                            data
                                                     .getString("damageHead0"));
+                                } else {
+                                    injector.text(R.id.weapon_head_dmg, "N/A");
+
+                                    LinearLayout linearLayout = (LinearLayout) injector.findViewById(R.id.weapon_head_dmg).getParent();
+                                    linearLayout.setVisibility(View.GONE);
+                                }
+
+                                if (data.getString("range") != null) {
+                                    String range = data.getString("range");
+                                    String[] split = range.split("-");
+                                    injector.text(R.id.weapon_range, split[1] + "M");
+                                } else {
+                                    injector.text(R.id.weapon_range, "N/A");
+
+                                    LinearLayout linearLayout = (LinearLayout) injector.findViewById(R.id.weapon_range).getParent();
+                                    linearLayout.setVisibility(View.GONE);
                                 }
 
                                 if (subtitle.getText().length() == 0) {
-                                    injector.gone(R.id.weaponItemSubtitle);
+                                    injector.gone(R.id.weapon_subtitle);
                                 }
 
-                                injector.clicked(R.id.top_layout, new OnClickListener() {
+                                injector.clicked(R.id.card_top, new OnClickListener() {
                                     @Override
                                     public void onClick(final View view) {
                                         Intent intent = new Intent(getActivity(),
@@ -302,39 +315,37 @@ public class HomeWeaponsList extends Fragment {
                                     }
                                 }
 
-                                injector.gone(R.id.fav_icon);
+                                injector.gone(R.id.weapon_fav);
                                 if (favs != null && favs.contains(data.getReference().getPath())) {
-                                    injector.visible(R.id.fav_icon);
+                                    injector.visible(R.id.weapon_fav);
                                 }
 
-                                injector.gone(R.id.heart_icon);
+                                injector.gone(R.id.weapon_like);
                                 if (mSharedPreferences.contains(data.getReference().getPath() + "-like") && mSharedPreferences
                                         .getBoolean(data.getReference().getPath() + "-like", false)) {
-                                    injector.visible(R.id.heart_icon);
+                                    injector.visible(R.id.weapon_like);
                                 }
 
-                                injector.gone(R.id.weapon_airdrop_icon);
-                                injector.gone(R.id.weapon_best_icon);
+                                injector.gone(R.id.weapon_parachute);
+                                injector.gone(R.id.weapon_trophy);
 
                                 if (data.contains("airDropOnly") && data.get("airDropOnly") != null) {
                                     if (data.getBoolean("airDropOnly")) {
-                                        Glide.with(getActivity()).load(R.drawable.ic_parachute)
-                                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                                .into((ImageView) injector.findViewById(R.id.weapon_airdrop_icon));
-                                        injector.visible(R.id.weapon_airdrop_icon);
+                                        GlideApp.with(getActivity()).load(R.drawable.ic_parachute)
+                                                .into((ImageView) injector.findViewById(R.id.weapon_parachute));
+                                        injector.visible(R.id.weapon_parachute);
                                     } else {
-                                        injector.gone(R.id.weapon_airdrop_icon);
+                                        injector.gone(R.id.weapon_parachute);
                                     }
                                 }
 
                                 if (data.contains("bestInClass") && data.get("bestInClass") != null) {
                                     if (data.getBoolean("bestInClass")) {
-                                        Glide.with(getActivity()).load(R.drawable.icons8_trophy)
-                                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                                .into((ImageView) injector.findViewById(R.id.weapon_best_icon));
-                                        injector.visible(R.id.weapon_best_icon);
+                                        GlideApp.with(getActivity()).load(R.drawable.icons8_trophy)
+                                                .into((ImageView) injector.findViewById(R.id.weapon_trophy));
+                                        injector.visible(R.id.weapon_trophy);
                                     } else {
-                                        injector.gone(R.id.weapon_best_icon);
+                                        injector.gone(R.id.weapon_trophy);
                                     }
                                 }
                             }

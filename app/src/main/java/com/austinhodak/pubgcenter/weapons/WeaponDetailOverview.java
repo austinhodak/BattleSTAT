@@ -23,9 +23,8 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.austinhodak.pubgcenter.GlideApp;
 import com.austinhodak.pubgcenter.R;
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -258,8 +257,7 @@ public class WeaponDetailOverview extends Fragment {
                             StorageReference gsReference = storage
                                     .getReferenceFromUrl(data.getString("icon"));
 
-                            Glide.with(getActivity())
-                                    .using(new FirebaseImageLoader())
+                            GlideApp.with(getActivity())
                                     .load(gsReference)
                                     .into((ImageView) injector.findViewById(R.id.helmetItem64));
 

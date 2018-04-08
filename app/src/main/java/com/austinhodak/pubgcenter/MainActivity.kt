@@ -13,6 +13,8 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.IBinder
+import android.support.customtabs.CustomTabsIntent
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -21,11 +23,14 @@ import com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_OK
 import com.austinhodak.pubgcenter.ammo.HomeAmmoList
 import com.austinhodak.pubgcenter.attachments.HomeAttachmentsFragment
 import com.austinhodak.pubgcenter.info.ControlsFragment
+import com.austinhodak.pubgcenter.info.TimerFragment
 import com.austinhodak.pubgcenter.loadout.LoadoutBestTabs
 import com.austinhodak.pubgcenter.loadout.LoadoutCreateMain
 import com.austinhodak.pubgcenter.map.MapViewFragment
 import com.austinhodak.pubgcenter.weapons.HomeWeaponsFragment
 import com.bumptech.glide.Glide
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -34,6 +39,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.marcoscg.ratedialog.RateDialog
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
+import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -42,12 +48,14 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
+import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import kotlinx.android.synthetic.main.activity_main.toolbar_title
 import org.jetbrains.anko.toast
+import java.util.Arrays
 
 
 class MainActivity : AppCompatActivity() {
@@ -59,6 +67,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mSharedPreferences: SharedPreferences
 
     private val removeAds = PrimaryDrawerItem().withIdentifier(9001).withName("Remove Ads").withIcon(R.drawable.icons8_remove_ads_96).withSelectable(false)
+
+    private val signInDrawerItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_password).withSelectable(false).withName("Login or Sign Up").withIdentifier(90001)
+
+    private val profileItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_user).withName("My Profile").withSelectable(false).withIdentifier(90002)
 
     private var serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
@@ -79,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val phosphate = Typeface.createFromAsset(assets, "fonts/Phosphate-Solid.ttf")
-        toolbar_title.typeface = phosphate
+        //toolbar_title.typeface = phosphate
         toolbar_title.text = "Weapons"
 
         if (!isGooglePlayServicesAvailable(this)) {
@@ -194,6 +206,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var result: Drawer
 
+    private lateinit var headerResult: AccountHeader
+
     private fun setupDrawer() {
         val homeFragment = HomeWeaponsFragment()
         supportFragmentManager.beginTransaction().replace(R.id.main_frame, homeFragment)
@@ -204,12 +218,27 @@ class MainActivity : AppCompatActivity() {
             appbar.elevation = 0.0f
         }
 
-        val headerResult = AccountHeaderBuilder()
+        headerResult = AccountHeaderBuilder()
                 .withActivity(this)
                 //.withHeaderBackground(R.drawable.header1)
                 .addProfiles(
-                        ProfileDrawerItem().withName("BattleGuide for PUBG").withEmail("Level 1 (Free)").withIcon(R.drawable.icon1)
+                        ProfileDrawerItem().withIdentifier(1).withName("BattleGuide for PUBG").withEmail("Level 1 (Free)").withIcon(R.drawable.icon1),
+                        ProfileSettingDrawerItem().withName("Logout").withIcon(R.drawable.icons8_logout).withOnDrawerItemClickListener { view, position, drawerItem ->
+
+                            AuthUI.getInstance().signOut(this).addOnCompleteListener {
+                                Snacky.builder().setActivity(this).info().setText("Signed Out.").show()
+
+                                notifySignedOut()
+
+                                if (result.getStickyFooterPosition(90001) == -1) {
+                                    result.addStickyFooterItem(signInDrawerItem)
+                                }
+                            }
+
+                            return@withOnDrawerItemClickListener true
+                        }
                         //ProfileSettingDrawerItem().withName("Upgrade").withIcon(R.drawable.icons8_buy_upgrade_96)
+
                 )
                 .withOnAccountHeaderListener { view, profile, currentProfile -> false }
                 .build()
@@ -247,12 +276,14 @@ class MainActivity : AppCompatActivity() {
                         PrimaryDrawerItem().withName("Controls").withIcon(R.drawable.icons8_game_controller_96).withIdentifier(997),
                         PrimaryDrawerItem().withName("Damage Calculator").withIcon(R.drawable.shield).withIdentifier(998).withSelectable(false),
                         ExpandableDrawerItem().withName("Loadouts").withSelectable(false).withIcon(R.drawable.icon_sack).withSubItems(SecondaryDrawerItem().withIdentifier(301).withName("Best Loadouts").withIcon(R.drawable.loadout_star)),
-                        ExpandableDrawerItem().withName("Maps").withSelectable(false).withIcon(R.drawable.map_96).withSubItems(map1, map2, map3),
+                        PrimaryDrawerItem().withName("Maps").withSelectable(false).withIcon(R.drawable.map_96).withIdentifier(200),
                         DividerDrawerItem(),
+                        SecondaryDrawerItem().withName("Match Timer").withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge("BETA"),
                         updates,
                         DividerDrawerItem(),
                         settings,
-                        SecondaryDrawerItem().withName("Send Suggestion").withIcon(R.drawable.icon_hint).withSelectable(false).withIdentifier(501)
+                        SecondaryDrawerItem().withName("Send Suggestion").withIcon(R.drawable.icon_hint).withSelectable(false).withIdentifier(501),
+                        SecondaryDrawerItem().withName("Share App").withIcon(R.drawable.icons8_share).withSelectable(false).withIdentifier(502)
                 )
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     if (drawerItem.identifier.toString() == "100") {
@@ -346,22 +377,24 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "200") {
-                        val mapFrag = MapViewFragment()
-                        val bundle = Bundle()
-                        bundle.putInt("map", 0)
-                        mapFrag.arguments = bundle
-                        supportFragmentManager.beginTransaction().replace(R.id.main_frame, mapFrag)
-                                .commit()
 
-                        toolbar_title.text = "Erangel"
-                        updateToolbarElevation(15f)
+                        val intentBuilder = CustomTabsIntent.Builder()
+
+                        intentBuilder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                        intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+
+                        val customTabsIntent = intentBuilder.build()
+
+                        customTabsIntent.launchUrl(this, Uri.parse("https://pubgmap.io/"))
+
+                        //toolbar_title.text = "Erangel"
+                        //updateToolbarElevation(15f)
 
                         val bundle2 = Bundle()
                         bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME,
                                 "map_erangel")
                         bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
                         mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
-
                     }
 
                     if (drawerItem.identifier.toString() == "201") {
@@ -416,6 +449,16 @@ class MainActivity : AppCompatActivity() {
                                 "controls_home")
                         bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
                         mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
+                    }
+
+                    if (drawerItem.identifier.toString() == "503") {
+                        val timerFragment = TimerFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_frame, timerFragment)
+                                .commit()
+
+                        toolbar_title.text = "Match Timer"
+
+                        updateToolbarElevation(0f)
                     }
 
                     if (drawerItem.identifier.toString() == "901") {
@@ -503,6 +546,23 @@ class MainActivity : AppCompatActivity() {
                         bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "drawer_select")
                         mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2)
                     }
+
+                    if (drawerItem.identifier.toString() == "502") {
+                        val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                        sharingIntent.type = "text/plain"
+                        val shareBody = "https://play.google.com/store/apps/details?id=com.austinhodak.pubgcenter"
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out BattleGuide for PUBG on the Google Play Store!")
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+                        startActivity(sharingIntent)
+                    }
+
+                    if (drawerItem.identifier.toString() == "90001") {
+                        launchSignIn()
+                    }
+
+                    if (drawerItem.identifier.toString() == "90002") {
+                        startActivity(Intent(this, ProfileActivity::class.java))
+                    }
                     false
                 }
                 .build()
@@ -513,6 +573,37 @@ class MainActivity : AppCompatActivity() {
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
             //result.addStickyFooterItem(removeAds)
         }
+
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            if (FirebaseAuth.getInstance().currentUser!!.isAnonymous) {
+                if (result.getStickyFooterPosition(90001) == -1) {
+                    result.addStickyFooterItem(signInDrawerItem)
+                }
+            } else {
+                notifyLoggedIn()
+            }
+        } else {
+            if (result.getStickyFooterPosition(90001) == -1) {
+                result.addStickyFooterItem(signInDrawerItem)
+            }
+        }
+    }
+
+    private fun launchSignIn() {
+        val RC_SIGN_IN = 123
+
+        val providers: List<AuthUI.IdpConfig> = Arrays.asList(AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
+                AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build())
+
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setLogo(R.mipmap.ic_launcher_round)
+                        .build(),
+                RC_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -529,6 +620,53 @@ class MainActivity : AppCompatActivity() {
                 Snacky.builder().setActivity(this).info().setText("Thanks! Please restart the app to remove ads!").show()
             }
         }
+
+        if (requestCode == 123) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                // ...
+                result.removeAllStickyFooterItems()
+
+                Snacky.builder().setActivity(this).success().setText("Logged In!").show()
+
+                notifyLoggedIn()
+            } else {
+                // Sign in failed, check response for error code
+                // ...
+                Snacky.builder().setActivity(this).error().setText("Login Failed.").show()
+            }
+        }
+    }
+
+    private fun notifyLoggedIn() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        var displayName = currentUser?.displayName
+        if (displayName.isNullOrEmpty()) {
+            displayName = currentUser?.email
+            if (displayName.isNullOrEmpty()) {
+                displayName = currentUser?.phoneNumber
+            }
+        }
+
+        val header = headerResult.profiles[0]
+        header.withName(displayName)
+        headerResult.updateProfile(header)
+
+        result.addItemAtPosition(profileItem, 1)
+        result.addItemAtPosition(DividerDrawerItem().withIdentifier(91001), 2)
+    }
+
+    private fun notifySignedOut() {
+        val header = headerResult.profiles[0]
+        header.withName("BattleGuide for PUBG")
+        headerResult.updateProfile(header)
+
+        result.removeItem(90002)
+        result.removeItem(91001)
     }
 
     private fun isGooglePlayServicesAvailable(activity: Activity): Boolean {

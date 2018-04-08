@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +26,7 @@ public class DamageCalcActivity extends AppCompatActivity {
 
         //"Teaser \uD83D\uDE08"
 
-        private String title[] = {"YOU", "THEM"};
+        private String title[] = {"YOU", "ENEMY"};
 
         ViewPagerAdapter(FragmentManager manager) {
             super(manager);
@@ -95,7 +96,7 @@ public class DamageCalcActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
-        Typeface phosphate = Typeface.createFromAsset(getAssets(), "fonts/Phosphate-Solid.ttf");
+        Typeface phosphate = ResourcesCompat.getFont(this, R.font.clearbold);
         title.setTypeface(phosphate);
         title.setText("Damage Calculator");
 
@@ -115,6 +116,11 @@ public class DamageCalcActivity extends AppCompatActivity {
 
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setHideable(false);
+        try {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

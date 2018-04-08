@@ -1,0 +1,29 @@
+ext.version = [
+        firebase : "12.0.1",
+        firebase_ui : "3.3.0",
+        supportLibraryVersion : "27.1.1"
+]
+
+def version = ext.version
+
+ext.library = [
+        firebase_core : "com.google.firebase:firebase-core:$version.firebase",
+        firebase_storage : "com.google.firebase:firebase-storage:$version.firebase",
+        firebase_storage_ui : "com.firebaseui:firebase-ui-storage:$version.firebase_ui",
+        firebase_auth : "com.google.firebase:firebase-auth:$version.firebase",
+        firebase_firestore : "com.google.firebase:firebase-firestore:$version.firebase",
+        firebase_ads : "com.google.firebase:firebase-ads:$version.firebase",
+        firebase_messaging : "com.google.firebase:firebase-messaging:$version.firebase",
+        firebase_config : "com.google.firebase:firebase-config:$version.firebase",
+        firebase_perf : "com.google.firebase:firebase-perf:$version.firebase",
+        firebase_auth_ui : "com.firebaseui:firebase-ui-auth:$version.firebase_ui",
+        firebase_database : "com.google.firebase:firebase-database:$version.firebase",
+        support_appcompat : "com.android.support:appcompat-v7:$version.supportLibraryVersion",
+        support_cardview : "com.android.support:cardview-v7:$version.supportLibraryVersion",
+        support_recyclerview : "com.android.support:recyclerview-v7:$version.supportLibraryVersion",
+        support_annotations : "com.android.support:support-annotations:$version.supportLibraryVersion",
+        support_design : "com.android.support:design:$version.supportLibraryVersion",
+        support_compat : "com.android.support:support-compat:$version.supportLibraryVersion",
+        support_tabs : "com.android.support:customtabs:$version.supportLibraryVersion"
+
+]

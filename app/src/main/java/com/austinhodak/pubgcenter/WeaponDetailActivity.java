@@ -257,6 +257,8 @@ public class WeaponDetailActivity extends AppCompatActivity {
                     Set<String> favs = mSharedPreferences.getStringSet("favoriteWeapons", null);
                     if (favs != null && favs.contains(weaponID)) {
                         favs.remove(weaponID);
+                        Log.d("FAVS", String.valueOf(favs));
+                        mSharedPreferences.edit().remove("favoriteWeapons").commit();
                         mSharedPreferences.edit().putStringSet("favoriteWeapons", favs).apply();
                     }
                 }

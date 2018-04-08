@@ -15,7 +15,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -161,7 +160,7 @@ public class DamageCalcFragment extends Fragment {
                                 if (documentSnapshot.contains("icon")) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(documentSnapshot.getString("icon"));
-                                    Glide.with(getActivity().getApplicationContext()).using(new FirebaseImageLoader()).load(gsReference)
+                                    GlideApp.with(getActivity().getApplicationContext()).load(gsReference)
                                             .into(weaponIV);
                                 }
 
@@ -190,7 +189,7 @@ public class DamageCalcFragment extends Fragment {
                                 if (documentSnapshot.contains("icon")) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(documentSnapshot.getString("icon"));
-                                    Glide.with(getActivity().getApplicationContext()).using(new FirebaseImageLoader()).load(gsReference)
+                                    GlideApp.with(getActivity().getApplicationContext()).load(gsReference)
                                             .into(helmetIV);
                                 }
 
@@ -219,7 +218,7 @@ public class DamageCalcFragment extends Fragment {
                                 if (documentSnapshot.contains("icon")) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(documentSnapshot.getString("icon"));
-                                    Glide.with(getActivity().getApplicationContext()).using(new FirebaseImageLoader()).load(gsReference)
+                                    GlideApp.with(getActivity().getApplicationContext()).load(gsReference)
                                             .into(vestIV);
                                 }
 

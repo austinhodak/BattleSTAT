@@ -93,6 +93,11 @@ public class HomeWeaponsFragment extends Fragment {
 
                 tabLayout.setScrollPosition(1, 0f, true);
                 viewPager.setCurrentItem(1);
+
+                int emoji = 0x2B50;
+
+                mStringArray.add(0, new String(Character.toChars(emoji)));
+                adapter.notifyDataSetChanged();
             }
         }
 

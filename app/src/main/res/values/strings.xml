@@ -6,8 +6,10 @@
     <string name="aboutLibraries_description_showIcon">true</string>
     <string name="aboutLibraries_description_showVersion">true</string>
 
-    <string name="com.twitter.sdk.android.CONSUMER_KEY">edOv17CHPl2kiu3d8BbRhzAS2</string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET">aPjELlexwiTF5P6ihTPgzExRw1rllKT3JhjMScP91RAwmAo19I</string>
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">424918801284779</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb424918801284779</string>
+    <!-- Twitter consumer key and secret -->
 
     <string name="desc_provided">DESCRIPTION &amp; STATS \nFROM GAMEPEDIA.COM</string>
     <string name="best_loadout_assault_weapon">Because the assault loadout is focused heavily on damage, we recommend using the AKM. It has a ton of damage behind it with decent range and accuracy, meaning you can engage from mid range effectively while dealing good damage. The AKM is actually pretty decent up close too, which handles a lot of the negatives of our sidearm pick.</string>

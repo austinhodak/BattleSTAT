@@ -13,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.austinhodak.pubgcenter.GlideApp;
 import com.austinhodak.pubgcenter.R;
 import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -330,7 +330,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         if (documentSnapshot.contains("icon")) {
             StorageReference gsReference = storage
                     .getReferenceFromUrl(documentSnapshot.getString("icon"));
-            Glide.with(getApplicationContext()).using(new FirebaseImageLoader()).load(gsReference).into(weapon1Image);
+            GlideApp.with(getApplicationContext()).load(gsReference).into(weapon1Image);
         }
 
         if (documentSnapshot.contains("weapon_name")) {
@@ -342,7 +342,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         if (documentSnapshot.contains("icon")) {
             StorageReference gsReference = storage
                     .getReferenceFromUrl(documentSnapshot.getString("icon"));
-            Glide.with(getApplicationContext()).using(new FirebaseImageLoader()).load(gsReference).into(weapon2Image);
+            GlideApp.with(getApplicationContext()).load(gsReference).into(weapon2Image);
         }
 
         if (documentSnapshot.contains("weapon_name")) {

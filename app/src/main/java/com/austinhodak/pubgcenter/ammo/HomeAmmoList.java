@@ -14,9 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.austinhodak.pubgcenter.GlideApp;
 import com.austinhodak.pubgcenter.R;
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -114,8 +113,7 @@ public class HomeAmmoList extends Fragment {
                                         StorageReference gsReference = storage
                                                 .getReferenceFromUrl(data.getString("icon"));
 
-                                        Glide.with(getActivity())
-                                                .using(new FirebaseImageLoader())
+                                        GlideApp.with(getActivity())
                                                 .load(gsReference)
                                                 .into(icon);
                                     } catch (Exception e) {

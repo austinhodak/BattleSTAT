@@ -12,15 +12,5 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
-
-        //        Glide.with(this)
-        //                .load(R.drawable.header2)
-        //                .asBitmap()
-        //                .into(new SimpleTarget<Bitmap>(SimpleTarget.SIZE_ORIGINAL, SimpleTarget.SIZE_ORIGINAL) {
-        //                    @Override
-        //                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-        //                        mFrissonView.setBitmap(bitmap);
-        //                    }
-        //                });
     }
 }
