@@ -13,4 +13,19 @@
 
     <string name="desc_provided">DESCRIPTION &amp; STATS \nFROM GAMEPEDIA.COM</string>
     <string name="best_loadout_assault_weapon">Because the assault loadout is focused heavily on damage, we recommend using the AKM. It has a ton of damage behind it with decent range and accuracy, meaning you can engage from mid range effectively while dealing good damage. The AKM is actually pretty decent up close too, which handles a lot of the negatives of our sidearm pick.</string>
+    <string name="drawer_title_update">RSS Feeds</string>
+    <string name="drawer_title_weapons">Weapons</string>
+    <string name="drawer_title_attachments">Attachments</string>
+    <string name="drawer_title_ammo">Ammo</string>
+    <string name="drawer_title_consumables">Consumables</string>
+    <string name="drawer_title_equipment">Equipment</string>
+    <string name="drawer_title_controls">Controls</string>
+    <string name="drawer_title_timer">Match Timer</string>
+    <string name="drawer_title_bestloadouts">Best Loadouts</string>
+    <string name="drawer_title_about">About</string>
+    <string name="drawer_title_damagecalc">Damage Calculator</string>
+    <string name="drawer_title_loadouts">Loadouts</string>
+    <string name="drawer_title_maps">Maps</string>
+    <string name="drawer_title_suggestion">Send Suggestion</string>
+    <string name="drawer_title_share">Share App</string>
 </resources>

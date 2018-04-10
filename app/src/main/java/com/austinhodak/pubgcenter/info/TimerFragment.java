@@ -26,12 +26,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.Chronometer.OnChronometerTickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.austinhodak.pubgcenter.R;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +82,19 @@ public class TimerFragment extends Fragment {
     @BindView(R.id.timer_total)
     Chronometer totalMatch;
 
+    @BindView(R.id.timer_minus)
+    ImageView timerMinus;
+
+    @BindView(R.id.timer_plus)
+    ImageView timerPlus;
+
+    boolean isTimerRunning = false;
+
     long totalMatchTimer = 0;
+
+    long timeAtStop  = 0;
+
+    private long airDropDelay = 180000;
 
     private SharedPreferences mSharedPreferences;
 
@@ -116,6 +130,7 @@ public class TimerFragment extends Fragment {
 
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer);
                 totalMatch.start();
+                isTimerRunning = true;
             }
         });
 
@@ -132,7 +147,7 @@ public class TimerFragment extends Fragment {
             public void onClick(final View v) {
                 totalMatchTimer = totalMatch.getBase() - SystemClock.elapsedRealtime();
                 totalMatch.stop();
-
+                isTimerRunning = false;
                 //firstCircleAppearCountDown.cancel();
             }
         });
@@ -147,7 +162,46 @@ public class TimerFragment extends Fragment {
             }
         });
 
+        timerPlus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                //totalMatchTimer = totalMatch.getBase() - SystemClock.elapsedRealtime() - 1000;
+                totalMatch.stop();
+                totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer - 1000);
+
+                if (isTimerRunning) {
+                    totalMatch.start();
+                } else {
+                    updateTimers();
+                }
+            }
+        });
+
+        timerMinus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                //totalMatchTimer = totalMatch.getBase() - SystemClock.elapsedRealtime() + 1000;
+                totalMatch.stop();
+                totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer + 1000);
+                if (isTimerRunning) {
+                    totalMatch.start();
+                } else {
+                    updateTimers();
+                }
+            }
+        });
+
         initChannels(getActivity());
+
+        try {
+            if (FirebaseRemoteConfig.getInstance().getLong("airdrop_timing_ms") != 0) {
+                airDropDelay = FirebaseRemoteConfig.getInstance().getLong("airdrop_timing_ms");
+            }
+            Log.d("DELAY", airDropDelay + " : DELAY");
+
+        } catch (Exception e) {
+
+        }
 
         return view;
     }
@@ -557,7 +611,7 @@ public class TimerFragment extends Fragment {
         } else if (airDropMil < 0) {
             createAirDropNotification("Air Drop inbound!");
             //Reset drop to two minutes-ish (wait for feedback before final)
-            airDropTimer = airDropTimer + 120000;
+            airDropTimer = airDropTimer + airDropDelay;
         }
     }
 }

@@ -15,7 +15,6 @@ repositories {
 
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -24,8 +23,8 @@ android {
         applicationId "com.austinhodak.pubgcenter"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 1060
-        versionName "0.6.0"
+        versionCode 1070
+        versionName "0.7.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -10,7 +10,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +24,6 @@ import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.austinhodak.pubgcenter.GlideApp;
 import com.austinhodak.pubgcenter.R;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.analytics.FirebaseAnalytics.Event;
@@ -181,16 +179,17 @@ public class WeaponDetailOverview extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_weapons_tab, container, false);
         ButterKnife.bind(this, view);
         // Inflate the layout for this fragment
 
+        if (getActivity() != null)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         if (getArguments() != null) {
-            loadWeapon(getArguments().getString("weaponPath"), getArguments().getString("weaponClass"));
+            loadWeapon(getArguments().getString("weaponPath"));
         }
 
         setupStatDescListeners();
@@ -218,10 +217,6 @@ public class WeaponDetailOverview extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        //mAdView.loadAd(adRequest);
-
         suggestButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -247,7 +242,7 @@ public class WeaponDetailOverview extends Fragment {
         final SlimAdapter adapter = SlimAdapter.create()
                 .register(R.layout.weapon_list_item, new SlimInjector<DocumentSnapshot>() {
                     @Override
-                    public void onInject(final DocumentSnapshot data, final IViewInjector injector) {
+                    public void onInject(@NonNull final DocumentSnapshot data, @NonNull final IViewInjector injector) {
 
                         if (!data.exists()) {
                             return;
@@ -257,6 +252,7 @@ public class WeaponDetailOverview extends Fragment {
                             StorageReference gsReference = storage
                                     .getReferenceFromUrl(data.getString("icon"));
 
+                            if (getActivity() != null)
                             GlideApp.with(getActivity())
                                     .load(gsReference)
                                     .into((ImageView) injector.findViewById(R.id.helmetItem64));
@@ -274,8 +270,6 @@ public class WeaponDetailOverview extends Fragment {
                 }).attachTo(attachmentsRV);
 
         List<DocumentReference> list = (List<DocumentReference>) data.get("attachments");
-        Log.d("LIST", list.get(0).getId());
-
         for (DocumentReference documentReference : list) {
             documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
@@ -308,8 +302,7 @@ public class WeaponDetailOverview extends Fragment {
                             cardView.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(final View view) {
-                                    String title = "";
-                                    String desc = "";
+                                    String title;
                                     int color;
 
                                     if (cardView.getCardBackgroundColor().getDefaultColor() == getResources()
@@ -333,6 +326,7 @@ public class WeaponDetailOverview extends Fragment {
                                         color = getResources().getColor(R.color.md_grey_800);
                                     }
 
+                                    if (getActivity() != null)
                                     new MaterialDialog.Builder(getActivity())
                                             .title(title)
                                             .backgroundColor(color)
@@ -563,7 +557,7 @@ public class WeaponDetailOverview extends Fragment {
                 });
     }
 
-    private void loadWeapon(final String weaponID, final String weaponClass) {
+    private void loadWeapon(final String weaponID) {
         db.document(weaponID)
                 .addSnapshotListener(
                         new EventListener<DocumentSnapshot>() {
@@ -587,7 +581,7 @@ public class WeaponDetailOverview extends Fragment {
                                             wikiButton.setVisibility(View.INVISIBLE);
                                         }
 
-                                        String descText = "";
+                                        String descText;
                                         descText = data.getString("desc");
                                         descText = descText.replace("<br>", "\n");
                                         descText = descText.replace("  ", "\n\n");
@@ -682,15 +676,17 @@ public class WeaponDetailOverview extends Fragment {
     }
 
     private void setupStatDescListeners() {
-        CardView tbs = (CardView) ((ViewGroup) tbsTV.getParent()).getParent();
-        CardView damage = (CardView) ((ViewGroup) damageBaseTV.getParent()).getParent();
-        CardView speed = (CardView) ((ViewGroup) speedTV.getParent()).getParent();
-        CardView power = (CardView) ((ViewGroup) powerTV.getParent()).getParent();
-        CardView range = (CardView) ((ViewGroup) rangeTV.getParent()).getParent();
-        CardView burstShots = (CardView) ((ViewGroup) burstShotTV.getParent()).getParent();
-        CardView burstDelay = (CardView) ((ViewGroup) burstDelayTV.getParent()).getParent();
-        CardView ammoPerMag = (CardView) ((ViewGroup) magSizeTV.getParent()).getParent();
-        CardView firingModes = (CardView) ((ViewGroup) firingModeTV.getParent()).getParent();
+        CardView tbs = (CardView) tbsTV.getParent().getParent();
+        CardView damage = (CardView) damageBaseTV.getParent().getParent();
+        CardView speed = (CardView) speedTV.getParent().getParent();
+        CardView power = (CardView) powerTV.getParent().getParent();
+        CardView range = (CardView) rangeTV.getParent().getParent();
+        CardView burstShots = (CardView) burstShotTV.getParent().getParent();
+        CardView burstDelay = (CardView) burstDelayTV.getParent().getParent();
+        CardView ammoPerMag = (CardView) magSizeTV.getParent().getParent();
+        CardView firingModes = (CardView) firingModeTV.getParent().getParent();
+
+        if (getActivity() == null) return;
 
         tbs.setOnLongClickListener(new OnLongClickListener() {
             @Override

@@ -12,9 +12,9 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.austinhodak.pubgcenter.GlideApp;
 import com.austinhodak.pubgcenter.R;
 import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
-import com.bumptech.glide.Glide;
 import de.mateware.snacky.Snacky;
 
 /**
@@ -80,13 +80,13 @@ public class MapViewFragment extends Fragment {
     private void loadMap(final int map) {
         switch (map) {
             case 0:
-                Glide.with(getActivity()).load(R.drawable.pubg_erangel).into(mMapView);
+                GlideApp.with(getActivity()).load(R.drawable.pubg_erangel).into(mMapView);
                 break;
             case 1:
-                Glide.with(getActivity()).load(R.drawable.pubg_miramar).into(mMapView);
+                GlideApp.with(getActivity()).load(R.drawable.pubg_miramar).into(mMapView);
                 break;
             case 2:
-                Glide.with(getActivity()).load(R.drawable.savage_map).into(mMapView);
+                GlideApp.with(getActivity()).load(R.drawable.savage_map).into(mMapView);
                 break;
         }
     }

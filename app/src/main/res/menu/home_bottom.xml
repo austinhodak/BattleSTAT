@@ -3,10 +3,15 @@
     <item
         android:id="@+id/pc_menu"
         android:icon="@drawable/windows"
-        android:title="Windows" />
+        android:title="PC" />
 
-    <!--<item-->
-    <!--android:id="@+id/xbox_menu"-->
-    <!--android:icon="@drawable/xbox"-->
-    <!--android:title="XBOX" />-->
+    <item
+        android:id="@+id/xbox_menu"
+        android:icon="@drawable/xbox"
+        android:title="Xbox" />
+
+    <item
+        android:id="@+id/mobile_menu"
+        android:icon="@drawable/icon8_phone"
+        android:title="Mobile" />
 </menu>

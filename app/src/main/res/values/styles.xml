@@ -37,4 +37,17 @@
         <item name="android:colorButtonNormal">@color/accent</item>
     </style>
 
+    <style name="Profile" parent="MaterialDrawerTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/md_indigo_500</item>
+        <item name="colorPrimaryDark">@color/md_indigo_700</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+    </style>
+
 </resources>

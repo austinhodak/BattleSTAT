@@ -2,7 +2,6 @@ package com.austinhodak.pubgcenter;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,8 +30,6 @@ import com.austinhodak.pubgcenter.weapons.WeaponDetailOverview;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailRecoil;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailSpread;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailSway;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,7 +39,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
-import com.google.firebase.storage.FirebaseStorage;
 import de.mateware.snacky.Snacky;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,59 +61,34 @@ public class WeaponDetailActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             Fragment currentFragment;
-            Bundle bundle;
-            Log.d("POS", position + "");
             switch (position) {
                 case 0:
                     currentFragment = new WeaponDetailOverview();
-                    bundle = new Bundle();
-                    bundle.putString("weaponClass", weaponClass);
-                    bundle.putString("weaponPath", weaponID);
-                    currentFragment.setArguments(bundle);
                     break;
                 case 1:
                     currentFragment = new WeaponDetailSpread();
-                    bundle = new Bundle();
-                    bundle.putString("weaponClass", weaponClass);
-                    bundle.putString("weaponPath", weaponID);
-                    currentFragment.setArguments(bundle);
                     break;
                 case 2:
                     currentFragment = new WeaponDetailDeviation();
-                    bundle = new Bundle();
-                    bundle.putString("weaponClass", weaponClass);
-                    bundle.putString("weaponPath", weaponID);
-                    currentFragment.setArguments(bundle);
                     break;
                 case 3:
                     currentFragment = new WeaponDetailRecoil();
-                    bundle = new Bundle();
-                    bundle.putString("weaponClass", weaponClass);
-                    bundle.putString("weaponPath", weaponID);
-                    currentFragment.setArguments(bundle);
                     break;
                 case 4:
                     currentFragment = new WeaponDetailSway();
-                    bundle = new Bundle();
-                    bundle.putString("weaponClass", weaponClass);
-                    bundle.putString("weaponPath", weaponID);
-                    currentFragment.setArguments(bundle);
                     break;
                 case 5:
                     currentFragment = new WeaponDetailCamera();
-                    bundle = new Bundle();
-                    bundle.putString("weaponClass", weaponClass);
-                    bundle.putString("weaponPath", weaponID);
-                    currentFragment.setArguments(bundle);
                     break;
                 default:
                     currentFragment = new WeaponDetailOverview();
-                    bundle = new Bundle();
-                    bundle.putString("weaponClass", weaponClass);
-                    bundle.putString("weaponPath", weaponID);
-                    currentFragment.setArguments(bundle);
                     break;
             }
+
+            Bundle bundle = new Bundle();
+            bundle.putString("weaponClass", weaponClass);
+            bundle.putString("weaponPath", weaponID);
+            currentFragment.setArguments(bundle);
             return currentFragment;
         }
 
@@ -149,8 +119,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
-
     private String weaponClass;
 
     private String weaponID;
@@ -161,8 +129,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
         setContentView(R.layout.weapon_detail_activity);
         ButterKnife.bind(this);
 
-        Typeface phosphate = Typeface.createFromAsset(getAssets(), "fonts/Phosphate-Solid.ttf");
-        title.setTypeface(phosphate);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
@@ -189,10 +155,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
         final TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        if (!mSharedPreferences.getBoolean("removeAds", false)) {
-            //loadAds();
-        }
-
         compareFAB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -204,25 +166,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (!mSharedPreferences.getBoolean("removeAds", false)) {
-            int viewCount = mSharedPreferences.getInt("weaponDetailAdCount", 1);
-            if (viewCount >= 5) {
-                //Show interstitial
-            } else {
-                mSharedPreferences.edit().putInt("weaponDetailAdCount", viewCount + 1).apply();
-            }
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.weapon_detail, menu);
@@ -257,8 +200,8 @@ public class WeaponDetailActivity extends AppCompatActivity {
                     Set<String> favs = mSharedPreferences.getStringSet("favoriteWeapons", null);
                     if (favs != null && favs.contains(weaponID)) {
                         favs.remove(weaponID);
-                        Log.d("FAVS", String.valueOf(favs));
-                        mSharedPreferences.edit().remove("favoriteWeapons").commit();
+
+                        mSharedPreferences.edit().remove("favoriteWeapons").apply();
                         mSharedPreferences.edit().putStringSet("favoriteWeapons", favs).apply();
                     }
                 }
@@ -270,7 +213,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
 
                     db.runTransaction(new Transaction.Function<Void>() {
                         @Override
-                        public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                        public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                             DocumentSnapshot snapshot = transaction.get(sfDocRef);
                             if (snapshot.contains("likes")) {
                                 double newPopulation = snapshot.getDouble("likes") + 1;
@@ -292,6 +235,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.d("LIKE", e.getMessage());
+
                             Snacky.builder().setView(mRelativeLayout).setText("Error Liking Weapon").error();
                             item.setIcon(R.drawable.ic_favorite_border_24dp);
                         }
@@ -302,7 +246,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
 
                     db.runTransaction(new Transaction.Function<Void>() {
                         @Override
-                        public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                        public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                             DocumentSnapshot snapshot = transaction.get(sfDocRef);
                             if (snapshot.contains("likes")) {
                                 double newPopulation = snapshot.getDouble("likes") - 1;
@@ -339,7 +283,6 @@ public class WeaponDetailActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem alertMenuItem = menu.findItem(R.id.favorite_weapon);
-        FrameLayout rootView = (FrameLayout) alertMenuItem.getActionView();
 
         if (mSharedPreferences.getBoolean(weaponID + "-like", false)) {
             menu.findItem(R.id.heart_weapon).setIcon(R.drawable.ic_favorite_24dp);
@@ -372,24 +315,4 @@ public class WeaponDetailActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
-    private void loadAds() {
-        mAdView.setVisibility(View.GONE);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(final int i) {
-                super.onAdFailedToLoad(i);
-                mAdView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                mAdView.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
 }

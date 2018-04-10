@@ -41,12 +41,12 @@
         </activity>
         <activity android:name=".WeaponDetailActivity" />
         <activity android:name=".loadout.LoadoutCreateMain" />
-        <activity android:name=".DamageCalcActivity" />
+        <activity android:name=".damage_calculator.DamageCalcActivity" />
         <activity
             android:name=".weapons.CompareWeaponActivity"
             android:theme="@style/CompareTheme" />
         <activity android:name=".weapons.CompareWeaponPicker" />
-        <activity android:name=".DamageCalcPicker" />
+        <activity android:name=".damage_calculator.DamageCalcPicker" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -61,7 +61,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".profile.ProfileActivity" android:theme="@style/Profile"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
