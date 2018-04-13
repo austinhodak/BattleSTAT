@@ -36,6 +36,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import de.mateware.snacky.Snacky;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import net.idik.lib.slimadapter.SlimAdapter;
 import net.idik.lib.slimadapter.SlimInjector;
@@ -168,6 +170,21 @@ public class WeaponDetailOverview extends Fragment {
     @BindView(R.id.wiki_button)
     Button wikiButton;
 
+    @BindView(R.id.buggy_shots)
+    TextView buggyShots;
+
+    @BindView(R.id.dacia_shots)
+    TextView daciaShots;
+
+    @BindView(R.id.mc_shots)
+    TextView mcShots;
+
+    @BindView(R.id.boat_shots)
+    TextView boatShots;
+
+    @BindView(R.id.uaz_shots)
+    TextView uazShots;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private boolean snackbarShown = false;
@@ -235,7 +252,7 @@ public class WeaponDetailOverview extends Fragment {
             return;
         }
 
-        final List<Object> attachmentsData = new ArrayList<>();
+        final List<DocumentSnapshot> attachmentsData = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         attachmentsRV.setLayoutManager(linearLayoutManager);
@@ -269,12 +286,22 @@ public class WeaponDetailOverview extends Fragment {
                     }
                 }).attachTo(attachmentsRV);
 
+
+        @SuppressWarnings("unchecked")
         List<DocumentReference> list = (List<DocumentReference>) data.get("attachments");
         for (DocumentReference documentReference : list) {
             documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(final DocumentSnapshot attachment, final FirebaseFirestoreException e) {
                     attachmentsData.add(attachment);
+
+                    Collections.sort(attachmentsData, new Comparator<DocumentSnapshot>() {
+                        @Override
+                        public int compare(DocumentSnapshot s1, DocumentSnapshot s2) {
+                            return s1.getString("name").compareToIgnoreCase(s2.getString("name"));
+                        }
+                    });
+
                     adapter.updateData(attachmentsData);
                 }
             });
@@ -669,6 +696,7 @@ public class WeaponDetailOverview extends Fragment {
 
                                     loadDamageStats(data);
                                     loadAttachments(data);
+                                    loadVehicleDamage(data);
 
                                 }
                             }
@@ -813,6 +841,25 @@ public class WeaponDetailOverview extends Fragment {
                 return false;
             }
         });
+    }
+
+    private void loadVehicleDamage(DocumentSnapshot data) {
+        if (data.getString("damageBody0") == null) {
+            return;
+        }
+        float damage = Integer.parseInt(data.getString("damageBody0"));
+
+        String buggy = String.valueOf((int)Math.ceil(1540/damage)) + " Shots";
+        String dacia = String.valueOf((int)Math.ceil(1820/damage)) + " Shots";
+        String mc = String.valueOf((int)Math.ceil(1025/damage)) + " Shots";
+        String boat = String.valueOf((int)Math.ceil(1520/damage)) + " Shots";
+        String uaz = String.valueOf((int)Math.ceil(1820/damage)) + " Shots";
+
+        buggyShots.setText(buggy);
+        daciaShots.setText(dacia);
+        mcShots.setText(mc);
+        boatShots.setText(boat);
+        uazShots.setText(uaz);
     }
 
 }

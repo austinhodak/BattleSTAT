@@ -68,6 +68,8 @@
             android:value="34736ba72b9d008df984326fac662fba6eefdc26" />
 
         <activity android:name=".info.TimerActivity"></activity>
+
+        <service android:name=".info.TimerService" />
     </application>
 
 </manifest>

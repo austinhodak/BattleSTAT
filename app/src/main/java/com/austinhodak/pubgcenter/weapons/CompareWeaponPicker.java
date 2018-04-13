@@ -2,7 +2,6 @@ package com.austinhodak.pubgcenter.weapons;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -63,9 +62,6 @@ public class CompareWeaponPicker extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        Typeface phosphate = Typeface.createFromAsset(getAssets(), "fonts/Phosphate-Solid.ttf");
-        title.setTypeface(phosphate);
 
         title.setText("Pick Second Weapon • " + getIntent().getStringExtra("weapon_name"));
 

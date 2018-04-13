@@ -23,8 +23,8 @@ android {
         applicationId "com.austinhodak.pubgcenter"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 1070
-        versionName "0.7.0"
+        versionCode 1080
+        versionName "0.8.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +43,9 @@ android {
         exclude "jsr305_annotations/Jsr305_annotations.gwt.xml"
         exclude "third_party/java_src/error_prone/project/annotations/Annotations.gwt.xml"
         exclude "error_prone/Annotations.gwt.xml"
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -112,6 +115,7 @@ dependencies {
     implementation 'com.prof.rssparser:rssparser:1.3.1'
     implementation 'com.github.marcoscgdev:RateDialog:1.0.4'
     implementation('com.facebook.android:facebook-android-sdk:4.27.0')
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -107,7 +107,7 @@
                     <ImageView
                         android:id="@+id/timer_minus"
                         android:clickable="true"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginRight="4dp"
@@ -116,7 +116,7 @@
                     <ImageView
                         android:id="@+id/timer_plus"
                         android:clickable="true"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginLeft="4dp"

@@ -264,6 +264,7 @@ public class HomeWeaponsList extends Fragment {
                                         intent.putExtra("weaponPath", data.getReference().getPath());
                                         intent.putExtra("weaponName",
                                                 data.getString("weapon_name"));
+                                        intent.putExtra("weaponKey", data.getId());
                                         startActivity(intent);
                                     }
                                 });

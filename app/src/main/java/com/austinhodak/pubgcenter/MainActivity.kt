@@ -19,6 +19,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.ImageView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.android.vending.billing.IInAppBillingService
 import com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_OK
 import com.austinhodak.pubgcenter.R.string
@@ -34,6 +36,10 @@ import com.austinhodak.pubgcenter.weapons.HomeWeaponsFragment
 import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -61,11 +67,12 @@ import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import kotlinx.android.synthetic.main.activity_main.toolbar_title
+import org.jetbrains.anko.find
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.toast
 import java.util.Arrays
 
-
-class MainActivity : AppCompatActivity() {
+public class MainActivity : AppCompatActivity() {
 
     private lateinit var result: Drawer
 
@@ -79,13 +86,15 @@ class MainActivity : AppCompatActivity() {
 
     private val removeAds = PrimaryDrawerItem().withIdentifier(9001).withName("Remove Ads").withIcon(R.drawable.icons8_remove_ads_96).withSelectable(false)
 
-    private val signInDrawerItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_password).withSelectable(false).withName("Login or Sign Up").withIdentifier(90001)
+    private val signInDrawerItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_password).withTextColor(Color.WHITE).withSelectable(false).withName("Login or Sign Up").withIdentifier(90001)
 
     private val profileItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_user).withTextColor(Color.WHITE).withName("My Profile").withSelectable(false).withIdentifier(90002)
 
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
     private lateinit var fbDatabase: FirebaseDatabase
+
+    private lateinit var mInterstitialAd: InterstitialAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +120,20 @@ class MainActivity : AppCompatActivity() {
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
         RateDialog.with(this, 1, 5)
+
+        MobileAds.initialize(this,
+                "ca-app-pub-1946691221734928~1341566099")
+
+        if (!mSharedPreferences.getBoolean("removeAds", false)) {
+            mInterstitialAd = InterstitialAd(this)
+            mInterstitialAd.adUnitId = "ca-app-pub-1946691221734928/2925783847"
+            mInterstitialAd.loadAd(AdRequest.Builder().build())
+            mInterstitialAd.adListener = object : AdListener() {
+                override fun onAdClosed() {
+                    finish()
+                }
+            }
+        }
     }
 
     private fun initializeFirebase() {
@@ -119,6 +142,34 @@ class MainActivity : AppCompatActivity() {
         if (mAuth == null) {
             mAuth = FirebaseAuth.getInstance()
         }
+    }
+
+    override fun onBackPressed() {
+        if (result.isDrawerOpen) {
+            result.closeDrawer()
+            return
+        }
+        if (mSharedPreferences.getBoolean("removeAds", false)) {
+            super.onBackPressed()
+            return
+        }
+        var launchCount = mSharedPreferences.getInt("launchCount", 0)
+        if (launchCount >= 3) {
+            try {
+                if (mInterstitialAd.isLoaded) {
+                    mInterstitialAd.show()
+                    mSharedPreferences.edit().putInt("launchCount", 0).apply()
+                } else {
+                    super.onBackPressed()
+                }
+            } catch (e: Exception) {
+                super.onBackPressed()
+            }
+        } else {
+            mSharedPreferences.edit().putInt("launchCount", launchCount + 1).apply()
+            super.onBackPressed()
+        }
+
     }
 
     private fun loadPurchases() {
@@ -135,7 +186,7 @@ class MainActivity : AppCompatActivity() {
                     result.removeItem(9001)
                 } else {
                     mSharedPreferences.edit().putBoolean("removeAds", false).apply()
-                    result.addStickyFooterItem(removeAds)
+                    //result.addStickyFooterItem(removeAds)
                 }
             }
         } catch (e: Exception) {
@@ -234,11 +285,26 @@ class MainActivity : AppCompatActivity() {
                         SecondaryDrawerItem().withName(R.string.drawer_title_timer).withTextColor(Color.WHITE).withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge("BETA").withTextColor(Color.WHITE),
                         updates,
                         DividerDrawerItem(),
+                        SecondaryDrawerItem().withName("Win Skins with Hellcase").withIcon(R.drawable.icons8_fire).withSelectable(false).withIdentifier(504),
                         settings,
                         SecondaryDrawerItem().withName(getString(string.drawer_title_suggestion)).withIcon(R.drawable.icon_hint).withSelectable(false).withIdentifier(501),
                         SecondaryDrawerItem().withName(getString(string.drawer_title_share)).withIcon(R.drawable.icons8_share).withSelectable(false).withIdentifier(502)
                 )
-                .withOnDrawerItemClickListener { view, position, drawerItem ->
+                .withOnDrawerItemClickListener { _, _, drawerItem ->
+                    if (drawerItem.identifier.toString() == "504") {
+                        val dialog = MaterialDialog.Builder(this)
+                                .customView(R.layout.hellcase1, false)
+                                .show()
+
+                        val view = dialog.customView
+                        val imageView = view?.find<ImageView>(R.id.hellcase)
+                        imageView?.onClick {
+                            val i = Intent(Intent.ACTION_VIEW)
+                            i.data = Uri.parse("https://pubg.hellcase.com/fbattleguide")
+                            startActivity(i)
+                        }
+                    }
+
                     if (drawerItem.identifier.toString() == "100") {
                         updateFragment(HomeUpdatesFragment())
                         toolbar_title.text = getString(string.drawer_title_update)
@@ -380,11 +446,14 @@ class MainActivity : AppCompatActivity() {
         result.setSelection(1)
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
-            //result.addStickyFooterItem(removeAds)
+            result.addStickyFooterItem(removeAds)
         }
 
         if (FirebaseAuth.getInstance().currentUser != null) {
+            //Logged In
             if (FirebaseAuth.getInstance().currentUser!!.isAnonymous) {
+                //Anon User, log out and show sign up.
+                AuthUI.getInstance().signOut(this)
                 if (result.getStickyFooterPosition(90001) == -1) {
                     result.addStickyFooterItem(signInDrawerItem)
                 }

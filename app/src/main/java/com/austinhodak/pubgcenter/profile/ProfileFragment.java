@@ -1,9 +1,11 @@
 package com.austinhodak.pubgcenter.profile;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.MaterialDialog.Builder;
+import com.afollestad.materialdialogs.MaterialDialog.ListCallbackMultiChoice;
 import com.austinhodak.pubgcenter.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,9 +26,15 @@ import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import de.mateware.snacky.Snacky;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProfileFragment extends Fragment {
@@ -42,6 +52,8 @@ public class ProfileFragment extends Fragment {
 
     @BindView(R.id.profile_game_versions)
     TextView gameTV;
+
+    private Integer[] selected = null;
 
     public ProfileFragment() {
     }
@@ -67,6 +79,10 @@ public class ProfileFragment extends Fragment {
                         .input(null, firebaseUser.getDisplayName(), new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(final MaterialDialog dialog, final CharSequence input) {
+                                if (input.toString().equals(firebaseUser.getDisplayName())) {
+                                    return;
+                                }
+
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(input.toString())
                                         .build();
@@ -108,6 +124,10 @@ public class ProfileFragment extends Fragment {
                         .input(null, firebaseUser.getEmail(), new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(final MaterialDialog dialog, final CharSequence input) {
+                                if (input.toString().equals(firebaseUser.getEmail())) {
+                                    return;
+                                }
+
                                 final MaterialDialog progress = new MaterialDialog.Builder(getActivity())
                                         .content("Please wait")
                                         .progress(true, 0)
@@ -150,13 +170,34 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(final View v) {
                 final String[] items = {"PC", "Xbox", "Mobile"};
-                new MaterialDialog.Builder(getActivity())
+                new Builder(getActivity())
                         .title("Pick Your Game Versions")
                         .items(items)
-                        .itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+                        .itemsColor(Color.WHITE)
+                        .itemsCallbackMultiChoice(selected, new ListCallbackMultiChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                                Map<String, Object> childUpdates = new HashMap<>();
 
+                                List<Integer> integers = new ArrayList<>(Arrays.asList(which));
+
+                                if (integers.contains(0)) {
+                                    childUpdates.put("/users/" + firebaseUser.getUid() + "/game_versions/pc", true);
+                                } else {
+                                    childUpdates.put("/users/" + firebaseUser.getUid() + "/game_versions/pc", null);
+                                }
+                                if (integers.contains(1)) {
+                                    childUpdates.put("/users/" + firebaseUser.getUid() + "/game_versions/xbox", true);
+                                } else {
+                                    childUpdates.put("/users/" + firebaseUser.getUid() + "/game_versions/xbox", null);
+                                }
+                                if (integers.contains(2)) {
+                                    childUpdates.put("/users/" + firebaseUser.getUid() + "/game_versions/mobile", true);
+                                } else {
+                                    childUpdates.put("/users/" + firebaseUser.getUid() + "/game_versions/mobile", null);
+                                }
+
+                                FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
                                 return true;
                             }
                         })
@@ -193,5 +234,60 @@ public class ProfileFragment extends Fragment {
         }
 
         setupListeners(user);
+
+        FirebaseDatabase.getInstance().getReference("/users/" + user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    if (dataSnapshot.hasChild("game_versions")) {
+                        List<Integer> myList = new ArrayList<Integer>();
+
+                        if (dataSnapshot.hasChild("game_versions/pc")) {
+                            myList.add(0);
+                        }
+                        if (dataSnapshot.hasChild("game_versions/xbox")) {
+                            myList.add(1);
+                        }
+                        if (dataSnapshot.hasChild("game_versions/mobile")) {
+                            myList.add(2);
+                        }
+
+                        selected = new Integer[myList.size()];
+                        myList.toArray(selected);
+
+                        Log.d("GAME", myList.toString() + " : " + myList.size() + " " + selected.length);
+
+                        String game_versions = "";
+
+                        if (dataSnapshot.hasChild("game_versions/pc")) {
+                            game_versions = "PC";
+                        }
+                        if (dataSnapshot.hasChild("game_versions/xbox")) {
+                            if (game_versions.isEmpty()) {
+                                game_versions = "Xbox";
+                            } else {
+                                game_versions = game_versions + ", Xbox";
+                            }
+                        }
+                        if (dataSnapshot.hasChild("game_versions/mobile")) {
+                            if (game_versions.isEmpty()) {
+                                game_versions = "Mobile";
+                            } else {
+                                game_versions = game_versions + ", Mobile";
+                            }
+                        }
+
+                        gameTV.setText(game_versions);
+                    } else {
+                        gameTV.setText("None");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+
+            }
+        });
     }
 }

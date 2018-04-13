@@ -114,20 +114,6 @@ public class TimerFragment extends Fragment {
         timerStart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
-                //                firstCircleAppearCountDown = new CountDownTimer(totalMatchTimer + 111000, 1000) { //Sets 10 second remaining
-                //
-                //                    public void onFinish() {
-                //
-                //                    }
-                //
-                //                    public void onTick(long millisUntilFinished) {
-                //                        long minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
-                //                        long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
-                //
-                //                        firstCircleCountdown.setText(minutes + ":" + (millisUntilFinished / 1000) % 60);
-                //                    }
-                //                }.start();
-
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer);
                 totalMatch.start();
                 isTimerRunning = true;
@@ -165,7 +151,6 @@ public class TimerFragment extends Fragment {
         timerPlus.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
-                //totalMatchTimer = totalMatch.getBase() - SystemClock.elapsedRealtime() - 1000;
                 totalMatch.stop();
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer - 1000);
 
@@ -177,10 +162,24 @@ public class TimerFragment extends Fragment {
             }
         });
 
+        timerPlus.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+                totalMatch.stop();
+                totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer - 30000);
+
+                if (isTimerRunning) {
+                    totalMatch.start();
+                } else {
+                    updateTimers();
+                }
+                return true;
+            }
+        });
+
         timerMinus.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
-                //totalMatchTimer = totalMatch.getBase() - SystemClock.elapsedRealtime() + 1000;
                 totalMatch.stop();
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer + 1000);
                 if (isTimerRunning) {
@@ -188,6 +187,20 @@ public class TimerFragment extends Fragment {
                 } else {
                     updateTimers();
                 }
+            }
+        });
+
+        timerMinus.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+                totalMatch.stop();
+                totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer + 30000);
+                if (isTimerRunning) {
+                    totalMatch.start();
+                } else {
+                    updateTimers();
+                }
+                return true;
             }
         });
 

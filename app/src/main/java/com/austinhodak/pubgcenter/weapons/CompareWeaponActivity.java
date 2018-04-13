@@ -145,8 +145,6 @@ public class CompareWeaponActivity extends AppCompatActivity {
         setContentView(R.layout.activity_compare_weapon);
         ButterKnife.bind(this);
 
-        Typeface phosphate = Typeface.createFromAsset(getAssets(), "fonts/Phosphate-Solid.ttf");
-        title.setTypeface(phosphate);
         title.setText("Comparing Weapons");
 
         mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
@@ -155,8 +153,6 @@ public class CompareWeaponActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //setTitle("Comparing Weapons");
 
         setupAdapter();
         mRecyclerView.setNestedScrollingEnabled(false);
@@ -185,7 +181,11 @@ public class CompareWeaponActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (!CompareWeaponActivity.this.isFinishing()) {
-            GlideApp.with(CompareWeaponActivity.this).pauseRequests();
+            try {
+                GlideApp.with(CompareWeaponActivity.this).pauseRequests();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -379,8 +379,6 @@ public class CompareWeaponActivity extends AppCompatActivity {
                     @Override
                     public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
                         if (!documentSnapshot.exists()) {
-                            //Snacky.builder().setActivity(CompareWeaponActivity.this).setText("Error Loading").error()
-                            //        .show();
                             return;
                         }
 
@@ -396,8 +394,6 @@ public class CompareWeaponActivity extends AppCompatActivity {
                     @Override
                     public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
                         if (!documentSnapshot.exists()) {
-                            //Snacky.builder().setActivity(CompareWeaponActivity.this).setText("Error Loading").error()
-                            //        .show();
                             return;
                         }
 

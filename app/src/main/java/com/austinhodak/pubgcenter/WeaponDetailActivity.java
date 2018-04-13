@@ -1,5 +1,7 @@
 package com.austinhodak.pubgcenter;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build.VERSION;
@@ -13,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,6 +27,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.austinhodak.pubgcenter.weapons.CompareWeaponPicker;
+import com.austinhodak.pubgcenter.weapons.WeaponComments;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailCamera;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailDeviation;
 import com.austinhodak.pubgcenter.weapons.WeaponDetailOverview;
@@ -47,7 +51,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
 
-        private String title[] = {"Overview", "Spread", "Deviation", "Recoil", "Sway", "Camera DOF"};
+        private String title[] = {"Comments", "Overview", "Spread", "Deviation", "Recoil", "Sway", "Camera DOF"};
 
         ViewPagerAdapter(FragmentManager manager) {
             super(manager);
@@ -63,21 +67,24 @@ public class WeaponDetailActivity extends AppCompatActivity {
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment = new WeaponDetailOverview();
+                    currentFragment = new WeaponComments();
                     break;
                 case 1:
-                    currentFragment = new WeaponDetailSpread();
+                    currentFragment = new WeaponDetailOverview();
                     break;
                 case 2:
-                    currentFragment = new WeaponDetailDeviation();
+                    currentFragment = new WeaponDetailSpread();
                     break;
                 case 3:
-                    currentFragment = new WeaponDetailRecoil();
+                    currentFragment = new WeaponDetailDeviation();
                     break;
                 case 4:
-                    currentFragment = new WeaponDetailSway();
+                    currentFragment = new WeaponDetailRecoil();
                     break;
                 case 5:
+                    currentFragment = new WeaponDetailSway();
+                    break;
+                case 6:
                     currentFragment = new WeaponDetailCamera();
                     break;
                 default:
@@ -88,6 +95,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString("weaponClass", weaponClass);
             bundle.putString("weaponPath", weaponID);
+            bundle.putString("weaponKey", weaponKey);
             currentFragment.setArguments(bundle);
             return currentFragment;
         }
@@ -123,12 +131,13 @@ public class WeaponDetailActivity extends AppCompatActivity {
 
     private String weaponID;
 
+    private String weaponKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weapon_detail_activity);
         ButterKnife.bind(this);
-
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
@@ -143,6 +152,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
         if (getIntent() != null) {
             weaponID = getIntent().getStringExtra("weaponPath");
             weaponClass = getIntent().getStringExtra("weaponClass");
+            weaponKey = getIntent().getStringExtra("weaponKey");
 
             String weaponName = getIntent().getStringExtra("weaponName");
             title.setText(weaponName.toUpperCase());
@@ -155,6 +165,9 @@ public class WeaponDetailActivity extends AppCompatActivity {
         final TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        viewPager.setCurrentItem(1);
+        tabLayout.setScrollPosition(1, 0f, true);
+
         compareFAB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -164,6 +177,91 @@ public class WeaponDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        viewPager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) { }
+
+            @Override
+            public void onPageSelected(final int position) {
+                if (position == 0) {
+                    hideFab();
+                } else {
+                    showFab();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) { }
+        });
+    }
+
+    private void showFab() {
+        if (compareFAB.getVisibility() == View.GONE) {
+            compareFAB.setVisibility(View.VISIBLE);
+            compareFAB.setScaleX(0.f);
+            compareFAB.setScaleY(0.f);
+            compareFAB.animate()
+                    .scaleX(1.f).scaleY(1.f)
+                    .setDuration(200)
+                    .setListener(new AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(final Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(final Animator animation) {
+                            compareFAB.setVisibility(View.VISIBLE);
+                            compareFAB.setScaleX(1.f);
+                            compareFAB.setScaleY(1.f);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(final Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(final Animator animation) {
+
+                        }
+                    })
+                    .start();
+        }
+    }
+
+    private void hideFab() {
+        if (compareFAB.getVisibility() == View.GONE) {
+            return;
+        }
+        compareFAB.setScaleX(1.f);
+        compareFAB.setScaleY(1.f);
+        compareFAB.animate()
+                .scaleX(0.f).scaleY(0.f)
+                .setDuration(200)
+                .setListener(new AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(final Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(final Animator animation) {
+                        compareFAB.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(final Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(final Animator animation) {
+
+                    }
+                })
+                .start();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

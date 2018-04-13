@@ -9,6 +9,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -42,16 +43,14 @@ public class Application extends MultiDexApplication {
                 .build();
         FirebaseFirestore.getInstance().setFirestoreSettings(settings);
 
-//        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-//                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-//                .build();
-//        FirebaseRemoteConfig.getInstance().setConfigSettings(configSettings);
         FirebaseRemoteConfig.getInstance().fetch().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(final Void aVoid) {
                 FirebaseRemoteConfig.getInstance().activateFetched();
             }
         });
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("NOTIID", "Refreshed token: " + refreshedToken);
