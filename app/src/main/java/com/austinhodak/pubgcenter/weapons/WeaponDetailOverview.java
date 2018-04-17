@@ -1,6 +1,9 @@
 package com.austinhodak.pubgcenter.weapons;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +27,8 @@ import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.austinhodak.pubgcenter.GlideApp;
 import com.austinhodak.pubgcenter.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.analytics.FirebaseAnalytics.Event;
@@ -187,6 +192,8 @@ public class WeaponDetailOverview extends Fragment {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private SharedPreferences mSharedPreferences;
+
     private boolean snackbarShown = false;
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -209,6 +216,8 @@ public class WeaponDetailOverview extends Fragment {
             loadWeapon(getArguments().getString("weaponPath"));
         }
 
+        mSharedPreferences = getActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
+
         setupStatDescListeners();
 
         weaponDescCard.setOnClickListener(new OnClickListener() {
@@ -227,8 +236,50 @@ public class WeaponDetailOverview extends Fragment {
         });
 
         attachmentsRV.setNestedScrollingEnabled(false);
+        loadAds();
+        if (mSharedPreferences != null && mSharedPreferences.getBoolean("removeAds", false)) {
+            //loadAds();
+        }
 
         return view;
+    }
+
+    private void loadAds() {
+        mAdView.setVisibility(View.GONE);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                mAdView.setVisibility(View.VISIBLE);
+                // Code to be executed when an ad finishes
+                // loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                mAdView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
     }
 
     @Override
@@ -295,12 +346,16 @@ public class WeaponDetailOverview extends Fragment {
                 public void onEvent(final DocumentSnapshot attachment, final FirebaseFirestoreException e) {
                     attachmentsData.add(attachment);
 
-                    Collections.sort(attachmentsData, new Comparator<DocumentSnapshot>() {
-                        @Override
-                        public int compare(DocumentSnapshot s1, DocumentSnapshot s2) {
-                            return s1.getString("name").compareToIgnoreCase(s2.getString("name"));
-                        }
-                    });
+                    try {
+                        Collections.sort(attachmentsData, new Comparator<DocumentSnapshot>() {
+                            @Override
+                            public int compare(DocumentSnapshot s1, DocumentSnapshot s2) {
+                                return s1.getString("name").compareToIgnoreCase(s2.getString("name"));
+                            }
+                        });
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
 
                     adapter.updateData(attachmentsData);
                 }

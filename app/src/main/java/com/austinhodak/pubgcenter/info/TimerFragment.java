@@ -4,7 +4,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -61,6 +63,8 @@ public class TimerFragment extends Fragment {
     @BindView(R.id.circle_fourth)
     TextView fourthCircle;
 
+    boolean isTimerRunning = false;
+
     @BindView(R.id.circle_second)
     TextView secondCircle;
 
@@ -73,6 +77,14 @@ public class TimerFragment extends Fragment {
     @BindView(R.id.circle_third)
     TextView thirdCircle;
 
+    long timeAtStop = 0;
+
+    @BindView(R.id.timer_minus)
+    ImageView timerMinus;
+
+    @BindView(R.id.timer_plus)
+    ImageView timerPlus;
+
     @BindView(R.id.timer_start)
     LinearLayout timerStart;
 
@@ -82,21 +94,15 @@ public class TimerFragment extends Fragment {
     @BindView(R.id.timer_total)
     Chronometer totalMatch;
 
-    @BindView(R.id.timer_minus)
-    ImageView timerMinus;
-
-    @BindView(R.id.timer_plus)
-    ImageView timerPlus;
-
-    boolean isTimerRunning = false;
-
     long totalMatchTimer = 0;
-
-    long timeAtStop  = 0;
 
     private long airDropDelay = 180000;
 
     private SharedPreferences mSharedPreferences;
+
+    private List<PendingIntent> circlePendingIntents = new ArrayList<>();
+
+    Intent intent;
 
     public TimerFragment() {
     }
@@ -106,10 +112,30 @@ public class TimerFragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timer, container, false);
         ButterKnife.bind(this, view);
+        intent = new Intent(getActivity(), AlarmReceiver.class);
+
         setHasOptionsMenu(true);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mSharedPreferences = getActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
+
+        if (mSharedPreferences.contains("timer_last") && mSharedPreferences.contains("timer_sys") && mSharedPreferences.contains("timer_running")) {
+            if (mSharedPreferences.getLong("timer_last", 0) == 0 || mSharedPreferences.getLong("timer_sys", 0) == 0) {
+
+            } else {
+                Log.d("TIMER", "SHARED");
+                if (mSharedPreferences.getBoolean("timer_running", false)) {
+                    totalMatchTimer = mSharedPreferences.getLong("timer_last", 0);
+                    totalMatch.setBase(mSharedPreferences.getLong("timer_sys", SystemClock.elapsedRealtime()) + totalMatchTimer);
+                    totalMatch.start();
+                    isTimerRunning = true;
+                } else {
+                    totalMatchTimer = mSharedPreferences.getLong("timer_last", 0);
+                    totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer);
+                    updateTimers();
+                }
+            }
+        }
 
         timerStart.setOnClickListener(new OnClickListener() {
             @Override
@@ -117,6 +143,8 @@ public class TimerFragment extends Fragment {
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer);
                 totalMatch.start();
                 isTimerRunning = true;
+
+                startAlarmManager();
             }
         });
 
@@ -131,10 +159,14 @@ public class TimerFragment extends Fragment {
         timerStop.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
+                if (!isTimerRunning) {
+                    return;
+                }
                 totalMatchTimer = totalMatch.getBase() - SystemClock.elapsedRealtime();
                 totalMatch.stop();
                 isTimerRunning = false;
-                //firstCircleAppearCountDown.cancel();
+
+                stopAlarmManager();
             }
         });
 
@@ -153,6 +185,7 @@ public class TimerFragment extends Fragment {
             public void onClick(final View v) {
                 totalMatch.stop();
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer - 1000);
+                stopAlarmManager();
 
                 if (isTimerRunning) {
                     totalMatch.start();
@@ -167,6 +200,7 @@ public class TimerFragment extends Fragment {
             public boolean onLongClick(final View v) {
                 totalMatch.stop();
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer - 30000);
+                stopAlarmManager();
 
                 if (isTimerRunning) {
                     totalMatch.start();
@@ -182,6 +216,8 @@ public class TimerFragment extends Fragment {
             public void onClick(final View v) {
                 totalMatch.stop();
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer + 1000);
+                stopAlarmManager();
+
                 if (isTimerRunning) {
                     totalMatch.start();
                 } else {
@@ -195,6 +231,8 @@ public class TimerFragment extends Fragment {
             public boolean onLongClick(final View v) {
                 totalMatch.stop();
                 totalMatch.setBase(SystemClock.elapsedRealtime() + totalMatchTimer + 30000);
+                stopAlarmManager();
+
                 if (isTimerRunning) {
                     totalMatch.start();
                 } else {
@@ -216,6 +254,17 @@ public class TimerFragment extends Fragment {
 
         }
 
+
+
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 2, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 3, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 4, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 5, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 6, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 7, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        circlePendingIntents.add(PendingIntent.getBroadcast(getActivity(), 8, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+
         return view;
     }
 
@@ -223,6 +272,9 @@ public class TimerFragment extends Fragment {
     public void onPause() {
         super.onPause();
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mSharedPreferences.edit().putLong("timer_last", totalMatchTimer).apply();
+        mSharedPreferences.edit().putLong("timer_sys", SystemClock.elapsedRealtime()).apply();
+        mSharedPreferences.edit().putBoolean("timer_running", isTimerRunning).apply();
     }
 
     public void initChannels(Context context) {
@@ -275,6 +327,8 @@ public class TimerFragment extends Fragment {
                 airDrop.setTextColor(Color.WHITE);
 
                 airDropTimer = 246000;
+
+                mSharedPreferences.edit().remove("timer_last").remove("timer_sys").remove("timer_running").commit();
                 break;
             case R.id.timer_setting:
 
@@ -626,5 +680,25 @@ public class TimerFragment extends Fragment {
             //Reset drop to two minutes-ish (wait for feedback before final)
             airDropTimer = airDropTimer + airDropDelay;
         }
+    }
+
+    private void startAlarmManager() {
+//        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+//        Log.d("TIMER BASE", totalMatch.getBase() + " : " + SystemClock.elapsedRealtime() + " : " + (totalMatch.getBase() - SystemClock.elapsedRealtime() + 10000));
+//
+//        alarmManager.set(AlarmManager.RTC, totalMatch.getBase() + 10000, PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+//
+//        for (PendingIntent i : circlePendingIntents) {
+//            switch (circlePendingIntents.indexOf(i)) {
+//                case 0:
+//                    break;
+//            }
+//        }
+    }
+
+    private void stopAlarmManager() {
+//        Log.d("TIMER", "ALARM STOP");
+//        AlarmManager manager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+//        manager.cancel(PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 }

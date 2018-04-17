@@ -54,5 +54,6 @@ public class Application extends MultiDexApplication {
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("NOTIID", "Refreshed token: " + refreshedToken);
+
     }
 }

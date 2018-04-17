@@ -620,7 +620,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="THIS FEATURE IS IN BETA. PLEASE BE PATIENT \nDO NOT LEAVE THIS PAGE OR YOUR TIMER WILL RESET\nYOUR SCREEN WILL STAY ON WHILE YOU ARE ON THIS PAGE"
+                    android:text="THIS FEATURE IS IN BETA. PLEASE BE PATIENT \nYOU WILL ONLY RECEIVE NOTIFICATIONS WHILE ON THIS PAGE, YOUR TIMER WILL CONTINUE IF YOU LEAVE"
                     android:textColor="#FFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />

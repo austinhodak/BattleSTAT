@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.activity_main.toolbar_title
 
 /**
  * A simple [Fragment] subclass.
@@ -25,20 +26,28 @@ class HomeUpdatesFragment : Fragment() {
                     val homeFragment2 = WindowsUpdatesFragment()
                     activity!!.supportFragmentManager.beginTransaction().replace(R.id.home_frame, homeFragment2)
                             .commit()
+
+                    (activity as MainActivity).toolbar_title.text = "PC Feed"
                 }
                 R.id.xbox_menu -> {
                     val homeFragment2 = XboxRSS()
                     activity!!.supportFragmentManager.beginTransaction().replace(R.id.home_frame, homeFragment2)
                             .commit()
+
+                    (activity as MainActivity).toolbar_title.text = "Xbox Feed"
                 }
                 R.id.mobile_menu -> {
                     val homeFragment2 = MobileRSS()
                     activity!!.supportFragmentManager.beginTransaction().replace(R.id.home_frame, homeFragment2)
                             .commit()
+
+                    (activity as MainActivity).toolbar_title.text = "Mobile Feed"
                 }
             }
             false
         }
+
+        (activity as MainActivity).toolbar_title.text = "PC Feed"
 
         view.findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.pc_menu
         val homeFragment2 = WindowsUpdatesFragment()

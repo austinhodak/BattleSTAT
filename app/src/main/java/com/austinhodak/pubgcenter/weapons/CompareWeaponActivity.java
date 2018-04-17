@@ -359,7 +359,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         db.document(firstWeapon).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
-                if (!documentSnapshot.exists()) {
+                if (documentSnapshot == null || !documentSnapshot.exists()) {
                     Snacky.builder().setActivity(CompareWeaponActivity.this).setText("Error Loading").error().show();
                     return;
                 }
@@ -378,7 +378,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
-                        if (!documentSnapshot.exists()) {
+                        if (documentSnapshot == null || !documentSnapshot.exists()) {
                             return;
                         }
 
@@ -393,7 +393,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
-                        if (!documentSnapshot.exists()) {
+                        if (documentSnapshot == null || !documentSnapshot.exists()) {
                             return;
                         }
 
@@ -407,7 +407,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         db.document(secondWeapon).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
-                if (!documentSnapshot.exists()) {
+                if (documentSnapshot == null || !documentSnapshot.exists()) {
                     Snacky.builder().setActivity(CompareWeaponActivity.this).setText("Error Loading").error().show();
                     return;
                 }

@@ -1169,15 +1169,13 @@
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:descendantFocusability="blocksDescendants"
             android:visibility="gone"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
+            ads:adSize="LARGE_BANNER"
+            ads:adUnitId="ca-app-pub-2379265021766723/1706729617" />
 
         <TextView
             android:layout_width="match_parent"
@@ -1237,7 +1235,8 @@
                             android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Buggy"
+                            android:fontFamily="sans-serif-condensed"
+                            android:text="BUGGY"
                             android:textColor="#FFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -1246,13 +1245,16 @@
                             android:id="@+id/textView10"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1540HP" />
+                            android:text="1540HP"
+                            android:textColor="@color/md_dark_secondary"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <TextView
                         android:id="@+id/buggy_shots"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
                         android:text="--"
                         android:textColor="#FFF"
                         android:textSize="18sp"
@@ -1280,7 +1282,8 @@
                             android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Dacia"
+                            android:fontFamily="sans-serif-condensed"
+                            android:text="DACIA"
                             android:textColor="#FFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -1296,6 +1299,7 @@
                         android:id="@+id/dacia_shots"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
                         android:text="--"
                         android:textColor="#FFF"
                         android:textSize="18sp"
@@ -1323,7 +1327,8 @@
                             android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Motorcycle"
+                            android:fontFamily="sans-serif-condensed"
+                            android:text="MOTORCYCLE"
                             android:textColor="#FFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -1339,6 +1344,7 @@
                         android:id="@+id/mc_shots"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
                         android:text="--"
                         android:textColor="#FFF"
                         android:textSize="18sp"
@@ -1366,6 +1372,7 @@
                             android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-condensed"
                             android:text="PG-117 (Boat)"
                             android:textColor="#FFF"
                             android:textSize="16sp"
@@ -1382,6 +1389,7 @@
                         android:id="@+id/boat_shots"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
                         android:text="--"
                         android:textColor="#FFF"
                         android:textSize="18sp"
@@ -1409,6 +1417,7 @@
                             android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-condensed"
                             android:text="UAZ"
                             android:textColor="#FFF"
                             android:textSize="16sp"
@@ -1425,6 +1434,7 @@
                         android:id="@+id/uaz_shots"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
                         android:text="--"
                         android:textColor="#FFF"
                         android:textSize="18sp"

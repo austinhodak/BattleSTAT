@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PUBG BattleGuide</string>
+    <string name="app_name">BattleGuide for PUBG</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -28,4 +28,7 @@
     <string name="drawer_title_maps">Maps</string>
     <string name="drawer_title_suggestion">Send Suggestion</string>
     <string name="drawer_title_share">Share App</string>
+
+
+    <string name="test_file"></string>
 </resources>

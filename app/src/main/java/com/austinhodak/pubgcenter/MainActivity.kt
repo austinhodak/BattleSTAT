@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.os.Environment
 import android.os.IBinder
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.Fragment
@@ -34,6 +35,7 @@ import com.austinhodak.pubgcenter.loadout.LoadoutCreateMain
 import com.austinhodak.pubgcenter.profile.ProfileActivity
 import com.austinhodak.pubgcenter.weapons.HomeWeaponsFragment
 import com.bumptech.glide.Glide
+import com.crashlytics.android.Crashlytics
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.gms.ads.AdListener
@@ -70,6 +72,7 @@ import kotlinx.android.synthetic.main.activity_main.toolbar_title
 import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.toast
+import java.io.File
 import java.util.Arrays
 
 public class MainActivity : AppCompatActivity() {
@@ -106,6 +109,8 @@ public class MainActivity : AppCompatActivity() {
             return
         }
 
+        checkIfMobileFilesExists()
+
         setSupportActionBar(main_toolbar)
         toolbar_title.text = getString(R.string.drawer_title_weapons)
 
@@ -122,17 +127,26 @@ public class MainActivity : AppCompatActivity() {
         RateDialog.with(this, 1, 5)
 
         MobileAds.initialize(this,
-                "ca-app-pub-1946691221734928~1341566099")
+                "ca-app-pub-2379265021766723~5729735109")
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
             mInterstitialAd = InterstitialAd(this)
-            mInterstitialAd.adUnitId = "ca-app-pub-1946691221734928/2925783847"
+            mInterstitialAd.adUnitId = "ca-app-pub-2379265021766723/5346591720"
             mInterstitialAd.loadAd(AdRequest.Builder().build())
             mInterstitialAd.adListener = object : AdListener() {
                 override fun onAdClosed() {
                     finish()
                 }
             }
+        }
+    }
+
+    private fun checkIfMobileFilesExists() {
+        var file = File(Environment.getExternalStorageDirectory(), "/Android/data/com.tencent.ig/files/UE4Game/ShadowTrackerExtra/ShadowTrackerExtra/Saved/Config/Android/UserCustom.ini")
+        if(file.exists()) {
+            Log.d("FILE", "UserCustom.ini File Exists!")
+        } else {
+            Log.d("FILE", "UserCustom.ini File DOESNT Exist!")
         }
     }
 
@@ -145,11 +159,14 @@ public class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (result.isDrawerOpen) {
+        if (this::result.isInitialized && result.isDrawerOpen) {
             result.closeDrawer()
             return
         }
-        if (mSharedPreferences.getBoolean("removeAds", false)) {
+        if (this::mSharedPreferences.isInitialized && mSharedPreferences.getBoolean("removeAds", false)) {
+            super.onBackPressed()
+            return
+        } else if (!this::mSharedPreferences.isInitialized) {
             super.onBackPressed()
             return
         }
@@ -200,6 +217,12 @@ public class MainActivity : AppCompatActivity() {
         if (!isGooglePlayServicesAvailable(this)) {
             return
         }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+
     }
 
     override fun onDestroy() {
@@ -276,6 +299,7 @@ public class MainActivity : AppCompatActivity() {
                         ammo,
                         equipment,
                         consumables,
+                        PrimaryDrawerItem().withName("Vehicles").withIcon(R.drawable.icons8_car).withIdentifier(610),
                         DividerDrawerItem(),
                         PrimaryDrawerItem().withName(R.string.drawer_title_controls).withIcon(R.drawable.icons8_game_controller_96).withIdentifier(997),
                         PrimaryDrawerItem().withName(getString(string.drawer_title_damagecalc)).withIcon(R.drawable.shield).withIdentifier(998).withSelectable(false),
@@ -303,6 +327,13 @@ public class MainActivity : AppCompatActivity() {
                             i.data = Uri.parse("https://pubg.hellcase.com/fbattleguide")
                             startActivity(i)
                         }
+                    }
+
+                    if (drawerItem.identifier.toString() == "610") {
+                        updateFragment(VehiclesFragment())
+                        toolbar_title.text = "Vehicles"
+                        updateToolbarElevation(15f)
+                        logDrawerEvent("vehicle")
                     }
 
                     if (drawerItem.identifier.toString() == "100") {
@@ -459,15 +490,21 @@ public class MainActivity : AppCompatActivity() {
                 }
             } else {
                 notifyLoggedIn(true)
+
+                Crashlytics.setBool("loggedIn", true)
             }
         } else {
             if (result.getStickyFooterPosition(90001) == -1) {
                 result.addStickyFooterItem(signInDrawerItem)
             }
+
+            Crashlytics.setBool("loggedIn", false)
         }
     }
 
     private fun notifyLoggedIn(setupAccount: Boolean) {
+
+
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         var displayName = currentUser?.displayName

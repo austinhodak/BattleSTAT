@@ -109,6 +109,9 @@ public class WeaponComments extends Fragment {
     }
 
     private void setupAdapter() {
+        if (childEventListener != null)
+        FirebaseDatabase.getInstance().getReference("/comments_weapons/" + weaponKey).removeEventListener(childEventListener);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mSlimAdapter = SlimAdapter.create().register(R.layout.comments_weapons_item, new SlimInjector<DataSnapshot>() {
@@ -137,7 +140,7 @@ public class WeaponComments extends Fragment {
                             return;
                         }
 
-                        if (!dataSnapshot.child("display_name").getValue().toString().equals(data.child("user_name").getValue().toString())) {
+                        if (dataSnapshot.hasChild("display_name") && !dataSnapshot.child("display_name").getValue().toString().equals(data.child("user_name").getValue().toString())) {
                             injector.text(R.id.comment_user, dataSnapshot.child("display_name").getValue().toString());
                         }
 

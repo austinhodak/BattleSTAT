@@ -115,7 +115,7 @@ public class TimerService extends Service {
      * Place the service into the foreground
      */
     public void foreground() {
-        startForeground(NOTIFICATION_ID, createNotification());
+        //startForeground(NOTIFICATION_ID, createNotification());
     }
 
     /**
@@ -130,10 +130,13 @@ public class TimerService extends Service {
      *
      * @return a notification for interacting with the service when in the foreground
      */
-    private Notification createNotification() {
+    private Notification createNotification(String time) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setContentTitle("Timer Active")
-                .setContentText("Tap to return to the timer")
+                .setContentText(time)
+                .setChannelId("blue_zone")
+                .setDefaults(0)
+                .setSound(null)
                 .setSmallIcon(R.drawable.icons8_rifle);
 
         Intent resultIntent = new Intent(this, TimerActivity.class);
