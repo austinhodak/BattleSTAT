@@ -3,4 +3,6 @@
     <declare-styleable name="ShadowView">
         <attr name="android:gravity" />
     </declare-styleable>
+
+    <attr format="color" name="tab_underline"/>
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,8 +9,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <ProgressBar
             android:id="@+id/comments_pg"
@@ -35,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="4dp"
+            android:paddingBottom="64dp"
             android:paddingTop="4dp" />
 
     </FrameLayout>
@@ -43,21 +42,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:gravity="center_vertical">
 
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             app:cardBackgroundColor="#FAFAFA"
-            app:cardCornerRadius="0dp">
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="4dp"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="4dp"
                 android:gravity="center_vertical"
@@ -88,4 +93,4 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

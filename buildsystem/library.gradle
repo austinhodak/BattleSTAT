@@ -1,23 +1,23 @@
 ext.version = [
         firebase : "15.0.0",
-        firebase_ui : "3.3.0",
+        firebase_ui : "4.1.0",
         supportLibraryVersion : "27.1.1"
 ]
 
 def version = ext.version
 
 ext.library = [
-        firebase_core : "com.google.firebase:firebase-core:$version.firebase",
-        firebase_storage : "com.google.firebase:firebase-storage:$version.firebase",
+        firebase_core : "com.google.firebase:firebase-core:16.0.1",
+        firebase_storage : "com.google.firebase:firebase-storage:16.0.1",
         firebase_storage_ui : "com.firebaseui:firebase-ui-storage:$version.firebase_ui",
-        firebase_auth : "com.google.firebase:firebase-auth:$version.firebase",
-        firebase_firestore : "com.google.firebase:firebase-firestore:$version.firebase",
-        firebase_ads : "com.google.firebase:firebase-ads:$version.firebase",
-        firebase_messaging : "com.google.firebase:firebase-messaging:$version.firebase",
-        firebase_config : "com.google.firebase:firebase-config:$version.firebase",
-        firebase_perf : "com.google.firebase:firebase-perf:$version.firebase",
+        firebase_auth : "com.google.firebase:firebase-auth:16.0.2",
+        firebase_firestore : "com.google.firebase:firebase-firestore:17.0.2",
+        firebase_ads : "com.google.firebase:firebase-ads:15.0.1",
+        firebase_messaging : "com.google.firebase:firebase-messaging:17.1.0",
+        firebase_config : "com.google.firebase:firebase-config:16.0.0",
+        firebase_perf : "com.google.firebase:firebase-perf:16.0.0",
         firebase_auth_ui : "com.firebaseui:firebase-ui-auth:$version.firebase_ui",
-        firebase_database : "com.google.firebase:firebase-database:$version.firebase",
+        firebase_database : "com.google.firebase:firebase-database:16.0.1",
         support_appcompat : "com.android.support:appcompat-v7:$version.supportLibraryVersion",
         support_cardview : "com.android.support:cardview-v7:$version.supportLibraryVersion",
         support_recyclerview : "com.android.support:recyclerview-v7:$version.supportLibraryVersion",

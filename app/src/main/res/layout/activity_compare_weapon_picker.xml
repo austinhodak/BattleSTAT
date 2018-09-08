@@ -14,6 +14,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/main_toolbar"
+            app:contentInsetStartWithNavigation="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
@@ -28,11 +29,10 @@
                     android:id="@+id/toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
+                    android:fontFamily="@font/francois_one"
                     android:text=""
                     android:textColor="#FFF"
                     android:textSize="20sp"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
             </RelativeLayout>

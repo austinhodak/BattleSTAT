@@ -23,7 +23,6 @@
             android:paddingTop="4dp">
 
             <View
-                android:id="@+id/weaponItemLeftBar"
                 android:layout_width="4dp"
                 android:layout_height="64dp"
                 android:background="@color/md_green_500"

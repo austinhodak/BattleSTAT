@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,7 +10,9 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="2dp">
+        android:layout_marginTop="2dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,12 +24,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center_horizontal"
                 android:text="OVERVIEW"
+                android:textColor="@color/primary_dark"
                 android:textSize="12sp" />
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_width="20dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center_horizontal"
                 android:background="@color/md_light_dividers" />
 
             <RelativeLayout
@@ -305,82 +312,6 @@
 
 
                 <TextView
-                    android:id="@+id/burst1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/tv8"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="--" />
-
-                <TextView
-                    android:id="@+id/tv8"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:gravity="center_horizontal"
-                    android:text="BURST SHOTS"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/burst2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/tv8"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="--" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
-
-
-                <TextView
-                    android:id="@+id/burstD1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/tv9"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="--" />
-
-                <TextView
-                    android:id="@+id/tv9"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:gravity="center_horizontal"
-                    android:text="BURST DELAY"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/burstD2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/tv9"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="--" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
-
-
-                <TextView
                     android:id="@+id/pickup1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -595,6 +526,82 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tv15"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/burst1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv8"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv8"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="BURST SHOTS"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/burst2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv8"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+
+                <TextView
+                    android:id="@+id/burstD1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv9"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv9"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_horizontal"
+                    android:text="BURST DELAY"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/burstD2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv9"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="--" />

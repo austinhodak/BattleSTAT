@@ -11,7 +11,8 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="4dp"
+        app:cardCornerRadius="8dp">
 
         <LinearLayout
             android:id="@+id/card_top"
@@ -92,9 +93,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="3dp"
                 android:layout_marginTop="12dp"
-                android:background="@color/md_dark_dividers"
+                android:background="@drawable/material_drawer_shadow_bottom"
                 android:visibility="visible" />
 
             <LinearLayout
@@ -194,11 +195,24 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/vehicle_image"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/vehicle_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/material_drawer_shadow_bottom"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

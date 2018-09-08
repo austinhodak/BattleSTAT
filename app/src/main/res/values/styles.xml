@@ -12,29 +12,37 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
+        
+        <item name="tab_underline">@color/colorAccent</item>
+
+        <item name="android:textColor">@color/md_dark_primary_text</item>
     </style>
 
-    <style name="CompareTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
-
-        <item name="android:colorButtonNormal">@color/accent</item>
-    </style>
-
-    <style name="AppThemeLight" parent="MaterialDrawerTheme.Light.DarkToolbar">
+    <style name="AppThemeLight" parent="MaterialDrawerTheme.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/md_grey_50</item>
-        <item name="colorPrimaryDark">@color/md_grey_300</item>
+        <item name="colorPrimary">@color/md_orange_600</item>
+        <item name="colorPrimaryDark">@color/md_orange_700</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="material_drawer_selected_text">@color/md_amber_700</item>
 
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+        <item name="tab_underline">@color/md_grey_900</item>
+
+        <item name="android:textColor">@color/md_light_primary_text</item>
+    </style>
+
+    <style name="CompareTheme" parent="MaterialDrawerTheme.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black_24dp</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="android:statusBarColor">@android:color/white</item>
     </style>
 
     <style name="Profile" parent="MaterialDrawerTheme">
@@ -48,6 +56,74 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
+    </style>
+
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+
+    <style name="DamageChart" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+    </style>
+
+
+
+    <!-- set the rounded drawable as background to your bottom sheet -->
+    <style name="BottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet_dialog_fragment</item>
+    </style>
+
+    <style name="BaseBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
+
+
+    <style name="MainStatsTheme" parent="MaterialDrawerTheme.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black_24dp</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="android:statusBarColor">@android:color/white</item>
+
+    </style>
+
+
+    <style name="MatchDetailsTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/md_amber_900</item>
+        <item name="colorPrimaryDark">#bc5100</item>
+        <item name="colorAccent">@color/md_amber_900</item>
+
+        <item name="material_drawer_selected_text">@color/md_amber_900</item>
+        <item name="material_drawer_selected">#EEEEEE</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="android:statusBarColor">@color/md_orange_700</item>
     </style>
 
 </resources>

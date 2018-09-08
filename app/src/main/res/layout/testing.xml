@@ -11,7 +11,8 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="4dp"
+        app:cardCornerRadius="4dp">
 
         <LinearLayout
             android:id="@+id/card_top"
@@ -25,6 +26,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp">
@@ -46,7 +48,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="--"
-                        android:textColor="@color/md_dark_primary_text"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -55,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="--"
-                        android:textColor="@color/md_dark_secondary" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                 </LinearLayout>
 
@@ -64,9 +66,18 @@
                     android:layout_height="match_parent">
 
                     <ImageView
+                        android:id="@+id/weapon_miramar"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:src="@drawable/cactu"
+                        android:visibility="gone" />
+
+                    <ImageView
                         android:id="@+id/weapon_parachute"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
                         android:src="@drawable/ic_parachute"
                         android:visibility="gone" />
 
@@ -76,6 +87,15 @@
                         android:layout_height="20dp"
                         android:layout_marginLeft="4dp"
                         android:src="@drawable/icons8_trophy"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/weapon_sanhok"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/sanhok_icon"
                         android:visibility="gone" />
 
                     <ImageView
@@ -99,11 +119,11 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="12dp"
-                android:background="@color/md_dark_dividers"
-                android:visibility="visible" />
+                android:layout_height="3dp"
+                android:background="@drawable/material_drawer_shadow_bottom"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -112,6 +132,7 @@
                 android:layout_marginRight="12dp">
 
                 <LinearLayout
+                    android:id="@+id/range_parent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -126,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:text="RANGE"
-                        android:textColor="@color/md_dark_primary_text"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -141,6 +162,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/body_parent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -155,7 +177,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:text="BODY DAMAGE"
-                        android:textColor="@color/md_dark_primary_text"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -170,6 +192,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/head_parent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -184,7 +207,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:text="HEAD DAMAGE"
-                        android:textColor="@color/md_dark_primary_text"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 

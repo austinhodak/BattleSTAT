@@ -1,0 +1,876 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_grey_900"
+    android:fitsSystemWindows="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="50dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:text="WEAPONS"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:visibility="visible"
+                    app:fontFamily="@font/francois_one" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="25dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_horizontal"
+                        android:text="BASE DAMAGE"
+                        android:textColor="#FFF"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/dmg_base"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_horizontal"
+                        android:text="--"
+                        android:textColor="#FFF"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                app:cardBackgroundColor="@color/md_grey_800"
+                app:cardCornerRadius="6dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/cardheader"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:text="BODY PART"
+                            android:textColor="#FFF"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:text="DAMAGE"
+                            android:textColor="#fff"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:gravity="center_horizontal"
+                            android:text="Hits to Kill"
+                            android:textColor="#fff"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/cardheader"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/dmg_head"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingTop="3dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Head"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_neck"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Neck"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_upshld"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Shoulder"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_upperchest"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Upper Chest"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_midchest"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Mid Chest"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_upperstomach"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Upper Stomach"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_lowerstomach"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Lower Stomach"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_upperarm"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Upper Arm"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_lowerarm"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Lower Arm"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_hand"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Hand"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_upleg"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Upper Leg"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="101.20"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="1"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_lowleg"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Lower Leg"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dmg_foot"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingBottom="3dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Foot"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:text="75.9"
+                                android:textColor="#FFF" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="2"
+                                android:textColor="#FFF" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_below="@id/cardheader"
+                        android:background="@drawable/material_drawer_shadow_bottom" />
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/dmg_shotgun_disc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/md_orange_500"
+                app:cardCornerRadius="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_horizontal"
+                        android:text="SHOTGUN DAMAGE IS IF ALL PELLETS HIT \nSINGLE PELLET DAMAGE WILL BE ADDED SOON"
+                        android:textColor="#FFF"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_rounded"
+        android:clipToPadding="true"
+        android:elevation="16dp"
+        android:theme="@style/DamageChart"
+        app:behavior_peekHeight="40dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="OPTIONS"
+                android:textColor="@color/md_black_1000"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center">
+
+                <View
+                    android:layout_width="25dp"
+                    android:layout_height="3dp"
+                    android:background="@drawable/pill_divider" />
+
+            </LinearLayout>
+
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/button_damage"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:text="Damage"
+                    android:textColor="@color/md_orange_500" />
+
+                <Button
+                    android:id="@+id/button_htk"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="1"
+                    android:text="Hits to Kill" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_condensed_bold"
+                android:text="Helmet"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/damage_helmet_radios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/radio_helmet_none"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="None"
+                    android:textColor="#000" />
+
+                <RadioButton
+                    android:id="@+id/radio_helmet_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Level 1"
+                    android:textColor="#000" />
+
+                <RadioButton
+                    android:id="@+id/radio_helmet_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Level 2"
+                    android:textColor="#000" />
+
+                <RadioButton
+                    android:id="@+id/radio_helmet_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Level 3"
+                    android:textColor="#000" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_condensed_bold"
+                android:text="Vest"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/damage_vest_radios"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/radio_vest_none"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="None"
+                    android:textColor="#000" />
+
+                <RadioButton
+                    android:id="@+id/radio_vest_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Level 1"
+                    android:textColor="#000" />
+
+                <RadioButton
+                    android:id="@+id/radio_vest_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Level 2"
+                    android:textColor="#000" />
+
+                <RadioButton
+                    android:id="@+id/radio_vest_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Level 3"
+                    android:textColor="#000" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

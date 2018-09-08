@@ -15,12 +15,13 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabBackground="@color/colorPrimary"
+            app:tabBackground="?attr/colorPrimary"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/colorAccent"
+            app:tabIndicatorColor="?attr/tab_underline"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="#FFF"
-            app:tabTextColor="#DEDEDE" />
+            app:tabSelectedTextColor="?android:attr/textColorPrimary"
+            app:tabIndicatorHeight="2dp"
+            app:tabTextColor="?android:attr/textColorSecondary" />
 
     </android.support.design.widget.AppBarLayout>
 

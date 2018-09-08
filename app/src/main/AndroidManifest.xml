@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.austinhodak.pubgcenter">
+    package="com.respondingio.battlegroundsbuddy">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.vending.BILLING" />
@@ -11,12 +11,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- <uses-feature -->
-    <!-- android:name="android.hardware.location" -->
-    <!-- android:required="false" /> -->
-    <!-- <uses-feature -->
-    <!-- android:name="android.hardware.location.network" -->
-    <!-- android:required="false" /> -->
     <application
         android:name=".Application"
         android:allowBackup="true"
@@ -24,15 +18,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.Launcher"
         tools:ignore="GoogleAppIndexingWarning">
-        <meta-data
-            android:name="firebase_crash_collection_enabled"
-            android:value="@bool/crash_reporting" />
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,13 +28,21 @@
             </intent-filter>
         </activity>
         <activity android:name=".WeaponDetailActivity" />
-        <activity android:name=".loadout.LoadoutCreateMain" />
-        <activity android:name=".damage_calculator.DamageCalcActivity" />
+        <activity
+            android:name=".loadout.LoadoutCreateMain"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".damage_calculator.DamageCalcActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".weapons.CompareWeaponActivity"
             android:theme="@style/CompareTheme" />
-        <activity android:name=".weapons.CompareWeaponPicker" />
-        <activity android:name=".damage_calculator.DamageCalcPicker" />
+        <activity
+            android:name=".weapons.CompareWeaponPicker"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".damage_calculator.DamageCalcPicker"
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -55,6 +50,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <service android:name=".FirebaseIDService">
             <intent-filter>
@@ -62,13 +60,34 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".profile.ProfileActivity" android:theme="@style/Profile"/>
-
-        <activity android:name=".info.TimerActivity"></activity>
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:theme="@style/Profile" />
+        <activity android:name=".info.TimerActivity" />
+        <activity
+            android:name=".weapons.WeaponDamageChart"
+            android:theme="@style/AppTheme" />
 
         <service android:name=".info.TimerService" />
 
-        <receiver android:name=".info.AlarmReceiver"/>
+        <receiver android:name=".info.AlarmReceiver" />
+
+        <activity android:name=".SocialLinksActivity" />
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${crashEnabled}" />
+
+        <activity
+            android:name=".models.Player$StatsMainActivity"
+            android:theme="@style/MainStatsTheme" />
+        <activity
+            android:name=".stats.GameStatsActivity"
+            android:theme="@style/MainStatsTheme" />
+        <activity android:name=".stats.MatchDetailActivity" android:theme="@style/MatchDetailsTheme"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />
     </application>
 
 </manifest>

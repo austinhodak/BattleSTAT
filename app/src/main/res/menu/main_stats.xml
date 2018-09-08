@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/your_stats_menu"
+        android:icon="@drawable/icons8combochart96"
+        android:title="Stats" />
+
+    <item
+        android:id="@+id/matches_menu"
+        android:icon="@drawable/icons8gamecontroller96"
+        android:title="Matches" />
+
+    <!--<item
+        android:id="@+id/stats_more"
+        android:icon="@drawable/icons8_more_color"
+        android:title="More" />-->
+</menu>

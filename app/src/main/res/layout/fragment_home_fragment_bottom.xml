@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/md_light_background"
     android:orientation="vertical"
-    tools:context=".HomeUpdatesFragment">
+    tools:context=".rss.HomeUpdatesFragment">
 
     <FrameLayout
         android:id="@+id/home_frame"

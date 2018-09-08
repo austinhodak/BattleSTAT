@@ -26,7 +26,6 @@
             android:paddingTop="4dp">
 
             <View
-                android:id="@+id/weaponItemLeftBar"
                 android:layout_width="4dp"
                 android:layout_height="64dp"
                 android:background="@color/md_green_500"
@@ -68,7 +67,6 @@
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:id="@+id/weapon_airdrop_icon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="4dp"
@@ -76,7 +74,6 @@
                         android:visibility="gone" />
 
                     <ImageView
-                        android:id="@+id/weapon_best_icon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="4dp"
@@ -111,19 +108,10 @@
                 android:layout_marginTop="8dp">
 
                 <ImageView
-                    android:id="@+id/heart_icon"
+                    android:id="@+id/windows_icon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/ic_favorite_24dp"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/fav_icon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_star_gold_24dp"
+                    android:src="@drawable/icons_windows"
                     android:visibility="gone" />
 
             </LinearLayout>

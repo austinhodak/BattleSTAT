@@ -95,7 +95,6 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:id="@+id/textView2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -220,7 +219,6 @@
             android:layout_marginRight="8dp">
 
             <android.support.v7.widget.CardView
-                android:id="@+id/weaponBaseDamageCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"
@@ -390,7 +388,6 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/weaponTBSCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -433,10 +430,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/overviewBurstSection"
+            android:id="@+id/burst_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:visibility="gone"
             android:layout_marginRight="8dp">
 
             <android.support.v7.widget.CardView
@@ -1175,7 +1173,7 @@
             android:descendantFocusability="blocksDescendants"
             android:visibility="gone"
             ads:adSize="LARGE_BANNER"
-            ads:adUnitId="ca-app-pub-2379265021766723/1706729617" />
+            ads:adUnitId="ca-app-pub-1946691221734928/9265393389" />
 
         <TextView
             android:layout_width="match_parent"
@@ -1188,6 +1186,7 @@
             android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
+            app:cardCornerRadius="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
@@ -1204,14 +1203,16 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:fontFamily="@font/roboto_medium"
                     android:text="SHOTS TO DESTROY VEHICLE"
                     android:textColor="#FFF"
-                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="20dp"
+                    android:layout_height="2dp"
                     android:layout_marginBottom="12dp"
                     android:background="@color/md_dark_dividers" />
 
@@ -1232,7 +1233,6 @@
 
 
                         <TextView
-                            android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-condensed"
@@ -1242,7 +1242,6 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textView10"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1540HP"
@@ -1279,7 +1278,6 @@
 
 
                         <TextView
-                            android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-condensed"
@@ -1289,7 +1287,6 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textView10"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1820HP" />
@@ -1324,7 +1321,6 @@
 
 
                         <TextView
-                            android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-condensed"
@@ -1334,7 +1330,6 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textView10"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1025HP" />
@@ -1369,7 +1364,6 @@
 
 
                         <TextView
-                            android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-condensed"
@@ -1379,7 +1373,6 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textView10"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1520HP" />
@@ -1414,7 +1407,6 @@
 
 
                         <TextView
-                            android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-condensed"
@@ -1424,7 +1416,6 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textView10"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1820HP" />
@@ -1457,6 +1448,7 @@
             android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
+            app:cardCornerRadius="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
@@ -1468,6 +1460,41 @@
                 <android.support.v7.widget.RecyclerView
 
                     android:id="@+id/weaponDetailAttachmentRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:focusableInTouchMode="false"
+            android:id="@+id/weaponDetailSoundsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:text="SOUNDS"
+            android:textColor="#FFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.CardView
+            android:focusableInTouchMode="false"
+            android:id="@+id/weaponDetailSoundsCard"
+            app:cardCornerRadius="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/weaponDetailSoundsList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"

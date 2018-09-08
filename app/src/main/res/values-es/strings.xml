@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PUBG BattleGuide</string>
+    <string name="app_name">Battle Buddy</string>
     <string name="drawer_title_update">Actualizaciones</string>
     <string name="drawer_title_weapons">Armas</string>
 </resources>
