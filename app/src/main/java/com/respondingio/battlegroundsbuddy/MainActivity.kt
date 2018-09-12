@@ -74,7 +74,7 @@ import com.respondingio.battlegroundsbuddy.loadout.LoadoutBestTabs
 import com.respondingio.battlegroundsbuddy.loadout.LoadoutCreateMain
 import com.respondingio.battlegroundsbuddy.profile.ProfileActivity
 import com.respondingio.battlegroundsbuddy.rss.HomeUpdatesFragment
-import com.respondingio.battlegroundsbuddy.stats.GameStatsActivity
+import com.respondingio.battlegroundsbuddy.stats.MainStatsActivity
 import com.respondingio.battlegroundsbuddy.weapons.HomeWeaponsFragment
 import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_main.appbar
@@ -100,6 +100,8 @@ public class MainActivity : AppCompatActivity() {
 
     private lateinit var mSharedPreferences: SharedPreferences
 
+    lateinit var newSharedPreferences: SharedPreferences
+
     private val removeAds = SecondaryDrawerItem().withIdentifier(9001).withName("Remove Ads").withIcon(R.drawable.icons8_remove_ads_96).withSelectable(false)
 
     private val signInDrawerItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_password).withSelectable(false).withName("Login or Sign Up").withIdentifier(90001)
@@ -116,6 +118,7 @@ public class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
+        newSharedPreferences = this.getSharedPreferences("com.respondingio.battlegroundsbuddy", Context.MODE_PRIVATE)
 
         if (mSharedPreferences.getBoolean("night_mode", true)) {
             setTheme(R.style.AppTheme)
@@ -216,7 +219,7 @@ public class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
         var launchCount = mSharedPreferences.getInt("launchCount", 0)
-        if (launchCount >= 3) {
+        if (launchCount >= 2) {
             try {
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
@@ -256,6 +259,12 @@ public class MainActivity : AppCompatActivity() {
                     mSharedPreferences.edit().putBoolean("removeAds", false).apply()
                     //result.addStickyFooterItem(removeAds)
                 }
+
+                if (ownedItems2.contains("plus_v1")) {
+                    newSharedPreferences.edit().putBoolean("premiumV1", true).apply()
+                } else {
+                    newSharedPreferences.edit().putBoolean("premiumV1", false).apply()
+                }
             }
         } catch (e: Exception) {
             Log.e("OWNED", e.toString() + e.message)
@@ -291,8 +300,6 @@ public class MainActivity : AppCompatActivity() {
         if (this::listener.isInitialized)
         mSharedPreferences.registerOnSharedPreferenceChangeListener(listener)
         checkAuthStatus()
-
-        loadSteamUserCount()
 
         try {
             if (scheduledRestart) {
@@ -337,6 +344,7 @@ public class MainActivity : AppCompatActivity() {
                         ProfileSettingDrawerItem().withName("Logout").withIcon(R.drawable.icons8_logout).withOnDrawerItemClickListener { _, _, _ ->
 
                             mSharedPreferences.edit().remove("stats_selected_player").remove("stats_selected_player_id").apply()
+                            newSharedPreferences.edit().remove("selected-player-id").apply()
 
                             AuthUI.getInstance().signOut(this).addOnCompleteListener {
                                 Snacky.builder().setActivity(this).info().setText("Signed Out.").show()
@@ -390,7 +398,7 @@ public class MainActivity : AppCompatActivity() {
                                 //SecondaryDrawerItem().withIdentifier(301).withName(R.string.drawer_title_bestloadouts).withIcon(R.drawable.loadout_star)
                         //),
                             PrimaryDrawerItem().withName(getString(string.drawer_title_maps)).withSelectable(false).withIcon(R.drawable.map_96).withIdentifier(200),
-                            PrimaryDrawerItem().withName(R.string.drawer_title_timer).withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge(getString(string.beta)),
+                            PrimaryDrawerItem().withName(R.string.drawer_title_timer).withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge("BETA"),
                         updates
                         ),
                         DividerDrawerItem(),
@@ -417,10 +425,13 @@ public class MainActivity : AppCompatActivity() {
                 .withOnDrawerItemClickListener { _, _, drawerItem ->
                     if (drawerItem.identifier.toString() == "9999") {
                         if (FirebaseAuth.getInstance().currentUser == null) {
-                            Snacky.builder().setActivity(this).error().setText("You must be logged in to use this feature.").setDuration(Snacky.LENGTH_SHORT).show()
+                            Snacky.builder().setActivity(this).error().setText("You must be logged in to use this feature.").setDuration(Snacky.LENGTH_LONG).setAction("LOGIN") {
+                                launchSignIn()
+                            }.show()
                             return@withOnDrawerItemClickListener false
                         }
-                        startActivity(Intent(this, GameStatsActivity::class.java))
+
+                        startActivity(Intent(this, MainStatsActivity::class.java))
                     }
 
                     if (drawerItem.identifier.toString() == "610") {
@@ -591,10 +602,10 @@ public class MainActivity : AppCompatActivity() {
             result.addItem(removeAds)
         }
 
-        if (BuildConfig.DEBUG) {
-            result.addItemAtPosition(PrimaryDrawerItem().withName("Game Stats").withIcon(R.drawable.icons8_chart).withSelectable(false).withIconTintingEnabled(false).withIdentifier(9999), 1)
+        //if (BuildConfig.DEBUG) {
+            result.addItemAtPosition(PrimaryDrawerItem().withName("Player Stats").withBadge("BETA").withIcon(R.drawable.icons8_chart).withSelectable(false).withIconTintingEnabled(false).withIdentifier(9999), 1)
             result.addItemAtPosition(DividerDrawerItem().withIdentifier(91001), 2)
-        }
+        //}
 
         if (FirebaseAuth.getInstance().currentUser != null) {
             //Logged In
@@ -617,7 +628,7 @@ public class MainActivity : AppCompatActivity() {
            // Crashlytics.setBool("loggedIn", false)
         }
 
-
+        loadSteamUserCount()
     }
 
     private fun notifyLoggedIn(setupAccount: Boolean) {
@@ -639,7 +650,6 @@ public class MainActivity : AppCompatActivity() {
 
         if (result.getDrawerItem(90002) == null) {
             result.addItemAtPosition(profileItem, 1)
-
         }
 
         if (setupAccount)
@@ -685,7 +695,6 @@ public class MainActivity : AppCompatActivity() {
         headerResult.updateProfile(header)
 
         result.removeItem(90002)
-        result.removeItem(91001)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -779,14 +788,15 @@ public class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSteamUserCount() {
-
-
         try {
             val queue = Volley.newRequestQueue(this)
             val url = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080"
 
             val stringRequest = JsonObjectRequest(Request.Method.GET, url, null,
                     Response.Listener { response ->
+                        if (!this::headerResult.isInitialized) {
+                            return@Listener
+                        }
                         val amount = java.lang.Double.parseDouble(response.getJSONObject("response").getString("player_count"))
                         val formatter = DecimalFormat("#,###")
                         val formatted = formatter.format(amount)
@@ -794,9 +804,7 @@ public class MainActivity : AppCompatActivity() {
                         val header = headerResult.profiles[0]
                         header.withEmail("$formatted Current Steam Players")
 
-                        if (this::headerResult.isInitialized) {
-                            headerResult.updateProfile(header)
-                        }
+                        headerResult.updateProfile(header)
                     },
                     Response.ErrorListener { error ->
                         // TODO: Handle error

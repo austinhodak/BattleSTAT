@@ -157,6 +157,13 @@ public class AddPlayerBottomSheet extends BottomSheetDialogFragment {
 
                         int statusCode = (int) task.getResult().get("statusCode");
                         if (statusCode == 200) {
+                            if (getActivity() instanceof  MainStatsActivity) {
+                                MainStatsActivity activity = (MainStatsActivity) getActivity();
+                                if (activity.getPlayersMap().containsKey(userName)) {
+                                    //Player is in list. Switch to them.
+                                    activity.setPlayerSelected(activity.getPlayersMap().get(userName));
+                                }
+                            }
                             Snacky.builder().setActivity(getActivity()).success().setText("Player found and added!").setDuration(
                                     Snacky.LENGTH_SHORT).show();
                             dismiss();

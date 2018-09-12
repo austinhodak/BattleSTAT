@@ -2,9 +2,7 @@ package com.respondingio.battlegroundsbuddy;
 
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDexApplication;
-
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.FirebaseDatabase;
@@ -36,7 +34,6 @@ public class Application extends MultiDexApplication {
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true);
             final Fabric fabric = new Fabric.Builder(this)
                     .kits(new Crashlytics())
-                    .debuggable(true)
                     .build();
             Fabric.with(fabric);
         }
@@ -50,12 +47,9 @@ public class Application extends MultiDexApplication {
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-        FirebaseRemoteConfig.getInstance().fetch().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(final Void aVoid) {
-                FirebaseRemoteConfig.getInstance().activateFetched();
-                Seasons.getInstance().withAPIKey(FirebaseRemoteConfig.getInstance().getString("pubg_api_key")).loadSeasons();
-            }
+        FirebaseRemoteConfig.getInstance().fetch().addOnSuccessListener(aVoid -> {
+            FirebaseRemoteConfig.getInstance().activateFetched();
+            Seasons.getInstance().withAPIKey(FirebaseRemoteConfig.getInstance().getString("pubg_api_key")).loadSeasons();
         });
     }
 

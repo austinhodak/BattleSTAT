@@ -1,30 +1,39 @@
 package com.respondingio.battlegroundsbuddy.models
 
-data class MatchRoster(
+import java.io.Serializable
+
+data class MatchRoster (
         val type: String,
         val relationships: Relationships,
         val id: String,
         val attributes: RosterAttributes
+) : Serializable
+
+data class RosterAttributes (
+        val won: Boolean,
+        val shardId: String,
+        val stats: AttributesStats
 )
 
-data class RosterAttributes(
-    val won: Boolean,
-    val shardId: String
+data class Relationships (
+        val participants: Participants,
+        val team: Team
 )
 
-data class Relationships(
-        val participants: Participants
-)
-
-data class Participants(
+data class Participants (
         val data: List<Participant>
 )
 
-data class Participant(
+data class Participant (
         val type: String,
         val id: String
 )
 
-data class Team(
+data class Team (
         val data: String
+)
+
+data class AttributesStats (
+        val rank: Int,
+        val teamId: Int
 )

@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+
+
     <application
         android:name=".Application"
         android:allowBackup="true"
@@ -20,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher"
         tools:ignore="GoogleAppIndexingWarning">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -88,6 +91,14 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />
+
+        <activity android:name=".stats.StatsOnboarding" />
+
+        <activity android:name=".stats.SinglePlayerStatsActivity" android:theme="@style/MatchDetailsTheme" />
+
+        <activity android:name=".stats.MapTileActivity" android:theme="@style/MatchDetailsTheme" />
+
+        <activity android:name=".stats.MainStatsActivity" android:theme="@style/MainStatsTheme" />
     </application>
 
 </manifest>

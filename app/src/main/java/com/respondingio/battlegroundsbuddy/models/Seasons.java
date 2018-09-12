@@ -135,6 +135,25 @@ public class Seasons {
         return seasonList;
     }
 
+    public List<String> getSeasonListArrayOG(int region) {
+        //1-pc,2-xbox
+        Log.d("SEASONS OBJ", "getSeasonListArray: " + region);
+        List<String> seasonList = new ArrayList<>();
+        if (region == 1) {
+            for (Map.Entry entry: getPcSeasons().entrySet()) {
+                seasonList.add((String) entry.getKey());
+            }
+        } else if (region == 2) {
+            for (Map.Entry entry: getXboxSeasons().entrySet()) {
+                seasonList.add((String) entry.getKey());
+            }
+        }
+
+        Collections.sort(seasonList);
+        Collections.reverse(seasonList);
+        return seasonList;
+    }
+
     public Map<String, Boolean> getPcSeasons() {
         return pcSeasons;
     }
@@ -158,7 +177,7 @@ public class Seasons {
             case 2:
                 return this.getSeasonListArray(region).indexOf(Seasons.getInstance().getXboxCurrentSeason() + " (Current)");
             default:
-                return this.getSeasonListArray(region).indexOf(Seasons.getInstance().getPcCurrentSeason() + " (Current)");
+                return this.getSeasonListArray(1).indexOf(Seasons.getInstance().getPcCurrentSeason() + " (Current)");
         }
 
     }

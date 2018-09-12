@@ -93,37 +93,43 @@
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
 
-    <style name="MainStatsTheme" parent="MaterialDrawerTheme.Light">
+    <style name="MainStatsTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">#e65100</item>
+        <item name="colorPrimaryDark">@color/md_deep_orange_700</item>
+        <item name="colorAccent">@color/md_amber_900</item>
 
-        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+        <item name="material_drawer_selected_text">@color/md_orange_A700</item>
+        <item name="material_drawer_selected">#EEEEEE</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
 
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black_24dp</item>
+        <item name="android:statusBarColor">@color/md_deep_orange_800</item>
 
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
-        <item name="android:statusBarColor">@android:color/white</item>
-
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
     </style>
 
 
     <style name="MatchDetailsTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/md_amber_900</item>
-        <item name="colorPrimaryDark">#bc5100</item>
+        <item name="colorPrimary">#e65100</item>
+        <item name="colorPrimaryDark">#e65100</item>
         <item name="colorAccent">@color/md_amber_900</item>
 
-        <item name="material_drawer_selected_text">@color/md_amber_900</item>
+        <item name="material_drawer_selected_text">@color/md_orange_A700</item>
         <item name="material_drawer_selected">#EEEEEE</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
 
-        <item name="android:statusBarColor">@color/md_orange_700</item>
+        <item name="android:statusBarColor">#e65100</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+    </style>
+
+    <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">#FFF</item>
     </style>
 
 </resources>

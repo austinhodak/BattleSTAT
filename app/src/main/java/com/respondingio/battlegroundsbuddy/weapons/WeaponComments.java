@@ -303,7 +303,11 @@ public class WeaponComments extends Fragment {
             Map<String, Object> childUpdates = new HashMap<>();
             childUpdates.put(path + "/comment", comment);
             childUpdates.put(path + "/user", UID);
-            childUpdates.put(path + "/user_name", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName().isEmpty()) {
+                childUpdates.put(path + "/user_name", UID);
+            } else {
+                childUpdates.put(path + "/user_name", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            }
             childUpdates.put(path + "/timestamp", dateFormat.format(date));
             childUpdates.put(path + "/weapon_path", weaponPath);
 
@@ -315,14 +319,14 @@ public class WeaponComments extends Fragment {
                     buttonSend.setEnabled(true);
                     commentEditText.setEnabled(true);
                     if (!task.isSuccessful()) {
-                        Snacky.builder().setActivity(getActivity()).error().setText("Error posting.").show();
+                        Snacky.builder().setActivity(requireActivity()).error().setText("Error posting.").show();
                         return;
                     }
 
                     commentEditText.getText().clear();
 
                     if (isAdded()) {
-                        Snacky.builder().setActivity(getActivity()).setActionTextColor(Color.WHITE).setActionText("UNDO")
+                        Snacky.builder().setActivity(requireActivity()).setActionTextColor(Color.WHITE).setActionText("UNDO")
                                 .setActionClickListener(new OnClickListener() {
                                     @Override
                                     public void onClick(final View v) {

@@ -110,6 +110,7 @@ public class WeaponDetailActivity extends AppCompatActivity {
             bundle.putString("weaponClass", weaponClass);
             bundle.putString("weaponPath", weaponID);
             bundle.putString("weaponKey", weaponKey);
+            bundle.putString("weaponName", weaponName);
             currentFragment.setArguments(bundle);
             return currentFragment;
         }

@@ -209,6 +209,8 @@ public class WeaponDetailOverview extends Fragment {
     @BindView(R.id.weaponDetailSoundsCard) CardView soundsCard;
     @BindView(R.id.weaponDetailSoundsList) RecyclerView soundsList;
 
+    @BindView(R.id.overview_full_stats) CardView fullDamageCard;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private SharedPreferences mSharedPreferences;
@@ -271,6 +273,20 @@ public class WeaponDetailOverview extends Fragment {
                 }
             }, 2000);
         }
+
+        fullDamageCard.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                Intent intent = new Intent(requireActivity(),
+                        WeaponDamageChart.class);
+                intent.putExtra("weaponPath", getArguments().getString("weaponPath"));
+                intent.putExtra("weaponKey",
+                        getArguments().getString("weaponKey"));
+                intent.putExtra("weaponClass", getArguments().getString("weaponClass"));
+                intent.putExtra("weaponName", getArguments().getString("weaponName"));
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

@@ -110,7 +110,7 @@ public class HomeAttachmentsList extends Fragment {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(final QuerySnapshot documentSnapshots, final FirebaseFirestoreException e) {
-                        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
+                        SharedPreferences mSharedPreferences = requireActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
 
                         data.clear();
                         try {
@@ -136,7 +136,7 @@ public class HomeAttachmentsList extends Fragment {
     }
 
     private void setupAdapter(final int position) {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         slimAdapter = SlimAdapter.create()
                 .register(R.layout.weapon_list_item_card,
@@ -163,7 +163,7 @@ public class HomeAttachmentsList extends Fragment {
                                         DrawableCrossFadeFactory factory =
                                                 new Builder().setCrossFadeEnabled(true).build();
 
-                                        GlideApp.with(getActivity())
+                                        GlideApp.with(requireActivity())
                                                 .load(gsReference)
                                                 .transition(withCrossFade(factory))
                                                 .override(100,100)
@@ -195,7 +195,7 @@ public class HomeAttachmentsList extends Fragment {
                                             stats = data.getString("stats").replaceAll("<br>", "");
                                             stats = stats.replace(" +", "\n+");
                                             stats = stats.replace(" -", "\n-");
-                                            MaterialDialog materialDialog = new MaterialDialog.Builder(getActivity())
+                                            MaterialDialog materialDialog = new MaterialDialog.Builder(requireActivity())
                                                     .title(data.getString("name"))
                                                     .content(stats)
                                                     .contentColorRes(R.color.md_white_1000)

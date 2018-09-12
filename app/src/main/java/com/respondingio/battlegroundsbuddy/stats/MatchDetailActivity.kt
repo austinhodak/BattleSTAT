@@ -1,14 +1,20 @@
 package com.respondingio.battlegroundsbuddy.stats
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -18,8 +24,20 @@ import co.zsmb.materialdrawerkt.draweritems.badge
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import com.afollestad.materialdialogs.MaterialDialog
-import com.android.volley.*
-import com.android.volley.toolbox.*
+import com.android.volley.Cache
+import com.android.volley.NetworkResponse
+import com.android.volley.ParseError
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.BasicNetwork
+import com.android.volley.toolbox.DiskBasedCache
+import com.android.volley.toolbox.HttpHeaderParser
+import com.android.volley.toolbox.HurlStack
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.holder.StringHolder
@@ -28,9 +46,12 @@ import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
 import com.respondingio.battlegroundsbuddy.models.MatchParticipant
+import com.respondingio.battlegroundsbuddy.models.MatchRoster
 import de.mateware.snacky.Snacky
-import kotlinx.android.synthetic.main.activity_match_detail.*
-import kotlinx.android.synthetic.main.fragment_stats_kill_feed.*
+import kotlinx.android.synthetic.main.activity_match_detail.app_bar
+import kotlinx.android.synthetic.main.activity_match_detail.match_detail_toolbar
+import kotlinx.android.synthetic.main.activity_match_detail.toolbar_title
+import kotlinx.android.synthetic.main.fragment_stats_kill_feed.kill_feed_rv
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import org.json.JSONArray
@@ -39,7 +60,9 @@ import org.json.JSONObject
 import java.io.UnsupportedEncodingException
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.TimeZone
 
 
 class MatchDetailActivity : AppCompatActivity() {
@@ -51,7 +74,8 @@ class MatchDetailActivity : AppCompatActivity() {
     private var headerTimeTV: TextView? = null
     private var headerRegionTV: TextView? = null
     private var headerMapIV: ImageView? = null
-    private var currentPlayerID: String? = null
+    var currentPlayerID: String? = null
+    var currentPlayerAccountID: String? = null
 
     var requestQueue: RequestQueue? = null
 
@@ -69,6 +93,8 @@ class MatchDetailActivity : AppCompatActivity() {
             Snacky.builder().setActivity(this).error().setText("No Match ID").show()
             return
         }
+
+        toolbar_title.text = "Your Match Stats"
 
         val matchID = intent.getStringExtra("matchID")
         val regionID = intent.getStringExtra("regionID")
@@ -146,13 +172,15 @@ class MatchDetailActivity : AppCompatActivity() {
                                 .title("Match Data Not Available")
                                 .canceledOnTouchOutside(false)
                                 .cancelable(false)
-                                .content("Most likely the match you are trying to view is older than 15 days old, we cannot pull data for matches older than 15 days.")
+                                .content("Most likely the match you are trying to view is older than 15 days, we cannot pull data for matches older than 15 days.")
                                 .positiveText("OKAY")
                                 .onPositive { _, _ ->
                                     finish()
                                 }
                                 .show()
                     }
+                } else {
+                    finish()
                 }
                 return super.parseNetworkError(volleyError)
             }
@@ -172,13 +200,19 @@ class MatchDetailActivity : AppCompatActivity() {
         requestQueue?.add(jsonArrayRequest)
     }
 
-    private var participantList = ArrayList<MatchParticipant>()
+    var participantList = ArrayList<MatchParticipant>()
+    var participantHash = HashMap<String, MatchParticipant>()
+    var rosterList = ArrayList<MatchRoster>()
 
-    private var matchData: JSONObject? = null
+    var currentPlayerRoster: MatchRoster? = null
+
+    var matchData: JSONObject? = null
 
     private fun parseMatchData(json: JSONObject?, dialog: MaterialDialog?) {
 
         participantList.clear()
+        rosterList.clear()
+
         matchData = json
 
         headerMapIV?.setImageDrawable(resources.getDrawable(getMapIcon(json?.getJSONObject("data")?.getJSONObject("attributes")?.getString("mapName").toString())))
@@ -202,7 +236,25 @@ class MatchDetailActivity : AppCompatActivity() {
             if (includedObject.getString("type") == "asset") {
                 loadTelemetryData(includedObject.getJSONObject("attributes").getString("URL"), dialog)
             } else if (includedObject.getString("type") == "participant") {
-                participantList.add(Gson().fromJson(includedObject.toString(), MatchParticipant::class.java))
+                val participant = Gson().fromJson(includedObject.toString(), MatchParticipant::class.java)
+                participantList.add(participant)
+                participantHash.put(includedObject.getString("id"), participant)
+
+                if (participant.attributes.stats.playerId == currentPlayerID) {
+                    currentPlayerAccountID = participant.id
+                }
+            } else if (includedObject.getString("type") == "roster") {
+                val roster: MatchRoster = Gson().fromJson(includedObject.toString(), MatchRoster::class.java)
+                rosterList.add(roster)
+            }
+        }
+
+        for (roster in rosterList) {
+            for (rosterItem in roster.relationships.participants.data) {
+                if (rosterItem.id == currentPlayerAccountID) {
+                    currentPlayerRoster = roster
+                    Log.d("ROSTER", rosterItem.id)
+                }
             }
         }
 
@@ -266,6 +318,19 @@ class MatchDetailActivity : AppCompatActivity() {
             }
 
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
+                runOnUiThread {
+                    dialog?.dismiss()
+                    MaterialDialog.Builder(this@MatchDetailActivity)
+                            .title("Unknown Error Occurred")
+                            .canceledOnTouchOutside(false)
+                            .cancelable(false)
+                            .content("Either pick a different match or try again later. If this match is older than 15 days, we cannot pull data for it.")
+                            .positiveText("OKAY")
+                            .onPositive { _, _ ->
+                                finish()
+                            }
+                            .show()
+                }
                 return super.parseNetworkError(volleyError)
             }
 
@@ -288,18 +353,50 @@ class MatchDetailActivity : AppCompatActivity() {
             headerViewRes = R.layout.drawer_header
             headerDivider = false
             stickyFooterShadow = false
+            selectedItem = 0
 
             primaryItem("Your Match Stats") {
                 icon = R.drawable.icons8_person_male
                 onClick { _, _, _ ->
-                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, EmptyFragment())
+                    val bundle = Bundle()
+                    bundle.putString("playerID", currentPlayerID)
+                    bundle.putSerializable("player", participantHash[currentPlayerAccountID])
+                    bundle.putSerializable("killList", killFeedList)
+                    bundle.putString("matchCreatedAt", matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("createdAt"))
+                    val matchesPlayerStatsFragment = MatchPlayerStatsFragment()
+                    matchesPlayerStatsFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
                             .commit()
+
+                    updateToolbarElevation(0f)
+                    updateToolbarFlags(false)
+
+                    toolbar_title.text = "Your Match Stats"
                     false
                 }
             }
             primaryItem("Your Team's Stats") {
                 icon = R.drawable.icons8_group
                 identifier = 12
+                onClick { view, position, drawerItem ->
+                    val bundle = Bundle()
+                    bundle.putString("playerID", currentPlayerID)
+                    bundle.putSerializable("player", participantHash[currentPlayerAccountID])
+                    bundle.putSerializable("killList", killFeedList)
+                    bundle.putString("matchCreatedAt", matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("createdAt"))
+                    val matchesPlayerStatsFragment = MatchYourTeamsStatsFragment()
+                    matchesPlayerStatsFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
+                            .commit()
+
+                    toolbar_title.text = "Your Team's Stats"
+                    updateToolbarElevation(0f)
+
+                    var params = match_detail_toolbar.layoutParams as AppBarLayout.LayoutParams
+                    params.scrollFlags = 0
+                    app_bar.requestLayout()
+                    false
+                }
             }
             primaryItem("Teams") {
                 icon = R.drawable.icons8_parallel_tasks
@@ -310,6 +407,14 @@ class MatchDetailActivity : AppCompatActivity() {
                     colorRes = R.color.md_orange_600
                 }
                 identifier = 11
+                onClick { _, _, _ ->
+                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, MatchTeamsFragment())
+                            .commit()
+                    toolbar_title.text = "Teams"
+                    updateToolbarElevation(15f)
+                    updateToolbarFlags(true)
+                    false
+                }
             }
             primaryItem("Players") {
                 icon = R.drawable.icons8_player_male
@@ -320,6 +425,13 @@ class MatchDetailActivity : AppCompatActivity() {
                     colorRes = R.color.md_orange_600
                 }
                 identifier = 10
+                onClick { view, position, drawerItem ->
+                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, MatchPlayersFragment()).commit()
+                    toolbar_title.text = "Players"
+                    updateToolbarElevation(15f)
+                    updateToolbarFlags(true)
+                    false
+                }
             }
             divider {}
             primaryItem("Kill Feed") {
@@ -327,6 +439,9 @@ class MatchDetailActivity : AppCompatActivity() {
                 onClick { view, position, drawerItem ->
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, KillFeedFragment())
                             .commit()
+                    toolbar_title.text = "Kill Feed"
+                    updateToolbarElevation(0f)
+                    updateToolbarFlags(false)
                     false
                 }
             }
@@ -343,7 +458,21 @@ class MatchDetailActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         setSupportActionBar(match_detail_toolbar)
-        title = "Match Details"
+        toolbar_title.text = "Your Match Stats"
+    }
+
+    private fun updateToolbarElevation(int: Float) {
+        ViewCompat.setElevation(app_bar, int)
+    }
+
+    private fun updateToolbarFlags(canShowOnScroll: Boolean) {
+        var params = match_detail_toolbar.layoutParams as AppBarLayout.LayoutParams
+        if (canShowOnScroll) {
+            params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        } else {
+            params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+        }
+        app_bar.requestLayout()
     }
 
     class EmptyFragment: Fragment() {
@@ -369,32 +498,56 @@ class MatchDetailActivity : AppCompatActivity() {
         killFeedList.sortedWith(compareBy { it._D })
 
         dialog?.dismiss()
+        //mDrawer.openDrawer()
+
+        val bundle = Bundle()
+        bundle.putString("playerID", currentPlayerID)
+        bundle.putSerializable("player", participantHash[currentPlayerAccountID])
+        bundle.putSerializable("participantList", participantList)
+        bundle.putSerializable("rosterList", rosterList)
+        bundle.putSerializable("killList", killFeedList)
+        bundle.putString("matchCreatedAt", matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("createdAt"))
+        val matchesPlayerStatsFragment = MatchPlayerStatsFragment()
+        matchesPlayerStatsFragment.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
+                .commit()
+
+        updateToolbarElevation(0f)
+        updateToolbarFlags(false)
+
+        toolbar_title.text = "Your Match Stats"
     }
 
-    private var killFeedList = ArrayList<LogPlayerKill>()
+    var killFeedList = ArrayList<LogPlayerKill>()
 
     class KillFeedFragment: Fragment() {
 
-        private var killFeedList: ArrayList<LogPlayerKill>? = null
+        private var killFeedList: List<LogPlayerKill> = ArrayList()
+        private var sortIndex = 0
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+            //setHasOptionsMenu(true)
             return inflater.inflate(R.layout.fragment_stats_kill_feed, container, false)
         }
 
+        private lateinit var mAdapter: SlimAdapter
+
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
-            var activity: MatchDetailActivity = activity as MatchDetailActivity
+            val activity: MatchDetailActivity = activity as MatchDetailActivity
             killFeedList = activity.killFeedList
 
             kill_feed_rv.layoutManager = LinearLayoutManager(activity)
 
-            var adapter: SlimAdapter = SlimAdapter.create().attachTo(kill_feed_rv).register(R.layout.stats_kill_feed_item, SlimInjector<LogPlayerKill> { data, injector ->
+            mAdapter  = SlimAdapter.create().attachTo(kill_feed_rv).register(R.layout.stats_kill_feed_item, SlimInjector<LogPlayerKill> { data, injector ->
                 injector.text(R.id.kill_feed_killer, "")
                 injector.text(R.id.kill_feed_victim, "")
 
                 if (data.killer.name.isEmpty()) {
                     data.killer.name = Telemetry().damageTypeCategory[data.damageTypeCategory].toString()
                     injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.ITALIC)
+                } else {
+                    injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.NORMAL)
                 }
 
                 injector.text(R.id.kill_feed_killer, data.killer.name.trim())
@@ -406,21 +559,19 @@ class MatchDetailActivity : AppCompatActivity() {
                     injector.text(R.id.kill_feed_cause, Telemetry().damageCauserName[data.damageCauserName].toString())
                 }
 
-                injector.text(R.id.textView9, (killFeedList!!.size - killFeedList!!.indexOf(data)).toString())
+                injector.text(R.id.textView9, (killFeedList.size - killFeedList.indexOf(data)).toString())
 
                 Log.d("MATCH", "${activity.currentPlayerID} - ${data.killer.accountId}")
 
-                if (data.killer.accountId == activity.currentPlayerID) {
-                    injector.background(R.id.textView9, R.drawable.chip_green_outline)
-                } else if (data.victim.accountId == activity.currentPlayerID) {
-                    injector.background(R.id.textView9, R.drawable.chip_red_outline)
-                } else {
-                    injector.background(R.id.textView9, R.drawable.chip_grey_outline)
+                when {
+                    data.killer.accountId == activity.currentPlayerID -> injector.background(R.id.textView9, R.drawable.chip_green_outline)
+                    data.victim.accountId == activity.currentPlayerID -> injector.background(R.id.textView9, R.drawable.chip_red_outline)
+                    else -> injector.background(R.id.textView9, R.drawable.chip_grey_outline)
                 }
 
                 //Do date.
-                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-                val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                 val matchStartDate = sdf.parse(activity.matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("createdAt"))
                 val killTime = sdf2.parse(data._D)
 
@@ -431,20 +582,66 @@ class MatchDetailActivity : AppCompatActivity() {
                 val hoursInMilli = minutesInMilli * 60
                 val daysInMilli = hoursInMilli * 24
 
-                val elapsedDays = difference / daysInMilli
-                difference = difference % daysInMilli
+                difference %= daysInMilli
 
-                val elapsedHours = difference / hoursInMilli
-                difference = difference % hoursInMilli
+                difference %= hoursInMilli
 
                 val elapsedMinutes = difference / minutesInMilli
-                difference = difference % minutesInMilli
+                difference %= minutesInMilli
 
                 val elapsedSeconds = difference / secondsInMilli
 
                 injector.text(R.id.kill_feed_time, String.format("%02d:%02d", elapsedMinutes, elapsedSeconds))
 
+                injector.text(R.id.kill_feed_distance, "${String.format("%.0f", Math.rint(data.distance/100))}m")
+
+                injector.clicked(R.id.kill_feed_top) {
+                    val intent = Intent(requireActivity(), MapTileActivity::class.java)
+                    intent.putExtra("mapName", activity.getMapAsset())
+                    intent.putExtra("killLog", data)
+                    //startActivity(intent)
+                }
             }).updateData(killFeedList)
+        }
+
+        override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+            super.onCreateOptionsMenu(menu, inflater)
+            inflater?.inflate(R.menu.match_players, menu)
+        }
+
+        override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+            if (item?.itemId == R.id.match_players_sort) {
+                MaterialDialog.Builder(requireActivity())
+                        .title("Sort Kills")
+                        .items(R.array.kill_feed_sort)
+                        .itemsCallbackSingleChoice(sortIndex) { dialog, itemView, position, text ->
+                            sortIndex = position
+                            when (position) {
+                                0 -> {
+                                    killFeedList = killFeedList.sortedWith(compareByDescending { it._D })
+                                    mAdapter.updateData(killFeedList)
+                                }
+                                1 -> {
+                                    killFeedList = killFeedList.sortedWith(compareBy { it._D })
+                                    mAdapter.updateData(killFeedList)
+                                }
+                                2 -> {
+                                    killFeedList = killFeedList.sortedWith(compareBy { it.killer.name })
+                                    mAdapter.updateData(killFeedList)
+                                }
+                                3 -> {
+                                    killFeedList = killFeedList.sortedWith(compareByDescending { it.victim.name })
+                                    mAdapter.updateData(killFeedList)
+                                }
+                                4 -> {
+                                    killFeedList = killFeedList.sortedWith(compareBy { it._D })
+                                    mAdapter.updateData(killFeedList)
+                                }
+                            }
+                            true
+                        }.show()
+            }
+            return super.onOptionsItemSelected(item)
         }
     }
 
@@ -468,8 +665,18 @@ class MatchDetailActivity : AppCompatActivity() {
         }
     }
 
+    fun getMapAsset(): String {
+        val mapName: String = matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("mapName").toString()
+        return when (mapName) {
+            "Savage_Main" -> "sanhok/Savage_Main_Low_Res.jpg"
+            "Erangel_Main" -> "erangel/Erangel_Main.jpg"
+            "Desert_Main" -> "miramar/Miramar_Main_High_Res.jpg"
+            else -> ""
+        }
+    }
+
     fun getFormattedCreatedAt(timeString: String): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         var time: Long = 0
         try {
             time = sdf.parse(timeString).time

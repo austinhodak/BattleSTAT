@@ -1,16 +1,18 @@
 package com.respondingio.battlegroundsbuddy.models
 
+import java.io.Serializable
+
 data class MatchParticipant(
         val id: String,
         val attributes: MatchAttributes,
         val type: String
-)
+) : Serializable
 
 data class MatchAttributes(
         val shardId: String,
         val stats: Stats,
         val actor: String
-)
+) : Serializable
 
 data class Stats(
         val DBNOs: Int,
@@ -43,4 +45,4 @@ data class Stats(
         val winPlace: Int,
         val winPoints: Int,
         val winPointsDelta: Double
-)
+) : Serializable

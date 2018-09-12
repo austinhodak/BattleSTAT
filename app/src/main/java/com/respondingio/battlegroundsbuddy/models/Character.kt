@@ -1,5 +1,7 @@
 package com.respondingio.battlegroundsbuddy.models
 
+import java.io.Serializable
+
 data class Character(
         var name: String,
         val teamId: Int,
@@ -7,4 +9,4 @@ data class Character(
         val location: Location,
         val ranking: Int,
         val accountId: String
-)
+) : Serializable

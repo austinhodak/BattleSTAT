@@ -1,5 +1,7 @@
 package com.respondingio.battlegroundsbuddy.models
 
+import java.io.Serializable
+
 data class LogPlayerKill(
         val attackId: Int,
         val killer: Character,
@@ -10,4 +12,4 @@ data class LogPlayerKill(
         val distance: Double,
         val _D: String,
         val _T: String
-)
+) : Serializable

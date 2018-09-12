@@ -323,7 +323,7 @@ public class GameStatsActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.your_stats_menu:
-                        NewStatsFragment yourStatsFragment = new NewStatsFragment();
+                        MainStatsFragment yourStatsFragment = new MainStatsFragment();
                         yourStatsFragment.setArguments(mBundle);
                         getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, yourStatsFragment).commit();
                         break;
@@ -464,7 +464,7 @@ public class GameStatsActivity extends AppCompatActivity {
     }
 
     private void reloadFragments() {
-        NewStatsFragment yourStatsFragment = new NewStatsFragment();
+        MainStatsFragment yourStatsFragment = new MainStatsFragment();
         switch (mBottomNavigationView.getSelectedItemId()) {
             case R.id.your_stats_menu:
                 yourStatsFragment.setArguments(mBundle);

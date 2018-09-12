@@ -34,8 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.stats.AddPlayerBottomSheet;
+import com.respondingio.battlegroundsbuddy.stats.OLDMainStatsFragment;
 import com.respondingio.battlegroundsbuddy.stats.MatchesListFragment;
-import com.respondingio.battlegroundsbuddy.stats.YourStatsFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,7 +160,7 @@ public class Player implements Parcelable {
                 public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.your_stats_menu:
-                            YourStatsFragment yourStatsFragment = new YourStatsFragment();
+                            OLDMainStatsFragment yourStatsFragment = new OLDMainStatsFragment();
                             yourStatsFragment.setArguments(mBundle);
                             getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, yourStatsFragment).commit();
                             break;
@@ -221,7 +221,7 @@ public class Player implements Parcelable {
 
             loadPlayers();
 
-            mFragment = new YourStatsFragment();
+            mFragment = new OLDMainStatsFragment();
             mFragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, mFragment).commit();
 
@@ -430,7 +430,7 @@ public class Player implements Parcelable {
         }
 
         private void reloadFragments() {
-            YourStatsFragment yourStatsFragment = new YourStatsFragment();
+            OLDMainStatsFragment yourStatsFragment = new OLDMainStatsFragment();
             switch (mBottomNavigationView.getSelectedItemId()) {
                 case R.id.your_stats_menu:
                     yourStatsFragment.setArguments(mBundle);
