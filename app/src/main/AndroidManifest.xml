@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WeaponDetailActivity" />
+        <activity android:name=".weapons.WeaponDetailsActivity" />
         <activity
             android:name=".loadout.LoadoutCreateMain"
             android:theme="@style/AppTheme" />

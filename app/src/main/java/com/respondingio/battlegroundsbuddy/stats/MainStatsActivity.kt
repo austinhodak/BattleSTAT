@@ -1,12 +1,17 @@
 package com.respondingio.battlegroundsbuddy.stats
 
 import android.app.Activity
+import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,12 +20,22 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem
+import com.android.vending.billing.IInAppBillingService
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.reward.RewardItem
+import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.google.android.gms.ads.reward.RewardedVideoAdListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.functions.FirebaseFunctions
 import com.google.gson.Gson
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
@@ -28,6 +43,7 @@ import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.models.Seasons
 import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_stats_main_new.bottom_navigation
+import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
 import kotlinx.android.synthetic.main.activity_stats_main_new.no_player
 import kotlinx.android.synthetic.main.activity_stats_main_new.stats_gamemode_picker
 import kotlinx.android.synthetic.main.activity_stats_main_new.stats_gamemode_text
@@ -38,8 +54,10 @@ import kotlinx.android.synthetic.main.activity_stats_main_new.stats_region_text
 import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_picker
 import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_text
 import kotlinx.android.synthetic.main.activity_stats_main_new.weapon_detail_toolbar
+import org.jetbrains.anko.support.v4.onRefresh
 
-class MainStatsActivity : AppCompatActivity() {
+class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
+
 
     var regionList = arrayOf("XBOX-AS", "XBOX-EU", "XBOX-NA", "XBOX-OC", "PC-KRJP", "PC-JP", "PC-NA", "PC-EU", "PC-RU", "PC-OC", "PC-KAKAO", "PC-SEA", "PC-SA", "PC-AS")
     var regions = arrayOf("Xbox Asia", "Xbox Europe", "Xbox North America", "Xbox Oceania", "PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC Kakao", "PC South East Asia", "PC South and Central America", "PC Asia")
@@ -48,14 +66,35 @@ class MainStatsActivity : AppCompatActivity() {
     lateinit var mSharedPreferences: SharedPreferences
     public var playersMap = HashMap<String, String>()
     var currentPlayer: PrefPlayer? = null
+    private var updateTimeout: Long = 15
+
+    private var isPremium: Boolean = false
+    var lastUpdated: Long? = null
+
+    private var mRewardedVideoAd: RewardedVideoAd? = null
+
+    private var iap: IInAppBillingService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats_main_new)
+
         setSupportActionBar(weapon_detail_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        val serviceIntent = Intent("com.android.vending.billing.InAppBillingService.BIND")
+        serviceIntent.`package` = "com.android.vending"
+        applicationContext?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+
         mSharedPreferences = this.getSharedPreferences("com.respondingio.battlegroundsbuddy", Context.MODE_PRIVATE)
+        isPremium = mSharedPreferences.getBoolean("premiumV1", false)
+
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(applicationContext)
+        mRewardedVideoAd?.rewardedVideoAdListener = this
+
+        if (mSharedPreferences.getBoolean("premiumV1", false)) {
+            updateTimeout = 2
+        }
 
         if (mSharedPreferences.getBoolean("isStatsFirstLaunch", true)) {
             MaterialDialog.Builder(this)
@@ -88,6 +127,90 @@ class MainStatsActivity : AppCompatActivity() {
             stats_gamemode_text.text = "Select Gamemode"
             stats_season_text.text = "Select Season"
         }
+
+        mainStatsRefreshLayout?.setColorSchemeResources(R.color.md_orange_500, R.color.md_pink_500)
+
+        mainStatsRefreshLayout?.onRefresh {
+            if (lastUpdated == null) {
+                mainStatsRefreshLayout?.isRefreshing = false
+                Log.e("MainStats", "Last updated long is null, either player isn't selected or stats haven't loaded yet...")
+                return@onRefresh
+            }
+
+            if (currentPlayer != null && currentPlayer?.playerID != null && currentPlayer?.selectedShardID != null && currentPlayer?.selectedGamemode != null && currentPlayer?.selectedSeason != null) {
+                if (getTimeSinceLastUpdated() / 60 > updateTimeout) {
+                    mainStatsRefreshLayout.isRefreshing = true
+                    reloadStats(currentPlayer!!)
+                } else if (!isPremium) {
+                    mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
+                            AdRequest.Builder().build())
+                    mainStatsRefreshLayout.isRefreshing = false
+                    Snacky.builder().setActivity(this).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes.")
+                            .setActionText("UPGRADE OR WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).setActionClickListener {
+                                MaterialDialog.Builder(this)
+                                        .title("Upgrade or Watch An Ad")
+                                        .content(R.string.upgrade)
+                                        .backgroundColorRes(R.color.md_orange_700)
+                                        .titleColorRes(R.color.md_white_1000)
+                                        .contentColorRes(R.color.md_white_1000)
+                                        .positiveColorRes(R.color.md_white_1000)
+                                        .neutralColorRes(R.color.md_white_1000)
+                                        .negativeColorRes(R.color.md_white_1000)
+                                        .positiveText("GO PREMIUM ($2.99)")
+                                        .neutralText("NEVERMIND")
+                                        .negativeText("WATCH AN AD")
+                                        .onNegative { dialog, which ->
+                                            if (mRewardedVideoAd?.isLoaded == true) {
+                                                mRewardedVideoAd?.show()
+                                            } else {
+                                                Snacky.builder().setActivity(this).info().setText("No ad loaded, please try again.").show()
+                                            }
+                                        }
+                                        .onNeutral { dialog, which ->
+                                            dialog.dismiss()
+                                        }
+                                        .onPositive { dialog, which ->
+                                            val buyIntentBundle = iap?.getBuyIntent(3, packageName,
+                                                    "plus_v1", "inapp", "")
+
+                                            val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
+
+                                            if (pendingIntent != null) {
+
+                                                val REQUEST_CODE = 1002
+
+                                                startIntentSenderForResult(pendingIntent.intentSender,
+                                                        REQUEST_CODE, Intent(), 0, 0,
+                                                        0)
+                                            }
+                                        }.show()
+                            }.build().show()
+                } else if (isPremium) {
+                    mRewardedVideoAd?.loadAd("ca-app-pub-3940256099942544/5224354917",
+                            AdRequest.Builder().build())
+
+                    mainStatsRefreshLayout.isRefreshing = false
+                    Snacky.builder().setActivity(this).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes with premium. This is a PUBG API limit.").setActionClickListener {
+                        if (mRewardedVideoAd?.isLoaded == true) {
+                            mRewardedVideoAd?.show()
+                        } else {
+                            Snacky.builder().setActivity(this).info().setText("No ad loaded, please try again.").show()
+                        }
+                    }.setActionText("WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).build().show()
+                }
+            } else {
+                mainStatsRefreshLayout?.isRefreshing = false
+                Snacky.builder().setActivity(this).info().setText("Make sure you select a player, season, gamemode, and region!").show()
+            }
+        }
+    }
+
+    private fun reloadStats(player: PrefPlayer) {
+        mainStatsRefreshLayout.isRefreshing = true
+
+        startPlayerStatsFunction(player.playerID, player.selectedShardID, player.selectedSeason!!)?.addOnSuccessListener {
+            mainStatsRefreshLayout.isRefreshing = false
+        }
     }
 
     private var selectedRegion: Int = -1
@@ -103,6 +226,38 @@ class MainStatsActivity : AppCompatActivity() {
                     .onNeutral { dialog, which ->
                         val addPlayerBottomSheet = AddPlayerBottomSheet()
                         addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
+                        if (playersMap.size < 5 || mSharedPreferences.getBoolean("premiumV1", false)) {
+//                            val addPlayerBottomSheet = AddPlayerBottomSheet()
+//                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
+                        } else if (playersMap.size >=5 && !mSharedPreferences.getBoolean("premiumV1", false)) {
+                            //Max players added and no premium.
+                            /*MaterialDialog.Builder(this)
+                                    .title("Max Players Reached")
+                                    .content(R.string.upgrade)
+                                    .backgroundColorRes(R.color.md_orange_700)
+                                    .titleColorRes(R.color.md_white_1000)
+                                    .contentColorRes(R.color.md_white_1000)
+                                    .positiveColorRes(R.color.md_white_1000)
+                                    .neutralColorRes(R.color.md_white_1000)
+                                    .negativeColorRes(R.color.md_white_1000)
+                                    .positiveText("GO PREMIUM ($2.99)")
+                                    .negativeText("CANCEL")
+                                    .onPositive { dialog, which ->
+                                        val buyIntentBundle = iap?.getBuyIntent(3, packageName,
+                                                "plus_v1", "inapp", "")
+
+                                        val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
+
+                                        if (pendingIntent != null) {
+
+                                            val REQUEST_CODE = 1002
+
+                                            startIntentSenderForResult(pendingIntent.intentSender,
+                                                    REQUEST_CODE, Intent(), 0, 0,
+                                                    0)
+                                        }
+                                    }.show()*/
+                        }
                     }
                     .show()
         }
@@ -137,7 +292,7 @@ class MainStatsActivity : AppCompatActivity() {
                 Toast.makeText(this@MainStatsActivity, "Must select player first.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            MaterialDialog.Builder(this@MainStatsActivity)
+            MaterialDialog.Builder(this)
                     .title("Select Gamemode")
                     .items("Solo TPP", "Solo FPP", "Duo TPP", "Duo FPP", "Squad TPP", "Squad FPP")
                     .itemsCallbackSingleChoice(selectedGamemode) { dialog, itemView, which, text ->
@@ -200,12 +355,43 @@ class MainStatsActivity : AppCompatActivity() {
         }
     })
 
+    override fun onStop() {
+        super.onStop()
+        if (listener != null && listenerRef != null) {
+            listenerRef!!.removeEventListener(listener!!)
+            listener = null
+            listenerRef = null
+        }
+
+        if (iap != null) {
+            try {
+                applicationContext?.unbindService(serviceConnection)
+            } catch (e: Exception) {
+            }
+        }
+
+        if (mRewardedVideoAd != null) {
+            mRewardedVideoAd!!.rewardedVideoAdListener = null
+            mRewardedVideoAd!!.destroy(applicationContext)
+            mRewardedVideoAd = null
+        }
+    }
+
+    private var listener: ChildEventListener? = null
+    private var listenerRef: DatabaseReference? = null
+
     private fun loadPlayers() {
+        if (listener != null && listenerRef != null) {
+            listenerRef!!.removeEventListener(listener!!)
+            listener = null
+            listenerRef = null
+        }
         playersMap.clear()
         playerListAdapter.clear()
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser!!.uid).child("pubg_players")
-        ref.addChildEventListener(object : ChildEventListener {
+        val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser!!.uid).child("pubg_players").orderByChild("playerName")
+        listenerRef = ref.ref
+        listener = ref.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -289,7 +475,7 @@ class MainStatsActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (!p0.exists()) {
-                    Snacky.builder().setView(bottom_navigation).warning().setText("You haven't linked your PUBG account yet.").setAction("LINK"
+                    Snacky.builder().setView(bottom_navigation).warning().setText("You haven't linked a PUBG account yet.").setAction("LINK"
                     ) {
                         val addPlayerBottomSheet = AddPlayerBottomSheet()
                         addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
@@ -332,7 +518,7 @@ class MainStatsActivity : AppCompatActivity() {
                     stats_season_text.text = Seasons.getInstance().getSeasonListArray(2)[selectedSeason].toString()
                 }
             } catch (e: Exception) {
-                Snacky.builder().error().setText("Unknown Error Occurred").show()
+                Snacky.builder().setActivity(this).error().setText("Unknown Error Occurred").show()
             }
         }
 
@@ -353,10 +539,10 @@ class MainStatsActivity : AppCompatActivity() {
             if (currentPlayer == null || !mSharedPreferences.contains("selected-player-id")) {
                 if (supportFragmentManager.findFragmentByTag("STATS") != null) {
                     val fragment: MainStatsFragment = supportFragmentManager.findFragmentByTag("STATS") as MainStatsFragment
-                    supportFragmentManager.beginTransaction().remove(fragment).commit()
+                    supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
                 } else if (supportFragmentManager.findFragmentByTag("MATCHES") != null) {
-                    val fragment: MatchesListFragment = supportFragmentManager.findFragmentByTag("MATCHES") as MatchesListFragment
-                    supportFragmentManager.beginTransaction().remove(fragment).commit()
+                    val fragment: MatchListFragment = supportFragmentManager.findFragmentByTag("MATCHES") as MatchListFragment
+                    supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
                 }
                 return@setOnNavigationItemSelectedListener false
             }
@@ -367,15 +553,15 @@ class MainStatsActivity : AppCompatActivity() {
                     val mBundle = Bundle()
                     mBundle.putSerializable("player", currentPlayer)
                     yourStatsFragment.arguments = mBundle
-                    supportFragmentManager.beginTransaction().replace(R.id.home_frame, yourStatsFragment, "STATS").commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.home_frame, yourStatsFragment, "STATS").commitAllowingStateLoss()
                 }
                 R.id.matches_menu -> {
                     if (supportFragmentManager.findFragmentByTag("MATCHES") != null) return@setOnNavigationItemSelectedListener true
-                    val matchesListFragment = MatchesListFragment()
+                    val MatchListFragment = MatchListFragment()
                     val mBundle = Bundle()
                     mBundle.putSerializable("player", currentPlayer)
-                    matchesListFragment.arguments = mBundle
-                    supportFragmentManager.beginTransaction().replace(R.id.home_frame, matchesListFragment, "MATCHES").commit()
+                    MatchListFragment.arguments = mBundle
+                    supportFragmentManager.beginTransaction().replace(R.id.home_frame, MatchListFragment, "MATCHES").commitAllowingStateLoss()
                 }
             }
             true
@@ -388,7 +574,7 @@ class MainStatsActivity : AppCompatActivity() {
                 val fragment: MainStatsFragment = supportFragmentManager.findFragmentByTag("STATS") as MainStatsFragment
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
             } else if (supportFragmentManager.findFragmentByTag("MATCHES") != null) {
-                val fragment: MatchesListFragment = supportFragmentManager.findFragmentByTag("MATCHES") as MatchesListFragment
+                val fragment: MatchListFragment = supportFragmentManager.findFragmentByTag("MATCHES") as MatchListFragment
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
             }
             return
@@ -412,9 +598,9 @@ class MainStatsActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction().replace(R.id.home_frame, yourStatsFragment, "STATS").commit()
             }
             R.id.matches_menu -> {
-                val matchesListFragment = MatchesListFragment()
-                matchesListFragment.arguments = mBundle
-                supportFragmentManager.beginTransaction().replace(R.id.home_frame, matchesListFragment, "MATCHES").commit()
+                val MatchListFragment = MatchListFragment()
+                MatchListFragment.arguments = mBundle
+                supportFragmentManager.beginTransaction().replace(R.id.home_frame, MatchListFragment, "MATCHES").commit()
             }
             else -> {
                 yourStatsFragment.arguments = mBundle
@@ -447,7 +633,7 @@ class MainStatsActivity : AppCompatActivity() {
                 val fragment: MainStatsFragment = supportFragmentManager.findFragmentByTag("STATS") as MainStatsFragment
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
             } else if (supportFragmentManager.findFragmentByTag("MATCHES") != null) {
-                val fragment: MatchesListFragment = supportFragmentManager.findFragmentByTag("MATCHES") as MatchesListFragment
+                val fragment: MatchListFragment = supportFragmentManager.findFragmentByTag("MATCHES") as MatchListFragment
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
             }
         }
@@ -494,6 +680,70 @@ class MainStatsActivity : AppCompatActivity() {
                 m2SharedPreferences.edit().putBoolean("removeAds", true).apply()
                 Snacky.builder().setActivity(this).info().setText("Thanks! Enjoy the new stuff!").show()
             }
+        }
+    }
+
+    private fun startPlayerStatsFunction(playerID: String, shardID: String, seasonID: String): Task<Map<String, Any>>? {
+        val data = java.util.HashMap<String, Any>()
+        data["playerID"] = playerID
+        data["shardID"] = shardID
+        data["seasonID"] = seasonID
+
+        return FirebaseFunctions.getInstance().getHttpsCallable("loadPlayerStats")?.call(data)?.continueWith { task ->
+            val result = task.result.data as Map<String, Any>
+            Log.d("REQUEST", result.toString())
+            result
+        }
+    }
+
+    fun getTimeSinceLastUpdated(): Long {
+        if (lastUpdated == null) return 0
+        return Math.abs(lastUpdated?.minus((System.currentTimeMillis() / 1000))!!)
+    }
+
+    override fun onRewardedVideoAdClosed() {
+        if (hasReward) {
+            Snacky.builder().setActivity(this).success().setText("Refresh Rewarded. Thank you!").show()
+            reloadStats(currentPlayer!!)
+            hasReward = false
+        }
+    }
+
+    override fun onRewardedVideoAdLeftApplication() {
+    }
+
+    override fun onRewardedVideoAdLoaded() {
+    }
+
+    override fun onRewardedVideoAdOpened() {
+    }
+
+    override fun onRewardedVideoCompleted() {
+
+    }
+
+    private var hasReward: Boolean = false
+
+    override fun onRewarded(p0: RewardItem?) {
+        hasReward = true
+        val bundle = Bundle()
+        bundle.putString("refresh_type", "ad_reward")
+        FirebaseAnalytics.getInstance(this).logEvent("stat_refresh", bundle)
+    }
+
+    override fun onRewardedVideoStarted() {
+    }
+
+    override fun onRewardedVideoAdFailedToLoad(p0: Int) {
+    }
+
+    private var serviceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            iap = null
+        }
+
+        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+            iap = IInAppBillingService.Stub.asInterface(p1)
         }
     }
 }

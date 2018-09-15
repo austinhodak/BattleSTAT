@@ -4,6 +4,7 @@
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/match_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -83,8 +84,7 @@
                         android:layout_width="24dp"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        android:visibility="invisible"
-                        android:src="@drawable/sanhok_icon" />
+                        android:visibility="visible" />
                 </LinearLayout>
 
                 <View
@@ -200,7 +200,6 @@
                 android:layout_alignParentTop="true" />
 
         </RelativeLayout>
-
 
 
     </android.support.v7.widget.CardView>

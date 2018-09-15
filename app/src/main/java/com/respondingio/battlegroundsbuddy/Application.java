@@ -26,7 +26,7 @@ public class Application extends MultiDexApplication {
             // You should not init your app in this process.
             return;
         }
-        //LeakCanary.install(this);
+        LeakCanary.install(this);
 
         if (BuildConfig.DEBUG) {
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);

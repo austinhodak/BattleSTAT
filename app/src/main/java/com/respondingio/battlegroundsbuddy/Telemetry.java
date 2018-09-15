@@ -102,6 +102,7 @@ public class Telemetry {
             "  \"WeapMachete_C\": \"Machete\",\n" +
             "  \"WeapMini14_C\": \"Mini 14\",\n" +
             "  \"WeapMk14_C\": \"Mk14 EBR\",\n" +
+            "  \"WeapMk47Mutant_C\": \"Mk47 Mutant\",\n" +
             "  \"WeapNagantM1895_C\": \"R1895\",\n" +
             "  \"WeapPan_C\": \"Pan\",\n" +
             "  \"WeapQBU88_C\": \"QBU88\",\n" +

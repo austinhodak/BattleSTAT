@@ -20,8 +20,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import co.zsmb.materialdrawerkt.builders.drawer
+import co.zsmb.materialdrawerkt.builders.footer
 import co.zsmb.materialdrawerkt.draweritems.badge
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
+import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.android.volley.Cache
@@ -42,6 +44,7 @@ import com.google.gson.Gson
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.holder.StringHolder
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.respondingio.battlegroundsbuddy.BuildConfig
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
@@ -354,7 +357,6 @@ class MatchDetailActivity : AppCompatActivity() {
             headerDivider = false
             stickyFooterShadow = false
             selectedItem = 0
-
             primaryItem("Your Match Stats") {
                 icon = R.drawable.icons8_person_male
                 onClick { _, _, _ ->
@@ -439,10 +441,26 @@ class MatchDetailActivity : AppCompatActivity() {
                 onClick { view, position, drawerItem ->
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, KillFeedFragment())
                             .commit()
-                    toolbar_title.text = "Kill Feed"
+                    toolbar_title.text = "Kills"
                     updateToolbarElevation(0f)
                     updateToolbarFlags(false)
                     false
+                }
+            }
+            if (BuildConfig.DEBUG) {
+                primaryItem("Care Packages") {
+                    icon = R.drawable.carepackage_open
+                    selectable = false
+                }
+                primaryItem("Weapon Stats") {
+                    icon = R.drawable.icons8_rifle
+                    selectable = false
+                }
+                footer {
+                    secondaryItem ("All Match Events") {
+                        icon = R.drawable.icons8_timeline
+                        selectable = false
+                    }
                 }
             }
         }
@@ -571,7 +589,11 @@ class MatchDetailActivity : AppCompatActivity() {
 
                 //Do date.
                 val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                sdf.timeZone = TimeZone.getTimeZone("GMT")
+
                 val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                sdf2.timeZone = TimeZone.getTimeZone("GMT")
+
                 val matchStartDate = sdf.parse(activity.matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("createdAt"))
                 val killTime = sdf2.parse(data._D)
 
@@ -607,6 +629,12 @@ class MatchDetailActivity : AppCompatActivity() {
         override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
             super.onCreateOptionsMenu(menu, inflater)
             inflater?.inflate(R.menu.match_players, menu)
+        }
+
+        override fun onStop() {
+            super.onStop()
+            kill_feed_rv.adapter = null
+            kill_feed_rv.layoutManager = null
         }
 
         override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -677,6 +705,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
     fun getFormattedCreatedAt(timeString: String): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        sdf.timeZone = TimeZone.getTimeZone("GMT")
         var time: Long = 0
         try {
             time = sdf.parse(timeString).time

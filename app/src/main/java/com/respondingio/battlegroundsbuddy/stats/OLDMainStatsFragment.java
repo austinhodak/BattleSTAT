@@ -142,8 +142,8 @@ public class OLDMainStatsFragment extends Fragment {
 
         playerName = getArguments().getString("player_name");
         playerID = getArguments().getString("player_id");
-        region = AddPlayerBottomSheet.regionList[getArguments().getInt("region")].toLowerCase();
-        gamemode = AddPlayerBottomSheet.modesList[getArguments().getInt("gamemode")];
+        //region = AddPlayerBottomSheet.Companion.getRegionList()[getArguments().getInt("region")].toLowerCase();
+        //gamemode = AddPlayerBottomSheet.Companion.getModesList()[getArguments().getInt("gamemode")];
         seasonLong = "division.bro.official." + getArguments().getString("season_id");
         seasonShort = getArguments().getString("season_id");
 
@@ -152,7 +152,6 @@ public class OLDMainStatsFragment extends Fragment {
         if (playerID != null)
         loadPlayerStats(playerID);
 
-        swipeRefreshLayout = view.findViewById(R.id.stats_refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.md_orange_500, R.color.md_pink_500);
         swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override

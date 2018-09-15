@@ -1,7 +1,6 @@
 package com.respondingio.battlegroundsbuddy.weapons
 
 import android.content.Context.MODE_PRIVATE
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -20,36 +19,43 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import com.respondingio.battlegroundsbuddy.R
-import com.respondingio.battlegroundsbuddy.WeaponDetailActivity
 import com.respondingio.battlegroundsbuddy.models.Weapon
 import kotlinx.android.synthetic.main.home_weapons_list.pg
 import kotlinx.android.synthetic.main.home_weapons_list.weapon_list_rv
 import net.idik.lib.slimadapter.SlimAdapter
+import org.jetbrains.anko.support.v4.startActivity
 import java.util.ArrayList
 
 class MainWeaponsList : Fragment() {
 
     var mSharedPreferences: SharedPreferences? = null
     private var mAdapter: SlimAdapter? = null
-    private var weaponClass: String = ""
+    private var weaponClass: String = "assault_rifles"
     private var data: MutableList<Any> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.home_weapons_list, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
+        pg?.visibility = View.VISIBLE
         mSharedPreferences = requireActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE)
         setupAdapter(arguments?.getInt("pos")!!)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        weaponListener?.remove()
     }
 
     private fun setupAdapter(int: Int) {
         val favoriteWeapons = mSharedPreferences?.getStringSet("favoriteWeapons", null)
 
-        weapon_list_rv.layoutManager = LinearLayoutManager(requireActivity())
+        weapon_list_rv.layoutManager = LinearLayoutManager(activity ?: return)
         mAdapter = SlimAdapter.create().attachTo(weapon_list_rv).register(R.layout.testing) { doc: DocumentSnapshot, injector ->
             val data = doc.toObject(Weapon::class.java)!!
             val subtitle = injector.findViewById<TextView>(R.id.weapon_subtitle)
@@ -61,10 +67,10 @@ class MainWeaponsList : Fragment() {
 
                 val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
-                Glide.with(requireActivity())
+                Glide.with(this)
                         .asDrawable()
                         .load(gsReference)
-                        .apply(RequestOptions().placeholder(R.drawable.icons8_rifle).override(100,100))
+                        .apply(RequestOptions().placeholder(R.drawable.icons8_rifle).override(150,150))
                         .transition(DrawableTransitionOptions.withCrossFade(factory))
                         .into(injector.findViewById(R.id.weapon_icon))
             }
@@ -99,14 +105,7 @@ class MainWeaponsList : Fragment() {
             }
 
             injector.clicked(R.id.card_top) {
-                val intent = Intent(activity,
-                        WeaponDetailActivity::class.java)
-                intent.putExtra("weaponPath", doc.reference.path)
-                intent.putExtra("weaponName",
-                        data.weapon_name)
-                intent.putExtra("weaponKey", doc.id)
-                intent.putExtra("weaponClass", weaponClass)
-                startActivity(intent)
+                startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
             }
 
             injector.gone(R.id.weapon_fav)
@@ -125,17 +124,17 @@ class MainWeaponsList : Fragment() {
             injector.gone(R.id.weapon_sanhok)
 
             if (data.airDropOnly) {
-                Glide.with(requireActivity()).load(R.drawable.ic_parachute).into(injector.findViewById(R.id.weapon_parachute))
+                Glide.with(this).load(R.drawable.ic_parachute).into(injector.findViewById(R.id.weapon_parachute))
                 injector.visible(R.id.weapon_parachute)
             }
 
             if (data.bestInClass) {
-                Glide.with(requireActivity()).load(R.drawable.icons8_trophy).into(injector.findViewById(R.id.weapon_trophy))
+                Glide.with(this).load(R.drawable.icons8_trophy).into(injector.findViewById(R.id.weapon_trophy))
                 injector.visible(R.id.weapon_trophy)
             }
 
             if (data.miramar_only) {
-                Glide.with(requireActivity()).load(R.drawable.cactu).into(injector.findViewById(R.id.weapon_miramar))
+                Glide.with(this).load(R.drawable.cactu).into(injector.findViewById(R.id.weapon_miramar))
                 injector.visible(R.id.weapon_miramar)
             }
 
@@ -163,6 +162,8 @@ class MainWeaponsList : Fragment() {
         loadWeapons(int)
     }
 
+    private var weaponListener: ListenerRegistration? = null
+
     private fun loadWeapons(int: Int) {
         when (int) {
             0 -> weaponClass = "assault_rifles"
@@ -174,6 +175,7 @@ class MainWeaponsList : Fragment() {
             6 -> weaponClass = "throwables"
             7 -> weaponClass = "melee"
             8 -> weaponClass = "misc"
+            else -> weaponClass = "assault_rifles"
         }
 
         if (arguments?.containsKey("isFavoriteTab")!! && arguments?.getBoolean("isFavoriteTab")!!) {
@@ -181,8 +183,8 @@ class MainWeaponsList : Fragment() {
             data.clear()
 
             for (i in 0 until classes.count()) {
-                FirebaseFirestore.getInstance().collection("weapons").document(classes[i]).collection("weapons").orderBy("weapon_name")
-                        .addSnapshotListener(requireActivity()) { it, _ ->
+                weaponListener = FirebaseFirestore.getInstance().collection("weapons").document(classes[i]).collection("weapons").orderBy("weapon_name")
+                        .addSnapshotListener { it, _ ->
                             data.clear()
 
                             val favs = mSharedPreferences?.getStringSet("favoriteWeapons", null)
@@ -201,10 +203,9 @@ class MainWeaponsList : Fragment() {
                         }
             }
         } else {
-            FirebaseFirestore.getInstance().collection("weapons").document(weaponClass).collection("weapons").orderBy("weapon_name")
-                    .addSnapshotListener(requireActivity()) { it, _ ->
+            weaponListener = FirebaseFirestore.getInstance().collection("weapons").document(weaponClass).collection("weapons").orderBy("weapon_name")
+                    .addSnapshotListener { it, _ ->
                         data.clear()
-
                         if (it != null) {
                             for (document in it) {
                                 if (document.contains("live")) {
@@ -224,7 +225,5 @@ class MainWeaponsList : Fragment() {
                         mAdapter?.updateData(data)
                     }
         }
-
-        pg.visibility = View.VISIBLE
     }
 }

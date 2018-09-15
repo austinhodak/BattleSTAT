@@ -37,8 +37,7 @@ android {
             manifestPlaceholders = [crashEnabled: true]
         }
         debug {
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            minifyEnabled false
+            ext.enableCrashlytics = false
             manifestPlaceholders = [crashEnabled: false]
         }
     }

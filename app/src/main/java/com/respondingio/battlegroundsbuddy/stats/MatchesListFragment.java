@@ -71,7 +71,7 @@ public class MatchesListFragment extends Fragment {
 
     @BindView(R.id.matches_RV) RecyclerView mRecyclerView;
 
-    @BindView(R.id.matches_swipeRefresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     List<MatchData> matchList = new ArrayList<>();
 
@@ -143,11 +143,17 @@ public class MatchesListFragment extends Fragment {
         mAdapter = new MatchesListAdapter(matchList, getActivity(), new OnItemClickListener() {
             @Override
             public void onItemClick(final MatchData item) {
-                Intent intent = new Intent(getActivity(), MatchDetailActivity.class);
-                intent.putExtra("matchID", item.getMatchID());
-                intent.putExtra("playerID", playerID);
-                intent.putExtra("regionID", item.getMatchTopData().getString("shardId"));
-                startActivity(intent);
+                if (getActivity() == null) return;
+                try {
+                    Intent intent = new Intent(getActivity(), MatchDetailActivity.class);
+                    intent.putExtra("matchID", item.getMatchID());
+                    intent.putExtra("playerID", playerID);
+                    intent.putExtra("regionID", item.getMatchTopData().getString("shardId"));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Snacky.builder().setActivity(getActivity()).error().setText("Error Occurred, please try again.").show();
+                    e.printStackTrace();
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);

@@ -31,6 +31,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -46,7 +47,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FileDownloadTask.TaskSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.respondingio.battlegroundsbuddy.GlideApp;
 import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.models.WeaponSound;
 import de.mateware.snacky.Snacky;
@@ -385,9 +385,8 @@ public class WeaponDetailOverview extends Fragment {
                                     .getReferenceFromUrl(data.getString("icon"));
 
                             if (getActivity() != null)
-                            GlideApp.with(getActivity())
+                            Glide.with(getActivity())
                                     .load(gsReference)
-                                    .override(100, 100)
                                     .into((ImageView) injector.findViewById(R.id.helmetItem64));
 
                         }
@@ -1101,7 +1100,7 @@ public class WeaponDetailOverview extends Fragment {
                             injector.image(R.id.weaponAudioPlay, R.drawable.ic_pause_circle_filled_white_24dp);
                             try {
                                 startPlaying();
-                            } catch (IOException e) {
+                            } catch (IllegalStateException e) {
                                 e.printStackTrace();
                             }
                         } else {
@@ -1111,7 +1110,7 @@ public class WeaponDetailOverview extends Fragment {
                         }
                     }
 
-                    private void startPlaying() throws IOException {
+                    private void startPlaying() {
                         injector.visible(R.id.audioPg);
                         if (finalLocalFile != null && !isLoaded[0]) {
                             storageReference.getFile(finalLocalFile).addOnSuccessListener(new OnSuccessListener<TaskSnapshot>() {
@@ -1124,7 +1123,7 @@ public class WeaponDetailOverview extends Fragment {
                                         mediaPlayer.setDataSource(requireActivity(), Uri.parse(finalLocalFile.getAbsolutePath()));
                                         mediaPlayer.prepare();
                                         mediaPlayer.start();
-                                    } catch (IOException e) {
+                                    } catch (IOException | IllegalStateException e) {
                                         e.printStackTrace();
                                     }
                                 }

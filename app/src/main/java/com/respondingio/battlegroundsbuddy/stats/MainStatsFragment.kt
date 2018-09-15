@@ -4,32 +4,18 @@ package com.respondingio.battlegroundsbuddy.stats
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
-import android.os.IBinder
 import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import com.afollestad.materialdialogs.MaterialDialog
-import com.android.vending.billing.IInAppBillingService
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.reward.RewardItem
-import com.google.android.gms.ads.reward.RewardedVideoAd
-import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -42,6 +28,7 @@ import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.PlayerStats
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import de.mateware.snacky.Snacky
+import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_assists
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_boosts
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_damageDealt
@@ -57,7 +44,6 @@ import kotlinx.android.synthetic.main.fragment_your_stats.stats_longestKill
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_longestSurv
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_losses
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_mostkills
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_refresh
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_revives
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_rideDist
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_roadKills
@@ -74,11 +60,10 @@ import kotlinx.android.synthetic.main.fragment_your_stats.stats_weeklyPoints
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_winPoints
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_winloss
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_wins
-import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.textColor
 import java.util.HashMap
 
-class MainStatsFragment : Fragment(), RewardedVideoAdListener {
+class MainStatsFragment : Fragment() {
 
 
     private var playerName: String? = null
@@ -95,8 +80,6 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
 
     private var mFunctions: FirebaseFunctions? = null
 
-    private var iap: IInAppBillingService? = null
-
     private var isOutdated = false
 
     private var TAG = MainStatsFragment::class.java.simpleName
@@ -108,8 +91,6 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
     private var isPremium: Boolean = false
 
     lateinit var previousPlayer: PlayerStats
-
-    private lateinit var mRewardedVideoAd: RewardedVideoAd
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -126,13 +107,6 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
         mDatabase = FirebaseDatabase.getInstance().reference
         mFunctions = FirebaseFunctions.getInstance()
         mSharedPreferences = activity!!.getSharedPreferences("com.respondingio.battlegroundsbuddy", Context.MODE_PRIVATE)
-
-        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(activity)
-        mRewardedVideoAd.rewardedVideoAdListener = this
-
-        val serviceIntent = Intent("com.android.vending.billing.InAppBillingService.BIND")
-        serviceIntent.`package` = "com.android.vending"
-        requireActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
         isPremium = mSharedPreferences!!.getBoolean("premiumV1", false)
 
@@ -157,81 +131,22 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
             loadPlayerStats()
 
         Log.d("STATS", "$playerID - $shardID - $seasonID")
+    }
 
-        val refreshLayout = mainView?.findViewById<SwipeRefreshLayout>(R.id.stats_refresh)
-
-        refreshLayout?.setColorSchemeResources(R.color.md_orange_500, R.color.md_pink_500)
-        refreshLayout?.onRefresh {
-            if (playerID != null && shardID != null && gameMode != null && seasonID != null) {
-                if (getTimeSinceLastUpdated() / 60 > updateTimeout) {
-                    refreshLayout.isRefreshing = true
-                    pullNewPlayerStats()
-                } else if (!isPremium) {
-                    mRewardedVideoAd.loadAd("ca-app-pub-1946691221734928/1941699809",
-                            AdRequest.Builder().build())
-                    refreshLayout.isRefreshing = false
-                    Snacky.builder().setActivity(activity!!).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes.")
-                            .setActionText("UPGRADE OR WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).setActionClickListener {
-                                MaterialDialog.Builder(requireActivity())
-                                        .title("Upgrade or Watch An Ad")
-                                        .content(R.string.upgrade)
-                                        .backgroundColorRes(R.color.md_orange_700)
-                                        .titleColorRes(R.color.md_white_1000)
-                                        .contentColorRes(R.color.md_white_1000)
-                                        .positiveColorRes(R.color.md_white_1000)
-                                        .neutralColorRes(R.color.md_white_1000)
-                                        .negativeColorRes(R.color.md_white_1000)
-                                        .positiveText("GO PREMIUM ($2.99)")
-                                        .neutralText("NEVERMIND")
-                                        .negativeText("WATCH AN AD")
-                                        .onNegative { dialog, which ->
-                                            if (mRewardedVideoAd.isLoaded) {
-                                                mRewardedVideoAd.show()
-                                            } else {
-                                                Snacky.builder().setActivity(requireActivity()).info().setText("No ad loaded, please try again.").show()
-                                            }
-                                        }
-                                        .onNeutral { dialog, which ->
-                                            dialog.dismiss()
-                                        }
-                                        .onPositive { dialog, which ->
-                                            val buyIntentBundle = iap?.getBuyIntent(3, requireActivity().packageName,
-                                                    "plus_v1", "inapp", "")
-
-                                            val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
-
-                                            if (pendingIntent != null) {
-
-                                                val REQUEST_CODE = 1002
-
-                                                requireActivity().startIntentSenderForResult(pendingIntent.intentSender,
-                                                        REQUEST_CODE, Intent(), 0, 0,
-                                                        0)
-                                            }
-                                        }.show()
-                            }.build().show()
-                } else if (isPremium) {
-                    mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
-                            AdRequest.Builder().build())
-
-                    refreshLayout.isRefreshing = false
-                    Snacky.builder().setActivity(activity!!).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes with premium. This is a PUBG API limit.").setActionClickListener {
-                        if (mRewardedVideoAd.isLoaded) {
-                            mRewardedVideoAd.show()
-                        } else {
-                            Snacky.builder().setActivity(requireActivity()).info().setText("No ad loaded, please try again.").show()
-                        }
-                    }.setActionText("WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).build().show()
-                }
-            } else {
-                Snacky.builder().setActivity(activity!!).warning().setText("Must Select Gamemode and Season before refreshing.").show()
-                refreshLayout.isRefreshing = false
-            }
+    override fun onStop() {
+        super.onStop()
+        if (statListener != null && statRef != null) {
+            statRef!!.removeEventListener(statListener!!)
         }
     }
 
+    private var statListener: ValueEventListener? = null
+
+    private var statRef: DatabaseReference? = null
+
     private fun loadPlayerStats() {
-        mDatabase?.child("user_stats/$playerID/season_data/$shardID/$seasonID")?.addValueEventListener(object : ValueEventListener {
+        statRef = mDatabase?.child("user_stats/$playerID/season_data/$shardID/$seasonID")?.ref
+        statListener = mDatabase?.child("user_stats/$playerID/season_data/$shardID/$seasonID")?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -240,11 +155,18 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
                 if (data.exists()) {
                     if (data.hasChild("stats/$gameMode")) {
                         updateStats(data.child("stats/$gameMode").getValue(PlayerStats::class.java)!!)
-
-                        stats_refresh?.isRefreshing = false
                     }
 
                     lastUpdated = data.child("lastUpdated").value as Long?
+
+                    if (activity != null && activity!! is MainStatsActivity) {
+                        try {
+                            val topActivity = activity as MainStatsActivity
+                            topActivity.lastUpdated = lastUpdated
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
 
                     val relTime = DateUtils
                             .getRelativeTimeSpanString(lastUpdated!! * 1000L,
@@ -254,6 +176,7 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
                     stats_updated?.text = "Updated: $relTime"
 
                     val activity = activity as MainStatsActivity?
+                    activity?.mainStatsRefreshLayout?.isRefreshing = false
 
                     Log.d("LASTUPDATED", getTimeSinceLastUpdated().toString())
 
@@ -264,7 +187,8 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
                     }
                 } else {
                     Log.w(TAG, "Stats not available in database, run function. - $playerID")
-                    stats_refresh?.isRefreshing = true
+                    val activity = activity as MainStatsActivity?
+                    activity?.mainStatsRefreshLayout?.isRefreshing = true
 
                     pullNewPlayerStats()
                 }
@@ -417,19 +341,17 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
 
                     Log.e("PullNewStats", "onComplete: " + e.message)
 
-                    if (code == Code.NOT_FOUND) {
-                        Snacky.builder().setActivity(activity).info().setText(e.message.toString()).setDuration(
-                                Snacky.LENGTH_LONG).show()
-                    } else if (code == Code.RESOURCE_EXHAUSTED) {
-                        Snacky.builder().setActivity(activity).error().setText("API limit reached, try again in a minute.").setDuration(
-                                Snacky.LENGTH_LONG).show()
-                    } else {
-                        Snacky.builder().setActivity(activity).error().setText("Unknown error.").setDuration(
-                                Snacky.LENGTH_LONG).show()
+                    if (activity != null) {
+                        when (code) {
+                            Code.NOT_FOUND -> Snacky.builder().setActivity(activity).info().setText(e.message.toString()).setDuration(
+                                    Snacky.LENGTH_LONG).show()
+                            Code.RESOURCE_EXHAUSTED -> Snacky.builder().setActivity(activity).error().setText("API limit reached, try again in a minute.").setDuration(
+                                    Snacky.LENGTH_LONG).show()
+                            else -> Snacky.builder().setActivity(activity).error().setText("Unknown error.").setDuration(
+                                    Snacky.LENGTH_LONG).show()
+                        }
                     }
                 }
-
-                stats_refresh.isRefreshing = false
                 return@addOnCompleteListener
             }
 
@@ -447,68 +369,6 @@ class MainStatsFragment : Fragment(), RewardedVideoAdListener {
             val result = task.result.data as Map<String, Any>
             Log.d("REQUEST", result.toString())
             result
-        }
-    }
-
-    override fun onRewardedVideoAdClosed() {
-        if (hasReward) {
-            Snacky.builder().setActivity(requireActivity()).success().setText("Refresh Rewarded. Thank you!").show()
-            stats_refresh.isRefreshing = true
-            pullNewPlayerStats()
-            hasReward = false
-        }
-    }
-
-    override fun onRewardedVideoAdLeftApplication() {
-    }
-
-    override fun onRewardedVideoAdLoaded() {
-    }
-
-    override fun onRewardedVideoAdOpened() {
-    }
-
-    override fun onRewardedVideoCompleted() {
-
-    }
-
-    private var hasReward: Boolean = false
-
-    override fun onRewarded(p0: RewardItem?) {
-        hasReward = true
-        val bundle = Bundle()
-        bundle.putString("refresh_type", "ad_reward")
-        FirebaseAnalytics.getInstance(requireActivity()).logEvent("stat_refresh", bundle)
-    }
-
-    override fun onRewardedVideoStarted() {
-    }
-
-    override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mRewardedVideoAd.pause(activity)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mRewardedVideoAd.resume(activity)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mRewardedVideoAd.destroy(activity)
-    }
-
-    private var serviceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(p0: ComponentName?) {
-            iap = null
-        }
-
-        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-            iap = IInAppBillingService.Stub.asInterface(p1)
         }
     }
 

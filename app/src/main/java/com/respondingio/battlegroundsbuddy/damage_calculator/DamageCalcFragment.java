@@ -14,14 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.respondingio.battlegroundsbuddy.GlideApp;
-import com.respondingio.battlegroundsbuddy.R;
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.respondingio.battlegroundsbuddy.R;
 
 
 /**
@@ -77,9 +77,9 @@ public class DamageCalcFragment extends Fragment {
         // Inflate the layout for this fragment
 
         if (getActivity() != null) {
-            GlideApp.with(getActivity()).load(R.drawable.icons8_rifle).into(weaponIV);
-            GlideApp.with(getActivity()).load(R.drawable.icons8_helmet).into(helmetIV);
-            GlideApp.with(getActivity()).load(R.drawable.vest1).into(vestIV);
+            Glide.with(getActivity()).load(R.drawable.icons8_rifle).into(weaponIV);
+            Glide.with(getActivity()).load(R.drawable.icons8_helmet).into(helmetIV);
+            Glide.with(getActivity()).load(R.drawable.vest1).into(vestIV);
         }
 
         if (getArguments().containsKey("youEnemy")) {
@@ -163,7 +163,7 @@ public class DamageCalcFragment extends Fragment {
                                 if (documentSnapshot.contains("icon")) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(documentSnapshot.getString("icon"));
-                                    GlideApp.with(getActivity()).load(gsReference)
+                                    Glide.with(getActivity()).load(gsReference)
                                             .into(weaponIV);
                                 }
 
@@ -192,7 +192,7 @@ public class DamageCalcFragment extends Fragment {
                                 if (documentSnapshot.contains("icon")) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(documentSnapshot.getString("icon"));
-                                    GlideApp.with(getActivity()).load(gsReference)
+                                    Glide.with(getActivity()).load(gsReference)
                                             .into(helmetIV);
                                 }
 
@@ -221,7 +221,7 @@ public class DamageCalcFragment extends Fragment {
                                 if (documentSnapshot.contains("icon")) {
                                     StorageReference gsReference = storage
                                             .getReferenceFromUrl(documentSnapshot.getString("icon"));
-                                    GlideApp.with(getActivity()).load(gsReference)
+                                    Glide.with(getActivity()).load(gsReference)
                                             .into(vestIV);
                                 }
 

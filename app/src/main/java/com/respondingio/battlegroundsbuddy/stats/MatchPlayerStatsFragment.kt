@@ -41,6 +41,7 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.textColor
 import java.text.SimpleDateFormat
 import java.util.ArrayList
+import java.util.TimeZone
 import kotlin.math.roundToLong
 
 class MatchPlayerStatsFragment : Fragment() {
@@ -96,7 +97,7 @@ class MatchPlayerStatsFragment : Fragment() {
             }
 
             injector.text(R.id.kill_feed_victim, data.victim.name)
-            injector.text(R.id.textView9, "#${data.victim.ranking}")
+            injector.text(R.id.textView9, ordinal(data.victim.ranking))
 
             if (Telemetry().damageCauserName[data.damageCauserName].toString() == "Player") {
                 injector.text(R.id.kill_feed_cause, Telemetry().damageTypeCategory[data.damageTypeCategory].toString())
@@ -105,7 +106,9 @@ class MatchPlayerStatsFragment : Fragment() {
             }
 
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            sdf.timeZone = TimeZone.getTimeZone("GMT")
             val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            sdf2.timeZone = TimeZone.getTimeZone("GMT")
             val matchStartDate = sdf.parse(matchCreatedAt)
             val killTime = sdf2.parse(data._D)
 
@@ -177,5 +180,13 @@ class MatchPlayerStatsFragment : Fragment() {
         stats_heals.text = stats.heals.toString()
         stats_damageDealt.text = stats.damageDealt.roundToLong().toString()
         stats_revives.text = stats.revives.toString()
+    }
+
+    fun ordinal(i: Int): String {
+        val sufixes = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
+        return when (i % 100) {
+            11, 12, 13 -> i.toString() + "th"
+            else -> i.toString() + sufixes[i % 10]
+        }
     }
 }

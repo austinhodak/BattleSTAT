@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.home_weapons_list.pg
 import kotlinx.android.synthetic.main.home_weapons_list.weapon_list_rv
@@ -40,26 +41,36 @@ class HomeConsumablesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pg.visibility = View.VISIBLE
+        pg?.visibility = View.VISIBLE
+    }
+
+    override fun onStart() {
+        super.onStart()
         setupAdapter()
     }
 
-    private fun loadWeapons() {
+    override fun onStop() {
+        super.onStop()
+        consumableListener?.remove()
+    }
 
-        db.collection("consumables").orderBy("name")
+    private var consumableListener: ListenerRegistration? = null
+
+    private fun loadWeapons() {
+        consumableListener = db.collection("consumables").orderBy("name")
                 .addSnapshotListener { documentSnapshots, _ ->
                     data.clear()
                     if (documentSnapshots == null) return@addSnapshotListener
                     for (document in documentSnapshots) {
                         data.add(document)
                     }
-                    pg.visibility = View.GONE
+                    pg?.visibility = View.GONE
                     mAdapter.updateData(data)
                 }
     }
 
     private fun setupAdapter() {
-        val linearLayoutManager = LinearLayoutManager(activity)
+        val linearLayoutManager = LinearLayoutManager(activity ?: return)
         weapon_list_rv.layoutManager = linearLayoutManager
         mAdapter = SlimAdapter.create()
                 .register(R.layout.weapon_list_item_card,
@@ -82,7 +93,7 @@ class HomeConsumablesList : Fragment() {
 
                                     val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
-                                    Glide.with(requireActivity())
+                                    Glide.with(this)
                                             .load(gsReference)
                                             .transition(withCrossFade(factory))
                                             .apply(RequestOptions().override(100,100))
