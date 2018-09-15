@@ -2,22 +2,22 @@ package com.respondingio.battlegroundsbuddy.stats;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.Continuation;
@@ -43,22 +43,19 @@ import com.google.firebase.functions.FirebaseFunctionsException.Code;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.models.MatchData;
-import com.respondingio.battlegroundsbuddy.stats.MatchListAdapter.OnItemClickListener;
-
-import net.idik.lib.slimadapter.SlimAdapter;
-import net.idik.lib.slimadapter.SlimInjector;
-import net.idik.lib.slimadapter.viewinjector.IViewInjector;
-
+import com.respondingio.battlegroundsbuddy.models.PrefPlayer;
+import com.respondingio.battlegroundsbuddy.stats.MatchesListAdapter.OnItemClickListener;
+import de.mateware.snacky.Snacky;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.mateware.snacky.Snacky;
+import net.idik.lib.slimadapter.SlimAdapter;
+import net.idik.lib.slimadapter.SlimInjector;
+import net.idik.lib.slimadapter.viewinjector.IViewInjector;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
@@ -68,12 +65,13 @@ public class MatchesListFragment extends Fragment {
     String gameModeMatch = "matchesSolo";
 
     String[] gamemodeMatches = {"matchesSolo", "matchesSoloFPP", "matchesDuo", "matchesDuoFPP", "matchesSquad", "matchesSquadFPP"};
+    public static String[] modesList = {"solo", "solo-fpp", "duo", "duo-fpp", "squad", "squad-fpp"};
 
-    MatchListAdapter mAdapter;
+    MatchesListAdapter mAdapter;
 
     @BindView(R.id.matches_RV) RecyclerView mRecyclerView;
 
-    @BindView(R.id.matches_swipeRefresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     List<MatchData> matchList = new ArrayList<>();
 
@@ -82,6 +80,8 @@ public class MatchesListFragment extends Fragment {
     private FirebaseFirestore mFirestore;
 
     private FirebaseFunctions mFunctions;
+
+    private SharedPreferences mSharedPreferences;
 
     private int order = -1;
 
@@ -103,7 +103,6 @@ public class MatchesListFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -114,33 +113,47 @@ public class MatchesListFragment extends Fragment {
             return null;
         }
 
+        mSharedPreferences = getActivity().getSharedPreferences("com.respondingio.battlegroundsbuddy", android.content.Context.MODE_PRIVATE);
+
+        if (mSharedPreferences.getBoolean("premiumV1", false)) {
+            updateTimeout = 2;
+        }
+
         queue = Volley.newRequestQueue(getActivity());
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFunctions = FirebaseFunctions.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
-        playerName = getArguments().getString("player_name");
-        playerID = getArguments().getString("player_id");
-        region = AddPlayerBottomSheet.regionList[getArguments().getInt("region")].toLowerCase();
-        gamemode = AddPlayerBottomSheet.modesList[getArguments().getInt("gamemode")];
-        gameModeMatch = gamemodeMatches[getArguments().getInt("gamemode")];
-        seasonLong = "division.bro.official." + getArguments().getString("season_id");
-        seasonShort = getArguments().getString("season_id");
+        PrefPlayer player = (PrefPlayer) getArguments().getSerializable("player");
+
+        playerName = player.getPlayerName();
+        playerID = player.getPlayerID();
+        region = player.getSelectedShardID();
+        gamemode = player.getSelectedGamemode();
+        gameModeMatch = gamemodeMatches[Arrays.asList(modesList).indexOf(player.getSelectedGamemode())];
+        seasonLong = "division.bro.official." + player.getSelectedSeason();
+        seasonShort = player.getSelectedSeason();
 
         Log.d("MATCHES", "matches/" + region + "/" + seasonShort + "/" + gameModeMatch);
 
         setupAdapter();
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mAdapter = new MatchListAdapter(matchList, getActivity(), new OnItemClickListener() {
+        mAdapter = new MatchesListAdapter(matchList, getActivity(), new OnItemClickListener() {
             @Override
             public void onItemClick(final MatchData item) {
-                Intent intent = new Intent(getActivity(), MatchDetailActivity.class);
-                intent.putExtra("matchID", item.getMatchID());
-                intent.putExtra("playerID", playerID);
-                intent.putExtra("regionID", item.getMatchTopData().getString("shardId"));
-                startActivity(intent);
+                if (getActivity() == null) return;
+                try {
+                    Intent intent = new Intent(getActivity(), MatchDetailActivity.class);
+                    intent.putExtra("matchID", item.getMatchID());
+                    intent.putExtra("playerID", playerID);
+                    intent.putExtra("regionID", item.getMatchTopData().getString("shardId"));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Snacky.builder().setActivity(getActivity()).error().setText("Error Occurred, please try again.").show();
+                    e.printStackTrace();
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -149,22 +162,13 @@ public class MatchesListFragment extends Fragment {
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.md_orange_500, R.color.md_pink_500, R.color.md_orange_500, R.color.md_black_1000);
         mSwipeRefreshLayout.setRefreshing(false);
-        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (getTimeSinceLastUpdated(lastUpdated) / 60 > updateTimeout) {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                    startPullNewData();
-                } else {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    Snacky.builder().setActivity(getActivity()).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every ${updateTimeout} minutes.").setActionClickListener(
-                            new OnClickListener() {
-                                @Override
-                                public void onClick(final View v) {
-                                    startPullNewData();
-                                }
-                            }).setActionText("UPGRADE").setDuration(5000).setActionTextColor(Color.WHITE).build().show();
-                }
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if (getTimeSinceLastUpdated(lastUpdated) / 60 > updateTimeout) {
+                mSwipeRefreshLayout.setRefreshing(true);
+                startPullNewData();
+            } else {
+                mSwipeRefreshLayout.setRefreshing(false);
+                Snacky.builder().setActivity(getActivity()).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every " + updateTimeout + " minutes.").setDuration(5000).setActionTextColor(Color.WHITE).build().show();
             }
         });
 
@@ -287,13 +291,10 @@ public class MatchesListFragment extends Fragment {
     }
 
     private void sortList() throws Exception {
-        Collections.sort(matchList, new Comparator<Object>() {
-            @Override
-            public int compare(final Object o1, final Object o2) {
-                MatchData m1 = (MatchData) o1;
-                MatchData m2 = (MatchData) o2;
-                return m2.getCreatedAt().compareTo(m1.getCreatedAt());
-            }
+        Collections.sort(matchList, (Comparator<Object>) (o1, o2) -> {
+            MatchData m1 = (MatchData) o1;
+            MatchData m2 = (MatchData) o2;
+            return m2.getCreatedAt().compareTo(m1.getCreatedAt());
         });
 
         mAdapter.notifyDataSetChanged();
@@ -350,13 +351,13 @@ public class MatchesListFragment extends Fragment {
                     mSwipeRefreshLayout.setRefreshing(false);
 
                     lastUpdated = (long) dataSnapshot.child("lastUpdated").getValue();
-                    GameStatsActivity activity = (GameStatsActivity) getActivity();
+                    MainStatsActivity activity = (MainStatsActivity) getActivity();
 
                     if (activity != null) {
                         if (getTimeSinceLastUpdated(lastUpdated) / 60 > updateTimeout) {
-                            activity.showOutdated();
+                            //activity.showOutdated();
                         } else {
-                            activity.hideOutdated();
+                            //activity.hideOutdated();
                         }
                     }
                 } else {

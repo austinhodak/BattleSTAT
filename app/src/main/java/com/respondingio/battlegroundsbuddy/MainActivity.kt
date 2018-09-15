@@ -7,12 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.os.Environment
+import android.os.Handler
 import android.os.IBinder
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.Fragment
@@ -20,6 +19,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.util.TimingLogger
 import com.android.vending.billing.IInAppBillingService
 import com.android.volley.Request
 import com.android.volley.Response
@@ -36,9 +36,6 @@ import com.google.ads.consent.ConsentInformation
 import com.google.ads.consent.ConsentStatus
 import com.google.ads.consent.ConsentStatus.PERSONALIZED
 import com.google.ads.consent.ConsentStatus.UNKNOWN
-import com.google.ads.mediation.admob.AdMobAdapter
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.common.ConnectionResult
@@ -74,14 +71,13 @@ import com.respondingio.battlegroundsbuddy.loadout.LoadoutBestTabs
 import com.respondingio.battlegroundsbuddy.loadout.LoadoutCreateMain
 import com.respondingio.battlegroundsbuddy.profile.ProfileActivity
 import com.respondingio.battlegroundsbuddy.rss.HomeUpdatesFragment
-import com.respondingio.battlegroundsbuddy.stats.GameStatsActivity
+import com.respondingio.battlegroundsbuddy.stats.MainStatsActivity
 import com.respondingio.battlegroundsbuddy.weapons.HomeWeaponsFragment
 import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import kotlinx.android.synthetic.main.activity_main.toolbar_title
 import org.jetbrains.anko.toast
-import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
 import java.text.DecimalFormat
@@ -100,6 +96,8 @@ public class MainActivity : AppCompatActivity() {
 
     private lateinit var mSharedPreferences: SharedPreferences
 
+    lateinit var newSharedPreferences: SharedPreferences
+
     private val removeAds = SecondaryDrawerItem().withIdentifier(9001).withName("Remove Ads").withIcon(R.drawable.icons8_remove_ads_96).withSelectable(false)
 
     private val signInDrawerItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_password).withSelectable(false).withName("Login or Sign Up").withIdentifier(90001)
@@ -112,16 +110,8 @@ public class MainActivity : AppCompatActivity() {
 
     private lateinit var mInterstitialAd: InterstitialAd
 
-    private lateinit var listener: OnSharedPreferenceChangeListener
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
-
-        if (mSharedPreferences.getBoolean("night_mode", true)) {
-            setTheme(R.style.AppTheme)
-        } else {
-            setTheme(R.style.AppThemeLight)
-        }
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -130,12 +120,13 @@ public class MainActivity : AppCompatActivity() {
             return
         }
 
+        mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
+        newSharedPreferences = this.getSharedPreferences("com.respondingio.battlegroundsbuddy", Context.MODE_PRIVATE)
+
         setSupportActionBar(main_toolbar)
         toolbar_title.text = getString(R.string.drawer_title_weapons)
 
         initializeFirebase()
-
-        isNightMode = mSharedPreferences.getBoolean("night_mode", false)
 
         setupDrawer()
 
@@ -145,46 +136,9 @@ public class MainActivity : AppCompatActivity() {
 
         RateDialog.with(this, 1, 5)
 
-        MobileAds.initialize(this,
-                "ca-app-pub-1946691221734928~8934220899")
-
-        checkConsent()
-
-        if (!mSharedPreferences.getBoolean("removeAds", false)) {
-            mInterstitialAd = InterstitialAd(this)
-            mInterstitialAd.adUnitId = "ca-app-pub-1946691221734928/5517720061"
-
-            if (!mSharedPreferences.getBoolean("personalized_ads", false)) {
-                var extra = Bundle()
-                extra.putString("npa", "1")
-                mInterstitialAd.loadAd(AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extra).build())
-            }
-            mInterstitialAd.loadAd(AdRequest.Builder().build())
-            mInterstitialAd.adListener = object : AdListener() {
-                override fun onAdClosed() {
-                    finish()
-                }
-            }
-        }
-
-        listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, s ->
-            Log.d("SHARED_PREF", s)
-            if (s.equals("night_mode")) {
-                reloadTheme()
-                scheduledRestart = true
-                onResume()
-            }
-        }
-
-    }
-
-    private fun checkIfMobileFilesExists() {
-        var file = File(Environment.getExternalStorageDirectory(), "/Android/data/com.tencent.ig/files/UE4Game/ShadowTrackerExtra/ShadowTrackerExtra/Saved/Config/Android/UserCustom.ini")
-        if(file.exists()) {
-            Log.d("FILE", "UserCustom.ini File Exists!")
-        } else {
-            Log.d("FILE", "UserCustom.ini File DOESNT Exist!")
-        }
+        Thread(Runnable {
+            MobileAds.initialize(this, "ca-app-pub-1946691221734928~8934220899")
+        }).start()
     }
 
     private fun initializeFirebase() {
@@ -216,7 +170,7 @@ public class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
         var launchCount = mSharedPreferences.getInt("launchCount", 0)
-        if (launchCount >= 3) {
+        if (launchCount >= 2) {
             try {
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
@@ -234,11 +188,7 @@ public class MainActivity : AppCompatActivity() {
 
     }
 
-    private var isNightMode: Boolean = false
 
-    public fun reloadTheme() {
-        isNightMode = mSharedPreferences.getBoolean("night_mode", false)
-    }
 
     private fun loadPurchases() {
         try {
@@ -252,9 +202,19 @@ public class MainActivity : AppCompatActivity() {
                     Log.d("OWNED", "ADS REMOVED")
                     mSharedPreferences.edit().putBoolean("removeAds", true).apply()
                     result.removeItem(9001)
+                    FirebaseAnalytics.getInstance(this).setUserProperty("isAdFree", "true")
                 } else {
                     mSharedPreferences.edit().putBoolean("removeAds", false).apply()
                     //result.addStickyFooterItem(removeAds)
+                    FirebaseAnalytics.getInstance(this).setUserProperty("isAdFree", "false")
+                }
+
+                if (ownedItems2.contains("plus_v1")) {
+                    newSharedPreferences.edit().putBoolean("premiumV1", true).apply()
+                    FirebaseAnalytics.getInstance(this).setUserProperty("isPremium", "true")
+                } else {
+                    newSharedPreferences.edit().putBoolean("premiumV1", false).apply()
+                    FirebaseAnalytics.getInstance(this).setUserProperty("isPremium", "false")
                 }
             }
         } catch (e: Exception) {
@@ -264,47 +224,16 @@ public class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
         if (!isGooglePlayServicesAvailable(this)) {
             return
         }
 
+        checkAuthStatus()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (iap != null) {
-            unbindService(serviceConnection)
-        }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        if (this::listener.isInitialized)
-        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
-    }
-
-    private var scheduledRestart: Boolean = false
-
-    override fun onResume() {
-        super.onResume()
-        if (this::listener.isInitialized)
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-        checkAuthStatus()
-
-        loadSteamUserCount()
-
-        try {
-            if (scheduledRestart) {
-                scheduledRestart = false
-                val i : Intent = baseContext.packageManager.getLaunchIntentForPackage(baseContext.packageName)
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(i)
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            }
-        } catch (e: Exception) {
-
-        }
     }
 
     private fun checkAuthStatus() {
@@ -320,9 +249,7 @@ public class MainActivity : AppCompatActivity() {
     private var new_fragment: Fragment? = null
 
     private fun setupDrawer() {
-        val homeFragment = HomeWeaponsFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.main_frame, homeFragment)
-                .commit()
+        val timer = TimingLogger("MainApp", "setupDrawer")
 
         if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
             supportActionBar?.elevation = 0.0f
@@ -337,6 +264,7 @@ public class MainActivity : AppCompatActivity() {
                         ProfileSettingDrawerItem().withName("Logout").withIcon(R.drawable.icons8_logout).withOnDrawerItemClickListener { _, _, _ ->
 
                             mSharedPreferences.edit().remove("stats_selected_player").remove("stats_selected_player_id").apply()
+                            newSharedPreferences.edit().remove("selected-player-id").apply()
 
                             AuthUI.getInstance().signOut(this).addOnCompleteListener {
                                 Snacky.builder().setActivity(this).info().setText("Signed Out.").show()
@@ -363,12 +291,6 @@ public class MainActivity : AppCompatActivity() {
         val equipment = PrimaryDrawerItem().withIdentifier(5).withName(R.string.drawer_title_equipment).withIcon(R.drawable.icons8_helmet).withIconTintingEnabled(false)
         val settings = SecondaryDrawerItem().withIdentifier(901).withName(R.string.drawer_title_about).withSelectable(false).withIcon(R.drawable.icons8_info)
 
-        var color = if (!isNightMode) {
-            R.color.md_light_secondary
-        } else {
-            R.color.md_dark_secondary
-        }
-
         result = DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(main_toolbar)
@@ -390,37 +312,26 @@ public class MainActivity : AppCompatActivity() {
                                 //SecondaryDrawerItem().withIdentifier(301).withName(R.string.drawer_title_bestloadouts).withIcon(R.drawable.loadout_star)
                         //),
                             PrimaryDrawerItem().withName(getString(string.drawer_title_maps)).withSelectable(false).withIcon(R.drawable.map_96).withIdentifier(200),
-                            PrimaryDrawerItem().withName(R.string.drawer_title_timer).withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge(getString(string.beta)),
+                            PrimaryDrawerItem().withName(R.string.drawer_title_timer).withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge("BETA"),
                         updates
                         ),
                         DividerDrawerItem(),
                         settings,
                         SecondaryDrawerItem().withName(getString(string.drawer_title_suggestion)).withIcon(R.drawable.icon_hint).withSelectable(false).withIdentifier(501),
                         SecondaryDrawerItem().withName(getString(string.drawer_title_share)).withIcon(R.drawable.icons8_share).withSelectable(false).withIdentifier(502)
-//                        SwitchDrawerItem().withName("Night Mode").withIcon(R.drawable.icons8_moon_96).withTextColorRes(color).withSelectable(false).withChecked(mSharedPreferences.getBoolean("night_mode", false)).withOnCheckedChangeListener { drawerItem, buttonView, isChecked ->
-//                            Log.d("ISCHECKED", "$isChecked")
-//                            if (isChecked) {
-//                                mSharedPreferences.edit().putBoolean("night_mode", true).apply()
-//                            } else {
-//                                mSharedPreferences.edit().putBoolean("night_mode", false).apply()
-//                            }
-//
-////                            try {
-////
-////                                reloadTheme()
-////                                scheduledRestart = true
-////                                onResume()
-////                            } catch (e: Exception) {
-////                            }
-//                        }
                 )
                 .withOnDrawerItemClickListener { _, _, drawerItem ->
                     if (drawerItem.identifier.toString() == "9999") {
                         if (FirebaseAuth.getInstance().currentUser == null) {
-                            Snacky.builder().setActivity(this).error().setText("You must be logged in to use this feature.").setDuration(Snacky.LENGTH_SHORT).show()
+                            Snacky.builder().setActivity(this).error().setText("You must be logged in to use this feature.").setDuration(Snacky.LENGTH_LONG).setAction("LOGIN") {
+                                launchSignIn()
+                            }.show()
                             return@withOnDrawerItemClickListener false
                         }
-                        startActivity(Intent(this, GameStatsActivity::class.java))
+
+                        Handler().postDelayed({
+                            startActivity(Intent(this, MainStatsActivity::class.java))
+                        }, 400)
                     }
 
                     if (drawerItem.identifier.toString() == "610") {
@@ -438,6 +349,7 @@ public class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "1") {
+                        Log.d("MainApp", "weapons_home")
                         updateFragment(HomeWeaponsFragment())
                         toolbar_title.text = getString(string.drawer_title_weapons)
                         updateToolbarElevation(0f)
@@ -482,7 +394,6 @@ public class MainActivity : AppCompatActivity() {
                         try {
                             customTabsIntent.launchUrl(this, Uri.parse("https://pubgmap.io/"))
                         } catch (e: Exception) {
-                            //Crashlytics.logException(e)
                             Snacky.builder().setActivity(this).error().setText("Error loading map.").show()
                         }
 
@@ -569,9 +480,6 @@ public class MainActivity : AppCompatActivity() {
                         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out Battlegrounds Battle Buddy on the Google Play Store!")
                         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
                         startActivity(sharingIntent)
-
-                        //val addPlayerBottomSheet = AddPlayerBottomSheet()
-                        //addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
                     }
 
                     if (drawerItem.identifier.toString() == "90001") {
@@ -585,44 +493,43 @@ public class MainActivity : AppCompatActivity() {
                 }
                 .build()
 
+        result.recyclerView.isVerticalScrollBarEnabled = false
+
         result.setSelection(1)
 
         if (!mSharedPreferences.getBoolean("removeAds", false)) {
             result.addItem(removeAds)
         }
 
-        if (BuildConfig.DEBUG) {
-            result.addItemAtPosition(PrimaryDrawerItem().withName("Game Stats").withIcon(R.drawable.icons8_chart).withSelectable(false).withIconTintingEnabled(false).withIdentifier(9999), 1)
-            result.addItemAtPosition(DividerDrawerItem().withIdentifier(91001), 2)
-        }
+        result.addItemAtPosition(PrimaryDrawerItem().withName("Player Stats").withBadge("BETA").withIcon(R.drawable.icons8_chart).withSelectable(false).withIconTintingEnabled(false).withIdentifier(9999), 1)
+        result.addItemAtPosition(DividerDrawerItem().withIdentifier(91001), 2)
+
+        timer.addSplit("firebase")
 
         if (FirebaseAuth.getInstance().currentUser != null) {
-            //Logged In
             if (FirebaseAuth.getInstance().currentUser!!.isAnonymous) {
-                //Anon User, log out and show sign up.
                 AuthUI.getInstance().signOut(this)
                 if (result.getStickyFooterPosition(90001) == -1) {
                     result.addStickyFooterItem(signInDrawerItem)
                 }
             } else {
                 notifyLoggedIn(true)
-
-                //Crashlytics.setBool("loggedIn", true)
             }
         } else {
             if (result.getStickyFooterPosition(90001) == -1) {
                 result.addStickyFooterItem(signInDrawerItem)
             }
-
-           // Crashlytics.setBool("loggedIn", false)
         }
 
+        timer.addSplit("steam")
 
+        loadSteamUserCount()
+
+        timer.addSplit("end")
+        timer.dumpToLog()
     }
 
     private fun notifyLoggedIn(setupAccount: Boolean) {
-
-
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         var displayName = currentUser?.displayName
@@ -639,7 +546,6 @@ public class MainActivity : AppCompatActivity() {
 
         if (result.getDrawerItem(90002) == null) {
             result.addItemAtPosition(profileItem, 1)
-
         }
 
         if (setupAccount)
@@ -685,7 +591,6 @@ public class MainActivity : AppCompatActivity() {
         headerResult.updateProfile(header)
 
         result.removeItem(90002)
-        result.removeItem(91001)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -722,8 +627,17 @@ public class MainActivity : AppCompatActivity() {
     }
 
     private fun updateFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.main_frame, fragment)
-                .commit()
+        if (supportFragmentManager.findFragmentById(R.id.main_frame) != null) {
+            supportFragmentManager.beginTransaction().remove(supportFragmentManager.findFragmentById(R.id.main_frame)!!).commit()
+
+            Handler().postDelayed({
+                supportFragmentManager.beginTransaction().replace(R.id.main_frame, fragment).setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .commit()
+            }, 400)
+        } else {
+            supportFragmentManager.beginTransaction().replace(R.id.main_frame, fragment).setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .commit()
+        }
     }
 
     private fun logDrawerEvent(eventName: String) {
@@ -779,14 +693,15 @@ public class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSteamUserCount() {
-
-
         try {
             val queue = Volley.newRequestQueue(this)
             val url = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080"
 
             val stringRequest = JsonObjectRequest(Request.Method.GET, url, null,
                     Response.Listener { response ->
+                        if (!this::headerResult.isInitialized) {
+                            return@Listener
+                        }
                         val amount = java.lang.Double.parseDouble(response.getJSONObject("response").getString("player_count"))
                         val formatter = DecimalFormat("#,###")
                         val formatted = formatter.format(amount)
@@ -794,9 +709,7 @@ public class MainActivity : AppCompatActivity() {
                         val header = headerResult.profiles[0]
                         header.withEmail("$formatted Current Steam Players")
 
-                        if (this::headerResult.isInitialized) {
-                            headerResult.updateProfile(header)
-                        }
+                        headerResult.updateProfile(header)
                     },
                     Response.ErrorListener { error ->
                         // TODO: Handle error

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.respondingio.battlegroundsbuddy.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -61,6 +62,8 @@ public class WeaponDetailDeviation extends Fragment {
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
+    private ListenerRegistration weaponListener;
+
     public WeaponDetailDeviation() {
         // Required empty public constructor
     }
@@ -70,19 +73,25 @@ public class WeaponDetailDeviation extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weapon_detail_deviation, container, false);
         ButterKnife.bind(this, view);
-        // Inflate the layout for this fragment
-        if (getArguments() != null) {
-            loadWeapon(getArguments().getString("weaponPath"), getArguments().getString("weaponClass"));
-        }
-
-        //AdRequest adRequest = new AdRequest.Builder().build();
-        //mAdView.loadAd(adRequest);
-
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getArguments() != null) {
+            loadWeapon(getArguments().getString("weaponPath"), getArguments().getString("weaponClass"));
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (weaponListener != null) weaponListener.remove();
+    }
+
     private void loadWeapon(final String weaponID, final String weaponClass) {
-        db.document(weaponID).collection("stats")
+        weaponListener = db.document(weaponID).collection("stats")
                 .document("deviation")
                 .addSnapshotListener(
                         new EventListener<DocumentSnapshot>() {

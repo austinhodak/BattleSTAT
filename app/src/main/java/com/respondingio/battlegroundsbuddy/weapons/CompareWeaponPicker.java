@@ -15,15 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.respondingio.battlegroundsbuddy.GlideApp;
-import com.respondingio.battlegroundsbuddy.R;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.respondingio.battlegroundsbuddy.GlideApp;
+import com.respondingio.battlegroundsbuddy.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +47,8 @@ public class CompareWeaponPicker extends AppCompatActivity {
     TextView title;
 
     private SlimAdapter adapter;
+
+    private List<ListenerRegistration> list = new ArrayList<>();
 
     private SharedPreferences mSharedPreferences;
 
@@ -82,31 +82,34 @@ public class CompareWeaponPicker extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        for (ListenerRegistration registration : list) {
+            registration.remove();
+        }
+    }
 
     private void loadWeapons() {
         String[] classes = {"assault_rifles", "sniper_rifles", "smgs", "shotguns", "pistols", "lmgs", "throwables",
                 "melee", "misc"};
         for (String name : classes) {
-            db.collection("weapons").document(name).collection("weapons").orderBy("weapon_name")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(final QuerySnapshot documentSnapshots,
-                                final FirebaseFirestoreException e) {
-                            Set<String> favs = mSharedPreferences.getStringSet("favoriteWeapons", null);
-                            //data.clear();
-                            for (DocumentSnapshot document : documentSnapshots) {
+            list.add(db.collection("weapons").document(name).collection("weapons").orderBy("weapon_name")
+                    .addSnapshotListener((documentSnapshots, e) -> {
+                        Set<String> favs = mSharedPreferences.getStringSet("favoriteWeapons", null);
+                        //data.clear();
+                        for (DocumentSnapshot document : documentSnapshots) {
 
-                                if (favs != null && favs.contains(document.getReference().getPath())) {
-                                    data.add(0, document);
-                                } else {
-                                    data.add(document);
-                                }
-
-                                //mProgressBar.setVisibility(View.GONE);
+                            if (favs != null && favs.contains(document.getReference().getPath())) {
+                                data.add(0, document);
+                            } else {
+                                data.add(document);
                             }
-                            adapter.updateData(data);
+
+                            //mProgressBar.setVisibility(View.GONE);
                         }
-                    });
+                        adapter.updateData(data);
+                    }));
         }
     }
 

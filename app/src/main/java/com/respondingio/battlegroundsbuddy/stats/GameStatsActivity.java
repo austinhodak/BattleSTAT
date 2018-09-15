@@ -17,7 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.MaterialDialog.ListCallbackSingleChoice;
@@ -35,14 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.models.Seasons;
-
-import java.util.Arrays;
+import de.mateware.snacky.Snacky;
 import java.util.HashMap;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.mateware.snacky.Snacky;
 
 public class GameStatsActivity extends AppCompatActivity {
 
@@ -323,7 +319,7 @@ public class GameStatsActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.your_stats_menu:
-                        NewStatsFragment yourStatsFragment = new NewStatsFragment();
+                        MainStatsFragment yourStatsFragment = new MainStatsFragment();
                         yourStatsFragment.setArguments(mBundle);
                         getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, yourStatsFragment).commit();
                         break;
@@ -360,7 +356,7 @@ public class GameStatsActivity extends AppCompatActivity {
                 String shardID = dataSnapshot.child("shardID").getValue().toString().toUpperCase();
                 String playerName = dataSnapshot.child("playerName").getValue().toString();
 
-                selectedRegion = Arrays.asList(AddPlayerBottomSheet.regionList).indexOf(shardID);
+                //selectedRegion = Arrays.asList(AddPlayerBottomSheet.Companion.getRegionList()).indexOf(shardID);
                 mSharedPreferences.edit().putInt("player_region-" + dataSnapshot.getKey(), selectedRegion).apply();
 
                 if (players.containsKey(playerName)) return;
@@ -464,7 +460,7 @@ public class GameStatsActivity extends AppCompatActivity {
     }
 
     private void reloadFragments() {
-        NewStatsFragment yourStatsFragment = new NewStatsFragment();
+        MainStatsFragment yourStatsFragment = new MainStatsFragment();
         switch (mBottomNavigationView.getSelectedItemId()) {
             case R.id.your_stats_menu:
                 yourStatsFragment.setArguments(mBundle);

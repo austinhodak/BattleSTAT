@@ -8,6 +8,7 @@
     android:scrollbars="none">
 
     <LinearLayout
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -802,6 +803,34 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <android.support.v7.widget.CardView
+            android:id="@+id/overview_full_stats"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            app:cardBackgroundColor="@color/md_blue_700"
+            app:cardCornerRadius="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto_bold"
+                    android:gravity="center"
+                    android:text="VIEW DAMAGE CHART"
+                    android:textColor="#FFF" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -816,6 +845,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -857,6 +887,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -906,6 +937,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -947,6 +979,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -996,6 +1029,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -1037,6 +1071,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -1086,6 +1121,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -1127,6 +1163,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
+                app:cardCornerRadius="5dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -1186,10 +1223,10 @@
             android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
-            app:cardCornerRadius="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1203,16 +1240,16 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
                     android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_horizontal"
                     android:text="SHOTS TO DESTROY VEHICLE"
                     android:textColor="#FFF"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="20dp"
                     android:layout_height="2dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="12dp"
                     android:background="@color/md_dark_dividers" />
 
@@ -1448,10 +1485,10 @@
             android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
-            app:cardCornerRadius="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1482,12 +1519,12 @@
             android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
-            android:focusableInTouchMode="false"
             android:id="@+id/weaponDetailSoundsCard"
-            app:cardCornerRadius="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:focusableInTouchMode="false"
+            app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

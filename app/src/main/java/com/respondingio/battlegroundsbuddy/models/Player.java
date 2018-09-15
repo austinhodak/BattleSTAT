@@ -19,7 +19,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.MaterialDialog.ListCallbackSingleChoice;
@@ -35,17 +36,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.stats.AddPlayerBottomSheet;
 import com.respondingio.battlegroundsbuddy.stats.MatchesListFragment;
-import com.respondingio.battlegroundsbuddy.stats.YourStatsFragment;
-
+import com.respondingio.battlegroundsbuddy.stats.OLDMainStatsFragment;
+import de.mateware.snacky.Snacky;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.mateware.snacky.Snacky;
 
 public class Player implements Parcelable {
 
@@ -160,7 +156,7 @@ public class Player implements Parcelable {
                 public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.your_stats_menu:
-                            YourStatsFragment yourStatsFragment = new YourStatsFragment();
+                            OLDMainStatsFragment yourStatsFragment = new OLDMainStatsFragment();
                             yourStatsFragment.setArguments(mBundle);
                             getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, yourStatsFragment).commit();
                             break;
@@ -221,7 +217,7 @@ public class Player implements Parcelable {
 
             loadPlayers();
 
-            mFragment = new YourStatsFragment();
+            mFragment = new OLDMainStatsFragment();
             mFragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, mFragment).commit();
 
@@ -401,36 +397,36 @@ public class Player implements Parcelable {
         private void loadSeasons() {
             seasonList.clear();
             String season;
-            if (AddPlayerBottomSheet.regionList[selectedRegion].contains("XBOX")) {
-                season = "xbox-na";
-            } else {
-                season = "pc-na";
-            }
+//            if (AddPlayerBottomSheet.getRegionList()[selectedRegion].contains("XBOX")) {
+//                season = "xbox-na";
+//            } else {
+//                season = "pc-na";
+//            }
 
-            Log.d("SEASON", season + " - "+ AddPlayerBottomSheet.regionList[selectedRegion]);
+            //Log.d("SEASON", season + " - "+ AddPlayerBottomSheet.Companion.getRegionList()[selectedRegion]);
 
-            mDatabase.child("seasons").child(season).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if ((boolean) child.getValue()) {
-                            seasonList.add(child.getKey() + " (Current)");
-                            selectedSeason = seasonList.indexOf(child.getKey() + " (Current)");
-                        } else {
-                            seasonList.add(child.getKey());
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull final DatabaseError databaseError) {
-
-                }
-            });
+//            mDatabase.child("seasons").child(season).addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+//                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                        if ((boolean) child.getValue()) {
+//                            seasonList.add(child.getKey() + " (Current)");
+//                            selectedSeason = seasonList.indexOf(child.getKey() + " (Current)");
+//                        } else {
+//                            seasonList.add(child.getKey());
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull final DatabaseError databaseError) {
+//
+//                }
+//            });
         }
 
         private void reloadFragments() {
-            YourStatsFragment yourStatsFragment = new YourStatsFragment();
+            OLDMainStatsFragment yourStatsFragment = new OLDMainStatsFragment();
             switch (mBottomNavigationView.getSelectedItemId()) {
                 case R.id.your_stats_menu:
                     yourStatsFragment.setArguments(mBundle);
@@ -484,7 +480,7 @@ public class Player implements Parcelable {
                 public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable final String s) {
 
                     String shard_id = dataSnapshot.child("shardId").getValue().toString().toUpperCase();
-                    selectedRegion = Arrays.asList(AddPlayerBottomSheet.regionList).indexOf(shard_id);
+                    //selectedRegion = Arrays.asList(AddPlayerBottomSheet.Companion.getRegionList()).indexOf(shard_id);
                     mSharedPreferences.edit().putInt("player_region-" + dataSnapshot.getKey(), selectedRegion).apply();
 
                     if (players.containsKey(dataSnapshot.getKey())) return;

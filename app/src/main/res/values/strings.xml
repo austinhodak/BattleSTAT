@@ -28,4 +28,25 @@
 
     <string name="beta"><b>β</b></string>
 
+    <string name="upgrade"><b>With Battle Buddy Premium</b> you get the following features:\n• Remove Ads (Except Watch to Refresh)\n• Reduce Stat Refresh Limit to 2 Minutes\n• Lots of more benefits in the future!</string>
+
+    <string name="statsOnBoarding">We are proud to introduce a new feature called <b>Player Stats</b>!\n\nYou can now view your (or anyone\'s) stats and matches! Please keep in mind this is in beta, we will be adding more features soon!\n\n<i>Only PC and Xbox stats are available, nobody can get PUBG Mobile stats yet (blame Tencent).</i>\n\n<b>Now go get some chicken dinners and have fun!</b></string>
+
+    <string-array name="players_sort">
+        <item>Win Place</item>
+        <item>Name</item>
+        <item>Rating</item>
+        <item>Kills</item>
+        <item>Damage</item>
+        <item>Distance</item>
+        <item>Longest Kill</item>
+    </string-array>
+
+    <string-array name="kill_feed_sort">
+        <item>Players Left</item>
+        <item>Kill Number</item>
+        <item>Killer Name</item>
+        <item>Victim Name</item>
+    </string-array>
+
 </resources>

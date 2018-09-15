@@ -96,7 +96,7 @@ public class MatchData {
     }
 
     public String getFormattedCreatedAt() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         long time = 0;
         try {
             time = sdf.parse(getMatchTopData().getString("createdAt")).getTime();

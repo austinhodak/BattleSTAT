@@ -2,8 +2,6 @@ package com.respondingio.battlegroundsbuddy.weapons;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.respondingio.battlegroundsbuddy.R;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.FirebaseStorage;
+import com.respondingio.battlegroundsbuddy.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +54,8 @@ public class WeaponDetailSpread extends Fragment {
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
+    private ListenerRegistration weaponListener;
+
     public WeaponDetailSpread() {
         // Required empty public constructor
     }
@@ -69,79 +66,71 @@ public class WeaponDetailSpread extends Fragment {
         View view = inflater.inflate(R.layout.fragment_weapon_detail_spread, container, false);
         ButterKnife.bind(this, view);
         // Inflate the layout for this fragment
-        if (getArguments() != null) {
-            loadWeapon(getArguments().getString("weaponPath"), getArguments().getString("weaponClass"));
-        }
-
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        //mAdView.loadAd(adRequest);
-
+    public void onStart() {
+        super.onStart();
+        if (getArguments() != null) {
+            loadWeapon(getArguments().getString("weaponPath"), getArguments().getString("weaponClass"));
+        }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
+        if (weaponListener != null) weaponListener.remove();
     }
 
     private void loadWeapon(final String weaponID, final String weaponClass) {
-        db.document(weaponID).collection("stats")
+        weaponListener = db.document(weaponID).collection("stats")
                 .document("spread")
                 .addSnapshotListener(
-                        new EventListener<DocumentSnapshot>() {
-                            @Override
-                            public void onEvent(final DocumentSnapshot data,
-                                    final FirebaseFirestoreException e) {
-                                if (e == null && data != null && data.exists()) {
-                                    if (data.getString("baseSpread") != null) {
-                                        spreadBaseTV.setText(data.getString("baseSpread"));
-                                    }
+                        (data, e) -> {
+                            if (e == null && data != null && data.exists()) {
+                                if (data.getString("baseSpread") != null) {
+                                    spreadBaseTV.setText(data.getString("baseSpread"));
+                                }
 
-                                    if (data.getString("aimingMod") != null) {
-                                        aimingTV.setText(data.getString("aimingMod"));
-                                    }
+                                if (data.getString("aimingMod") != null) {
+                                    aimingTV.setText(data.getString("aimingMod"));
+                                }
 
-                                    if (data.getString("adsMod") != null) {
-                                        adsTV.setText(data.getString("adsMod"));
-                                    }
+                                if (data.getString("adsMod") != null) {
+                                    adsTV.setText(data.getString("adsMod"));
+                                }
 
-                                    if (data.getString("firingBase") != null) {
-                                        firingTV.setText(data.getString("firingBase"));
-                                    }
+                                if (data.getString("firingBase") != null) {
+                                    firingTV.setText(data.getString("firingBase"));
+                                }
 
-                                    if (data.getString("crouchMod") != null) {
-                                        crouchTV.setText(data.getString("crouchMod"));
-                                    }
+                                if (data.getString("crouchMod") != null) {
+                                    crouchTV.setText(data.getString("crouchMod"));
+                                }
 
-                                    if (data.getString("proneMod") != null) {
-                                        proneTV.setText(data.getString("proneMod"));
-                                    }
+                                if (data.getString("proneMod") != null) {
+                                    proneTV.setText(data.getString("proneMod"));
+                                }
 
-                                    if (data.getString("walkMod") != null) {
-                                        walkTV.setText(data.getString("walkMod"));
-                                    }
+                                if (data.getString("walkMod") != null) {
+                                    walkTV.setText(data.getString("walkMod"));
+                                }
 
-                                    if (data.getString("runMod") != null) {
-                                        runTV.setText(data.getString("runMod"));
-                                    }
+                                if (data.getString("runMod") != null) {
+                                    runTV.setText(data.getString("runMod"));
+                                }
 
-                                    if (data.getString("jumpMod") != null) {
-                                        jumpTV.setText(data.getString("jumpMod"));
-                                    }
+                                if (data.getString("jumpMod") != null) {
+                                    jumpTV.setText(data.getString("jumpMod"));
+                                }
 
-                                    if (data.getString("bestInClass") != null) {
-
-                                    }
-
-                                } else {
+                                if (data.getString("bestInClass") != null) {
 
                                 }
+
+                            } else {
+
                             }
                         });
     }

@@ -27,7 +27,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="center_horizontal"
-                android:text="ADD YOUR PLAYER"
+                android:text="ADD A PLAYER"
                 android:textColor="@color/md_black_1000"
                 android:textSize="13sp"
                 android:visibility="visible" />
@@ -59,7 +59,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto_condensed_bold"
-            android:text="SELECT YOUR REGION"
+            android:text="SELECT REGION"
             android:textColor="#000"
             android:textSize="12sp" />
 
@@ -78,7 +78,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto_condensed_bold"
-            android:text="ENTER YOUR USERNAME (CASE SENSITIVE)"
+            android:text="ENTER IN-GAME NAME (CASE SENSITIVE)"
             android:textColor="#000"
             android:textSize="12sp" />
 
@@ -90,7 +90,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="Username"
+            android:hint="Exactly how it appears in game..."
             android:inputType="textPersonName"
             android:textSize="14sp" />
 

@@ -2,6 +2,8 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/kill_feed_top"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="72dp"
     tools:layout_editor_absoluteY="25dp">
@@ -70,6 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/roboto_medium"
+        android:text="12:34"
         android:textColor="@color/material_drawer_secondary_text"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,6 +91,7 @@
         android:id="@+id/kill_feed_cause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Cause"
         app:layout_constraintBottom_toBottomOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="@+id/kill_feed_killer"
         app:layout_constraintTop_toBottomOf="@+id/kill_feed_killer" />
@@ -104,5 +108,25 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView9"
         app:layout_constraintEnd_toEndOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="@+id/textView9" />
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/crosshair"
+        app:layout_constraintBottom_toBottomOf="@+id/kill_feed_distance"
+        app:layout_constraintEnd_toStartOf="@+id/kill_feed_distance"
+        app:layout_constraintTop_toTopOf="@+id/kill_feed_distance" />
+
+    <TextView
+        android:id="@+id/kill_feed_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="123m"
+        android:textColor="@color/material_drawer_secondary_text"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/kill_feed_cause"
+        app:layout_constraintEnd_toEndOf="@+id/kill_feed_time"
+        app:layout_constraintTop_toBottomOf="@+id/kill_feed_killer" />
 
 </android.support.constraint.ConstraintLayout>

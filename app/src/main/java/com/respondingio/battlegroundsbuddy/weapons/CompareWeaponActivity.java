@@ -13,8 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.respondingio.battlegroundsbuddy.GlideApp;
-import com.respondingio.battlegroundsbuddy.R;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -23,8 +22,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.respondingio.battlegroundsbuddy.R;
 import de.mateware.snacky.Snacky;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,12 +140,20 @@ public class CompareWeaponActivity extends AppCompatActivity {
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
+    private List<ListenerRegistration> weaponListeners = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compare_weapon);
         ButterKnife.bind(this);
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         title.setText("Comparing Weapons");
 
         mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
@@ -178,11 +187,20 @@ public class CompareWeaponActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        for (ListenerRegistration registration : weaponListeners) {
+            registration.remove();
+        }
+        mRecyclerView.setAdapter(null);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (!CompareWeaponActivity.this.isFinishing()) {
             try {
-                GlideApp.with(CompareWeaponActivity.this).pauseRequests();
+                Glide.with(CompareWeaponActivity.this).pauseRequests();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -331,7 +349,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         if (documentSnapshot.contains("icon")) {
             StorageReference gsReference = storage
                     .getReferenceFromUrl(documentSnapshot.getString("icon"));
-            GlideApp.with(weapon1Image.getContext()).load(gsReference).into(weapon1Image);
+            Glide.with(this).load(gsReference).into(weapon1Image);
         }
 
         if (documentSnapshot.contains("weapon_name")) {
@@ -343,7 +361,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         if (documentSnapshot.contains("icon")) {
             StorageReference gsReference = storage
                     .getReferenceFromUrl(documentSnapshot.getString("icon"));
-            GlideApp.with(weapon1Image.getContext()).load(gsReference).into(weapon2Image);
+            Glide.with(this).load(gsReference).into(weapon2Image);
         }
 
         if (documentSnapshot.contains("weapon_name")) {
@@ -356,7 +374,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         final Overview overview = new Overview();
         final Damage damage = new Damage();
 
-        db.document(firstWeapon).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        weaponListeners.add(db.document(firstWeapon).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
                 if (documentSnapshot == null || !documentSnapshot.exists()) {
@@ -372,9 +390,9 @@ public class CompareWeaponActivity extends AppCompatActivity {
                 adapter.updateData(dataList);
                 adapter.notifyDataSetChanged();
             }
-        });
+        }));
 
-        db.document(firstWeapon).collection("stats").document("damage")
+        weaponListeners.add(db.document(firstWeapon).collection("stats").document("damage")
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
@@ -387,9 +405,9 @@ public class CompareWeaponActivity extends AppCompatActivity {
 
                         adapter.notifyDataSetChanged();
                     }
-                });
+                }));
 
-        db.document(secondWeapon).collection("stats").document("damage")
+        weaponListeners.add(db.document(secondWeapon).collection("stats").document("damage")
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
@@ -402,9 +420,9 @@ public class CompareWeaponActivity extends AppCompatActivity {
 
                         adapter.notifyDataSetChanged();
                     }
-                });
+                }));
 
-        db.document(secondWeapon).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        weaponListeners.add(db.document(secondWeapon).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(final DocumentSnapshot documentSnapshot, final FirebaseFirestoreException e) {
                 if (documentSnapshot == null || !documentSnapshot.exists()) {
@@ -419,7 +437,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
             }
-        });
+        }));
 
         dataList.add(overview);
         dataList.add(damage);
