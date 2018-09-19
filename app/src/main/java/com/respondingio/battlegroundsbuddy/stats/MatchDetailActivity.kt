@@ -1,30 +1,27 @@
 package com.respondingio.battlegroundsbuddy.stats
 
-import android.content.Intent
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.builders.footer
 import co.zsmb.materialdrawerkt.draweritems.badge
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
+import co.zsmb.materialdrawerkt.draweritems.sectionHeader
+import co.zsmb.materialdrawerkt.draweritems.switchable.switchItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.android.volley.Cache
 import com.android.volley.NetworkResponse
@@ -40,6 +37,7 @@ import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.appbar.AppBarLayout
 import com.google.gson.Gson
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.holder.StringHolder
@@ -50,13 +48,12 @@ import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
 import com.respondingio.battlegroundsbuddy.models.MatchParticipant
 import com.respondingio.battlegroundsbuddy.models.MatchRoster
-import de.mateware.snacky.Snacky
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_match_detail.app_bar
 import kotlinx.android.synthetic.main.activity_match_detail.match_detail_toolbar
+import kotlinx.android.synthetic.main.activity_match_detail.match_loading_lottie
+import kotlinx.android.synthetic.main.activity_match_detail.match_pg
 import kotlinx.android.synthetic.main.activity_match_detail.toolbar_title
-import kotlinx.android.synthetic.main.fragment_stats_kill_feed.kill_feed_rv
-import net.idik.lib.slimadapter.SlimAdapter
-import net.idik.lib.slimadapter.SlimInjector
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -103,29 +100,28 @@ class MatchDetailActivity : AppCompatActivity() {
         val regionID = intent.getStringExtra("regionID")
         currentPlayerID =  "account.${intent.getStringExtra("playerID")}"
 
+        //Crashlytics.setString("matchID", matchID)
+        //Crashlytics.setString("shardID", regionID)
+
         mDrawer.addStickyFooterItem(SecondaryDrawerItem().withName(matchID).withEnabled(false).withSelectable(false))
         Log.d("MATCHID", matchID)
 
-        val dialog = MaterialDialog.Builder(this)
-                .content("Getting Match Data")
-                .progress(false, 100, false)
-                .canceledOnTouchOutside(false)
-                .cancelable(false)
-                .show()
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
-        loadMatchData(matchID, regionID, dialog)
+        //match_pg.visibility = View.VISIBLE
+        match_loading_lottie?.visibility = View.VISIBLE
+        match_loading_lottie?.playAnimation()
+
+        loadMatchData(matchID, regionID)
     }
 
-    private fun loadMatchData(matchID: String?, regionID: String?, dialog: MaterialDialog?) {
+    private fun loadMatchData(matchID: String?, regionID: String?) {
         val url = "https://api.pubg.com/shards/$regionID/matches/$matchID"
 
         val jsonArrayRequest = object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener {
-            if (dialog?.currentProgress == 0) {
-                dialog.setContent("Parsing Match Data")
-                dialog.setProgress(25)
-            }
 
-            parseMatchData(it, dialog)
+            parseMatchData(it)
         }, Response.ErrorListener {
             Log.d("MATCHREQ", it.toString())
         }) {
@@ -168,18 +164,16 @@ class MatchDetailActivity : AppCompatActivity() {
             }
 
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
-                if (volleyError.networkResponse.statusCode == 404) {
+                if (volleyError.networkResponse == null || volleyError.networkResponse.statusCode == 404) {
                     runOnUiThread {
-                        dialog?.dismiss()
-                        MaterialDialog.Builder(this@MatchDetailActivity)
-                                .title("Match Data Not Available")
-                                .canceledOnTouchOutside(false)
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                        match_pg?.visibility = View.GONE
+                        MaterialDialog(this@MatchDetailActivity)
+                                .title(text = "Error Getting Match Data")
+                                .cancelOnTouchOutside(false)
                                 .cancelable(false)
-                                .content("Most likely the match you are trying to view is older than 15 days, we cannot pull data for matches older than 15 days.")
-                                .positiveText("OKAY")
-                                .onPositive { _, _ ->
-                                    finish()
-                                }
+                                .message(text = "Either you are offline or the match you are trying to view is older than 15 days, we cannot pull data for matches older than 15 days.")
+                                .positiveButton(text = "OKAY")
                                 .show()
                     }
                 } else {
@@ -211,7 +205,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
     var matchData: JSONObject? = null
 
-    private fun parseMatchData(json: JSONObject?, dialog: MaterialDialog?) {
+    private fun parseMatchData(json: JSONObject?) {
 
         participantList.clear()
         rosterList.clear()
@@ -237,7 +231,7 @@ class MatchDetailActivity : AppCompatActivity() {
             val includedObject = json.getJSONArray("included").getJSONObject(i)
 
             if (includedObject.getString("type") == "asset") {
-                loadTelemetryData(includedObject.getJSONObject("attributes").getString("URL"), dialog)
+                loadTelemetryData(includedObject.getJSONObject("attributes").getString("URL"))
             } else if (includedObject.getString("type") == "participant") {
                 val participant = Gson().fromJson(includedObject.toString(), MatchParticipant::class.java)
                 participantList.add(participant)
@@ -263,22 +257,13 @@ class MatchDetailActivity : AppCompatActivity() {
 
         mDrawer.updateBadge(10, StringHolder("${participantList.size}"))
         mDrawer.updateBadge(11, StringHolder("${json.getJSONObject("data").getJSONObject("relationships").getJSONObject("rosters").getJSONArray("data").length()}"))
-
-        dialog?.setContent("Getting Telemetry Data")
-        dialog?.setProgress(50)
     }
 
-    private fun loadTelemetryData(url: String?, dialog: MaterialDialog?) {
+    private fun loadTelemetryData(url: String?) {
         Log.d("TELEMETRY", url)
 
         val jsonArrayRequest = object : JsonArrayRequest(Request.Method.GET, url, null, Response.Listener {
-            if (dialog?.currentProgress == 50) {
-                dialog.setContent("Parsing Telemetry Data")
-                dialog.setProgress(75)
-            }
-
-            parseTelemetry(it, dialog)
-
+            parseTelemetry(it)
         }, Response.ErrorListener {
             Log.d("MATCHREQ", it.toString())
         }) {
@@ -322,16 +307,14 @@ class MatchDetailActivity : AppCompatActivity() {
 
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
                 runOnUiThread {
-                    dialog?.dismiss()
-                    MaterialDialog.Builder(this@MatchDetailActivity)
-                            .title("Unknown Error Occurred")
-                            .canceledOnTouchOutside(false)
+                    match_pg?.visibility = View.GONE
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    MaterialDialog(this@MatchDetailActivity)
+                            .title(text = "Error Getting Match Data")
+                            .cancelOnTouchOutside(false)
                             .cancelable(false)
-                            .content("Either pick a different match or try again later. If this match is older than 15 days, we cannot pull data for it.")
-                            .positiveText("OKAY")
-                            .onPositive { _, _ ->
-                                finish()
-                            }
+                            .message(text = "Either you are offline or the match you are trying to view is older than 15 days, we cannot pull data for matches older than 15 days.")
+                            .positiveButton(text = "OKAY")
                             .show()
                 }
                 return super.parseNetworkError(volleyError)
@@ -450,16 +433,21 @@ class MatchDetailActivity : AppCompatActivity() {
             if (BuildConfig.DEBUG) {
                 primaryItem("Care Packages") {
                     icon = R.drawable.carepackage_open
-                    selectable = false
                 }
                 primaryItem("Weapon Stats") {
                     icon = R.drawable.icons8_rifle
-                    selectable = false
+                    onClick { view, position, drawerItem ->
+                        supportFragmentManager.beginTransaction().replace(R.id.match_frame, MatchWeaponStatsFragment())
+                                .commit()
+                        toolbar_title.text = "Weapon Stats"
+                        updateToolbarElevation(0f)
+                        updateToolbarFlags(false)
+                        false
+                    }
                 }
                 footer {
                     secondaryItem ("All Match Events") {
                         icon = R.drawable.icons8_timeline
-                        selectable = false
                     }
                 }
             }
@@ -470,6 +458,20 @@ class MatchDetailActivity : AppCompatActivity() {
         headerTimeTV = mDrawer.header.findViewById(R.id.header_time)
         headerRegionTV = mDrawer.header.findViewById(R.id.header_region)
         headerMapIV = mDrawer.header.findViewById(R.id.header_icon)
+
+        if (BuildConfig.DEBUG) {
+            drawer{
+                selectedItem = -1
+                gravity = Gravity.END
+                closeOnClick = false
+                toolbar = match_detail_toolbar
+                sectionHeader("Show In Map")
+                switchItem("Care Packages") {
+                    selectable = false
+                    icon = R.drawable.carepackage_open
+                }
+            }
+        }
     }
 
 
@@ -499,7 +501,10 @@ class MatchDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun parseTelemetry(json: JSONArray, dialog: MaterialDialog?) {
+    var telemetryJson: JSONArray? = null
+
+    private fun parseTelemetry(json: JSONArray) {
+        telemetryJson = json
         killFeedList.clear()
         for (i in 0 until json.length()) {
             var item = json.getJSONObject(i)
@@ -515,7 +520,11 @@ class MatchDetailActivity : AppCompatActivity() {
 
         killFeedList.sortedWith(compareBy { it._D })
 
-        dialog?.dismiss()
+        match_pg?.visibility = View.GONE
+        match_loading_lottie?.pauseAnimation()
+        match_loading_lottie?.visibility = View.GONE
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
         //mDrawer.openDrawer()
 
         val bundle = Bundle()
@@ -528,7 +537,7 @@ class MatchDetailActivity : AppCompatActivity() {
         val matchesPlayerStatsFragment = MatchPlayerStatsFragment()
         matchesPlayerStatsFragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
-                .commit()
+                .commitAllowingStateLoss()
 
         updateToolbarElevation(0f)
         updateToolbarFlags(false)
@@ -537,141 +546,6 @@ class MatchDetailActivity : AppCompatActivity() {
     }
 
     var killFeedList = ArrayList<LogPlayerKill>()
-
-    class KillFeedFragment: Fragment() {
-
-        private var killFeedList: List<LogPlayerKill> = ArrayList()
-        private var sortIndex = 0
-
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            //setHasOptionsMenu(true)
-            return inflater.inflate(R.layout.fragment_stats_kill_feed, container, false)
-        }
-
-        private lateinit var mAdapter: SlimAdapter
-
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
-            val activity: MatchDetailActivity = activity as MatchDetailActivity
-            killFeedList = activity.killFeedList
-
-            kill_feed_rv.layoutManager = LinearLayoutManager(activity)
-
-            mAdapter  = SlimAdapter.create().attachTo(kill_feed_rv).register(R.layout.stats_kill_feed_item, SlimInjector<LogPlayerKill> { data, injector ->
-                injector.text(R.id.kill_feed_killer, "")
-                injector.text(R.id.kill_feed_victim, "")
-
-                if (data.killer.name.isEmpty()) {
-                    data.killer.name = Telemetry().damageTypeCategory[data.damageTypeCategory].toString()
-                    injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.ITALIC)
-                } else {
-                    injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.NORMAL)
-                }
-
-                injector.text(R.id.kill_feed_killer, data.killer.name.trim())
-                injector.text(R.id.kill_feed_victim, data.victim.name.trim())
-
-                if (Telemetry().damageCauserName[data.damageCauserName].toString() == "Player") {
-                    injector.text(R.id.kill_feed_cause, Telemetry().damageTypeCategory[data.damageTypeCategory].toString())
-                } else {
-                    injector.text(R.id.kill_feed_cause, Telemetry().damageCauserName[data.damageCauserName].toString())
-                }
-
-                injector.text(R.id.textView9, (killFeedList.size - killFeedList.indexOf(data)).toString())
-
-                Log.d("MATCH", "${activity.currentPlayerID} - ${data.killer.accountId}")
-
-                when {
-                    data.killer.accountId == activity.currentPlayerID -> injector.background(R.id.textView9, R.drawable.chip_green_outline)
-                    data.victim.accountId == activity.currentPlayerID -> injector.background(R.id.textView9, R.drawable.chip_red_outline)
-                    else -> injector.background(R.id.textView9, R.drawable.chip_grey_outline)
-                }
-
-                //Do date.
-                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                sdf.timeZone = TimeZone.getTimeZone("GMT")
-
-                val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                sdf2.timeZone = TimeZone.getTimeZone("GMT")
-
-                val matchStartDate = sdf.parse(activity.matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("createdAt"))
-                val killTime = sdf2.parse(data._D)
-
-                var difference = killTime.time - matchStartDate.time
-
-                val secondsInMilli: Long = 1000
-                val minutesInMilli = secondsInMilli * 60
-                val hoursInMilli = minutesInMilli * 60
-                val daysInMilli = hoursInMilli * 24
-
-                difference %= daysInMilli
-
-                difference %= hoursInMilli
-
-                val elapsedMinutes = difference / minutesInMilli
-                difference %= minutesInMilli
-
-                val elapsedSeconds = difference / secondsInMilli
-
-                injector.text(R.id.kill_feed_time, String.format("%02d:%02d", elapsedMinutes, elapsedSeconds))
-
-                injector.text(R.id.kill_feed_distance, "${String.format("%.0f", Math.rint(data.distance/100))}m")
-
-                injector.clicked(R.id.kill_feed_top) {
-                    val intent = Intent(requireActivity(), MapTileActivity::class.java)
-                    intent.putExtra("mapName", activity.getMapAsset())
-                    intent.putExtra("killLog", data)
-                    //startActivity(intent)
-                }
-            }).updateData(killFeedList)
-        }
-
-        override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-            super.onCreateOptionsMenu(menu, inflater)
-            inflater?.inflate(R.menu.match_players, menu)
-        }
-
-        override fun onStop() {
-            super.onStop()
-            kill_feed_rv.adapter = null
-            kill_feed_rv.layoutManager = null
-        }
-
-        override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-            if (item?.itemId == R.id.match_players_sort) {
-                MaterialDialog.Builder(requireActivity())
-                        .title("Sort Kills")
-                        .items(R.array.kill_feed_sort)
-                        .itemsCallbackSingleChoice(sortIndex) { dialog, itemView, position, text ->
-                            sortIndex = position
-                            when (position) {
-                                0 -> {
-                                    killFeedList = killFeedList.sortedWith(compareByDescending { it._D })
-                                    mAdapter.updateData(killFeedList)
-                                }
-                                1 -> {
-                                    killFeedList = killFeedList.sortedWith(compareBy { it._D })
-                                    mAdapter.updateData(killFeedList)
-                                }
-                                2 -> {
-                                    killFeedList = killFeedList.sortedWith(compareBy { it.killer.name })
-                                    mAdapter.updateData(killFeedList)
-                                }
-                                3 -> {
-                                    killFeedList = killFeedList.sortedWith(compareByDescending { it.victim.name })
-                                    mAdapter.updateData(killFeedList)
-                                }
-                                4 -> {
-                                    killFeedList = killFeedList.sortedWith(compareBy { it._D })
-                                    mAdapter.updateData(killFeedList)
-                                }
-                            }
-                            true
-                        }.show()
-            }
-            return super.onOptionsItemSelected(item)
-        }
-    }
 
     fun getMapIcon(mapName: String): Int {
         if (mapName == null) return -1

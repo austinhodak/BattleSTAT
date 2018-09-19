@@ -13,9 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,11 +28,13 @@ import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.respondingio.battlegroundsbuddy.R;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.respondingio.battlegroundsbuddy.R;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -349,50 +348,50 @@ public class TimerFragment extends Fragment {
                 myList.toArray(selected);
 
                 final String[] items = {"Enable Notifications", "Enable Airdrop Notifications"};
-                MaterialDialog materialDialog = new MaterialDialog.Builder(getActivity())
-                        .title("Timer Settings")
-                        .items(items)
-                        .itemsCallbackMultiChoice(selected, new MaterialDialog.ListCallbackMultiChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-
-                                if (which.length == 0) {
-                                    Log.d("TIMER", "NOTIFY DISABLED BOTH");
-                                    mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", false).apply();
-                                    mSharedPreferences.edit().putBoolean("timerNotifyEnabled", false).apply();
-
-                                    return true;
-                                } else if (which.length == 2) {
-                                    Log.d("TIMER", "NOTIFY ENABLED BOTH");
-                                    mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", true).apply();
-                                    mSharedPreferences.edit().putBoolean("timerNotifyEnabled", true).apply();
-
-                                    return true;
-                                }
-
-                                for (final Integer aWhich : which) {
-                                    if (aWhich == 0) {
-                                        Log.d("TIMER", "NOTIFY ENABLED");
-                                        mSharedPreferences.edit().putBoolean("timerNotifyEnabled", true).apply();
-                                    } else {
-                                        Log.d("TIMER", "NOTIFY DISABLED");
-                                        mSharedPreferences.edit().putBoolean("timerNotifyEnabled", false).apply();
-                                    }
-
-                                    if (aWhich == 1) {
-                                        Log.d("TIMER", "NOTIFY ENABLED DROP");
-                                        mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", true).apply();
-                                    } else {
-                                        Log.d("TIMER", "NOTIFY DISABLED DROP");
-                                        mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", false).apply();
-                                    }
-                                }
-
-                                return true;
-                            }
-                        })
-                        .positiveText("DONE")
-                        .show();
+//                MaterialDialog materialDialog = new MaterialDialog(getActivity())
+//                        .title("Timer Settings")
+//                        .items(items)
+//                        .itemsCallbackMultiChoice(selected, new MaterialDialog.ListCallbackMultiChoice() {
+//                            @Override
+//                            public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+//
+//                                if (which.length == 0) {
+//                                    Log.d("TIMER", "NOTIFY DISABLED BOTH");
+//                                    mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", false).apply();
+//                                    mSharedPreferences.edit().putBoolean("timerNotifyEnabled", false).apply();
+//
+//                                    return true;
+//                                } else if (which.length == 2) {
+//                                    Log.d("TIMER", "NOTIFY ENABLED BOTH");
+//                                    mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", true).apply();
+//                                    mSharedPreferences.edit().putBoolean("timerNotifyEnabled", true).apply();
+//
+//                                    return true;
+//                                }
+//
+//                                for (final Integer aWhich : which) {
+//                                    if (aWhich == 0) {
+//                                        Log.d("TIMER", "NOTIFY ENABLED");
+//                                        mSharedPreferences.edit().putBoolean("timerNotifyEnabled", true).apply();
+//                                    } else {
+//                                        Log.d("TIMER", "NOTIFY DISABLED");
+//                                        mSharedPreferences.edit().putBoolean("timerNotifyEnabled", false).apply();
+//                                    }
+//
+//                                    if (aWhich == 1) {
+//                                        Log.d("TIMER", "NOTIFY ENABLED DROP");
+//                                        mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", true).apply();
+//                                    } else {
+//                                        Log.d("TIMER", "NOTIFY DISABLED DROP");
+//                                        mSharedPreferences.edit().putBoolean("airDropNotifyEnabled", false).apply();
+//                                    }
+//                                }
+//
+//                                return true;
+//                            }
+//                        })
+//                        .positiveText("DONE")
+//                        .show();
                 break;
         }
         return super.onOptionsItemSelected(item);

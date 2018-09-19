@@ -10,12 +10,12 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.LruCache;
 import android.view.Gravity;
 import android.view.View;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 /**
  * Shadow view based on the {@code ScrimUtil.java} class from the Muzei App. Take a look at

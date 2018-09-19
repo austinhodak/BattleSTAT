@@ -3,24 +3,24 @@ package com.respondingio.battlegroundsbuddy.weapons;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.respondingio.battlegroundsbuddy.GlideApp;
 import com.respondingio.battlegroundsbuddy.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,9 +142,8 @@ public class CompareWeaponPicker extends AppCompatActivity {
                             StorageReference gsReference = storage
                                     .getReferenceFromUrl(data.getString("icon"));
 
-                            GlideApp.with(CompareWeaponPicker.this)
+                            Glide.with(CompareWeaponPicker.this)
                                     .load(gsReference)
-                                    .placeholder(R.drawable.icons8_rifle)
                                     .into(icon);
 
                         }

@@ -6,15 +6,15 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.CardView
-import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -27,7 +27,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.WeaponSound
-import de.mateware.snacky.Snacky
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.boat_shots
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.buggy_shots
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.burst_layout
@@ -74,6 +74,7 @@ import kotlinx.android.synthetic.main.fragment_home_weapons_tab.weaponSpeedTV
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.weaponTBSTV
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.weapon_desc_arrow
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.weapon_desc_card
+import kotlinx.android.synthetic.main.fragment_home_weapons_tab.weapon_desc_card_content
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.weapon_desc_layout
 import kotlinx.android.synthetic.main.fragment_home_weapons_tab.wiki_button
 import net.idik.lib.slimadapter.SlimAdapter
@@ -110,12 +111,12 @@ class WeaponStatsOverview : Fragment() {
         setupSoundsList()
 
         weapon_desc_card.setOnClickListener {
-            if (weapon_desc_layout.visibility == View.GONE) {
-                weapon_desc_layout.visibility = View.VISIBLE
+            if (weapon_desc_card_content?.visibility == View.GONE) {
+                weapon_desc_card_content?.visibility = View.VISIBLE
 
                 weapon_desc_arrow.setImageDrawable(resources.getDrawable(R.drawable.ic_arrow_drop_up_24dp))
             } else {
-                weapon_desc_layout.visibility = View.GONE
+                weapon_desc_card_content?.visibility = View.GONE
 
                 weapon_desc_arrow.setImageDrawable(resources.getDrawable(R.drawable.ic_arrow_drop_down_24dp))
             }
@@ -279,14 +280,11 @@ class WeaponStatsOverview : Fragment() {
                     stats = data.getString("stats")!!.replace("<br>".toRegex(), "")
                     stats = stats.replace(" +", "\n+")
                     stats = stats.replace(" -", "\n-")
-                    val materialDialog = MaterialDialog.Builder(activity!!)
-                            .title(data.getString("name")!!)
-                            .content(stats)
-                            .contentColorRes(R.color.md_white_1000)
-                            .positiveText("OK")
-                            .build()
-
-                    materialDialog.show()
+                    val materialDialog = MaterialDialog(activity!!)
+                            .title(text = data.getString("name")!!)
+                            .message(text = stats)
+                            .positiveButton(text = "OK")
+                            .show()
                 }
             }
         }.attachTo(weaponDetailAttachmentRV).updateData(attachmentsList)
@@ -353,14 +351,11 @@ class WeaponStatsOverview : Fragment() {
                             }
 
                             if (activity != null)
-                                MaterialDialog.Builder(activity!!)
-                                        .title(title)
-                                        .backgroundColor(color)
-                                        .positiveColor(resources.getColor(R.color.md_white_1000))
-                                        .contentColor(resources.getColor(R.color.md_white_1000))
-                                        .content(
+                                MaterialDialog(activity!!)
+                                        .title(text = title)
+                                        .message( text =
                                                 "This is assuming the shooter is within normal range of the gun used.")
-                                        .positiveText("CLOSE")
+                                        .positiveButton(text = "CLOSE")
                                         .show()
                         }
                     }

@@ -7,11 +7,14 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.models.Pin;
 import java.util.ArrayList;
 
 
 public class PinView extends SubsamplingScaleImageView {
+
+    private final Context context;
 
     private final Paint paint = new Paint();
     private ArrayList<Pin> sPin = new ArrayList<>();
@@ -24,6 +27,8 @@ public class PinView extends SubsamplingScaleImageView {
 
     public PinView(Context context, AttributeSet attr) {
         super(context, attr);
+        this.context = context;
+
         initialise();
     }
 
@@ -63,15 +68,28 @@ public class PinView extends SubsamplingScaleImageView {
         paint.reset();
         paint.setAntiAlias(true);
 
+        if (sPin.size() == 2) {
+            PointF vPin1 = sourceToViewCoord(sPin.get(0).getPoints());
+            PointF vPin2 = sourceToViewCoord(sPin.get(1).getPoints());
+            paint.setColor(context.getColor(R.color.md_red_A700));
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setStrokeWidth(10);
+            canvas.drawLine(vPin1.x, vPin1.y, vPin2.x, vPin2.y, paint);
+        }
+
         for (Pin point : sPin){
             if (point != null) {
                 pin = point.getBitmap();
                 PointF vPin = sourceToViewCoord(point.getPoints());
                 float vX = vPin.x - (pin.getWidth()/2);
-                float vY = vPin.y - (pin.getHeight()/2);
+                float vY = vPin.y - (pin.getHeight());
                 canvas.drawBitmap(pin, vX, vY, paint);
             }
         }
+
+
     }
 
 }

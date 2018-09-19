@@ -1,7 +1,7 @@
 package com.respondingio.battlegroundsbuddy.stats
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.MatchParticipant
 import kotlinx.android.synthetic.main.activity_match_detail.match_detail_toolbar

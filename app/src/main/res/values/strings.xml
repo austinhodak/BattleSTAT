@@ -49,4 +49,6 @@
         <item>Victim Name</item>
     </string-array>
 
+    <string name="match_list_empty">NO MATCHES FOUND \nMATCHES MAY TAKE UP TO 15 MINUTES AFTER GAME END TO SHOW HERE</string>
+
 </resources>

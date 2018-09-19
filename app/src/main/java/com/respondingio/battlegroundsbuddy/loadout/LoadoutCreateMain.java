@@ -1,12 +1,12 @@
 package com.respondingio.battlegroundsbuddy.loadout;
 
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.respondingio.battlegroundsbuddy.R;
 
 public class LoadoutCreateMain extends AppCompatActivity {

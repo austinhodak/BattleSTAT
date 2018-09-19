@@ -3,18 +3,18 @@ package com.respondingio.battlegroundsbuddy.map;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.respondingio.battlegroundsbuddy.R;
-import de.mateware.snacky.Snacky;
+import com.respondingio.battlegroundsbuddy.snacky.Snacky;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e65100"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         app:elevation="0dp"
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/match_detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,17 +42,40 @@
                     android:visibility="visible" />
 
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
+        <ProgressBar
+            android:id="@+id/match_pg"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-4dp"
+            android:layout_marginTop="-4dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/md_white_1000"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="gone" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:id="@+id/match_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-    <android.support.design.widget.FloatingActionButton
+    </FrameLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:visibility="gone"
+        android:id="@+id/match_loading_lottie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:lottie_fileName="loading_2.json"
+        app:lottie_loop="true"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:visibility="gone"
         android:id="@+id/compare_fab"
         android:layout_width="wrap_content"
@@ -65,4 +88,4 @@
         android:src="@drawable/ic_compare_arrows_black_24dp"
         app:fabSize="normal" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

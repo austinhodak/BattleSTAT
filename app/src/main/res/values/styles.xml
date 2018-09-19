@@ -7,8 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="material_drawer_selected_text">@color/md_amber_700</item>
-
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
@@ -16,6 +14,10 @@
         <item name="tab_underline">@color/colorAccent</item>
 
         <item name="android:textColor">@color/md_dark_primary_text</item>
+
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+
+        <item name="material_drawer_selected">#1FF57C00</item>
     </style>
 
     <style name="AppThemeLight" parent="MaterialDrawerTheme.Light">
@@ -118,18 +120,22 @@
         <item name="colorPrimaryDark">#e65100</item>
         <item name="colorAccent">@color/md_amber_900</item>
 
-        <item name="material_drawer_selected_text">@color/md_orange_A700</item>
-        <item name="material_drawer_selected">#EEEEEE</item>
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+        <item name="material_drawer_selected">#1FF57C00</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
 
         <item name="android:statusBarColor">#e65100</item>
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+
     </style>
 
     <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">#FFF</item>
     </style>
 
+    <style name="MapTileActivity" parent="MaterialDrawerTheme.Light.DarkToolbar">
+    </style>
 </resources>

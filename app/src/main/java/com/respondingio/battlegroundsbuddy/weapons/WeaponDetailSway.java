@@ -2,20 +2,20 @@ package com.respondingio.battlegroundsbuddy.weapons;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.respondingio.battlegroundsbuddy.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.FirebaseStorage;
+import com.respondingio.battlegroundsbuddy.R;
 
 /**
  * A simple {@link Fragment} subclass.

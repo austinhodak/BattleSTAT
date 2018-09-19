@@ -3,14 +3,14 @@ package com.respondingio.battlegroundsbuddy.weapons
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.R.layout
-import de.mateware.snacky.Snacky
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_edittext
 import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_rv
 import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_send
@@ -62,6 +62,8 @@ class WeaponComments : Fragment() {
             weaponPath = arguments!!.getString("weaponPath")!!
             weaponKey = arguments!!.getString("weaponKey")!!
         }
+
+        Log.d("WEAPON", "$weaponPath - $weaponKey")
 
         if (FirebaseAuth.getInstance().currentUser == null) {
             comment_send?.isEnabled = false
@@ -159,12 +161,10 @@ class WeaponComments : Fragment() {
                             object : ValueEventListener {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                     if (true && dataSnapshot.exists() && dataSnapshot.value as Boolean) {
-                                        MaterialDialog.Builder(activity!!)
-                                                .title("Delete Post?")
-                                                .content("This cannot be undone.")
-                                                .positiveText("DELETE")
-                                                .negativeText("CANCEL")
-                                                .onPositive { dialog, which ->
+                                        MaterialDialog(activity!!)
+                                                .title(text = "Delete Post?")
+                                                .message( text = "This cannot be undone.")
+                                                .positiveButton(text = "DELETE") { dialog ->
                                                     FirebaseDatabase.getInstance().getReference("/users/" + FirebaseAuth.getInstance().currentUser!!.uid
                                                             + "/weapon_comments/" + weaponKey + "/" + data.key).removeValue()
 
@@ -175,6 +175,7 @@ class WeaponComments : Fragment() {
 
                                                     loadData()
                                                 }
+                                                .negativeButton( text ="CANCEL")
                                                 .show()
                                     }
                                 }

@@ -13,13 +13,13 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.util.TimingLogger
+import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 import com.android.vending.billing.IInAppBillingService
 import com.android.volley.Request
 import com.android.volley.Response
@@ -37,7 +37,6 @@ import com.google.ads.consent.ConsentStatus
 import com.google.ads.consent.ConsentStatus.PERSONALIZED
 import com.google.ads.consent.ConsentStatus.UNKNOWN
 import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -71,9 +70,9 @@ import com.respondingio.battlegroundsbuddy.loadout.LoadoutBestTabs
 import com.respondingio.battlegroundsbuddy.loadout.LoadoutCreateMain
 import com.respondingio.battlegroundsbuddy.profile.ProfileActivity
 import com.respondingio.battlegroundsbuddy.rss.HomeUpdatesFragment
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.stats.MainStatsActivity
 import com.respondingio.battlegroundsbuddy.weapons.HomeWeaponsFragment
-import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import kotlinx.android.synthetic.main.activity_main.toolbar_title
@@ -135,10 +134,6 @@ public class MainActivity : AppCompatActivity() {
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
         RateDialog.with(this, 1, 5)
-
-        Thread(Runnable {
-            MobileAds.initialize(this, "ca-app-pub-1946691221734928~8934220899")
-        }).start()
     }
 
     private fun initializeFirebase() {
@@ -188,8 +183,6 @@ public class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     private fun loadPurchases() {
         try {
             val ownedItems = iap?.getPurchases(3, packageName, "inapp", null)
@@ -211,6 +204,7 @@ public class MainActivity : AppCompatActivity() {
 
                 if (ownedItems2.contains("plus_v1")) {
                     newSharedPreferences.edit().putBoolean("premiumV1", true).apply()
+
                     FirebaseAnalytics.getInstance(this).setUserProperty("isPremium", "true")
                 } else {
                     newSharedPreferences.edit().putBoolean("premiumV1", false).apply()
@@ -233,7 +227,7 @@ public class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        unbindService(serviceConnection)
     }
 
     private fun checkAuthStatus() {
@@ -305,15 +299,15 @@ public class MainActivity : AppCompatActivity() {
                         //DividerDrawerItem(),
                         ExpandableDrawerItem().withName("More").withIcon(R.drawable.icons8_view_more_96).withSelectable(false).withSubItems(
                                 DividerDrawerItem(),
-                        PrimaryDrawerItem().withName(R.string.drawer_title_controls).withIcon(R.drawable.icons8_game_controller_96).withIdentifier(997),
-                        PrimaryDrawerItem().withName(getString(string.drawer_title_damagecalc)).withIcon(R.drawable.shield).withIdentifier(998).withSelectable(false),
-                        //ExpandableDrawerItem().withName(getString(string.drawer_title_loadouts)).withSelectable(false).withIcon(R.drawable.icon_sack).withSubItems(
+                                PrimaryDrawerItem().withName(R.string.drawer_title_controls).withIcon(R.drawable.icons8_game_controller_96).withIdentifier(997),
+                                PrimaryDrawerItem().withName(getString(string.drawer_title_damagecalc)).withIcon(R.drawable.shield).withIdentifier(998).withSelectable(false),
+                                //ExpandableDrawerItem().withName(getString(string.drawer_title_loadouts)).withSelectable(false).withIcon(R.drawable.icon_sack).withSubItems(
                                 //SecondaryDrawerItem().withIdentifier(302).withName("Loadout Creator").withIcon(R.drawable.loadout_create).withBadge("BETA"),
                                 //SecondaryDrawerItem().withIdentifier(301).withName(R.string.drawer_title_bestloadouts).withIcon(R.drawable.loadout_star)
-                        //),
-                            PrimaryDrawerItem().withName(getString(string.drawer_title_maps)).withSelectable(false).withIcon(R.drawable.map_96).withIdentifier(200),
-                            PrimaryDrawerItem().withName(R.string.drawer_title_timer).withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge("BETA"),
-                        updates
+                                //),
+                                PrimaryDrawerItem().withName(getString(string.drawer_title_maps)).withSelectable(false).withIcon(R.drawable.map_96).withIdentifier(200),
+                                PrimaryDrawerItem().withName(R.string.drawer_title_timer).withSelectable(true).withIcon(R.drawable.stopwatch).withIdentifier(503).withBadge("BETA"),
+                                updates
                         ),
                         DividerDrawerItem(),
                         settings,
@@ -549,7 +543,7 @@ public class MainActivity : AppCompatActivity() {
         }
 
         if (setupAccount)
-        setupAccount(currentUser)
+            setupAccount(currentUser)
     }
 
     private fun setupAccount(currentUser: FirebaseUser?) {
@@ -596,7 +590,7 @@ public class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 1001) {
+        if (requestCode == 1001 && data != null) {
             val responseCode = data?.getIntExtra("RESPONSE_CODE", 0)
             val purchaseData = data?.getStringExtra("INAPP_PURCHASE_DATA")
             val dataSignature = data?.getStringExtra("INAPP_DATA_SIGNATURE")
@@ -608,7 +602,7 @@ public class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (requestCode == 123) {
+        if (requestCode == 123 && data != null) {
             val response = IdpResponse.fromResultIntent(data)
 
             if (resultCode == RESULT_OK) {
@@ -628,15 +622,15 @@ public class MainActivity : AppCompatActivity() {
 
     private fun updateFragment(fragment: Fragment) {
         if (supportFragmentManager.findFragmentById(R.id.main_frame) != null) {
-            supportFragmentManager.beginTransaction().remove(supportFragmentManager.findFragmentById(R.id.main_frame)!!).commit()
+            supportFragmentManager.beginTransaction().remove(supportFragmentManager.findFragmentById(R.id.main_frame)!!).commitAllowingStateLoss()
 
             Handler().postDelayed({
                 supportFragmentManager.beginTransaction().replace(R.id.main_frame, fragment).setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .commit()
+                        .commitAllowingStateLoss()
             }, 400)
         } else {
             supportFragmentManager.beginTransaction().replace(R.id.main_frame, fragment).setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                    .commit()
+                    .commitAllowingStateLoss()
         }
     }
 

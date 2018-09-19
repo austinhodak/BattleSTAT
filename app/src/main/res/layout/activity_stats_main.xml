@@ -15,7 +15,7 @@
         app:elevation="0dp"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:elevation="3dp"
             app:layout_scrollFlags="scroll"
             android:id="@+id/weapon_detail_toolbar"
@@ -43,7 +43,7 @@
                     android:visibility="visible" />
 
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
             android:orientation="vertical"

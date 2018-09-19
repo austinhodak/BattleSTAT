@@ -11,26 +11,24 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
@@ -49,7 +47,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.models.WeaponSound;
-import de.mateware.snacky.Snacky;
+import com.respondingio.battlegroundsbuddy.snacky.Snacky;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -245,7 +243,6 @@ public class WeaponDetailOverview extends Fragment {
 
         mSharedPreferences = getActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
 
-        setupStatDescListeners();
 
         weaponDescCard.setOnClickListener(new OnClickListener() {
             @Override
@@ -407,14 +404,11 @@ public class WeaponDetailOverview extends Fragment {
                                     stats = data.getString("stats").replaceAll("<br>", "");
                                     stats = stats.replace(" +", "\n+");
                                     stats = stats.replace(" -", "\n-");
-                                    MaterialDialog materialDialog = new MaterialDialog.Builder(getActivity())
-                                            .title(data.getString("name"))
-                                            .content(stats)
-                                            .contentColorRes(R.color.md_white_1000)
-                                            .positiveText("OK")
-                                            .build();
-
-                                    materialDialog.show();
+//                                    MaterialDialog materialDialog = new MaterialDialog(getActivity())
+//                                            .title(null, data.getString("name"))
+//                                            .message(null, stats)
+//                                            .positiveButton(null, "OK", null)
+//                                            .show();
                                 }
                             }
                         });
@@ -493,16 +487,16 @@ public class WeaponDetailOverview extends Fragment {
                                         color = getResources().getColor(R.color.md_grey_800);
                                     }
 
-                                    if (getActivity() != null)
-                                    new MaterialDialog.Builder(getActivity())
-                                            .title(title)
-                                            .backgroundColor(color)
-                                            .positiveColor(getResources().getColor(R.color.md_white_1000))
-                                            .contentColor(getResources().getColor(R.color.md_white_1000))
-                                            .content(
-                                                    "This is assuming the shooter is within normal range of the gun used.")
-                                            .positiveText("CLOSE")
-                                            .show();
+                                    //if (getActivity() != null)
+//                                    new MaterialDialog.Builder(getActivity())
+//                                            .title(title)
+//                                            .backgroundColor(color)
+//                                            .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                                            .contentColor(getResources().getColor(R.color.md_white_1000))
+//                                            .content(
+//                                                    "This is assuming the shooter is within normal range of the gun used.")
+//                                            .positiveText("CLOSE")
+//                                            .show();
                                 }
                             });
                         }
@@ -900,145 +894,145 @@ public class WeaponDetailOverview extends Fragment {
                         });
     }
 
-    private void setupStatDescListeners() {
-        CardView tbs = (CardView) tbsTV.getParent().getParent();
-        CardView damage = (CardView) damageBaseTV.getParent().getParent();
-        CardView speed = (CardView) speedTV.getParent().getParent();
-        CardView power = (CardView) powerTV.getParent().getParent();
-        CardView range = (CardView) rangeTV.getParent().getParent();
-        CardView burstShots = (CardView) burstShotTV.getParent().getParent();
-        CardView burstDelay = (CardView) burstDelayTV.getParent().getParent();
-        CardView ammoPerMag = (CardView) magSizeTV.getParent().getParent();
-        CardView firingModes = (CardView) firingModeTV.getParent().getParent();
-
-        if (getActivity() == null) return;
-
-        tbs.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Time Between Shots")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "When firing at maximum speed, the time between shots.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        damage.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Hit Damage")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "Direct damage applied before armor and other mitigating factors.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        speed.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Initial Bullet Speed")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "The speed at which the bullet leaves the muzzle, affecting range and damage.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        power.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Body Hit Impact Power")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "Damage taken to an unshielded, unarmored body.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        range.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Zero Range")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "The range of effectiveness.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        burstShots.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Burst Shots")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "If allowed, how many shots are fired during burst.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        burstDelay.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Burst Delay")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "The delay of these shots.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        ammoPerMag.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Ammo Per Mag")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "The maximum amount of ammunition that can be held in a magazine.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-
-        firingModes.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                new MaterialDialog.Builder(getActivity())
-                        .title("Firing Modes")
-                        .positiveColor(getResources().getColor(R.color.md_white_1000))
-                        .content(
-                                "The modes this weapon can select.")
-                        .positiveText("CLOSE")
-                        .show();
-                return false;
-            }
-        });
-    }
+//    private void setupStatDescListeners() {
+//        CardView tbs = (CardView) tbsTV.getParent().getParent();
+//        CardView damage = (CardView) damageBaseTV.getParent().getParent();
+//        CardView speed = (CardView) speedTV.getParent().getParent();
+//        CardView power = (CardView) powerTV.getParent().getParent();
+//        CardView range = (CardView) rangeTV.getParent().getParent();
+//        CardView burstShots = (CardView) burstShotTV.getParent().getParent();
+//        CardView burstDelay = (CardView) burstDelayTV.getParent().getParent();
+//        CardView ammoPerMag = (CardView) magSizeTV.getParent().getParent();
+//        CardView firingModes = (CardView) firingModeTV.getParent().getParent();
+//
+//        if (getActivity() == null) return;
+//
+//        tbs.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Time Between Shots")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "When firing at maximum speed, the time between shots.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        damage.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Hit Damage")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "Direct damage applied before armor and other mitigating factors.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        speed.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Initial Bullet Speed")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "The speed at which the bullet leaves the muzzle, affecting range and damage.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        power.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Body Hit Impact Power")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "Damage taken to an unshielded, unarmored body.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        range.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Zero Range")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "The range of effectiveness.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        burstShots.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Burst Shots")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "If allowed, how many shots are fired during burst.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        burstDelay.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Burst Delay")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "The delay of these shots.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        ammoPerMag.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Ammo Per Mag")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "The maximum amount of ammunition that can be held in a magazine.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//
+//        firingModes.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(final View view) {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("Firing Modes")
+//                        .positiveColor(getResources().getColor(R.color.md_white_1000))
+//                        .content(
+//                                "The modes this weapon can select.")
+//                        .positiveText("CLOSE")
+//                        .show();
+//                return false;
+//            }
+//        });
+//    }
 
     private void loadVehicleDamage(DocumentSnapshot data) {
         if (data.getString("damageBody0") == null) {

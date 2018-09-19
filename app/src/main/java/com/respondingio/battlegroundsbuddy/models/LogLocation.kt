@@ -6,4 +6,9 @@ data class LogLocation(
         val x: Double,
         val y: Double,
         val z: Double
-) : Serializable
+) : Serializable {
+    fun isValidLocation(): Boolean {
+        if (x > 0 && y > 0 && z > 0) return true
+        return false
+    }
+}

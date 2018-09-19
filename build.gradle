@@ -2,13 +2,14 @@
 apply from: 'app/versioning.gradle'
 buildscript {
     ext.kotlin_version = '1.2.60'
-    ext.anko_version = '0.10.4'
+    ext.anko_version = '0.10.6'
     repositories {
         google()
         jcenter()
         maven {
             url 'https://maven.fabric.io/public'
         }
+        maven { url "https://dl.bintray.com/drummer-aidan/maven/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.0-rc03'
@@ -33,6 +34,10 @@ allprojects {
         maven { url "https://jitpack.io" }
         flatDir {
             dirs 'libs'
+        }
+        maven {
+            name 'Sonatype SNAPSHOTs';
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
     }
     buildscript {

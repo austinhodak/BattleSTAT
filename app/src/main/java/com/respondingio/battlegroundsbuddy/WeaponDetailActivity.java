@@ -1,67 +1,6 @@
 package com.respondingio.battlegroundsbuddy;
 
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
-
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Transaction;
-import com.respondingio.battlegroundsbuddy.weapons.CompareWeaponPicker;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponComments;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponDamageChart;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponDetailCamera;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponDetailDeviation;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponDetailOverview;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponDetailRecoil;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponDetailSpread;
-import com.respondingio.battlegroundsbuddy.weapons.WeaponDetailSway;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.mateware.snacky.Snacky;
-
-public class WeaponDetailActivity extends AppCompatActivity {
+/*public class WeaponDetailActivity extends AppCompatActivity {
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -573,4 +512,4 @@ public class WeaponDetailActivity extends AppCompatActivity {
     private void stopListener() {
         registration.remove();
     }
-}
+}*/

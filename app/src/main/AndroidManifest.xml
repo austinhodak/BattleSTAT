@@ -81,22 +81,15 @@
             android:name="firebase_crashlytics_collection_enabled"
             android:value="${crashEnabled}" />
 
-        <activity
-            android:name=".models.Player$StatsMainActivity"
-            android:theme="@style/MainStatsTheme" />
-        <activity
-            android:name=".stats.GameStatsActivity"
-            android:theme="@style/MainStatsTheme" />
-        <activity android:name=".stats.MatchDetailActivity" android:theme="@style/MatchDetailsTheme"></activity>
+        <activity android:name=".stats.MatchDetailActivity" android:theme="@style/MatchDetailsTheme"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />
 
-        <activity android:name=".stats.StatsOnboarding" />
-
         <activity android:name=".stats.SinglePlayerStatsActivity" android:theme="@style/MatchDetailsTheme" />
 
-        <activity android:name=".stats.MapTileActivity" android:theme="@style/MatchDetailsTheme" />
+        <activity android:name=".stats.KillFeedListMap"/>
 
         <activity android:name=".stats.MainStatsActivity" android:theme="@style/MainStatsTheme" />
     </application>

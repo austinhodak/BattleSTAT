@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="4dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weapon_desc_card"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
 
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -131,7 +131,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="4dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -169,9 +169,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -209,7 +209,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -219,7 +219,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"
@@ -257,9 +257,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -298,9 +298,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -338,7 +338,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -348,7 +348,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -386,9 +386,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -426,7 +426,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -438,7 +438,7 @@
             android:visibility="gone"
             android:layout_marginRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -476,9 +476,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -516,7 +516,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -526,7 +526,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -564,9 +564,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -604,7 +604,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -618,7 +618,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -656,7 +656,7 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -665,7 +665,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -703,9 +703,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -743,11 +743,11 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -791,7 +791,7 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:layout_width="match_parent"
@@ -803,7 +803,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/overview_full_stats"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -829,7 +829,7 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -838,7 +838,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponBody0Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -878,9 +878,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponBody1Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -920,7 +920,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -930,7 +930,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponBody2Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -970,9 +970,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponBody3Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1012,7 +1012,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -1022,7 +1022,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponHead0Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1062,9 +1062,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponHead1Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1104,7 +1104,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -1114,7 +1114,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponHead2Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1154,9 +1154,9 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/weaponHead3Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1196,7 +1196,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -1222,7 +1222,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -1472,7 +1472,7 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:layout_width="match_parent"
@@ -1484,7 +1484,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -1494,7 +1494,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
 
                     android:id="@+id/weaponDetailAttachmentRV"
                     android:layout_width="match_parent"
@@ -1504,7 +1504,7 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:focusableInTouchMode="false"
@@ -1518,7 +1518,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/weaponDetailSoundsCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -1530,7 +1530,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/weaponDetailSoundsList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1539,7 +1539,7 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -1566,4 +1566,4 @@
 
     </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>

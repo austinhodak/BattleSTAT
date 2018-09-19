@@ -2,8 +2,6 @@ package com.respondingio.battlegroundsbuddy.stats
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
-import android.support.design.widget.BottomSheetDialogFragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
 import com.google.firebase.functions.FirebaseFunctionsException.Code
 import com.respondingio.battlegroundsbuddy.R
-import de.mateware.snacky.Snacky
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.stats_addplayer_bottom.add_button
 import kotlinx.android.synthetic.main.stats_addplayer_bottom.add_progress
 import kotlinx.android.synthetic.main.stats_addplayer_bottom.add_username
@@ -86,18 +86,21 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
 
                             Log.e("AddPlayer", "onComplete: " + code.toString())
 
-                            if (code == Code.NOT_FOUND) {
-                                Toast.makeText(activity, "Player not found, try again.", Toast.LENGTH_LONG).show()
-                                //                                    Snacky.builder().setView(getView()).info().setText("Player not found, try again.").setDuration(
-                                //                                            Snacky.LENGTH_LONG).show();
-                            } else if (code == Code.RESOURCE_EXHAUSTED) {
-                                Toast.makeText(activity, "API limit reached, try again in a minute.", Toast.LENGTH_LONG).show()
-                                //                                    Snacky.builder().setView(getView()).error().setText("API limit reached, try again in a minute.").setDuration(
-                                //                                            Snacky.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(activity, "Unknown error.", Toast.LENGTH_SHORT).show()
-                                //                                    Snacky.builder().setView(getView()).error().setText("Unknown error.").setDuration(
-                                //                                            Snacky.LENGTH_LONG).show();
+                            try {
+                                if (code == Code.NOT_FOUND) {
+                                    Toast.makeText(activity, "Player not found, try again.", Toast.LENGTH_LONG).show()
+                                    //                                    Snacky.builder().setView(getView()).info().setText("Player not found, try again.").setDuration(
+                                    //                                            Snacky.LENGTH_LONG).show();
+                                } else if (code == Code.RESOURCE_EXHAUSTED) {
+                                    Toast.makeText(activity, "API limit reached, try again in a minute.", Toast.LENGTH_LONG).show()
+                                    //                                    Snacky.builder().setView(getView()).error().setText("API limit reached, try again in a minute.").setDuration(
+                                    //                                            Snacky.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(activity, "Unknown error.", Toast.LENGTH_SHORT).show()
+                                    //                                    Snacky.builder().setView(getView()).error().setText("Unknown error.").setDuration(
+                                    //                                            Snacky.LENGTH_LONG).show();
+                                }
+                            } catch (e: Exception) {
                             }
                         }
 

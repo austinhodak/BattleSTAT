@@ -1,13 +1,13 @@
 package com.respondingio.battlegroundsbuddy.attachments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.respondingio.battlegroundsbuddy.R.layout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import com.respondingio.battlegroundsbuddy.R
 import kotlinx.android.synthetic.main.fragment_home_weapons.tabs
 import kotlinx.android.synthetic.main.fragment_home_weapons.viewpager
 
@@ -37,7 +37,7 @@ class HomeAttachmentsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(layout.fragment_home_weapons, container, false)
+        return inflater.inflate(R.layout.fragment_home_weapons, container, false)
     }
 
     override fun onStart() {

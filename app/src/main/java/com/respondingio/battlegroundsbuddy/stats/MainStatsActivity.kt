@@ -10,16 +10,17 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem
+import com.afollestad.materialdialogs.list.customListAdapter
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.android.vending.billing.IInAppBillingService
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -41,7 +42,7 @@ import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.models.Seasons
-import de.mateware.snacky.Snacky
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_stats_main_new.bottom_navigation
 import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
 import kotlinx.android.synthetic.main.activity_stats_main_new.no_player
@@ -54,6 +55,7 @@ import kotlinx.android.synthetic.main.activity_stats_main_new.stats_region_text
 import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_picker
 import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_text
 import kotlinx.android.synthetic.main.activity_stats_main_new.weapon_detail_toolbar
+import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.support.v4.onRefresh
 
 class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
@@ -94,22 +96,20 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
         if (mSharedPreferences.getBoolean("premiumV1", false)) {
             updateTimeout = 2
+        } else {
+            mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
+                    AdRequest.Builder().build())
         }
 
         if (mSharedPreferences.getBoolean("isStatsFirstLaunch", true)) {
-            MaterialDialog.Builder(this)
-                    .title("Player Stats (Beta)")
-                    .content(R.string.statsOnBoarding)
-                    .backgroundColorRes(R.color.md_orange_700)
-                    .titleColorRes(R.color.md_white_1000)
-                    .contentColorRes(R.color.md_white_1000)
-                    .positiveColorRes(R.color.md_white_1000)
-                    .positiveText("OKAY")
-                    .onPositive { dialog, which ->
+            MaterialDialog(this)
+                    .title(text = "Player Stats (Beta)")
+                    .message(R.string.statsOnBoarding)
+                    .positiveButton(text = "OKAY") {
+                        dialog ->
                         dialog.dismiss()
                         mSharedPreferences.edit().putBoolean("isStatsFirstLaunch", false).apply()
-                    }
-                    .show()
+                    }.show()
         }
 
         setupTopNav()
@@ -142,34 +142,13 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                     mainStatsRefreshLayout.isRefreshing = true
                     reloadStats(currentPlayer!!)
                 } else if (!isPremium) {
-                    mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
-                            AdRequest.Builder().build())
                     mainStatsRefreshLayout.isRefreshing = false
                     Snacky.builder().setActivity(this).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes.")
                             .setActionText("UPGRADE OR WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).setActionClickListener {
-                                MaterialDialog.Builder(this)
-                                        .title("Upgrade or Watch An Ad")
-                                        .content(R.string.upgrade)
-                                        .backgroundColorRes(R.color.md_orange_700)
-                                        .titleColorRes(R.color.md_white_1000)
-                                        .contentColorRes(R.color.md_white_1000)
-                                        .positiveColorRes(R.color.md_white_1000)
-                                        .neutralColorRes(R.color.md_white_1000)
-                                        .negativeColorRes(R.color.md_white_1000)
-                                        .positiveText("GO PREMIUM ($2.99)")
-                                        .neutralText("NEVERMIND")
-                                        .negativeText("WATCH AN AD")
-                                        .onNegative { dialog, which ->
-                                            if (mRewardedVideoAd?.isLoaded == true) {
-                                                mRewardedVideoAd?.show()
-                                            } else {
-                                                Snacky.builder().setActivity(this).info().setText("No ad loaded, please try again.").show()
-                                            }
-                                        }
-                                        .onNeutral { dialog, which ->
-                                            dialog.dismiss()
-                                        }
-                                        .onPositive { dialog, which ->
+                                MaterialDialog(this)
+                                        .title(text = "Upgrade or Watch An Ad")
+                                        .message(R.string.upgrade)
+                                        .positiveButton(text = "GO PREMIUM ($2.99)") {
                                             val buyIntentBundle = iap?.getBuyIntent(3, packageName,
                                                     "plus_v1", "inapp", "")
 
@@ -182,6 +161,14 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                                                 startIntentSenderForResult(pendingIntent.intentSender,
                                                         REQUEST_CODE, Intent(), 0, 0,
                                                         0)
+                                            }
+                                        }
+                                        .neutralButton(text = "NEVERMIND") { dialog -> dialog.dismiss() }
+                                        .negativeButton(text = "WATCH AN AD") { dialog ->
+                                            if (mRewardedVideoAd?.isLoaded == true) {
+                                                mRewardedVideoAd?.show()
+                                            } else {
+                                                Snacky.builder().setActivity(this).info().setText("No ad loaded, please try again.").show()
                                             }
                                         }.show()
                             }.build().show()
@@ -217,19 +204,20 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
     private var selectedGamemode: Int = -1
     private var selectedSeason: Int = -1
 
+    private var selectPlayerDialog: MaterialDialog? = null
+
     private fun setupTopNav() {
         stats_player_picker.setOnClickListener {
-            MaterialDialog.Builder(this@MainStatsActivity)
-                    .title("Select Player")
-                    .adapter(playerListAdapter, null)
-                    .neutralText("LINK NEW")
-                    .onNeutral { dialog, which ->
+            selectPlayerDialog = MaterialDialog(this@MainStatsActivity)
+                    .title(text = "Select Player")
+                    .customListAdapter(playerListAdapter)
+                    .positiveButton(text = "LINK NEW") { dialog ->
                         val addPlayerBottomSheet = AddPlayerBottomSheet()
                         addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
                         if (playersMap.size < 5 || mSharedPreferences.getBoolean("premiumV1", false)) {
 //                            val addPlayerBottomSheet = AddPlayerBottomSheet()
 //                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-                        } else if (playersMap.size >=5 && !mSharedPreferences.getBoolean("premiumV1", false)) {
+                        } else if (playersMap.size >= 5 && !mSharedPreferences.getBoolean("premiumV1", false)) {
                             //Max players added and no premium.
                             /*MaterialDialog.Builder(this)
                                     .title("Max Players Reached")
@@ -259,22 +247,21 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                                     }.show()*/
                         }
                     }
-                    .show()
+            selectPlayerDialog!!.show()
         }
         stats_region_picker.setOnClickListener {
             if (currentPlayer == null) {
                 Toast.makeText(this@MainStatsActivity, "Must select player first.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            MaterialDialog.Builder(this)
-                    .title("Select Region")
-                    .items(regions.toMutableList())
-                    .itemsCallbackSingleChoice(selectedRegion) { dialog, itemView, which, text ->
-                        selectedRegion = which
+            MaterialDialog(this)
+                    .title(text = "Select Region")
+                    .listItemsSingleChoice(items = regions.toMutableList(), initialSelection = selectedRegion) { _, index, text ->
+                        selectedRegion = index
 
                         val existingPlayer = Gson().fromJson(mSharedPreferences.getString("player-${mSharedPreferences.getString("selected-player-id", "")}", null), PrefPlayer::class.java)
                         if (existingPlayer != null) {
-                            existingPlayer.selectedShardID = regionList[which].toLowerCase()
+                            existingPlayer.selectedShardID = regionList[index].toLowerCase()
                             mSharedPreferences.edit().putString("player-${mSharedPreferences.getString("selected-player-id", "")}", Gson().toJson(existingPlayer)).apply()
                         }
 
@@ -282,8 +269,6 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                         regionText.text = text
 
                         setPlayerSelected(existingPlayer.playerID)
-
-                        false
                     }
                     .show()
         }
@@ -292,21 +277,19 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                 Toast.makeText(this@MainStatsActivity, "Must select player first.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            MaterialDialog.Builder(this)
-                    .title("Select Gamemode")
-                    .items("Solo TPP", "Solo FPP", "Duo TPP", "Duo FPP", "Squad TPP", "Squad FPP")
-                    .itemsCallbackSingleChoice(selectedGamemode) { dialog, itemView, which, text ->
-                        selectedGamemode = which
+            MaterialDialog(this)
+                    .title(text = "Select Gamemode")
+                    .listItemsSingleChoice(items = listOf("Solo TPP", "Solo FPP", "Duo TPP", "Duo FPP", "Squad TPP", "Squad FPP"), initialSelection = selectedGamemode) { _, index, text ->
+                        selectedGamemode = index
                         stats_gamemode_text.text = text
 
                         val existingPlayer = Gson().fromJson(mSharedPreferences.getString("player-${mSharedPreferences.getString("selected-player-id", "")}", null), PrefPlayer::class.java)
                         if (existingPlayer != null) {
-                            existingPlayer.selectedGamemode = modesList[which]
+                            existingPlayer.selectedGamemode = modesList[index]
                             mSharedPreferences.edit().putString("player-${mSharedPreferences.getString("selected-player-id", "")}", Gson().toJson(existingPlayer)).apply()
                         }
 
                         setPlayerSelected(existingPlayer.playerID)
-                        false
                     }
                     .show()
         }
@@ -320,10 +303,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             } else {
                 2
             }
-            MaterialDialog.Builder(this)
-                    .title("Select Season (" + stats_region_text.text + ")")
-                    .items(Seasons.getInstance().getSeasonListArray(regionInt))
-                    .itemsCallbackSingleChoice(selectedSeason) { dialog, itemView, which, text ->
+            MaterialDialog(this)
+                    .title(text = "Select Season (" + stats_region_text.text + ")")
+                    .listItemsSingleChoice(items = Seasons.getInstance().getSeasonListArray(regionInt), initialSelection = selectedSeason) { _, which, text ->
                         selectedSeason = which
                         var seasonID = text.toString()
                         if (seasonID.contains("Current")) {
@@ -339,21 +321,32 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                         }
 
                         setPlayerSelected(existingPlayer.playerID)
-                        false
                     }
                     .show()
         }
     }
 
-    val playerListAdapter = MaterialSimpleListAdapter(MaterialSimpleListAdapter.Callback { dialog, index, item ->
-        if (dialog.titleView.text == "Select Player") {
-            setPlayerSelected(playersMap[item.content].toString())
-            dialog.dismiss()
+    private var players: MutableList<PrefPlayer> = ArrayList()
+
+    private val playerListAdapter: RecyclerView.Adapter<*> = SlimAdapter.create().register<PrefPlayer>(R.layout.player_choice_dialog_item) { player, injector ->
+        val iconDrawable: Int = if (player.defaultShardID.contains("pc")) {
+            R.drawable.windows_color
         } else {
-            deletePlayer(item.content.toString())
-            dialog.dismiss()
+            R.drawable.xbox_logo
         }
-    })
+        injector.image(R.id.game_version_icon, iconDrawable)
+        injector.text(R.id.player_select_name, player.playerName)
+
+        injector.clicked(R.id.constraintLayout) {
+            if (selectPlayerDialog != null && selectPlayerDialog!!.isShowing) {
+                setPlayerSelected(playersMap[player.playerName].toString())
+                selectPlayerDialog!!.dismiss()
+            } else if (deletePlayerDialog != null && deletePlayerDialog!!.isShowing) {
+                deletePlayer(player.playerName)
+                deletePlayerDialog!!.dismiss()
+            }
+        }
+    }.updateData(players)
 
     override fun onStop() {
         super.onStop()
@@ -386,8 +379,8 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             listener = null
             listenerRef = null
         }
+        players.clear()
         playersMap.clear()
-        playerListAdapter.clear()
         val currentUser = FirebaseAuth.getInstance().currentUser
         val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser!!.uid).child("pubg_players").orderByChild("playerName")
         listenerRef = ref.ref
@@ -449,19 +442,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                     setPlayerSelected(p0.key.toString())
                 }
 
-                val iconDrawable: Int
-                iconDrawable = if (player.defaultShardID.contains("pc")) {
-                    R.drawable.windows_color
-                } else {
-                    R.drawable.xbox_logo
-                }
-
-                playerListAdapter.add(MaterialSimpleListItem.Builder(this@MainStatsActivity)
-                        .content(player.playerName)
-                        .icon(iconDrawable)
-                        .iconPaddingDp(8)
-                        .backgroundColor(Color.WHITE)
-                        .build())
+                players.add(player)
+                //players = players.sortedWith(compareBy {it.playerName}).toMutableList()
+                playerListAdapter.notifyDataSetChanged()
 
                 playersMap[player.playerName] = player.playerID
             }
@@ -610,8 +593,15 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
     }
 
     private fun deletePlayer(name: String) {
-        var playerID = playersMap[name]
+        val playerID = playersMap[name]
         playersMap.remove(name)
+        for (i in players) {
+            if (i is PrefPlayer) {
+                if (i.playerName == name) {
+                    players.remove(i)
+                }
+            }
+        }
 
         if (mSharedPreferences.getString("selected-player-id", "") == playerID) {
             //Deleted player is currently selected, remove that.
@@ -654,13 +644,15 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         return super.onCreateOptionsMenu(menu)
     }
 
+    private var deletePlayerDialog: MaterialDialog? = null
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.stats_delete_player) {
-            MaterialDialog.Builder(this@MainStatsActivity)
-                    .title("Select Player to Delete")
-                    .adapter(playerListAdapter, null)
-                    .negativeText("CANCEL")
-                    .show()
+            deletePlayerDialog = MaterialDialog(this@MainStatsActivity)
+                    .title(text = "Select Player to Delete")
+                    .customListAdapter(playerListAdapter)
+                    .negativeButton(text = "CANCEL")
+            deletePlayerDialog!!.show()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -735,6 +727,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
     }
 
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
+        Log.d("ADERROR", p0.toString())
     }
 
     private var serviceConnection: ServiceConnection = object : ServiceConnection {

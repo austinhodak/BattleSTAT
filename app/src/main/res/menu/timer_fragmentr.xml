@@ -12,6 +12,7 @@
         android:id="@+id/timer_setting"
         android:icon="@drawable/ic_settings_24dp"
         android:title="Settings"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
 </menu>

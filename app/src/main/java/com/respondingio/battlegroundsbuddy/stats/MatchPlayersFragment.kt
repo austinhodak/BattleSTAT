@@ -2,15 +2,16 @@ package com.respondingio.battlegroundsbuddy.stats
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.MatchParticipant
 import kotlinx.android.synthetic.main.match_players_fragment.match_players_rv
@@ -103,10 +104,9 @@ class MatchPlayersFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.match_players_sort) {
-            MaterialDialog.Builder(requireActivity())
-                    .title("Sort By")
-                    .items(R.array.players_sort)
-                    .itemsCallbackSingleChoice(sortIndex) { dialog, itemView, position, text ->
+            MaterialDialog(requireActivity())
+                    .title(text = "Sort By")
+                    .listItemsSingleChoice(R.array.players_sort, initialSelection = sortIndex) { _, position, text ->
                         sortIndex = position
                         when (position) {
                             0 -> {
@@ -138,7 +138,6 @@ class MatchPlayersFragment : Fragment() {
                                 mAdapter.updateData(sortedList)
                             }
                         }
-                        true
                     }.show()
         }
         return super.onOptionsItemSelected(item)
