@@ -21,7 +21,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.respondingio.battlegroundsbuddy.R
-import com.respondingio.battlegroundsbuddy.R.layout
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_edittext
 import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_rv
@@ -52,7 +51,7 @@ class WeaponComments : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layout.fragment_weapon_comments, container, false)
+        return inflater.inflate(R.layout.fragment_weapon_comments, container, false)
     }
 
     override fun onStart() {

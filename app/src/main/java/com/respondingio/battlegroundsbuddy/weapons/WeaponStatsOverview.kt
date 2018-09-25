@@ -106,7 +106,7 @@ class WeaponStatsOverview : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        suggest_button.setOnClickListener { email("fireappsdev@gmail.com", "Battlegrounds Battle Buddy Suggestion") }
+        suggest_button.setOnClickListener { email("pubgbattlebuddy@gmail.com", "Battlegrounds Battle Buddy Suggestion") }
         weaponDetailAttachmentRV.isNestedScrollingEnabled = false
         setupSoundsList()
 

@@ -939,7 +939,7 @@
                                     android:textSize="20sp" />
 
                                 <TextView
-                                    android:id="@+id/textView10"
+                                    android:id="@+id/winPointsTitle"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/roboto_condensed_regular"
@@ -949,6 +949,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/killPointsView"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"

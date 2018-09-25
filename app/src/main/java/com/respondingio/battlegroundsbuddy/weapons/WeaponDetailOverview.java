@@ -343,7 +343,7 @@ public class WeaponDetailOverview extends Fragment {
             @Override
             public void onClick(final View view) {
                 try {
-                    String mailto = "mailto:fireappsdev@gmail.com" +
+                    String mailto = "mailto:pubgbattlebuddy@gmail.com" +
                             "?subject=" + Uri.encode("Battlegrounds Battle Buddy Suggestion");
 
                     Intent emailIntent = new Intent(Intent.ACTION_SENDTO);

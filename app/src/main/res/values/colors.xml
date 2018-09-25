@@ -3,4 +3,9 @@
     <color name="colorPrimary">@color/md_grey_900</color>
     <color name="colorPrimaryDark">@color/md_grey_900</color>
     <color name="colorAccent">#ff9100</color>
+
+    <color name="primary700">#293944</color>
+    <color name="primary800">#1B2327</color>
+    <color name="primary600">#3B525F</color>
+    <color name="secondary500">#F3981D</color>
 </resources>

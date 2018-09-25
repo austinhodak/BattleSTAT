@@ -546,6 +546,14 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                     MatchListFragment.arguments = mBundle
                     supportFragmentManager.beginTransaction().replace(R.id.home_frame, MatchListFragment, "MATCHES").commitAllowingStateLoss()
                 }
+                R.id.stats_war_mode -> {
+                    if (supportFragmentManager.findFragmentByTag("WAR") != null) return@setOnNavigationItemSelectedListener true
+                    val MatchListFragment = WarModeListFragment()
+                    val mBundle = Bundle()
+                    mBundle.putSerializable("player", currentPlayer)
+                    MatchListFragment.arguments = mBundle
+                    supportFragmentManager.beginTransaction().replace(R.id.home_frame, MatchListFragment, "WAR").commitAllowingStateLoss()
+                }
             }
             true
         }
@@ -558,6 +566,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
             } else if (supportFragmentManager.findFragmentByTag("MATCHES") != null) {
                 val fragment: MatchListFragment = supportFragmentManager.findFragmentByTag("MATCHES") as MatchListFragment
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
+            } else if (supportFragmentManager.findFragmentByTag("WAR") != null) {
+                val fragment: WarModeListFragment = supportFragmentManager.findFragmentByTag("WAR") as WarModeListFragment
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
             }
             return
@@ -584,6 +595,11 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                 val MatchListFragment = MatchListFragment()
                 MatchListFragment.arguments = mBundle
                 supportFragmentManager.beginTransaction().replace(R.id.home_frame, MatchListFragment, "MATCHES").commit()
+            }
+            R.id.stats_war_mode -> {
+                val MatchListFragment = WarModeListFragment()
+                MatchListFragment.arguments = mBundle
+                supportFragmentManager.beginTransaction().replace(R.id.home_frame, MatchListFragment, "WAR").commit()
             }
             else -> {
                 yourStatsFragment.arguments = mBundle
@@ -699,6 +715,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             reloadStats(currentPlayer!!)
             hasReward = false
         }
+
+        mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
+                AdRequest.Builder().build())
     }
 
     override fun onRewardedVideoAdLeftApplication() {

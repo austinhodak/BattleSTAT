@@ -33,5 +33,6 @@ data class PlayerStats(
         val weaponsAcquired: Int = 0,
         val weeklyKills: Int = 0,
         val winPoints: Double = 0.0,
-        val wins: Int = 0
+        val wins: Int = 0,
+        val RankPoint: Double = 0.0
 ) : Serializable

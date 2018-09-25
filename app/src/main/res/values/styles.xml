@@ -128,8 +128,6 @@
         <item name="android:statusBarColor">#e65100</item>
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
-
-
     </style>
 
     <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
@@ -138,4 +136,31 @@
 
     <style name="MapTileActivity" parent="MaterialDrawerTheme.Light.DarkToolbar">
     </style>
+
+    <style name="NewHomeActivity" parent="MaterialDrawerTheme">
+        <item name="colorPrimary">@color/primary700</item>
+        <item name="colorPrimaryDark">@color/primary800</item>
+        <item name="colorAccent">@color/secondary500</item>
+
+        <item name="material_drawer_selected">#1FF3981D</item>
+    </style>
+
+    <style name="WeaponHome" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorPrimary">@color/primary700</item>
+        <item name="colorPrimaryDark">#D2DBE0</item>
+        <item name="colorAccent">@color/secondary500</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="WeaponChipText" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:fontFamily">@font/work_sans_semibold</item>
+    </style>
+
+    <style name="PickerTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary700</item>
+        <item name="colorPrimaryDark">@color/primary800</item>
+        <item name="colorAccent">@color/secondary500</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+    </style>
+
 </resources>

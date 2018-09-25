@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.Weapon
+import com.respondingio.battlegroundsbuddy.weapondetail.WeaponHome
 import kotlinx.android.synthetic.main.home_weapons_list.pg
 import kotlinx.android.synthetic.main.home_weapons_list.weapon_list_rv
 import net.idik.lib.slimadapter.SlimAdapter
@@ -95,7 +96,7 @@ class MainWeaponsList : Fragment() {
                 injector.gone(R.id.head_parent)
             }
 
-            if (data.range.isNotEmpty()) {
+            if (data.range.isNotEmpty() && data.range != "--") {
                 val range = data.range
                 val split = range.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 injector.text(R.id.weapon_range, split[1] + "M")
@@ -106,7 +107,8 @@ class MainWeaponsList : Fragment() {
             }
 
             injector.clicked(R.id.card_top) {
-                startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
+               // startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
+                startActivity<WeaponHome>("weaponPath" to doc.reference.path, "weaponClass" to weaponClass, "weaponName" to data.weapon_name, "weaponKey" to doc.id)
             }
 
             injector.gone(R.id.weapon_fav)

@@ -264,6 +264,7 @@ public class Telemetry {
         object.put("normal-solo-fpp", "Solo FPP");
         object.put("normal-squad", "Squad TPP");
         object.put("normal-squad-fpp", "Squad FPP");
+        object.put("war2", "War Mode");
         return object;
     }
 

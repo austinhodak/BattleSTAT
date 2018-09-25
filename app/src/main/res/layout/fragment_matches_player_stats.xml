@@ -3,16 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/top"
+    android:visibility="visible"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e65100">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/stats_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:clipToPadding="false"
         android:paddingBottom="8dp"
+        android:visibility="gone"
         android:paddingTop="2dp">
 
         <LinearLayout

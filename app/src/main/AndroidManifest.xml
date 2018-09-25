@@ -30,19 +30,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".weapons.WeaponDetailsActivity" />
+
         <activity
             android:name=".loadout.LoadoutCreateMain"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".damage_calculator.DamageCalcActivity"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".weapons.CompareWeaponActivity"
             android:theme="@style/CompareTheme" />
+
         <activity
             android:name=".weapons.CompareWeaponPicker"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/PickerTheme" />
+
         <activity
             android:name=".damage_calculator.DamageCalcPicker"
             android:theme="@style/AppTheme" />
@@ -50,9 +56,11 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/icons8_rifle" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -66,7 +74,9 @@
         <activity
             android:name=".profile.ProfileActivity"
             android:theme="@style/Profile" />
+
         <activity android:name=".info.TimerActivity" />
+
         <activity
             android:name=".weapons.WeaponDamageChart"
             android:theme="@style/AppTheme" />
@@ -81,17 +91,30 @@
             android:name="firebase_crashlytics_collection_enabled"
             android:value="${crashEnabled}" />
 
-        <activity android:name=".stats.MatchDetailActivity" android:theme="@style/MatchDetailsTheme"/>
+        <activity android:name=".stats.matchdetails.MatchDetailActivity" android:theme="@style/MatchDetailsTheme"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />
 
-        <activity android:name=".stats.SinglePlayerStatsActivity" android:theme="@style/MatchDetailsTheme" />
+        <activity android:name=".stats.matchdetails.SinglePlayerStatsActivity" android:theme="@style/MatchDetailsTheme" />
 
-        <activity android:name=".stats.KillFeedListMap"/>
+        <activity android:name=".stats.matchdetails.KillFeedListMap"/>
 
         <activity android:name=".stats.MainStatsActivity" android:theme="@style/MainStatsTheme" />
+
+        <!-- START NEW STUFF -->
+        <activity android:name=".MainActivityKT" android:label="Battle Buddy New" android:theme="@style/NewHomeActivity">
+
+        </activity>
+
+        <activity android:name=".weapondetail.WeaponHome" android:theme="@style/WeaponHome">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

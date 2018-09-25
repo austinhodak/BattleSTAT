@@ -119,23 +119,14 @@ public class CompareWeaponPicker extends AppCompatActivity {
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         adapter = SlimAdapter.create()
-                .register(R.layout.weapon_list_item_card_light, new SlimInjector<DocumentSnapshot>() {
+                .register(R.layout.weapon_compare_picker_item, new SlimInjector<DocumentSnapshot>() {
                     @Override
                     public void onInject(final DocumentSnapshot data, final IViewInjector injector) {
-                        Set<String> favs = mSharedPreferences.getStringSet("favoriteWeapons", null);
-                        if (favs != null && favs.contains(data.getReference().getPath())) {
-                            injector.visible(R.id.favorite_weapon_icon);
-                        } else {
-                            injector.gone(R.id.favorite_weapon_icon);
-                        }
-
-                        TextView subtitle = (TextView) injector
-                                .findViewById(R.id.weaponItemSubtitle);
 
                         ImageView icon = (ImageView) injector
-                                .findViewById(R.id.helmetItem64);
+                                .findViewById(R.id.pickerIcon);
 
-                        injector.text(R.id.weaponItemName,
+                        injector.text(R.id.pickerText,
                                 data.getString("weapon_name"));
 
                         if (data.get("icon") != null) {
@@ -145,39 +136,9 @@ public class CompareWeaponPicker extends AppCompatActivity {
                             Glide.with(CompareWeaponPicker.this)
                                     .load(gsReference)
                                     .into(icon);
-
                         }
 
-                        injector.text(R.id.weaponItemSubtitle, "");
-
-                        if (data.getString("ammo") != null) {
-                            injector.text(R.id.weaponItemSubtitle,
-                                    data.getString("ammo"));
-                        }
-
-                        if (data.getString("damageBody0") != null) {
-                            if (subtitle.getText().length() != 0) {
-                                injector.text(R.id.weaponItemSubtitle,
-                                        subtitle.getText() + " • Body: " + data
-                                                .getString("damageBody0"));
-                            } else {
-                                injector.text(R.id.weaponItemSubtitle,
-                                        subtitle.getText() + "Body: " + data
-                                                .getString("damageBody0"));
-                            }
-                        }
-
-                        if (data.getString("damageHead0") != null) {
-                            injector.text(R.id.weaponItemSubtitle,
-                                    subtitle.getText() + " • Head: " + data
-                                            .getString("damageHead0"));
-                        }
-
-                        if (subtitle.getText().length() == 0) {
-                            injector.gone(R.id.weaponItemSubtitle);
-                        }
-
-                        injector.clicked(R.id.top_layout, new OnClickListener() {
+                        injector.clicked(R.id.topLayout, new OnClickListener() {
                             @Override
                             public void onClick(final View view) {
                                 Intent intent = new Intent(CompareWeaponPicker.this,

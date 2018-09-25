@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDF0F2">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
+                android:background="#FEFEFE">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottie_star"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/weaponName"
+                    app:layout_constraintStart_toEndOf="@+id/weaponName"
+                    app:layout_constraintTop_toTopOf="@+id/weaponName"
+                    app:lottie_fileName="star.json" />
+
+                <devlight.io.library.ArcProgressStackView
+                    android:id="@+id/progress_stack"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    app:apsv_draw_width="13dp"
+                    app:apsv_indicator_orientation="horizontal"
+                    app:apsv_leveled="false"
+                    app:apsv_model_bg_enabled="true"
+                    app:apsv_rounded="true"
+                    app:apsv_shadowed="false"
+                    app:apsv_start_angle="135"
+                    app:apsv_sweep_angle="270"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/work_sans"
+                    android:text="STARS"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/progress_stack"
+                    app:layout_constraintEnd_toEndOf="@+id/progress_stack"
+                    app:layout_constraintStart_toStartOf="@+id/progress_stack" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:elevation="2dp"
+                    android:src="@drawable/weapon_vss"
+                    app:layout_constraintBottom_toBottomOf="@+id/progress_stack"
+                    app:layout_constraintEnd_toEndOf="@+id/progress_stack"
+                    app:layout_constraintStart_toStartOf="@+id/progress_stack"
+                    app:layout_constraintTop_toTopOf="@+id/progress_stack" />
+
+                <TextView
+                    android:id="@+id/weaponName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/work_sans_bold"
+                    android:text="VSS"
+                    android:textColor="@color/primary800"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="@+id/progress_stack"
+                    app:layout_constraintStart_toStartOf="@+id/progress_stack"
+                    app:layout_constraintTop_toBottomOf="@+id/progress_stack" />
+
+                <HorizontalScrollView
+                    android:id="@+id/horizontalScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/weaponName"
+                    app:layout_constraintVertical_bias="1.0">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp">
+
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.MaterialComponents.Chip.Action"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="9mm"
+                            android:textAppearance="@style/WeaponChipText"
+                            android:textColor="#232F34"
+                            app:chipBackgroundColor="#1F232F34"
+                            app:chipIcon="@drawable/icon_ammo"
+                            app:chipIconSize="20dp"
+                            app:chipStartPadding="8dp" />
+
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.MaterialComponents.Chip.Action"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="715 m/s"
+                            android:textAppearance="@style/WeaponChipText"
+                            android:textColor="#232F34"
+                            app:chipBackgroundColor="#1F232F34"
+                            app:chipIcon="@drawable/speed_dark"
+                            app:chipIconSize="20dp"
+                            app:chipStartPadding="8dp" />
+
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.MaterialComponents.Chip.Action"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="1000m"
+                            android:textAppearance="@style/WeaponChipText"
+                            android:textColor="#232F34"
+                            app:chipBackgroundColor="#1F232F34"
+                            app:chipIcon="@drawable/distance_dark"
+                            app:chipIconSize="20dp"
+                            app:chipStartPadding="8dp" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </HorizontalScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:background="#FEFEFE"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup2">
+
+                <com.app.progresviews.ProgressLine
+                    android:id="@+id/progressLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:definition="Bullet Speed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/progressLine2"
+                    app:lineDefTextSize="10sp"
+                    app:lineProgressColor="@color/md_teal_300"
+                    app:value="715 m/s"
+                    app:valuePercentage="40" />
+
+                <com.app.progresviews.ProgressLine
+                    android:id="@+id/progressLine2"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    app:definition="Base Damage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lineDefTextSize="10sp"
+                    app:lineProgressColor="@color/secondary500"
+                    app:value="49"
+                    app:valuePercentage="40" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="#232F34"
+        app:fabAlignmentMode="center"
+        app:fabCradleMargin="8dp"
+        app:navigationIcon="@drawable/ic_menu_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_compare_arrows_dark_24dp"
+        android:tint="@color/primary700"
+        app:elevation="1dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/bar" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

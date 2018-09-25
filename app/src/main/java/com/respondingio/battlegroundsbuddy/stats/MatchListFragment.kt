@@ -23,6 +23,7 @@ import com.respondingio.battlegroundsbuddy.models.Match
 import com.respondingio.battlegroundsbuddy.models.MatchTop
 import com.respondingio.battlegroundsbuddy.models.ParticipantShort
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
+import com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchDetailActivity
 import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
 import kotlinx.android.synthetic.main.fragment_matches_list.matches_RV
 import kotlinx.android.synthetic.main.fragment_matches_list.matches_empty

@@ -10,8 +10,8 @@
         android:icon="@drawable/icons8gamecontroller96"
         android:title="Matches" />
 
-    <!--<item
-        android:id="@+id/stats_more"
-        android:icon="@drawable/icons8_more_color"
-        android:title="More" />-->
+    <item
+        android:id="@+id/stats_war_mode"
+        android:icon="@drawable/missle"
+        android:title="War Mode" />
 </menu>

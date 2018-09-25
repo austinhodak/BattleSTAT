@@ -29,6 +29,7 @@ import com.respondingio.battlegroundsbuddy.models.PlayerStats
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
+import kotlinx.android.synthetic.main.fragment_your_stats.killPointsView
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_assists
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_boosts
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_damageDealt
@@ -60,6 +61,8 @@ import kotlinx.android.synthetic.main.fragment_your_stats.stats_weeklyPoints
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_winPoints
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_winloss
 import kotlinx.android.synthetic.main.fragment_your_stats.stats_wins
+import kotlinx.android.synthetic.main.fragment_your_stats.winPointsTitle
+import kotlinx.android.synthetic.main.update_rss_card.view.title
 import org.jetbrains.anko.textColor
 import java.util.HashMap
 
@@ -236,7 +239,6 @@ class MainStatsFragment : Fragment() {
         stats_damageDealt?.text = Math.round(playerStats.damageDealt).toString()
         stats_headshots?.text = playerStats.headshotKills.toString()
         stats_heals?.text = playerStats.heals.toString()
-        stats_killPoints?.text = String.format("%.0f", Math.rint(playerStats.killPoints))
         stats_longestKill?.text = "${String.format("%.0f", Math.rint(playerStats.longestKill))}m"
         stats_longestSurv?.text = "${String.format("%.0f", Math.ceil(playerStats.longestTimeSurvived / 60))} Min"
         stats_losses?.text = playerStats.losses.toString()
@@ -254,7 +256,17 @@ class MainStatsFragment : Fragment() {
         stats_walkDist?.text = "${String.format("%.0f", Math.ceil(playerStats.walkDistance))}m"
         stats_weaponsAqd?.text = playerStats.weaponsAcquired.toString()
         stats_weeklyPoints?.text = playerStats.weeklyKills.toString()
-        stats_winPoints?.text = String.format("%.0f", Math.rint(playerStats.winPoints))
+
+        if (playerStats.killPoints == 0.0 && playerStats.winPoints == 0.0 && playerStats.RankPoint > 0.0) {
+            winPointsTitle?.text = "RANK POINTS *NEW"
+            stats_winPoints?.text = String.format("%.0f", Math.rint(playerStats.RankPoint))
+
+            killPointsView?.visibility = View.GONE
+        } else {
+            stats_killPoints?.text = String.format("%.0f", Math.rint(playerStats.killPoints))
+            stats_winPoints?.text = String.format("%.0f", Math.rint(playerStats.winPoints))
+        }
+
         stats_wins?.text = playerStats.wins.toString()
         stats_deaths?.text = playerStats.losses.toString()
 

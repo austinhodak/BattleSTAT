@@ -20,11 +20,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.android.vending.billing.IInAppBillingService
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_OK
 import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
@@ -79,11 +77,19 @@ import kotlinx.android.synthetic.main.activity_main.toolbar_title
 import org.jetbrains.anko.toast
 import java.net.MalformedURLException
 import java.net.URL
-import java.text.DecimalFormat
 import java.util.Arrays
 import kotlin.collections.set
 
 public class MainActivity : AppCompatActivity() {
+
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+
+    private val steamUserObserver =
+            Observer<String> {
+                value -> value?.let { updateSteamUserCount(value) }
+            }
 
     private lateinit var result: Drawer
 
@@ -134,6 +140,8 @@ public class MainActivity : AppCompatActivity() {
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
         RateDialog.with(this, 1, 5)
+
+        viewModel.steamPlayerCountChange.observe(this, steamUserObserver)
     }
 
     private fun initializeFirebase() {
@@ -446,7 +454,7 @@ public class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "501") {
-                        val mailto = "mailto:fireappsdev@gmail.com" +
+                        val mailto = "mailto:pubgbattlebuddy@gmail.com" +
                                 "?subject=" + Uri.encode("Battlegrounds Battle Buddy Suggestion")
 
                         val emailIntent = Intent(Intent.ACTION_SENDTO)
@@ -515,10 +523,9 @@ public class MainActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.getSteamPlayerCount(application)
+
         timer.addSplit("steam")
-
-        loadSteamUserCount()
-
         timer.addSplit("end")
         timer.dumpToLog()
     }
@@ -686,35 +693,11 @@ public class MainActivity : AppCompatActivity() {
                 requestCode)
     }
 
-    private fun loadSteamUserCount() {
-        try {
-            val queue = Volley.newRequestQueue(this)
-            val url = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080"
-
-            val stringRequest = JsonObjectRequest(Request.Method.GET, url, null,
-                    Response.Listener { response ->
-                        if (!this::headerResult.isInitialized) {
-                            return@Listener
-                        }
-                        val amount = java.lang.Double.parseDouble(response.getJSONObject("response").getString("player_count"))
-                        val formatter = DecimalFormat("#,###")
-                        val formatted = formatter.format(amount)
-
-                        val header = headerResult.profiles[0]
-                        header.withEmail("$formatted Current Steam Players")
-
-                        headerResult.updateProfile(header)
-                    },
-                    Response.ErrorListener { error ->
-                        // TODO: Handle error
-                    })
-
-
-            queue.add(stringRequest)
-        } catch (e: UninitializedPropertyAccessException) {
-            e.printStackTrace()
-        }
-
+    private fun updateSteamUserCount(string: String) {
+        if (!this::headerResult.isInitialized) return
+        val header = headerResult.profiles[0]
+        header.withEmail("$string Current Steam Players")
+        headerResult.updateProfile(header)
     }
 
     private fun checkConsent() {
