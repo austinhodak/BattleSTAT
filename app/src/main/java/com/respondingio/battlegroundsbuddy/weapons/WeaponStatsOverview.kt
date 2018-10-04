@@ -25,6 +25,9 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
+import com.instabug.bug.BugReporting
+import com.instabug.bug.invocation.InvocationMode
+import com.instabug.library.Instabug
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.WeaponSound
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
@@ -106,7 +109,10 @@ class WeaponStatsOverview : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        suggest_button.setOnClickListener { email("pubgbattlebuddy@gmail.com", "Battlegrounds Battle Buddy Suggestion") }
+        suggest_button.setOnClickListener {
+           // email("pubgbattlebuddy@gmail.com", "Battlegrounds Battle Buddy Suggestion")
+            BugReporting.invoke(InvocationMode.NEW_FEEDBACK)
+        }
         weaponDetailAttachmentRV.isNestedScrollingEnabled = false
         setupSoundsList()
 

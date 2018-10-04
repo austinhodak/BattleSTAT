@@ -9,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.respondingio.battlegroundsbuddy.R
@@ -16,6 +17,7 @@ import com.respondingio.battlegroundsbuddy.models.MatchParticipant
 import com.respondingio.battlegroundsbuddy.models.MatchRoster
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
+import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.fragment_stats_teams.stats_teams_rv
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.backgroundColor
@@ -91,11 +93,15 @@ class MatchTeamsFragment : Fragment() {
                 }
 
                 participantInjector.clicked(R.id.roster_player_top) {
-                    val intent = Intent(requireActivity(), SinglePlayerStatsActivity::class.java)
-                    intent.putExtra("playerID", participant.id)
-                    intent.putExtra("match", match)
-                    intent.putExtra("player", participant)
-                    startActivity(intent)
+                    val bundle = Bundle()
+                    bundle.putString("playerID", participant.id)
+                    requireActivity().toolbar_title.text = participant.attributes.stats.name
+
+                    val activity: MatchDetailActivity = requireActivity() as MatchDetailActivity
+                    activity.updateToolbarElevation(0f)
+                    activity.updateToolbarFlags(false)
+
+                    activity.showPlayerStatsFragment(bundle)
                 }
 
             }.attachTo(injector.findViewById(R.id.roster_card_list)).updateData(participants)

@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_stats_kill_feed.kill_feed_rv
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import org.jetbrains.anko.support.v4.startActivity
+import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.TimeZone
@@ -64,11 +65,16 @@ class KillFeedFragment: Fragment() {
             injector.text(R.id.kill_feed_killer, "")
             injector.text(R.id.kill_feed_victim, "")
 
+            //TODO FIX THIS, NOT GOING BACK TO NORMAL AFTER ITALIC.
+            var killerTV = injector.findViewById<TextView>(R.id.kill_feed_killer)
             if (data.killer.name.isEmpty()) {
                 data.killer.name = Telemetry().damageTypeCategory[data.damageTypeCategory].toString()
-                injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.ITALIC)
+
+                killerTV.setTypeface(null, Typeface.BOLD_ITALIC)
+                //injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.ITALIC)
             } else {
-                injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.NORMAL)
+                killerTV.setTypeface(null, Typeface.BOLD)
+                //injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.NORMAL)
             }
 
             injector.text(R.id.kill_feed_killer, data.killer.name.trim())
@@ -87,7 +93,19 @@ class KillFeedFragment: Fragment() {
             when {
                 data.killer.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_green_outline)
                 data.victim.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_red_outline)
-                else -> injector.background(R.id.textView9, drawable.chip_grey_outline)
+                else -> {
+                    for (teammate in matchModel?.currentPlayerRoster?.relationships?.participants?.data!!) {
+                        if (data.killer.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
+                            injector.background(R.id.textView9, drawable.chip_green_outline_teammate)
+                            break
+                        } else if (data.victim.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
+                            injector.background(R.id.textView9, drawable.chip_red_outline_teammate)
+                            break
+                        } else {
+                            injector.background(R.id.textView9, drawable.chip_grey_outline)
+                        }
+                    }
+                }
             }
 
             //Do date.

@@ -12,37 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
 import com.respondingio.battlegroundsbuddy.models.Stats
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.div2
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_assists
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_boosts
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_damageDealt
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_dbnos
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_headshots
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_heals
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_killPoints
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_killStreaks
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_kills
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_killsRV
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_longestKill
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_mostDamageDealt
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_revives
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_rideDist
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_roadKills
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_scroll_view
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_swimDist
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_teamKills
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_timeSurv
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_vehicleDestroy
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_walkDist
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_weaponsAqd
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.stats_winPoints
-import kotlinx.android.synthetic.main.fragment_matches_player_stats.top
+import kotlinx.android.synthetic.main.fragment_matches_player_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.textColor
@@ -172,7 +149,6 @@ class MatchPlayerStatsFragment : Fragment() {
     private fun fillStats(matchModel: MatchModel) {
         var match = matchModel
 
-
         Log.d("MATCH", match.getFormattedCreatedAt())
 
         val stats: Stats
@@ -192,20 +168,20 @@ class MatchPlayerStatsFragment : Fragment() {
 
         if (stats.winPointsDelta >= 0) {
             winPointsText = "${stats.winPoints} (+${String.format("%.0f", stats.winPointsDelta)})"
-            stats_winPoints.textColor = resources.getColor(R.color.md_green_A700)
+            //stats_winPoints.textColor = resources.getColor(R.color.md_green_A700)
         } else {
             winPointsText = "${stats.winPoints} (${String.format("%.0f", stats.winPointsDelta)})"
-            stats_winPoints.textColor = resources.getColor(R.color.md_red_A700)
+            //stats_winPoints.textColor = resources.getColor(R.color.md_red_A700)
         }
 
         val killPointsText: String
 
         if (stats.killPointsDelta >= 0) {
             killPointsText = "${stats.killPoints} (+${String.format("%.0f", stats.killPointsDelta)})"
-            stats_killPoints.textColor = resources.getColor(R.color.md_green_A700)
+            //stats_killPoints.textColor = resources.getColor(R.color.md_green_A700)
         } else {
             killPointsText = "${stats.killPoints} (${String.format("%.0f", stats.killPointsDelta)})"
-            stats_killPoints.textColor = resources.getColor(R.color.md_red_A700)
+            //stats_killPoints.textColor = resources.getColor(R.color.md_red_A700)
         }
 
         stats_winPoints.text = winPointsText
@@ -227,6 +203,34 @@ class MatchPlayerStatsFragment : Fragment() {
         stats_heals.text = stats.heals.toString()
         stats_damageDealt.text = stats.damageDealt.roundToLong().toString()
         stats_revives.text = stats.revives.toString()
+
+        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints > 0.0) {
+            rank_card?.visibility = View.VISIBLE
+            rank_title?.text = getRankTitle(stats.rankPoints)
+            rank_subtitle?.text = "POINTS: ${Math.floor(stats.rankPoints).toInt()}"
+
+            Glide.with(this).load(getRankIcon(stats.rankPoints)).into(rank_icon)
+
+            old_points_layout?.visibility = View.GONE
+            divider13?.visibility = View.INVISIBLE
+        } else {
+            rank_card?.visibility = View.GONE
+
+            old_points_layout?.visibility = View.VISIBLE
+
+            stats_killPoints?.text = String.format("%.0f", Math.rint(stats.killPoints))
+            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.winPoints))
+        }
+
+        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints > 0.0) {
+            winPointsTitle?.text = "RANK POINTS *NEW"
+            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.rankPoints))
+
+            killPoints_view?.visibility = View.GONE
+        } else {
+            stats_killPoints?.text = String.format("%.0f", Math.rint(stats.killPoints))
+            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.winPoints))
+        }
     }
 
     fun ordinal(i: Int): String {
@@ -234,6 +238,40 @@ class MatchPlayerStatsFragment : Fragment() {
         return when (i % 100) {
             11, 12, 13 -> i.toString() + "th"
             else -> i.toString() + sufixes[i % 10]
+        }
+    }
+
+    fun getRankTitle(rank: Double): String {
+        var rankPoints = Math.floor(rank).toInt()
+
+        return when {
+            rankPoints == 0 -> "UNRANKED"
+            rankPoints in 1..1399 -> "BRONZE"
+            rankPoints in 1400..1499 -> "SILVER"
+            rankPoints in 1500..1599 -> "GOLD"
+            rankPoints in 1600..1699 -> "PLATINUM"
+            rankPoints in 1700..1799 -> "DIAMOND"
+            rankPoints in 1800..1899 -> "ELITE"
+            rankPoints in 1900..1999 -> "MASTER"
+            rankPoints >= 2000 -> "GRANDMASTER"
+            else -> "RANK ERROR"
+        }
+    }
+
+    fun getRankIcon(rank: Double): Int {
+        var rankPoints = Math.floor(rank).toInt()
+
+        return when {
+            rankPoints == 0 -> R.drawable.rank_icon_unranked
+            rankPoints in 1..1399 -> R.drawable.rank_icon_bronze
+            rankPoints in 1400..1499 -> R.drawable.rank_icon_silver
+            rankPoints in 1500..1599 -> R.drawable.rank_icon_gold
+            rankPoints in 1600..1699 -> R.drawable.rank_icon_platinum
+            rankPoints in 1700..1799 -> R.drawable.rank_icon_diamond
+            rankPoints in 1800..1899 -> R.drawable.rank_icon_elite
+            rankPoints in 1900..1999 -> R.drawable.rank_icon_master
+            rankPoints >= 2000 -> R.drawable.rank_icon_grandmaster
+            else -> R.drawable.rank_icon_unranked
         }
     }
 }

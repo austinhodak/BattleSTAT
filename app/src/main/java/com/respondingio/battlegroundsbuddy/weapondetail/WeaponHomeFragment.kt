@@ -21,16 +21,7 @@ import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
 import devlight.io.library.ArcProgressStackView
 import kotlinx.android.synthetic.main.new_weapon_home.lottie_star
 import kotlinx.android.synthetic.main.new_weapon_home.progress_stack
-import kotlinx.android.synthetic.main.weapon_home_fragment.ammoChip
-import kotlinx.android.synthetic.main.weapon_home_fragment.basicDropTop
-import kotlinx.android.synthetic.main.weapon_home_fragment.damageChip
-import kotlinx.android.synthetic.main.weapon_home_fragment.magChip
-import kotlinx.android.synthetic.main.weapon_home_fragment.rangeChip
-import kotlinx.android.synthetic.main.weapon_home_fragment.speedChip
-import kotlinx.android.synthetic.main.weapon_home_fragment.weaponBasicStatsRV
-import kotlinx.android.synthetic.main.weapon_home_fragment.weaponIcon
-import kotlinx.android.synthetic.main.weapon_home_fragment.weaponName
-import kotlinx.android.synthetic.main.weapon_home_fragment.weaponType
+import kotlinx.android.synthetic.main.weapon_home_fragment.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
@@ -121,7 +112,11 @@ class WeaponHomeFragment : Fragment() {
 
         damageChip?.text = weapon.damageBody0
         magChip?.text = weapon.ammoPerMag
+
         weaponType?.text = arguments!!.getString("weaponClass").replace("_", " ").toUpperCase()
+        if (weaponType?.text!!.endsWith("S", true)) {
+            weaponType?.text = weaponType?.text!!.substring(0, weaponType?.text!!.length - 1)
+        }
 
         if (weapon.damageBody0 != "--" && weapon.damageBody0.toDouble() >= 100) {
             models.add(ArcProgressStackView.Model("BODY", ((weapon.damageBody0.toFloat() * 100f) / 225), resources.getColor(R.color.md_grey_200), resources.getColor(R.color.md_red_500), weapon.damageBody0))
@@ -139,7 +134,7 @@ class WeaponHomeFragment : Fragment() {
             models.add(ArcProgressStackView.Model("HEAD", ((weapon.damageHead0.toFloat() * 100f) / 300), resources.getColor(R.color.md_grey_300), resources.getColor(R.color.md_green_700), weapon.damageHead0))
         }
 
-        progress_stack?.models = models
+        //progress_stack?.models = models
 
         basicStatList.add(WeaponStat("Time Between Shots", weapon.TBS))
         basicStatList.add(WeaponStat("Hit Impact Power", weapon.power))
@@ -153,5 +148,21 @@ class WeaponHomeFragment : Fragment() {
         basicStatList.add(WeaponStat("Reload Duration (Tac)", weapon.reloadDurationTac.replace("\n", " ")))
 
         basicStatAdapter?.notifyDataSetChanged()
+
+        if (weapon.damageBody0 != "--") {
+            damageBody0?.setmValueText(weapon.damageBody0)
+            damageBody0?.setmPercentage(((weapon.damageBody0.toFloat() * 100f) / 120).toInt())
+        } else {
+            damageBody0?.setmValueText("N/A")
+            damageBody0?.setmPercentage(0)
+        }
+
+        if (weapon.damageHead0 != "--") {
+            damageHead0?.setmValueText(weapon.damageHead0)
+            damageHead0?.setmPercentage(((weapon.damageHead0.toFloat() * 100f) / 300).toInt())
+        } else {
+            damageHead0?.setmValueText("N/A")
+            damageHead0?.setmPercentage(0)
+        }
     }
 }

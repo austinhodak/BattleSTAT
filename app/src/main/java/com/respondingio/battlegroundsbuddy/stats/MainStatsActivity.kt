@@ -38,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.gson.Gson
+import com.instabug.bug.BugReporting
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
@@ -131,6 +132,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         mainStatsRefreshLayout?.setColorSchemeResources(R.color.md_orange_500, R.color.md_pink_500)
 
         mainStatsRefreshLayout?.onRefresh {
+            //TODO REMOVE
+            //reloadStats(currentPlayer!!)
+
             if (lastUpdated == null) {
                 mainStatsRefreshLayout?.isRefreshing = false
                 Log.e("MainStats", "Last updated long is null, either player isn't selected or stats haven't loaded yet...")
@@ -196,6 +200,10 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         mainStatsRefreshLayout.isRefreshing = true
 
         startPlayerStatsFunction(player.playerID, player.selectedShardID, player.selectedSeason!!)?.addOnSuccessListener {
+            mainStatsRefreshLayout.isRefreshing = false
+        }
+
+        startPlayerWarModeMatches(player.playerID, player.selectedShardID)?.addOnSuccessListener {
             mainStatsRefreshLayout.isRefreshing = false
         }
     }
@@ -669,6 +677,8 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                     .customListAdapter(playerListAdapter)
                     .negativeButton(text = "CANCEL")
             deletePlayerDialog!!.show()
+        } else if (item?.itemId == R.id.stats_bug) {
+            BugReporting.invoke()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -698,7 +708,19 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         data["seasonID"] = seasonID
 
         return FirebaseFunctions.getInstance().getHttpsCallable("loadPlayerStats")?.call(data)?.continueWith { task ->
-            val result = task.result.data as Map<String, Any>
+            val result = task.result?.data as Map<String, Any>
+            Log.d("REQUEST", result.toString())
+            result
+        }
+    }
+
+    private fun startPlayerWarModeMatches(playerID: String, shardID: String): Task<Map<String, Any>>? {
+        val data = java.util.HashMap<String, Any>()
+        data["playerID"] = playerID
+        data["shardID"] = shardID
+
+        return FirebaseFunctions.getInstance().getHttpsCallable("loadPlayerWarMode")?.call(data)?.continueWith { task ->
+            val result = task.result?.data as Map<String, Any>
             Log.d("REQUEST", result.toString())
             result
         }

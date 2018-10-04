@@ -22,8 +22,9 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.vending.billing.IInAppBillingService
-import com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_OK
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
 import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
@@ -45,6 +46,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
+import com.instabug.bug.BugReporting
 import com.marcoscg.ratedialog.RateDialog
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -97,8 +99,6 @@ public class MainActivity : AppCompatActivity() {
 
     private var mAuth: FirebaseAuth? = null
 
-    private var iap: IInAppBillingService? = null
-
     private lateinit var mSharedPreferences: SharedPreferences
 
     lateinit var newSharedPreferences: SharedPreferences
@@ -114,6 +114,8 @@ public class MainActivity : AppCompatActivity() {
     private lateinit var fbDatabase: FirebaseDatabase
 
     private lateinit var mInterstitialAd: InterstitialAd
+
+    lateinit var billingClient: BillingClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -135,9 +137,57 @@ public class MainActivity : AppCompatActivity() {
 
         setupDrawer()
 
-        val serviceIntent = Intent("com.android.vending.billing.InAppBillingService.BIND")
-        serviceIntent.`package` = "com.android.vending"
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        billingClient = BillingClient.newBuilder(this).setListener { responseCode, purchases ->
+            if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+                for (purchase in purchases) {
+                    if (purchase.sku == "remove_ads") {
+                        Log.d("OWNED", "ADS REMOVED")
+                        mSharedPreferences.edit().putBoolean("removeAds", true).apply()
+                        result.removeItem(9001)
+                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isAdFree", "true")
+                    }
+                }
+            } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+                // Handle an error caused by a user cancelling the purchase flow.
+            } else {
+                // Handle any other error codes.
+            }
+        }.build()
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingServiceDisconnected() {
+
+            }
+
+            override fun onBillingSetupFinished(responseCode: Int) {
+                if (responseCode == BillingClient.BillingResponse.OK) {
+                    // The billing client is ready. You can query purchases here.
+                    val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
+                    val skuList = ArrayList<String>()
+                    for (purchase in purchases.purchasesList) {
+                        skuList.add(purchase.sku)
+                    }
+
+                    if (skuList.contains("remove_ads")) {
+                        Log.d("OWNED", "ADS REMOVED")
+                        mSharedPreferences.edit().putBoolean("removeAds", true).apply()
+                        result.removeItem(9001)
+                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isAdFree", "true")
+                    } else {
+                        mSharedPreferences.edit().putBoolean("removeAds", false).apply()
+                        //result.addStickyFooterItem(removeAds)
+                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isAdFree", "false")
+                    }
+
+                    if (skuList.contains("plus_v1")) {
+                        newSharedPreferences.edit().putBoolean("premiumV1", true).apply()
+                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isPremium", "true")
+                    } else {
+                        newSharedPreferences.edit().putBoolean("premiumV1", false).apply()
+                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isPremium", "false")
+                    }
+                }
+            }
+        })
 
         RateDialog.with(this, 1, 5)
 
@@ -191,39 +241,6 @@ public class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun loadPurchases() {
-        try {
-            val ownedItems = iap?.getPurchases(3, packageName, "inapp", null)
-            val response = ownedItems?.getInt("RESPONSE_CODE")
-            Log.d("OWNED", response.toString() + "")
-            if (response == BILLING_RESPONSE_RESULT_OK) {
-                val ownedItems2 = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST")
-                Log.d("OWNED", ownedItems2.toString())
-                if (ownedItems2.contains("remove_ads")) {
-                    Log.d("OWNED", "ADS REMOVED")
-                    mSharedPreferences.edit().putBoolean("removeAds", true).apply()
-                    result.removeItem(9001)
-                    FirebaseAnalytics.getInstance(this).setUserProperty("isAdFree", "true")
-                } else {
-                    mSharedPreferences.edit().putBoolean("removeAds", false).apply()
-                    //result.addStickyFooterItem(removeAds)
-                    FirebaseAnalytics.getInstance(this).setUserProperty("isAdFree", "false")
-                }
-
-                if (ownedItems2.contains("plus_v1")) {
-                    newSharedPreferences.edit().putBoolean("premiumV1", true).apply()
-
-                    FirebaseAnalytics.getInstance(this).setUserProperty("isPremium", "true")
-                } else {
-                    newSharedPreferences.edit().putBoolean("premiumV1", false).apply()
-                    FirebaseAnalytics.getInstance(this).setUserProperty("isPremium", "false")
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("OWNED", e.toString() + e.message)
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         if (!isGooglePlayServicesAvailable(this)) {
@@ -235,7 +252,9 @@ public class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unbindService(serviceConnection)
+        if (this::billingClient.isInitialized && billingClient.isReady) {
+            billingClient.endConnection()
+        }
     }
 
     private fun checkAuthStatus() {
@@ -319,7 +338,7 @@ public class MainActivity : AppCompatActivity() {
                         ),
                         DividerDrawerItem(),
                         settings,
-                        SecondaryDrawerItem().withName(getString(string.drawer_title_suggestion)).withIcon(R.drawable.icon_hint).withSelectable(false).withIdentifier(501),
+                        SecondaryDrawerItem().withName(getString(R.string.drawer_title_suggestion)).withIcon(R.drawable.icon_hint).withSelectable(false).withIdentifier(501),
                         SecondaryDrawerItem().withName(getString(string.drawer_title_share)).withIcon(R.drawable.icons8_share).withSelectable(false).withIdentifier(502)
                 )
                 .withOnDrawerItemClickListener { _, _, drawerItem ->
@@ -436,32 +455,19 @@ public class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "9001") {
-                        val buyIntentBundle = iap?.getBuyIntent(3, packageName,
-                                "remove_ads", "inapp", "")
-
-                        val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
-
-                        if (pendingIntent != null) {
-
-                            val REQUEST_CODE = 1001
-                            startIntentSenderForResult(pendingIntent.intentSender,
-                                    REQUEST_CODE, Intent(), Integer.valueOf(0)!!, Integer.valueOf(0)!!,
-                                    Integer.valueOf(0)!!)
-                        }
+                        val flowParams = BillingFlowParams.newBuilder()
+                                .setSku("remove_ads")
+                                .setType(BillingClient.SkuType.INAPP)
+                                .build()
+                        val responseCode = billingClient.launchBillingFlow(this@MainActivity, flowParams)
 
                         logDrawerEvent("remove_ads")
-
                     }
 
                     if (drawerItem.identifier.toString() == "501") {
-                        val mailto = "mailto:pubgbattlebuddy@gmail.com" +
-                                "?subject=" + Uri.encode("Battlegrounds Battle Buddy Suggestion")
+                        BugReporting.invoke()
 
-                        val emailIntent = Intent(Intent.ACTION_SENDTO)
-                        emailIntent.data = Uri.parse(mailto)
-                        startActivity(emailIntent)
-
-                        logDrawerEvent("suggestion")
+                        logDrawerEvent("feedback")
                     }
 
                     if (drawerItem.identifier.toString() == "301") {
@@ -596,19 +602,6 @@ public class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 1001 && data != null) {
-            val responseCode = data?.getIntExtra("RESPONSE_CODE", 0)
-            val purchaseData = data?.getStringExtra("INAPP_PURCHASE_DATA")
-            val dataSignature = data?.getStringExtra("INAPP_DATA_SIGNATURE")
-
-            if (resultCode == Activity.RESULT_OK) {
-                mSharedPreferences.edit().putBoolean("removeAds", true).apply()
-                loadPurchases()
-                Snacky.builder().setActivity(this).info().setText("Thanks! Please restart the app to remove ads!").show()
-            }
-        }
-
         if (requestCode == 123 && data != null) {
             val response = IdpResponse.fromResultIntent(data)
 
@@ -662,18 +655,6 @@ public class MainActivity : AppCompatActivity() {
             return false
         }
         return true
-    }
-
-    private var serviceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(p0: ComponentName?) {
-            iap = null
-        }
-
-        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-            iap = IInAppBillingService.Stub.asInterface(p1)
-
-            loadPurchases()
-        }
     }
 
     private fun launchSignIn() {
@@ -736,19 +717,6 @@ public class MainActivity : AppCompatActivity() {
                                     super.onConsentFormClosed(consentStatus, userPrefersAdFree)
 
                                     if (userPrefersAdFree!!) {
-                                        val buyIntentBundle = iap?.getBuyIntent(3, packageName,
-                                                "remove_ads", "inapp", "")
-
-                                        val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
-
-                                        if (pendingIntent != null) {
-
-                                            val REQUEST_CODE = 1001
-                                            startIntentSenderForResult(pendingIntent.intentSender,
-                                                    REQUEST_CODE, Intent(), Integer.valueOf(0)!!, Integer.valueOf(0)!!,
-                                                    Integer.valueOf(0)!!)
-                                        }
-
                                         return
                                     }
 

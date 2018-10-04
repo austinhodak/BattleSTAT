@@ -246,7 +246,7 @@ class MatchListFragment : Fragment() {
         data["shardID"] = shardID
 
         return mFunctions.getHttpsCallable("addMatchData").call(data).continueWith { task ->
-            val result = task.result.data as Map<String, Any>
+            val result = task.result?.data as Map<String, Any>
             Log.d("REQUEST", result.toString())
             result
         }

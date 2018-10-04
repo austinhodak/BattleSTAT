@@ -35,6 +35,7 @@
         app:layout_anchor="@id/bar" />
 
     <LinearLayout
+        android:visibility="gone"
         android:elevation="16dp"
         android:id="@+id/bottomDrawerSheet"
         android:layout_width="match_parent"

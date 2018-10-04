@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.fragment_weapon_comments.comments_pg
 import kotlinx.android.synthetic.main.fragment_weapon_comments.empty_tv
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
+import net.idik.lib.slimadapter.animators.FadeInAnimator
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
@@ -83,6 +84,7 @@ class WeaponComments : Fragment() {
     private fun setupAdapter() {
         val linearLayoutManager = LinearLayoutManager(activity)
         comment_rv?.layoutManager = linearLayoutManager
+        comment_rv?.itemAnimator = FadeInAnimator()
         mSlimAdapter = SlimAdapter.create().register(R.layout.comments_weapons_item, SlimInjector<DataSnapshot> { data, injector ->
             try {
                 val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -169,10 +171,10 @@ class WeaponComments : Fragment() {
 
                                                     FirebaseDatabase.getInstance().getReference("/comments_weapons/" + weaponKey + "/" + data.key).removeValue()
 
-                                                    listData.remove(data)
-                                                    mSlimAdapter.updateData(listData)
+                                                    //listData.remove(data)
+                                                    //mSlimAdapter.updateData(listData)
 
-                                                    loadData()
+                                                    //loadData()
                                                 }
                                                 .negativeButton( text ="CANCEL")
                                                 .show()
@@ -210,7 +212,8 @@ class WeaponComments : Fragment() {
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-
+                listData.remove(dataSnapshot)
+                mSlimAdapter.updateData(listData)
             }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
@@ -226,8 +229,6 @@ class WeaponComments : Fragment() {
                 if (!dataSnapshot.exists()) {
                     empty_tv?.visibility = View.VISIBLE
                     comments_pg?.visibility = View.GONE
-
-
 
                     mSlimAdapter.updateData(listData)
                 } else {

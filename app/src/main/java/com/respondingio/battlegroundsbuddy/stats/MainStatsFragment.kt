@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,40 +30,7 @@ import com.respondingio.battlegroundsbuddy.models.PlayerStats
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
-import kotlinx.android.synthetic.main.fragment_your_stats.killPointsView
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_assists
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_boosts
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_damageDealt
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_dbnos
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_deaths
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_headshots
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_heals
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_kd
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_killPoints
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_killStreak
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_kills
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_longestKill
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_longestSurv
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_losses
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_mostkills
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_revives
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_rideDist
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_roadKills
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_roundsplayed
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_suicides
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_teamKills
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_time
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_top10s
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_updated
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_vehicleDestroy
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_walkDist
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_weaponsAqd
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_weeklyPoints
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_winPoints
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_winloss
-import kotlinx.android.synthetic.main.fragment_your_stats.stats_wins
-import kotlinx.android.synthetic.main.fragment_your_stats.winPointsTitle
-import kotlinx.android.synthetic.main.update_rss_card.view.title
+import kotlinx.android.synthetic.main.fragment_your_stats.*
 import org.jetbrains.anko.textColor
 import java.util.HashMap
 
@@ -127,7 +95,7 @@ class MainStatsFragment : Fragment() {
 
         if (arguments!!.containsKey("previousPlayer")) {
             previousPlayer = arguments!!.getSerializable("previousPlayer") as PlayerStats
-            setPreviousStats(previousPlayer)
+            //setPreviousStats(previousPlayer)
         }
 
         if (playerID != null && shardID != null && seasonID != null)
@@ -257,12 +225,22 @@ class MainStatsFragment : Fragment() {
         stats_weaponsAqd?.text = playerStats.weaponsAcquired.toString()
         stats_weeklyPoints?.text = playerStats.weeklyKills.toString()
 
-        if (playerStats.killPoints == 0.0 && playerStats.winPoints == 0.0 && playerStats.RankPoint > 0.0) {
-            winPointsTitle?.text = "RANK POINTS *NEW"
-            stats_winPoints?.text = String.format("%.0f", Math.rint(playerStats.RankPoint))
+        if (playerStats.killPoints == 0.0 && playerStats.winPoints == 0.0 && playerStats.rankPoints > 0.0) {
+            rank_card?.visibility = View.VISIBLE
+            rank_title?.text = getRankTitle(playerStats.rankPoints)
+            rank_subtitle?.text = "POINTS: ${Math.floor(playerStats.rankPoints).toInt()}"
 
-            killPointsView?.visibility = View.GONE
+            Glide.with(this).load(getRankIcon(playerStats.rankPoints)).into(rank_icon)
+
+            old_points_layout?.visibility = View.GONE
+            divider13?.visibility = View.INVISIBLE
+            //stats_winPoints?.text = String.format("%.0f", Math.rint(playerStats.rankPoints))
+
         } else {
+            rank_card?.visibility = View.GONE
+
+            old_points_layout?.visibility = View.VISIBLE
+
             stats_killPoints?.text = String.format("%.0f", Math.rint(playerStats.killPoints))
             stats_winPoints?.text = String.format("%.0f", Math.rint(playerStats.winPoints))
         }
@@ -276,8 +254,9 @@ class MainStatsFragment : Fragment() {
             stats_kd?.text = "0"
         }
 
-        if (playerStats.wins > 0 && playerStats.losses > 0) {
-            stats_winloss?.text = String.format("%.2f", playerStats.wins.toDouble() / playerStats.losses.toDouble())
+        //FIX WINS/ROUNDS PLAYED FOR W/L RATIO
+        if (playerStats.wins > 0 && playerStats.roundsPlayed > 0) {
+            stats_winloss?.text = String.format("%.2f", playerStats.wins.toDouble() / playerStats.roundsPlayed.toDouble())
         } else {
             stats_winloss?.text = "0"
         }
@@ -378,7 +357,7 @@ class MainStatsFragment : Fragment() {
         data["seasonID"] = seasonID
 
         return mFunctions?.getHttpsCallable("loadPlayerStats")?.call(data)?.continueWith { task ->
-            val result = task.result.data as Map<String, Any>
+            val result = task.result?.data as Map<String, Any>
             Log.d("REQUEST", result.toString())
             result
         }
@@ -399,6 +378,40 @@ class MainStatsFragment : Fragment() {
                 m2SharedPreferences.edit().putBoolean("removeAds", true).apply()
                 Snacky.builder().setActivity(requireActivity()).info().setText("Thanks! Enjoy the new stuff!").show()
             }
+        }
+    }
+
+    fun getRankTitle(rank: Double): String {
+        var rankPoints = Math.floor(rank).toInt()
+
+        return when {
+            rankPoints == 0 -> "UNRANKED"
+            rankPoints in 1..1399 -> "BRONZE"
+            rankPoints in 1400..1499 -> "SILVER"
+            rankPoints in 1500..1599 -> "GOLD"
+            rankPoints in 1600..1699 -> "PLATINUM"
+            rankPoints in 1700..1799 -> "DIAMOND"
+            rankPoints in 1800..1899 -> "ELITE"
+            rankPoints in 1900..1999 -> "MASTER"
+            rankPoints >= 2000 -> "GRANDMASTER"
+            else -> "RANK ERROR"
+        }
+    }
+
+    fun getRankIcon(rank: Double): Int {
+        var rankPoints = Math.floor(rank).toInt()
+
+        return when {
+            rankPoints == 0 -> R.drawable.rank_icon_unranked
+            rankPoints in 1..1399 -> R.drawable.rank_icon_bronze
+            rankPoints in 1400..1499 -> R.drawable.rank_icon_silver
+            rankPoints in 1500..1599 -> R.drawable.rank_icon_gold
+            rankPoints in 1600..1699 -> R.drawable.rank_icon_platinum
+            rankPoints in 1700..1799 -> R.drawable.rank_icon_diamond
+            rankPoints in 1800..1899 -> R.drawable.rank_icon_elite
+            rankPoints in 1900..1999 -> R.drawable.rank_icon_master
+            rankPoints >= 2000 -> R.drawable.rank_icon_grandmaster
+            else -> R.drawable.rank_icon_unranked
         }
     }
 }

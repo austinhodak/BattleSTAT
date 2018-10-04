@@ -34,5 +34,9 @@ data class PlayerStats(
         val weeklyKills: Int = 0,
         val winPoints: Double = 0.0,
         val wins: Int = 0,
-        val RankPoint: Double = 0.0
+        val rankPoints: Double = 0.0,
+        val bestRankPoints: Double = 0.0,
+        val dailyWins: Int = 0,
+        val swimDistance: Double = 0.0,
+        val weeklyWins: Int = 0
 ) : Serializable

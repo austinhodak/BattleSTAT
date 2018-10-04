@@ -60,6 +60,12 @@ class VehiclesFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        mList.clear()
+        weapon_list_rv.adapter = null
+    }
+
     private fun setupAdapter() {
         val linearLayoutManager = LinearLayoutManager(activity ?: return)
         weapon_list_rv.layoutManager = linearLayoutManager

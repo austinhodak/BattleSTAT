@@ -112,7 +112,7 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
                         return@OnCompleteListener
                     }
 
-                    val statusCode = task.result["statusCode"] as Int
+                    val statusCode = task.result?.get("statusCode") as Int
                     if (statusCode == 200) {
                         if (activity != null)
                         if (activity is MainStatsActivity) {
@@ -136,7 +136,8 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
         data["shardID"] = shardID
 
         return mFunctions!!.getHttpsCallable("addPlayerByName").call(data).continueWith { task ->
-            val result = task.result.data as Map<String, Any>
+            val result = task.result
+                    ?.data as Map<String, Any>
             Log.d("REQUEST", result.toString())
             result
         }

@@ -23,7 +23,7 @@ data class Stats(
         val headshotKills: Int,
         val heals: Int,
         val killPlace: Int,
-        val killPoints: Int,
+        val killPoints: Double,
         val killPointsDelta: Double,
         val killStreaks: Int,
         val kills: Int,
@@ -33,6 +33,7 @@ data class Stats(
         val mostDamage: Double,
         val name: String,
         val playerId: String,
+        val rankPoints: Double,
         val revives: Int,
         val rideDistance: Double,
         val roadKills: Int,
@@ -43,6 +44,6 @@ data class Stats(
         val walkDistance: Double,
         val weaponsAcquired: Int,
         val winPlace: Int,
-        val winPoints: Int,
+        val winPoints: Double,
         val winPointsDelta: Double
 ) : Serializable

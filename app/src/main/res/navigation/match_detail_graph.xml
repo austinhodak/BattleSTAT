@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/match_detail_graph" app:startDestination="@id/matchPlayerStatsFragment">
+
+    <fragment
+        android:id="@+id/matchPlayerStatsFragment"
+        android:name="com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchPlayerStatsFragment"
+        android:label="MatchPlayerStatsFragment" ></fragment>
+    <fragment
+        android:id="@+id/matchYourTeamsStatsFragment"
+        android:name="com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchYourTeamsStatsFragment"
+        android:label="MatchYourTeamsStatsFragment" />
+    <fragment
+        android:id="@+id/matchTeamsFragment"
+        android:name="com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchTeamsFragment"
+        android:label="MatchTeamsFragment" />
+    <fragment
+        android:id="@+id/matchPlayersFragment"
+        android:name="com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchPlayersFragment"
+        android:label="MatchPlayersFragment" />
+    <fragment
+        android:id="@+id/killFeedFragment"
+        android:name="com.respondingio.battlegroundsbuddy.stats.matchdetails.KillFeedFragment"
+        android:label="KillFeedFragment" />
+    <fragment
+        android:id="@+id/matchWeaponStatsFragment"
+        android:name="com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchWeaponStatsFragment"
+        android:label="MatchWeaponStatsFragment" />
+</navigation>

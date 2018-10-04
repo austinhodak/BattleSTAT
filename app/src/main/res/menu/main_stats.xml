@@ -14,4 +14,10 @@
         android:id="@+id/stats_war_mode"
         android:icon="@drawable/missle"
         android:title="War Mode" />
+
+    <item
+        android:visible="false"
+        android:id="@+id/faceit_menu"
+        android:icon="@drawable/faceit_logo"
+        android:title="FACEIT"/>
 </menu>

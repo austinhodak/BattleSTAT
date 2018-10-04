@@ -14,7 +14,9 @@ import com.respondingio.battlegroundsbuddy.models.Seasons
 import com.squareup.leakcanary.LeakCanary
 import io.fabric.sdk.android.Fabric
 import org.jetbrains.anko.doAsync
-
+import com.instabug.library.invocation.InstabugInvocationEvent
+import com.instabug.library.Instabug
+import com.instabug.library.ui.onboarding.WelcomeMessage
 
 
 class Application : MultiDexApplication() {
@@ -26,6 +28,19 @@ class Application : MultiDexApplication() {
 
         if (LeakCanary.isInAnalyzerProcess(this)) return
         //LeakCanary.install(this)
+
+        if (BuildConfig.DEBUG) {
+            Instabug.Builder(this, "b88ab4ff06e0bb4240f1ee0f261b78d4")
+                    .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT, InstabugInvocationEvent.SCREENSHOT)
+                    .build()
+        } else {
+            Instabug.Builder(this, "b31b0a70fb49b434daf6d39005418842")
+                    .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT, InstabugInvocationEvent.SCREENSHOT)
+                    .build()
+        }
+
+        Instabug.setWelcomeMessageState(WelcomeMessage.State.DISABLED)
+        Instabug.setPrimaryColor(resources.getColor(R.color.md_red_500))
 
         if (BuildConfig.DEBUG) {
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false)

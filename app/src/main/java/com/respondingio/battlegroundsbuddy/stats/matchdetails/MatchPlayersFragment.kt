@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
@@ -18,6 +19,7 @@ import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.MatchParticipant
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
+import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.match_players_fragment.match_players_rv
 import net.idik.lib.slimadapter.SlimAdapter
 import java.text.DecimalFormat
@@ -77,11 +79,14 @@ class MatchPlayersFragment : Fragment() {
             }
 
             injector.clicked(R.id.card) {
-                val intent = Intent(requireActivity(), SinglePlayerStatsActivity::class.java)
-                intent.putExtra("playerID", data.attributes.stats.playerId)
-                intent.putExtra("match", match)
-                intent.putExtra("player", data)
-                startActivity(intent)
+                val bundle = Bundle()
+                bundle.putString("playerID", data.id)
+                requireActivity().toolbar_title.text = data.attributes.stats.name
+
+                val activity: MatchDetailActivity = requireActivity() as MatchDetailActivity
+                activity.updateToolbarElevation(0f)
+                activity.updateToolbarFlags(false)
+                activity.showPlayerStatsFragment(bundle)
             }
 
         }.updateData(sortedList)

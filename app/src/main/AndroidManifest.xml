@@ -109,11 +109,6 @@
         </activity>
 
         <activity android:name=".weapondetail.WeaponHome" android:theme="@style/WeaponHome">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

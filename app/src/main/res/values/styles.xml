@@ -147,7 +147,7 @@
 
     <style name="WeaponHome" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="colorPrimary">@color/primary700</item>
-        <item name="colorPrimaryDark">#D2DBE0</item>
+        <item name="colorPrimaryDark">@color/md_grey_300</item>
         <item name="colorAccent">@color/secondary500</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>

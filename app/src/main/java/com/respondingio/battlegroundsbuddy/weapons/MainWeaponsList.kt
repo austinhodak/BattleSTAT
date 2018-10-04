@@ -107,8 +107,8 @@ class MainWeaponsList : Fragment() {
             }
 
             injector.clicked(R.id.card_top) {
-               // startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
-                startActivity<WeaponHome>("weaponPath" to doc.reference.path, "weaponClass" to weaponClass, "weaponName" to data.weapon_name, "weaponKey" to doc.id)
+                startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
+                //startActivity<WeaponHome>("weaponPath" to doc.reference.path, "weaponClass" to weaponClass, "weaponName" to data.weapon_name, "weaponKey" to doc.id)
             }
 
             injector.gone(R.id.weapon_fav)

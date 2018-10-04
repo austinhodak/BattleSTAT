@@ -3,6 +3,7 @@ package com.respondingio.battlegroundsbuddy.stats.matchdetails
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
@@ -130,6 +131,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 icon = R.drawable.icons8_person_male
                 identifier = 1
                 onClick { _, _, _ ->
+                    isNavigatedDown = false
                     val matchesPlayerStatsFragment = MatchPlayerStatsFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
                             .commit()
@@ -145,6 +147,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 icon = R.drawable.icons8_group
                 identifier = 12
                 onClick { view, position, drawerItem ->
+                    isNavigatedDown = false
                     val matchesPlayerStatsFragment = MatchYourTeamsStatsFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
                             .commit()
@@ -168,6 +171,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 }
                 identifier = 11
                 onClick { _, _, _ ->
+                    isNavigatedDown = false
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, MatchTeamsFragment())
                             .commit()
                     toolbar_title.text = "Teams"
@@ -186,6 +190,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 }
                 identifier = 10
                 onClick { view, position, drawerItem ->
+                    isNavigatedDown = false
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, MatchPlayersFragment()).commit()
                     toolbar_title.text = "Players"
                     updateToolbarElevation(15f)
@@ -197,6 +202,7 @@ class MatchDetailActivity : AppCompatActivity() {
             primaryItem("Kill Feed") {
                 icon = R.drawable.icons8_horror_96
                 onClick { view, position, drawerItem ->
+                    isNavigatedDown = false
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, KillFeedFragment())
                             .commit()
                     toolbar_title.text = "Kills"
@@ -212,6 +218,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 primaryItem("Weapon Stats") {
                     icon = R.drawable.icons8_rifle
                     onClick { view, position, drawerItem ->
+                        isNavigatedDown = false
                         supportFragmentManager.beginTransaction().replace(R.id.match_frame, MatchWeaponStatsFragment())
                                 .commit()
                         toolbar_title.text = "Weapon Stats"
@@ -254,11 +261,11 @@ class MatchDetailActivity : AppCompatActivity() {
         toolbar_title.text = "Your Match Stats"
     }
 
-    private fun updateToolbarElevation(int: Float) {
+    fun updateToolbarElevation(int: Float) {
         ViewCompat.setElevation(app_bar, int)
     }
 
-    private fun updateToolbarFlags(canShowOnScroll: Boolean) {
+    fun updateToolbarFlags(canShowOnScroll: Boolean) {
         var params = match_detail_toolbar.layoutParams as AppBarLayout.LayoutParams
         if (canShowOnScroll) {
             params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
@@ -266,6 +273,31 @@ class MatchDetailActivity : AppCompatActivity() {
             params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
         }
         app_bar.requestLayout()
+    }
+
+    override fun onBackPressed() {
+        if (isNavigatedDown) {
+            isNavigatedDown = false
+
+            if (mDrawer.currentSelection == 11.toLong()) {
+                mDrawer.setSelection(11)
+            } else if (mDrawer.currentSelection == 10.toLong()) {
+                mDrawer.setSelection(10)
+            }
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private var isNavigatedDown = false
+
+    fun showPlayerStatsFragment(bundle: Bundle) {
+        isNavigatedDown = true
+
+        val playerStats = MatchPlayerStatsFragment()
+        playerStats.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.match_frame, playerStats)
+                .commit()
     }
 
     var telemetryJson: JSONArray? = null
