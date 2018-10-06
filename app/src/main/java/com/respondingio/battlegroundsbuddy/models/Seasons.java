@@ -24,8 +24,8 @@ public class Seasons {
 
     private Map<String, Boolean> pcSeasons = new HashMap<>();
     private Map<String, Boolean> xboxSeasons = new HashMap<>();
-    private String pcCurrentSeason = null;
-    private String xboxCurrentSeason = null;
+    private String pcCurrentSeason = "pc-2018-01";
+    private String xboxCurrentSeason = "2018-08";
 
     public Seasons() {
         mDBref = FirebaseDatabase.getInstance().getReference();

@@ -135,15 +135,13 @@ class WeaponStatsOverview : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-
         overview_full_stats.setOnClickListener {
             startActivity<WeaponDamageChart>("weaponPath" to arguments!!.getString("weaponPath"), "weaponKey" to arguments!!.getString("weaponKey"), "weaponClass" to arguments!!.getString("weaponClass"), "weaponName" to arguments!!.getString("weaponName"))
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         for (i in listenerList) {
             i.remove()
         }

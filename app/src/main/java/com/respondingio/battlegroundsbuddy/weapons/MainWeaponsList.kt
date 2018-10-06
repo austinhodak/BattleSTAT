@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.Weapon
+import com.respondingio.battlegroundsbuddy.weapondetail.WeaponDetailTimeline
 import com.respondingio.battlegroundsbuddy.weapondetail.WeaponHome
 import kotlinx.android.synthetic.main.home_weapons_list.pg
 import kotlinx.android.synthetic.main.home_weapons_list.weapon_list_rv
@@ -107,8 +108,9 @@ class MainWeaponsList : Fragment() {
             }
 
             injector.clicked(R.id.card_top) {
-                startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
+                //startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
                 //startActivity<WeaponHome>("weaponPath" to doc.reference.path, "weaponClass" to weaponClass, "weaponName" to data.weapon_name, "weaponKey" to doc.id)
+                startActivity<WeaponDetailTimeline>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
             }
 
             injector.gone(R.id.weapon_fav)

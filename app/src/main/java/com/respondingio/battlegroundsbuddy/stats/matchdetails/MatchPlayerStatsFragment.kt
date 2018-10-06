@@ -87,11 +87,15 @@ class MatchPlayerStatsFragment : Fragment() {
         val killsList = ArrayList<LogPlayerKill>()
 
         for (kill in match.killFeedList) {
-            if (kill.killer.accountId == match.currentPlayerID) {
-                killsList.add(kill)
-            } else if (kill.victim.accountId == match.currentPlayerID) {
-                //This PlayerKill (death) is the current user.
-
+            Log.d("MATCH", "ID: $playerID - ${kill.killer.accountId}")
+            if (playerID == null) {
+                if (kill.killer.accountId == match.currentPlayerID) {
+                    killsList.add(kill)
+                }
+            } else {
+                if (kill.killer.accountId == match.participantHash[playerID!!]!!.attributes.stats.playerId) {
+                    killsList.add(kill)
+                }
             }
         }
 
@@ -204,7 +208,7 @@ class MatchPlayerStatsFragment : Fragment() {
         stats_damageDealt.text = stats.damageDealt.roundToLong().toString()
         stats_revives.text = stats.revives.toString()
 
-        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints > 0.0) {
+        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints >= 0.0) {
             rank_card?.visibility = View.VISIBLE
             rank_title?.text = getRankTitle(stats.rankPoints)
             rank_subtitle?.text = "POINTS: ${Math.floor(stats.rankPoints).toInt()}"
@@ -222,7 +226,7 @@ class MatchPlayerStatsFragment : Fragment() {
             stats_winPoints?.text = String.format("%.0f", Math.rint(stats.winPoints))
         }
 
-        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints > 0.0) {
+        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints >= 0.0) {
             winPointsTitle?.text = "RANK POINTS *NEW"
             stats_winPoints?.text = String.format("%.0f", Math.rint(stats.rankPoints))
 

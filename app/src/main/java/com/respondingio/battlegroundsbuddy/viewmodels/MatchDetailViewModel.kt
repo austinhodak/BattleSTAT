@@ -1,6 +1,7 @@
 package com.respondingio.battlegroundsbuddy.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.volley.Cache
@@ -14,17 +15,25 @@ import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonToken
 import com.respondingio.battlegroundsbuddy.models.LogItemPickup
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
 import com.respondingio.battlegroundsbuddy.models.MatchParticipant
 import com.respondingio.battlegroundsbuddy.models.MatchRoster
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchData
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.InputStreamReader
 import java.io.UnsupportedEncodingException
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.HashMap
 
 class MatchDetailViewModel : ViewModel() {
@@ -64,6 +73,7 @@ class MatchDetailViewModel : ViewModel() {
                         cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue)
                     }
                     cacheEntry.responseHeaders = response.headers
+
                     val jsonString = String(response.data) +
                             HttpHeaderParser.parseCharset(response.headers)
                     return Response.success(JSONObject(jsonString), cacheEntry)
@@ -166,8 +176,10 @@ class MatchDetailViewModel : ViewModel() {
                         cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue)
                     }
                     cacheEntry.responseHeaders = response.headers
+
                     val jsonString = String(response.data) +
                             HttpHeaderParser.parseCharset(response.headers)
+
                     return Response.success(JSONArray(jsonString), cacheEntry)
                 } catch (e: UnsupportedEncodingException) {
                     return Response.error(ParseError(e))
@@ -201,6 +213,7 @@ class MatchDetailViewModel : ViewModel() {
         }
 
         mVolleyQueue.add(objectRequest)
+
     }
 
     private fun parseTelemetryData(json: JSONArray, matchModel: MatchModel) {

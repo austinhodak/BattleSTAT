@@ -68,7 +68,11 @@ class MatchPlayersFragment : Fragment() {
             injector.text(R.id.match_player_longestkill, "${String.format("%.0f", Math.rint(data.attributes.stats.longestKill))}m")
 
             val formatter = DecimalFormat("#,###,###")
-            injector.text(R.id.match_player_rating, "Rating: ${formatter.format(data.attributes.stats.winPoints)}")
+            if (data.attributes.stats.winPoints == 0.0) {
+                injector.text(R.id.match_player_rating, "Rank Points: ${data.attributes.stats.rankPoints.toInt()}")
+            } else {
+                injector.text(R.id.match_player_rating, "Rating: ${formatter.format(data.attributes.stats.winPoints)}")
+            }
 
             if (mActivity.currentPlayerID == data.attributes.stats.playerId) {
                 injector.background(R.id.match_player_place, R.drawable.chip_green_outline)
@@ -137,7 +141,13 @@ class MatchPlayersFragment : Fragment() {
                                 mAdapter.updateData(sortedList)
                             }
                             2 -> {
-                                sortedList = sortedList.sortedWith(compareByDescending { it.attributes.stats.winPoints })
+                                sortedList = sortedList.sortedWith(compareByDescending {
+                                    if (it.attributes.stats.winPoints != 0.0) {
+                                        it.attributes.stats.winPoints
+                                    } else {
+                                        it.attributes.stats.rankPoints
+                                    }
+                                })
                                 mAdapter.updateData(sortedList)
                             }
                             3 -> {

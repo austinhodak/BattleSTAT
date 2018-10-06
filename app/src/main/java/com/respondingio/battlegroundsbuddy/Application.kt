@@ -10,14 +10,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.instabug.library.Instabug
+import com.instabug.library.invocation.InstabugInvocationEvent
+import com.instabug.library.ui.onboarding.WelcomeMessage
 import com.respondingio.battlegroundsbuddy.models.Seasons
 import com.squareup.leakcanary.LeakCanary
 import io.fabric.sdk.android.Fabric
 import org.jetbrains.anko.doAsync
-import com.instabug.library.invocation.InstabugInvocationEvent
-import com.instabug.library.Instabug
-import com.instabug.library.ui.onboarding.WelcomeMessage
-
 
 class Application : MultiDexApplication() {
 
@@ -27,9 +26,9 @@ class Application : MultiDexApplication() {
         super.onCreate()
 
         if (LeakCanary.isInAnalyzerProcess(this)) return
-        //LeakCanary.install(this)
 
         if (BuildConfig.DEBUG) {
+            //LeakCanary.install(this)
             Instabug.Builder(this, "b88ab4ff06e0bb4240f1ee0f261b78d4")
                     .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT, InstabugInvocationEvent.SCREENSHOT)
                     .build()

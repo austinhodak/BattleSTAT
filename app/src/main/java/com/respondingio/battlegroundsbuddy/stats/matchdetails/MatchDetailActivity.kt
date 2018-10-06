@@ -63,7 +63,6 @@ class MatchDetailActivity : AppCompatActivity() {
     private var headerRegionTV: TextView? = null
     private var headerMapIV: ImageView? = null
     var currentPlayerID: String? = null
-    var currentPlayerAccountID: String? = null
 
     var requestQueue: RequestQueue? = null
 
@@ -299,54 +298,4 @@ class MatchDetailActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.match_frame, playerStats)
                 .commit()
     }
-
-    var telemetryJson: JSONArray? = null
-
-
-    /*private fun parseTelemetry(json: JSONArray) {
-        telemetryJson = json
-        killFeedList.clear()
-        for (i in 0 until json.length()) {
-            var item = json.getJSONObject(i)
-
-            when (item["_T"]) {
-                "LogPlayerKill" -> {
-                    killFeedList.add(Gson().fromJson(item.toString(), LogPlayerKill::class.java))
-                }
-            }
-        }
-
-        Log.d("LogPlayerKill", "SIZE: ${killFeedList[2].killer.name}")
-
-        killFeedList.sortedWith(compareBy { it._D })
-
-        match_pg?.visibility = View.GONE
-        match_loading_lottie?.pauseAnimation()
-        match_loading_lottie?.visibility = View.GONE
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
-        //mDrawer.openDrawer()
-
-        val bundle = Bundle()
-        bundle.putString("playerID", currentPlayerID)
-        bundle.putSerializable("player", participantHash[currentPlayerAccountID])
-        bundle.putSerializable("participantList", participantList)
-        bundle.putSerializable("rosterList", rosterList)
-        bundle.putSerializable("killList", killFeedList)
-        bundle.putString("matchCreatedAt", matchData?.getJSONObject("data")?.getJSONObject("attributes")?.getString("createdAt"))
-        val matchesPlayerStatsFragment = MatchPlayerStatsFragment()
-        matchesPlayerStatsFragment.arguments = bundle
-        supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
-                .commitAllowingStateLoss()
-
-        updateToolbarElevation(0f)
-        updateToolbarFlags(false)
-
-        toolbar_title.text = "Your Match Stats"
-    }*/
-
-    var killFeedList = ArrayList<LogPlayerKill>()
-
-    var matchData: JSONObject? = null
-
 }

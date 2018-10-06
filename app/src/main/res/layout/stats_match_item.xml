@@ -12,8 +12,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
         app:cardMaxElevation="2dp"
-        app:cardElevation="2dp"
-        app:cardCornerRadius="15dp">
+        app:cardElevation="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

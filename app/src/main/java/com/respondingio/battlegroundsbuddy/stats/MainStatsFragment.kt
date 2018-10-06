@@ -225,7 +225,7 @@ class MainStatsFragment : Fragment() {
         stats_weaponsAqd?.text = playerStats.weaponsAcquired.toString()
         stats_weeklyPoints?.text = playerStats.weeklyKills.toString()
 
-        if (playerStats.killPoints == 0.0 && playerStats.winPoints == 0.0 && playerStats.rankPoints > 0.0) {
+        if (playerStats.killPoints == 0.0 && playerStats.winPoints == 0.0 && playerStats.rankPoints >= 0.0) {
             rank_card?.visibility = View.VISIBLE
             rank_title?.text = getRankTitle(playerStats.rankPoints)
             rank_subtitle?.text = "POINTS: ${Math.floor(playerStats.rankPoints).toInt()}"

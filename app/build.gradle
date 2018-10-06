@@ -29,12 +29,21 @@ android {
         versionName "1.3.5-HOTFIX"
         multiDexEnabled true
     }
+    signingConfigs {
+        release {
+            keyAlias "key0"
+            keyPassword "tanker654"
+            storePassword "tanker654"
+            storeFile file("/Users/austinhodak/Desktop/Keystores/PUBGGuide")
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [crashEnabled: true]
+            signingConfig signingConfigs.release
         }
         debug {
             ext.enableCrashlytics = false
@@ -73,6 +82,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+
 
     //Firebase
     implementation "com.google.firebase:firebase-core:16.0.4"
@@ -115,9 +129,9 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
-    implementation "com.mikepenz:materialdrawer:6.1.0-rc02"
+    implementation "com.mikepenz:materialdrawer:6.1.0"
 
-    implementation 'com.afollestad.material-dialogs:core:2.0.0-alpha11'
+    implementation 'com.afollestad.material-dialogs:core:2.0.0-beta2'
 
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation('com.mikepenz:aboutlibraries:6.0.9@aar') {
@@ -152,15 +166,15 @@ dependencies {
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
-    implementation 'com.afollestad:aesthetic:0.7.0'
+    implementation 'com.afollestad:aesthetic:0.7.1'
 
     implementation "com.airbnb.android:lottie:2.6.1"
 
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
     implementation 'com.zekapp.library:progreswheelview:1.1.5'
 
-    implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha11'
+    implementation 'com.afollestad.material-dialogs:input:2.0.0-beta2'
 
     implementation 'com.instabug.library:instabug:8.0.8'
 
@@ -172,6 +186,11 @@ dependencies {
 
     implementation 'pl.hypeapp:materialtimelineview:1.1'
 
+    implementation 'com.github.hugocastelani:waterfall-toolbar:0.4.0'
+
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
 }
 
 apply plugin: 'com.google.gms.google-services'
