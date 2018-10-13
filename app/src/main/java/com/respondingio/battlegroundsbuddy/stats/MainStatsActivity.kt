@@ -791,4 +791,11 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
         Log.d("ADERROR", p0.toString())
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::billingClient.isInitialized && billingClient.isReady) {
+            billingClient.endConnection()
+        }
+    }
 }
