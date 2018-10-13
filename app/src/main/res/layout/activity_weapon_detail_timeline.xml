@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:id="@+id/weaponTimelineFrame"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    <com.hugocastelani.waterfalltoolbar.WaterfallToolbar
+        app:final_elevation="6dp"
+        app:scroll_final_elevation="6"
+        android:id="@+id/weaponTimelineToolbarWaterfall"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:visibility="gone"
-        app:layout_behavior="com.respondingio.battlegroundsbuddy.BottomNavBehavior"
+        <androidx.appcompat.widget.Toolbar
+            android:theme="@style/ToolbarTheme"
+            android:id="@+id/weaponTimelineToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="#1B1B1B" />
+
+    </com.hugocastelani.waterfalltoolbar.WaterfallToolbar>
+
+    <fragment
+        android:id="@+id/weaponDetailNavHost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/md_grey_850"
-        app:itemIconTint="@color/md_white_1000"
-        app:itemTextColor="@color/md_white_1000"
-        app:menu="@menu/weapon_timeline_bottom"/>
+        android:layout_height="match_parent"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/weapon_detail_graph"
+        app:defaultNavHost="true"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <!--<FrameLayout-->
+        <!--android:id="@+id/weaponTimelineFrame"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"/>-->
+
+</LinearLayout>

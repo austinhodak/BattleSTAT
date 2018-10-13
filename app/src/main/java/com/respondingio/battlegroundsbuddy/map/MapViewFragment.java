@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.respondingio.battlegroundsbuddy.R;
 import com.respondingio.battlegroundsbuddy.snacky.Snacky;
 
@@ -40,7 +39,6 @@ public class MapViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
         ButterKnife.bind(this, view);
         // Inflate the layout for this fragment
-        mMapView.setOnTouchListener(new ImageMatrixTouchHandler(getActivity()));
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (mSharedPreferences != null) {

@@ -90,8 +90,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:ellipsize="middle"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
+                    android:singleLine="true"
                     android:text="Select Player"
                     android:textColor="#000"
                     android:textStyle="bold" />
@@ -126,8 +128,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:ellipsize="middle"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
+                    android:singleLine="true"
                     android:text="Select Region"
                     android:textColor="#000"
                     android:textStyle="bold" />
@@ -164,8 +168,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:ellipsize="middle"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
+                    android:singleLine="true"
                     android:text="Select Gamemode"
                     android:textColor="#000"
                     android:textStyle="bold" />
@@ -203,8 +209,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:ellipsize="middle"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
+                    android:singleLine="true"
                     android:text="Select Season"
                     android:textColor="#000"
                     android:textStyle="bold" />

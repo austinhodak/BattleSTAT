@@ -38,6 +38,8 @@ class Application : MultiDexApplication() {
                     .build()
         }
 
+        Premium.init(applicationContext)
+
         Instabug.setWelcomeMessageState(WelcomeMessage.State.DISABLED)
         Instabug.setPrimaryColor(resources.getColor(R.color.md_red_500))
 
@@ -75,5 +77,11 @@ class Application : MultiDexApplication() {
         }
 
         MobileAds.initialize(this, "ca-app-pub-1946691221734928~8934220899")
+
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        Premium.onDestroy()
     }
 }

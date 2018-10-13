@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:timeline_position="first"
+        app:timeline_radio_outline_radius="0"
+        app:timeline_radio_radius="15"
+        app:timeline_type="item">
+
+    </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+    <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:timeline_position="middle"
+        app:timeline_radio_outline_radius="23"
+        app:timeline_radio_radius="15"
+        app:timeline_type="line">
+
+
+    </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+</LinearLayout>

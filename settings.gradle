@@ -1,1 +1,1 @@
-include ':app', ':slimadapter', ':materialdrawerkt', ':arcprogress'
+include ':app', ':slimadapter'

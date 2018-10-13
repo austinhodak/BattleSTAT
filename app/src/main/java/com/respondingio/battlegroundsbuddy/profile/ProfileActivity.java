@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(
                 getSupportFragmentManager());
-        adapter.addFrag(new ProfileFragment(),"PROFILE");
+        adapter.addFrag(new ProfileMain(),"PROFILE");
         //adapter.addFrag(new ProfileFragment(),"POSTS");
         //adapter.addFrag(new ProfileSettingsFragment(),"SETTINGS");
         viewPager.setAdapter(adapter);

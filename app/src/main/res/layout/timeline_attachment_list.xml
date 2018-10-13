@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timeline_small_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:background="@drawable/timeline_round"
+    android:backgroundTint="@color/timelineGrey"
+    app:timeline_position="middle"
+    app:timeline_radio_outline_radius="23"
+    app:timeline_radio_radius="15"
+    app:timeline_type="item">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/timelineAttachmentRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</pl.hypeapp.materialtimelineview.MaterialTimelineView>

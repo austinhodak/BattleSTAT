@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:title="Wiki"
         android:id="@+id/wiki"
         app:showAsAction="always"
-        android:icon="@drawable/ic_library_books_24dp" />
+        android:icon="@drawable/ic_book_24dp" />
+
+    <item
+        android:id="@+id/weaponFeedback"
+        android:title="Send Feedback" />
+
 </menu>

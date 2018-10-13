@@ -16,8 +16,10 @@
     <color name="timelineGrey">#636363</color>
     <color name="timelineBlue">#457AD1</color>
     <color name="timelineYellow">#FFB018</color>
+    <color name="timelineNavy">#4A5175</color>
 
     <color name="timelineGreen">@color/md_green_400</color>
     <color name="timelineOrange">@color/md_deep_orange_400</color>
     <color name="timelineRed">@color/md_red_400</color>
+
 </resources>

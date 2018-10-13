@@ -274,6 +274,7 @@ public class Telemetry {
         object.put("xbox-eu", "Xbox EU");
         object.put("xbox-na", "Xbox NA");
         object.put("xbox-oc", "Xbox OC");
+        object.put("xbox-sa", "Xbox SA");
         object.put("pc-krjp", "Xbox KRJP");
         object.put("pc-jp", "PC JP");
         object.put("pc-na", "PC NA");

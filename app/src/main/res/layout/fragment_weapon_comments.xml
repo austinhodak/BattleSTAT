@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/timelineBG"
     android:orientation="vertical"
     tools:context=".weapons.WeaponComments">
 
@@ -24,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="It's lonely in here."
-            android:textColor="@color/primary800"
+            android:textColor="@color/md_white_1000"
             android:textSize="16sp"
             android:textStyle="bold"
             android:visibility="gone" />
@@ -32,12 +33,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comment_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="80dp"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:paddingTop="2dp" />
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 
@@ -47,7 +43,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
@@ -96,4 +92,15 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/commentAddFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_edit_black_24dp"
+        app:fabSize="normal" />
 </RelativeLayout>

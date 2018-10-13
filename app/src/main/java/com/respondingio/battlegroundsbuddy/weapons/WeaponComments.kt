@@ -1,6 +1,7 @@
 package com.respondingio.battlegroundsbuddy.weapons
 
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -10,8 +11,14 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.input.input
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -20,16 +27,20 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.hugocastelani.waterfalltoolbar.WaterfallToolbar
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
-import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_edittext
-import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_rv
-import kotlinx.android.synthetic.main.fragment_weapon_comments.comment_send
-import kotlinx.android.synthetic.main.fragment_weapon_comments.comments_pg
-import kotlinx.android.synthetic.main.fragment_weapon_comments.empty_tv
+import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
+import com.respondingio.battlegroundsbuddy.weapondetail.WeaponDetailTimelineStats
+import kotlinx.android.synthetic.main.fragment_weapon_comments.*
+import kotlinx.android.synthetic.main.fragment_weapon_timeline_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import net.idik.lib.slimadapter.animators.FadeInAnimator
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.support.v4.longToast
+import pl.hypeapp.materialtimelineview.MaterialTimelineView
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
@@ -39,6 +50,10 @@ import java.util.HashMap
  * A simple [Fragment] subclass.
  */
 class WeaponComments : Fragment() {
+
+    private val viewModel: WeaponDetailViewModel by lazy {
+        ViewModelProviders.of(requireActivity()).get(WeaponDetailViewModel::class.java)
+    }
 
     private var commentRef: DatabaseReference? = null
     private var commentListener: ChildEventListener? = null
@@ -55,13 +70,19 @@ class WeaponComments : Fragment() {
         return inflater.inflate(R.layout.fragment_weapon_comments, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        activity?.findViewById<WaterfallToolbar>(R.id.weaponTimelineToolbarWaterfall)?.recyclerView = comment_rv
+    }
+
     override fun onStart() {
         super.onStart()
 
-        if (arguments != null) {
-            weaponPath = arguments!!.getString("weaponPath")!!
-            weaponKey = arguments!!.getString("weaponKey")!!
-        }
+        viewModel.weaponData.observe(requireActivity(), Observer {
+            weaponPath = it.reference.path
+            weaponKey = it.id
+            setupAdapter()
+        })
 
         Log.d("WEAPON", "$weaponPath - $weaponKey")
 
@@ -71,9 +92,65 @@ class WeaponComments : Fragment() {
             comment_edittext?.isEnabled = false
         }
 
-        comment_send?.setOnClickListener { saveComment() }
+        //comment_send?.setOnClickListener { saveComment() }
 
-        setupAdapter()
+        comment_rv?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 15) {
+                    commentAddFAB?.hide()
+                }
+                else if (dy < -15)
+                    commentAddFAB?.show()
+            }
+        })
+
+
+        commentAddFAB?.onClick {
+            if (FirebaseAuth.getInstance().currentUser == null) {
+                longToast("You must be logged in to comment.")
+                return@onClick
+            }
+
+            MaterialDialog(requireActivity())
+                    .title(text = "Add a Comment")
+                    .input(hint = "Your Comment") { dialog, text ->
+                        dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                        val UID = FirebaseAuth.getInstance().currentUser?.uid ?: "Unknown User"
+                        val key = FirebaseDatabase.getInstance().getReference("/comments_weapons/$weaponKey").push().key
+                        val path = "/comments_weapons/$weaponKey/$key"
+
+                        Log.d("COMMENT", "$path -- $key -- $UID")
+
+                        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                        val date = Date()
+
+                        val childUpdates = HashMap<String, Any>()
+                        childUpdates["$path/comment"] = text.toString()
+                        childUpdates["$path/user"] = UID
+                        if (FirebaseAuth.getInstance().currentUser!!.displayName!!.isEmpty()) {
+                            childUpdates["$path/user_name"] = UID
+                        } else {
+                            childUpdates["$path/user_name"] = FirebaseAuth.getInstance().currentUser?.displayName.toString()
+                        }
+                        childUpdates["$path/timestamp"] = dateFormat.format(date)
+                        childUpdates["$path/weapon_path"] = weaponPath
+
+                        childUpdates["/users/$UID/weapon_comments/$weaponKey/$key"] = true
+
+                        FirebaseDatabase.getInstance().reference.updateChildren(childUpdates).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Snacky.builder().setActivity(requireActivity()).success().setText("Comment Posted.").show()
+                                dialog.dismiss()
+                            } else {
+                                Snacky.builder().setActivity(requireActivity()).error().setText("Error posting.").show()
+                                dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
+                            }
+                        }
+                    }
+                    .positiveButton(text = "Post")
+                    .negativeButton(text = "Cancel")
+                    .show()
+        }
     }
 
     override fun onStop() {
@@ -82,10 +159,14 @@ class WeaponComments : Fragment() {
     }
 
     private fun setupAdapter() {
+        if (comment_rv == null) return
+
         val linearLayoutManager = LinearLayoutManager(activity)
         comment_rv?.layoutManager = linearLayoutManager
         comment_rv?.itemAnimator = FadeInAnimator()
         mSlimAdapter = SlimAdapter.create().register(R.layout.comments_weapons_item, SlimInjector<DataSnapshot> { data, injector ->
+            val timeline = injector.findViewById<MaterialTimelineView>(R.id.commentTimeline)
+
             try {
                 val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                 var time: Long = 0
@@ -145,9 +226,15 @@ class WeaponComments : Fragment() {
                             injector.gone(R.id.comment_gameV)
                         }
 
-                        if (dataSnapshot.hasChild("dev")) {
-                            injector.textColor(R.id.comment_user, resources.getColor(R.color.md_red_500))
+                        if (dataSnapshot.hasChild("isPaid/adFree")) {
+                            timeline.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.timelineGreen))
+                        } else if (dataSnapshot.hasChild("isPaid/premiumLevel3")) {
+                            timeline.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.timelineBlue))
+                        } else if (dataSnapshot.hasChild("dev")) {
+                            timeline.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.timelineRed))
                             injector.text(R.id.comment_user, dataSnapshot.child("display_name").value!!.toString() + " (DEV)")
+                        } else {
+                            timeline.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.timelineGrey))
                         }
                     }
 
@@ -169,12 +256,9 @@ class WeaponComments : Fragment() {
                                                     FirebaseDatabase.getInstance().getReference("/users/" + FirebaseAuth.getInstance().currentUser!!.uid
                                                             + "/weapon_comments/" + weaponKey + "/" + data.key).removeValue()
 
-                                                    FirebaseDatabase.getInstance().getReference("/comments_weapons/" + weaponKey + "/" + data.key).removeValue()
-
-                                                    //listData.remove(data)
-                                                    //mSlimAdapter.updateData(listData)
-
-                                                    //loadData()
+                                                    FirebaseDatabase.getInstance().getReference("/comments_weapons/" + weaponKey + "/" + data.key).removeValue().addOnSuccessListener {
+                                                        loadData()
+                                                    }
                                                 }
                                                 .negativeButton( text ="CANCEL")
                                                 .show()
@@ -190,20 +274,26 @@ class WeaponComments : Fragment() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }).attachTo(comment_rv).updateData(listData)
+        }).register<String>(R.layout.weapon_timeline_line_only) { data, injector ->
+
+        }.register<WeaponDetailTimelineStats.LineSection>(R.layout.weapon_timeline_line) { data, injector ->
+            injector.text(R.id.line_title, data.title)
+            injector.text(R.id.line_subtitle, data.subTitle)
+        }.attachTo(comment_rv).updateData(listData)
 
         loadData()
     }
 
     private fun loadData() {
         listData.clear()
+        listData.add("")
         comments_pg?.visibility = View.VISIBLE
 
         commentRef = FirebaseDatabase.getInstance().getReference("/comments_weapons/$weaponKey")
         commentListener = FirebaseDatabase.getInstance().getReference("/comments_weapons/$weaponKey").orderByChild("timestamp").addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                listData.add(0, dataSnapshot)
-                mSlimAdapter.updateData(listData)
+                listData.add(1, dataSnapshot)
+                mSlimAdapter.notifyItemInserted(1)
                 empty_tv?.visibility = View.GONE
             }
 
@@ -229,6 +319,7 @@ class WeaponComments : Fragment() {
                 if (!dataSnapshot.exists()) {
                     empty_tv?.visibility = View.VISIBLE
                     comments_pg?.visibility = View.GONE
+                    listData.clear()
 
                     mSlimAdapter.updateData(listData)
                 } else {

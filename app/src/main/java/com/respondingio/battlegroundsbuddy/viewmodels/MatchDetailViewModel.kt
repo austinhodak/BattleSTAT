@@ -15,7 +15,6 @@ import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken

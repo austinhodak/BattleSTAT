@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
 import kotlinx.android.synthetic.main.fragment_home_weapons.tabs
 import kotlinx.android.synthetic.main.fragment_home_weapons.viewpager
@@ -66,7 +67,7 @@ class HomeWeaponsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTabs()
-        if (mSharedPreferences != null && !mSharedPreferences!!.getBoolean("removeAds", false)) {
+        if (Premium.isAdFreeUser()) {
             weaponListAd?.adListener = object: AdListener() {
                 override fun onAdFailedToLoad(p0: Int) {
                     super.onAdFailedToLoad(p0)

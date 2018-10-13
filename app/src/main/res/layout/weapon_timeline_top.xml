@@ -5,16 +5,37 @@
     android:id="@+id/timeline_top_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginTop="12dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="8dp"
     android:background="@drawable/timeline_round"
-    android:backgroundTint="@color/timelineGrey"
+    android:backgroundTint="@color/timelineNavy"
+    android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
     android:paddingBottom="21dp"
     app:timeline_position="first"
+    app:timeline_radio_outline_radius="23"
+    app:timeline_radio_radius="15"
     app:timeline_top_radio_color="@color/md_white_1000"
     app:timeline_type="item">
+
+    <LinearLayout
+        android:id="@+id/timelineSpecialIcons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/timelineTopDropdown"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_drop_down_24dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/timelineIcon"
@@ -44,6 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="19dp"
+        android:fontFamily="@font/roboto_medium"
         android:text="SNIPER RIFLE"
         android:textColor="#FFF"
         android:textSize="13sp"
@@ -228,17 +250,18 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/top_div"
+        android:id="@+id/top_div2"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="21dp"
         android:layout_marginEnd="12dp"
         android:background="#1F000000"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/top_extras" />
 
     <LinearLayout
         android:id="@+id/top_extras"
@@ -248,6 +271,7 @@
         android:gravity="center"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/top_div">
 
         <LinearLayout
@@ -260,15 +284,16 @@
             <ImageView
                 android:layout_width="23dp"
                 android:layout_height="23dp"
-                android:src="@drawable/icon_ammo"
+                android:src="@drawable/ammo_timer"
                 android:tint="#FFF" />
 
             <TextView
+                android:id="@+id/timelineTBS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:gravity="center_horizontal"
-                android:text="9MM"
+                android:text="0.100s"
                 android:textColor="#FFF"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -276,7 +301,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ammo"
+                android:text="TBS"
                 android:textColor="#BBFFFFFF"
                 android:textSize="12sp" />
 
@@ -292,15 +317,16 @@
             <ImageView
                 android:layout_width="23dp"
                 android:layout_height="23dp"
-                android:src="@drawable/speed_dark"
+                android:src="@drawable/hand_clock"
                 android:tint="#FFF" />
 
             <TextView
+                android:id="@+id/timelinePickupDelay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:gravity="center_horizontal"
-                android:text="760 m/s"
+                android:text="150 ms"
                 android:textColor="#FFF"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -308,7 +334,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Speed"
+                android:text="Pickup Delay"
                 android:textColor="#BBFFFFFF"
                 android:textSize="12sp" />
 
@@ -324,15 +350,16 @@
             <ImageView
                 android:layout_width="23dp"
                 android:layout_height="23dp"
-                android:src="@drawable/distance_dark"
+                android:src="@drawable/ready_delay"
                 android:tint="#FFF" />
 
             <TextView
+                android:id="@+id/timelineReadyDelay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:gravity="center_horizontal"
-                android:text="500m"
+                android:text="500 ms"
                 android:textColor="#FFF"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -340,76 +367,139 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Range"
-                android:textColor="#BBFFFFFF"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@drawable/magazine_dark"
-                android:tint="#FFF" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:gravity="center_horizontal"
-                android:text="10"
-                android:textColor="#FFF"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mag"
-                android:textColor="#BBFFFFFF"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@drawable/icon_vest"
-                android:tint="#FFF" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:gravity="center_horizontal"
-                android:text="49"
-                android:textColor="#FFF"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Power"
+                android:text="Ready Delay"
                 android:textColor="#BBFFFFFF"
                 android:textSize="12sp" />
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/top_extras2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:gravity="center"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/top_div2"
+        tools:layout_editor_absoluteX="0dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/firing_modes"
+                android:tint="#FFF" />
+
+            <TextView
+                android:id="@+id/timelineFiringModes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_horizontal"
+                android:text="0.100s"
+                android:textColor="#FFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Firing Modes"
+                android:textColor="#BBFFFFFF"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/reload_tac"
+                android:tint="#FFF" />
+
+            <TextView
+                android:id="@+id/timelineReloadTac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_horizontal"
+                android:text="2.250s"
+                android:textColor="#FFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reload (Tac)"
+                android:textColor="#BBFFFFFF"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/reload_full"
+                android:tint="#FFF" />
+
+            <TextView
+                android:id="@+id/timelineReloadFull"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_horizontal"
+                android:text="2.900s"
+                android:textColor="#FFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reload (Full)"
+                android:textColor="#BBFFFFFF"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/top_div"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="12dp"
+        android:background="#1F000000"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
 </pl.hypeapp.materialtimelineview.MaterialTimelineView>

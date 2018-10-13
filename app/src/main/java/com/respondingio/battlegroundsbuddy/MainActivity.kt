@@ -1,18 +1,15 @@
 package com.respondingio.battlegroundsbuddy
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Handler
-import android.os.IBinder
 import android.util.Log
 import android.util.TimingLogger
 import androidx.appcompat.app.AppCompatActivity
@@ -28,11 +25,7 @@ import com.android.billingclient.api.BillingFlowParams
 import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
-import com.google.ads.consent.ConsentForm
-import com.google.ads.consent.ConsentFormListener
-import com.google.ads.consent.ConsentInfoUpdateListener
-import com.google.ads.consent.ConsentInformation
-import com.google.ads.consent.ConsentStatus
+import com.google.ads.consent.*
 import com.google.ads.consent.ConsentStatus.PERSONALIZED
 import com.google.ads.consent.ConsentStatus.UNKNOWN
 import com.google.android.gms.ads.InterstitialAd
@@ -41,11 +34,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ServerValue
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.instabug.bug.BugReporting
 import com.marcoscg.ratedialog.RateDialog
 import com.mikepenz.aboutlibraries.Libs
@@ -54,12 +43,7 @@ import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
-import com.mikepenz.materialdrawer.model.DividerDrawerItem
-import com.mikepenz.materialdrawer.model.ExpandableDrawerItem
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem
-import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.*
 import com.respondingio.battlegroundsbuddy.R.string
 import com.respondingio.battlegroundsbuddy.ammo.HomeAmmoList
 import com.respondingio.battlegroundsbuddy.attachments.HomeAttachmentsFragment
@@ -73,13 +57,15 @@ import com.respondingio.battlegroundsbuddy.rss.HomeUpdatesFragment
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.stats.MainStatsActivity
 import com.respondingio.battlegroundsbuddy.weapons.HomeWeaponsFragment
-import kotlinx.android.synthetic.main.activity_main.appbar
-import kotlinx.android.synthetic.main.activity_main.main_toolbar
-import kotlinx.android.synthetic.main.activity_main.toolbar_title
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.toast
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.Arrays
+import kotlin.collections.HashMap
+import kotlin.collections.List
 import kotlin.collections.set
 
 public class MainActivity : AppCompatActivity() {
@@ -115,7 +101,7 @@ public class MainActivity : AppCompatActivity() {
 
     private lateinit var mInterstitialAd: InterstitialAd
 
-    lateinit var billingClient: BillingClient
+    lateinit private var billingClient: BillingClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -135,63 +121,66 @@ public class MainActivity : AppCompatActivity() {
 
         initializeFirebase()
 
+        //Premium.clearUserLevel()
+
         setupDrawer()
+
+        RateDialog.with(this, 1, 5)
+
+        updatePremiumStuff()
 
         billingClient = BillingClient.newBuilder(this).setListener { responseCode, purchases ->
             if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
                 for (purchase in purchases) {
-                    if (purchase.sku == "remove_ads") {
-                        Log.d("OWNED", "ADS REMOVED")
-                        mSharedPreferences.edit().putBoolean("removeAds", true).apply()
-                        result.removeItem(9001)
-                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isAdFree", "true")
-                    }
+                    Premium.handlePurchase(purchase)
                 }
+
+                updatePremiumStuff()
             } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
                 // Handle an error caused by a user cancelling the purchase flow.
             } else {
                 // Handle any other error codes.
             }
         }.build()
-        billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingServiceDisconnected() {
 
-            }
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingServiceDisconnected() {}
 
             override fun onBillingSetupFinished(responseCode: Int) {
                 if (responseCode == BillingClient.BillingResponse.OK) {
                     // The billing client is ready. You can query purchases here.
                     val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
-                    val skuList = ArrayList<String>()
                     for (purchase in purchases.purchasesList) {
-                        skuList.add(purchase.sku)
+                        Premium.handlePurchase(purchase)
                     }
 
-                    if (skuList.contains("remove_ads")) {
-                        Log.d("OWNED", "ADS REMOVED")
-                        mSharedPreferences.edit().putBoolean("removeAds", true).apply()
-                        result.removeItem(9001)
-                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isAdFree", "true")
-                    } else {
-                        mSharedPreferences.edit().putBoolean("removeAds", false).apply()
-                        //result.addStickyFooterItem(removeAds)
-                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isAdFree", "false")
-                    }
-
-                    if (skuList.contains("plus_v1")) {
-                        newSharedPreferences.edit().putBoolean("premiumV1", true).apply()
-                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isPremium", "true")
-                    } else {
-                        newSharedPreferences.edit().putBoolean("premiumV1", false).apply()
-                        FirebaseAnalytics.getInstance(this@MainActivity).setUserProperty("isPremium", "false")
-                    }
+                    updatePremiumStuff()
                 }
             }
         })
 
-        RateDialog.with(this, 1, 5)
+        //Premium.setUserLevel(Premium.Level.LEVEL_3)
+    }
 
-        viewModel.steamPlayerCountChange.observe(this, steamUserObserver)
+    private fun updatePremiumStuff() {
+        if (!this::headerResult.isInitialized) return
+        val header = headerResult.profiles[0]
+        val string: String = when (Premium.getUserLevel()) {
+            Premium.Level.FREE -> {
+                "Free"
+            }
+            Premium.Level.LEVEL_1 -> {
+                "Level 1"
+            }
+            Premium.Level.LEVEL_2 -> {
+                "Level 2"
+            }
+            Premium.Level.LEVEL_3 -> {
+                "Level 3"
+            }
+        }
+        headerResult.updateProfile(header)
+        header.withEmail(string)
     }
 
     private fun initializeFirebase() {
@@ -210,7 +199,7 @@ public class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
         if (this::mSharedPreferences.isInitialized) {
-            if (mSharedPreferences.getBoolean("removeAds", false)) {
+            if (Premium.isAdFreeUser()) {
                 super.onBackPressed()
                 return
             } else {
@@ -250,13 +239,6 @@ public class MainActivity : AppCompatActivity() {
         checkAuthStatus()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (this::billingClient.isInitialized && billingClient.isReady) {
-            billingClient.endConnection()
-        }
-    }
-
     private fun checkAuthStatus() {
         if (FirebaseAuth.getInstance().currentUser != null) {
             notifyLoggedIn(false)
@@ -270,7 +252,6 @@ public class MainActivity : AppCompatActivity() {
     private var new_fragment: Fragment? = null
 
     private fun setupDrawer() {
-        val timer = TimingLogger("MainApp", "setupDrawer")
 
         if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
             supportActionBar?.elevation = 0.0f
@@ -456,9 +437,10 @@ public class MainActivity : AppCompatActivity() {
 
                     if (drawerItem.identifier.toString() == "9001") {
                         val flowParams = BillingFlowParams.newBuilder()
-                                .setSku("remove_ads")
+                                .setSku("level_1")
                                 .setType(BillingClient.SkuType.INAPP)
                                 .build()
+
                         val responseCode = billingClient.launchBillingFlow(this@MainActivity, flowParams)
 
                         logDrawerEvent("remove_ads")
@@ -505,14 +487,12 @@ public class MainActivity : AppCompatActivity() {
 
         result.setSelection(1)
 
-        if (!mSharedPreferences.getBoolean("removeAds", false)) {
+        if (Premium.getUserLevel() == Premium.Level.FREE) {
             result.addItem(removeAds)
         }
 
         result.addItemAtPosition(PrimaryDrawerItem().withName("Player Stats").withBadge("BETA").withIcon(R.drawable.icons8_chart).withSelectable(false).withIconTintingEnabled(false).withIdentifier(9999), 1)
         result.addItemAtPosition(DividerDrawerItem().withIdentifier(91001), 2)
-
-        timer.addSplit("firebase")
 
         if (FirebaseAuth.getInstance().currentUser != null) {
             if (FirebaseAuth.getInstance().currentUser!!.isAnonymous) {
@@ -528,16 +508,12 @@ public class MainActivity : AppCompatActivity() {
                 result.addStickyFooterItem(signInDrawerItem)
             }
         }
-
-        viewModel.getSteamPlayerCount(application)
-
-        timer.addSplit("steam")
-        timer.addSplit("end")
-        timer.dumpToLog()
     }
 
     private fun notifyLoggedIn(setupAccount: Boolean) {
         val currentUser = FirebaseAuth.getInstance().currentUser
+
+        Log.d("USER", currentUser.toString())
 
         var displayName = currentUser?.displayName
         if (displayName.isNullOrEmpty()) {
@@ -579,7 +555,7 @@ public class MainActivity : AppCompatActivity() {
                     return
                 }
 
-                Log.d("USER", "User found, updating account info.")
+                Log.d("USER", "User found, updating account info." + currentUser?.email)
 
                 var childUpdates = HashMap<String, Any>()
                 childUpdates["users/" + currentUser?.uid + "/last_logon"] = ServerValue.TIMESTAMP
@@ -594,7 +570,7 @@ public class MainActivity : AppCompatActivity() {
 
     private fun notifySignedOut() {
         val header = headerResult.profiles[0]
-        header.withName("Battlegrounds Battle Buddy")
+        header.withName("Battle Buddy")
         headerResult.updateProfile(header)
 
         result.removeItem(90002)
@@ -663,13 +639,15 @@ public class MainActivity : AppCompatActivity() {
         val providers: List<AuthUI.IdpConfig> = Arrays.asList(AuthUI.IdpConfig.EmailBuilder().build(),
                 AuthUI.IdpConfig.PhoneBuilder().build(),
                 AuthUI.IdpConfig.GoogleBuilder().build(),
-                AuthUI.IdpConfig.FacebookBuilder().build())
+                AuthUI.IdpConfig.FacebookBuilder().build(),
+                AuthUI.IdpConfig.TwitterBuilder().build())
 
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setLogo(R.mipmap.ic_launcher)
+                        .setTheme(R.style.SignInTheme)
                         .build(),
                 requestCode)
     }
@@ -749,5 +727,10 @@ public class MainActivity : AppCompatActivity() {
         })
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::billingClient.isInitialized && billingClient.isReady) {
+            billingClient.endConnection()
+        }
+    }
 }

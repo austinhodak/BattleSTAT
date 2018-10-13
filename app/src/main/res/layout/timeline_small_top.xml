@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/timeline_small_view"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     android:background="@drawable/timeline_round_top_only"
     android:backgroundTint="@color/timelineBlue"
     app:timeline_position="last"
+    app:timeline_radio_outline_radius="23"
+    app:timeline_radio_radius="15"
     app:timeline_type="item">
 
     <View
@@ -31,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/damageIcon"
+        android:id="@+id/attachmentIcon"
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_marginStart="20dp"
@@ -43,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/damageTitle"
+        android:id="@+id/attachmentTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="23dp"
@@ -52,7 +54,7 @@
         android:textColor="#FFF"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/damageIcon"
+        app:layout_constraintStart_toEndOf="@+id/attachmentIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -64,8 +66,8 @@
         android:textColor="#bbFFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/damageTitle"
-        app:layout_constraintTop_toBottomOf="@+id/damageTitle" />
+        app:layout_constraintStart_toStartOf="@+id/attachmentTitle"
+        app:layout_constraintTop_toBottomOf="@+id/attachmentTitle" />
 
     <TextView
         android:id="@+id/damageVal"
@@ -79,7 +81,6 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 
 </pl.hypeapp.materialtimelineview.MaterialTimelineView>

@@ -1,9 +1,12 @@
 package com.respondingio.battlegroundsbuddy.weapondetail
 
 import android.os.Bundle
+import android.view.Menu
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
 import kotlinx.android.synthetic.main.activity_weapon_detail_timeline.*
@@ -23,6 +26,6 @@ class WeaponDetailTimeline : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weapon_detail_timeline)
 
-        supportFragmentManager.beginTransaction().replace(R.id.weaponTimelineFrame, WeaponDetailTimelineStats()).commit()
+        //NavigationUI.setupWithNavController(weaponTimelineToolbar, Navigation.findNavController(this, R.id.weaponDetailNavHost))
     }
 }

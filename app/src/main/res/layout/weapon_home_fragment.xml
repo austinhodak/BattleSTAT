@@ -32,9 +32,6 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/progress_stack"
-                    app:layout_constraintEnd_toEndOf="@+id/progress_stack"
-                    app:layout_constraintStart_toStartOf="@+id/progress_stack"
                     app:lottie_fileName="star.json" />
 
                 <TextView
@@ -47,24 +44,7 @@
                     app:layout_constraintStart_toStartOf="@+id/weaponName"
                     app:layout_constraintTop_toBottomOf="@+id/weaponName" />
 
-                <devlight.io.library.ArcProgressStackView
-                    android:id="@+id/progress_stack"
-                    android:layout_width="125dp"
-                    android:layout_height="125dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:visibility="invisible"
-                    app:apsv_animated="false"
-                    app:apsv_draw_width="22dp"
-                    app:apsv_indicator_orientation="horizontal"
-                    app:apsv_leveled="false"
-                    app:apsv_model_bg_enabled="false"
-                    app:apsv_rounded="false"
-                    app:apsv_shadowed="false"
-                    app:apsv_start_angle="135"
-                    app:apsv_sweep_angle="270"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <TextView
                     android:id="@+id/textView13"
@@ -100,8 +80,7 @@
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="@+id/weaponIcon"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/weaponIcon"
-                    app:layout_constraintTop_toTopOf="@+id/progress_stack" />
+                    app:layout_constraintStart_toEndOf="@+id/weaponIcon" />
 
                 <HorizontalScrollView
                     android:id="@+id/horizontalScrollView"
@@ -314,23 +293,6 @@
                         android:visibility="invisible" />
 
                 </LinearLayout>
-
-                <com.app.progresviews.ProgressLine
-                    android:id="@+id/damageBody0"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    app:definition="Body • No Vest"
-                    app:lineBarWidth="5dp"
-                    app:lineProgressColor="@color/md_orange_500" />
-
-                <com.app.progresviews.ProgressLine
-                    android:id="@+id/damageHead0"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
-                    app:definition="Head • No Helmet"
-                    app:lineBarWidth="5dp"
-                    app:lineProgressColor="@color/md_red_500" />
 
             </LinearLayout>
 

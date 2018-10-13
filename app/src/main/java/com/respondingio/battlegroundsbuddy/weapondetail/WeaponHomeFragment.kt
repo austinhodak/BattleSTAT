@@ -18,9 +18,7 @@ import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.Weapon
 import com.respondingio.battlegroundsbuddy.models.WeaponStat
 import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
-import devlight.io.library.ArcProgressStackView
 import kotlinx.android.synthetic.main.new_weapon_home.lottie_star
-import kotlinx.android.synthetic.main.new_weapon_home.progress_stack
 import kotlinx.android.synthetic.main.weapon_home_fragment.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.sdk27.coroutines.onClick
@@ -32,7 +30,6 @@ class WeaponHomeFragment : Fragment() {
     }
 
     var isStarred = false
-    val models = ArrayList<ArcProgressStackView.Model>()
     var weaponData: DocumentSnapshot? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -91,7 +88,6 @@ class WeaponHomeFragment : Fragment() {
     private fun updateWeaponData(it: DocumentSnapshot) {
         val weapon = it.toObject(Weapon::class.java)!!
         basicStatList.clear()
-        models.clear()
 
         Log.d("WEAPON", weapon.damageBody0)
 
@@ -118,22 +114,6 @@ class WeaponHomeFragment : Fragment() {
             weaponType?.text = weaponType?.text!!.substring(0, weaponType?.text!!.length - 1)
         }
 
-        if (weapon.damageBody0 != "--" && weapon.damageBody0.toDouble() >= 100) {
-            models.add(ArcProgressStackView.Model("BODY", ((weapon.damageBody0.toFloat() * 100f) / 225), resources.getColor(R.color.md_grey_200), resources.getColor(R.color.md_red_500), weapon.damageBody0))
-        } else if (weapon.damageBody0 != "--" && weapon.damageBody0.toDouble() > 50) {
-            models.add(ArcProgressStackView.Model("BODY", ((weapon.damageBody0.toFloat() * 100f) / 225), resources.getColor(R.color.md_grey_200), resources.getColor(R.color.md_orange_500), weapon.damageBody0))
-        } else if (weapon.damageBody0 != "--") {
-            models.add(ArcProgressStackView.Model("BODY", ((weapon.damageBody0.toFloat() * 100f) / 225), resources.getColor(R.color.md_grey_200), resources.getColor(R.color.md_green_500), weapon.damageBody0))
-        }
-
-        if (weapon.damageHead0 != "--" && weapon.damageHead0.toDouble() >= 100) {
-            models.add(ArcProgressStackView.Model("HEAD", ((weapon.damageHead0.toFloat() * 100f) / 300), resources.getColor(R.color.md_grey_300), resources.getColor(R.color.md_red_700), weapon.damageHead0))
-        } else if (weapon.damageHead0 != "--" && weapon.damageBody0.toDouble() > 50) {
-            models.add(ArcProgressStackView.Model("HEAD", ((weapon.damageHead0.toFloat() * 100f) / 300), resources.getColor(R.color.md_grey_300), resources.getColor(R.color.md_orange_700), weapon.damageHead0))
-        } else if (weapon.damageHead0 != "--") {
-            models.add(ArcProgressStackView.Model("HEAD", ((weapon.damageHead0.toFloat() * 100f) / 300), resources.getColor(R.color.md_grey_300), resources.getColor(R.color.md_green_700), weapon.damageHead0))
-        }
-
         //progress_stack?.models = models
 
         basicStatList.add(WeaponStat("Time Between Shots", weapon.TBS))
@@ -149,20 +129,5 @@ class WeaponHomeFragment : Fragment() {
 
         basicStatAdapter?.notifyDataSetChanged()
 
-        if (weapon.damageBody0 != "--") {
-            damageBody0?.setmValueText(weapon.damageBody0)
-            damageBody0?.setmPercentage(((weapon.damageBody0.toFloat() * 100f) / 120).toInt())
-        } else {
-            damageBody0?.setmValueText("N/A")
-            damageBody0?.setmPercentage(0)
-        }
-
-        if (weapon.damageHead0 != "--") {
-            damageHead0?.setmValueText(weapon.damageHead0)
-            damageHead0?.setmPercentage(((weapon.damageHead0.toFloat() * 100f) / 300).toInt())
-        } else {
-            damageHead0?.setmValueText("N/A")
-            damageHead0?.setmPercentage(0)
-        }
     }
 }

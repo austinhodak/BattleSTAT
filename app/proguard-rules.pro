@@ -34,6 +34,9 @@
 -keepclassmembers class com.respondingio.battlegroundsbuddy.models.** {
   *;
 }
+-keepclassmembers class com.respondingio.battlegroundsbuddy.** {
+  *;
+}
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
     public static int v(...);

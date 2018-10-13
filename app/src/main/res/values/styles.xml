@@ -164,7 +164,7 @@
     </style>
 
     <style name="WeaponTimeline" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/md_grey_900</item>
+        <item name="colorPrimary">@color/timelineBG</item>
         <item name="colorPrimaryDark">#171717</item>
         <item name="colorAccent">@color/colorAccent</item>
 
@@ -173,6 +173,39 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+
     </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="SignInTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/timelineBG</item>
+        <item name="colorPrimaryDark">@color/timelineDark</item>
+        <item name="colorAccent">@color/md_orange_500</item>
+
+        <item name="colorControlNormal">@color/md_orange_500</item>
+        <item name="colorControlActivated">@color/md_orange_A700</item>
+        <item name="colorControlHighlight">@color/md_orange_A200</item>
+        <item name="android:windowBackground">@color/timelineBG</item>
+    </style>
+
+    <style name="FirebaseUI.EditText">
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="colorControlActivated">@color/md_white_1000</item>
+        <item name="colorControlHighlight">@color/md_white_1000</item>
+        <item name="android:textColorHint">@color/md_white_1000</item>
+        <item name="android:textColor">@color/md_white_1000</item>
+    </style>
+
+    <style name="FirebaseUI.Text.TextInputLayout" parent="@style/FirebaseUI.EditText" />
+
+    <style name="FirebaseUI.Text.HintText" parent="@style/FirebaseUI.EditText" />
 
 </resources>

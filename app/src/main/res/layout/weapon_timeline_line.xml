@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     app:timeline_position="middle"
+    app:timeline_radio_outline_radius="23"
+    app:timeline_radio_radius="15"
     app:timeline_type="line">
 
     <LinearLayout

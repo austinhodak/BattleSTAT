@@ -34,7 +34,7 @@
                     app:layout_constraintTop_toTopOf="@+id/weaponName"
                     app:lottie_fileName="star.json" />
 
-                <devlight.io.library.ArcProgressStackView
+                <!--<devlight.io.library.ArcProgressStackView
                     android:id="@+id/progress_stack"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
@@ -51,7 +51,7 @@
                     app:apsv_sweep_angle="270"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />-->
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -164,31 +164,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chipGroup2">
 
-                <com.app.progresviews.ProgressLine
-                    android:id="@+id/progressLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    app:definition="Bullet Speed"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/progressLine2"
-                    app:lineDefTextSize="10sp"
-                    app:lineProgressColor="@color/md_teal_300"
-                    app:value="715 m/s"
-                    app:valuePercentage="40" />
-
-                <com.app.progresviews.ProgressLine
-                    android:id="@+id/progressLine2"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    app:definition="Base Damage"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:lineDefTextSize="10sp"
-                    app:lineProgressColor="@color/secondary500"
-                    app:value="49"
-                    app:valuePercentage="40" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

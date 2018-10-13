@@ -21,6 +21,8 @@ import androidx.annotation.IntRange;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.respondingio.battlegroundsbuddy.R;
 import java.lang.annotation.Retention;
@@ -165,9 +167,9 @@ public class Snacky {
     public @interface Duration {
     }
 
-    public static final int LENGTH_INDEFINITE = Snackbar.LENGTH_INDEFINITE;
-    public static final int LENGTH_SHORT      = Snackbar.LENGTH_SHORT;
-    public static final int LENGTH_LONG       = Snackbar.LENGTH_LONG;
+    public static final int LENGTH_INDEFINITE = BaseTransientBottomBar.LENGTH_INDEFINITE;
+    public static final int LENGTH_SHORT      = BaseTransientBottomBar.LENGTH_SHORT;
+    public static final int LENGTH_LONG       = BaseTransientBottomBar.LENGTH_LONG;
 
 
     public static class Builder {

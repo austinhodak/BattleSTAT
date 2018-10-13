@@ -51,4 +51,13 @@
 
     <string name="match_list_empty">NO MATCHES FOUND \nMATCHES MAY TAKE UP TO 15 MINUTES AFTER GAME END TO SHOW HERE</string>
 
+    <string-array name="profile_game_versions">
+        <item>PC</item>
+        <item>Xbox</item>
+        <item>Mobile</item>
+    </string-array>
+
+    <string name="twitter_consumer_key" translatable="false">SptY5rSTRIJa4Tin9DVCq0ryM</string>
+    <string name="twitter_consumer_secret" translatable="false">Te5FpxPDX7fOoj0mBGDS3NMzsFOuu2wLsCqXXDWcJUlYl5kHQt</string>
+
 </resources>

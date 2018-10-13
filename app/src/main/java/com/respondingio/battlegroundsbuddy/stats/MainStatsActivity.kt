@@ -21,6 +21,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
 import com.android.vending.billing.IInAppBillingService
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -28,6 +31,7 @@ import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -39,6 +43,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.gson.Gson
 import com.instabug.bug.BugReporting
+import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
@@ -62,8 +67,8 @@ import org.jetbrains.anko.support.v4.onRefresh
 class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
 
-    var regionList = arrayOf("XBOX-AS", "XBOX-EU", "XBOX-NA", "XBOX-OC", "PC-KRJP", "PC-JP", "PC-NA", "PC-EU", "PC-RU", "PC-OC", "PC-KAKAO", "PC-SEA", "PC-SA", "PC-AS")
-    var regions = arrayOf("Xbox Asia", "Xbox Europe", "Xbox North America", "Xbox Oceania", "PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC Kakao", "PC South East Asia", "PC South and Central America", "PC Asia")
+    var regionList = arrayOf("XBOX-AS", "XBOX-EU", "XBOX-NA", "XBOX-OC", "XBOX-SA", "PC-KRJP", "PC-JP", "PC-NA", "PC-EU", "PC-RU", "PC-OC", "PC-KAKAO", "PC-SEA", "PC-SA", "PC-AS")
+    var regions = arrayOf("Xbox Asia", "Xbox Europe", "Xbox North America", "Xbox Oceania", "Xbox South America", "PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC Kakao", "PC South East Asia", "PC South and Central America", "PC Asia")
     var modesList = arrayOf("solo", "solo-fpp", "duo", "duo-fpp", "squad", "squad-fpp")
 
     lateinit var mSharedPreferences: SharedPreferences
@@ -71,12 +76,13 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
     var currentPlayer: PrefPlayer? = null
     private var updateTimeout: Long = 15
 
-    private var isPremium: Boolean = false
     var lastUpdated: Long? = null
 
     private var mRewardedVideoAd: RewardedVideoAd? = null
 
     private var iap: IInAppBillingService? = null
+
+    lateinit private var billingClient: BillingClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,17 +91,12 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         setSupportActionBar(weapon_detail_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val serviceIntent = Intent("com.android.vending.billing.InAppBillingService.BIND")
-        serviceIntent.`package` = "com.android.vending"
-        applicationContext?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-
         mSharedPreferences = this.getSharedPreferences("com.respondingio.battlegroundsbuddy", Context.MODE_PRIVATE)
-        isPremium = mSharedPreferences.getBoolean("premiumV1", false)
 
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(applicationContext)
         mRewardedVideoAd?.rewardedVideoAdListener = this
 
-        if (mSharedPreferences.getBoolean("premiumV1", false)) {
+        if (Premium.getUserLevel() == Premium.Level.LEVEL_2 || Premium.getUserLevel() == Premium.Level.LEVEL_3) {
             updateTimeout = 2
         } else {
             mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
@@ -129,6 +130,40 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             stats_season_text.text = "Select Season"
         }
 
+        billingClient = BillingClient.newBuilder(this).setListener { responseCode, purchases ->
+            if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+                for (purchase in purchases) {
+                    Premium.handlePurchase(purchase)
+                }
+
+                if (Premium.getUserLevel() == Premium.Level.LEVEL_2 || Premium.getUserLevel() == Premium.Level.LEVEL_3) {
+                    updateTimeout = 2
+                }
+            } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+                // Handle an error caused by a user cancelling the purchase flow.
+            } else {
+                // Handle any other error codes.
+            }
+        }.build()
+
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingServiceDisconnected() {}
+
+            override fun onBillingSetupFinished(responseCode: Int) {
+                if (responseCode == BillingClient.BillingResponse.OK) {
+                    // The billing client is ready. You can query purchases here.
+                    val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
+                    for (purchase in purchases.purchasesList) {
+                        Premium.handlePurchase(purchase)
+                    }
+
+                    if (Premium.getUserLevel() == Premium.Level.LEVEL_2 || Premium.getUserLevel() == Premium.Level.LEVEL_3) {
+                        updateTimeout = 2
+                    }
+                }
+            }
+        })
+
         mainStatsRefreshLayout?.setColorSchemeResources(R.color.md_orange_500, R.color.md_pink_500)
 
         mainStatsRefreshLayout?.onRefresh {
@@ -145,7 +180,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                 if (getTimeSinceLastUpdated() / 60 > updateTimeout) {
                     mainStatsRefreshLayout.isRefreshing = true
                     reloadStats(currentPlayer!!)
-                } else if (!isPremium) {
+                } else if (Premium.getUserLevel() != Premium.Level.LEVEL_2 && Premium.getUserLevel() != Premium.Level.LEVEL_3) {
                     mainStatsRefreshLayout.isRefreshing = false
                     Snacky.builder().setActivity(this).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes.")
                             .setActionText("UPGRADE OR WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).setActionClickListener {
@@ -153,19 +188,12 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                                         .title(text = "Upgrade or Watch An Ad")
                                         .message(R.string.upgrade)
                                         .positiveButton(text = "GO PREMIUM ($2.99)") {
-                                            val buyIntentBundle = iap?.getBuyIntent(3, packageName,
-                                                    "plus_v1", "inapp", "")
+                                            val flowParams = BillingFlowParams.newBuilder()
+                                                    .setSku("level_3")
+                                                    .setType(BillingClient.SkuType.INAPP)
+                                                    .build()
 
-                                            val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
-
-                                            if (pendingIntent != null) {
-
-                                                val REQUEST_CODE = 1002
-
-                                                startIntentSenderForResult(pendingIntent.intentSender,
-                                                        REQUEST_CODE, Intent(), 0, 0,
-                                                        0)
-                                            }
+                                            billingClient.launchBillingFlow(this, flowParams)
                                         }
                                         .neutralButton(text = "NEVERMIND") { dialog -> dialog.dismiss() }
                                         .negativeButton(text = "WATCH AN AD") { dialog ->
@@ -176,7 +204,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                                             }
                                         }.show()
                             }.build().show()
-                } else if (isPremium) {
+                } else if (Premium.getUserLevel() == Premium.Level.LEVEL_2 || Premium.getUserLevel() == Premium.Level.LEVEL_3) {
                     mRewardedVideoAd?.loadAd("ca-app-pub-3940256099942544/5224354917",
                             AdRequest.Builder().build())
 
@@ -364,13 +392,6 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             listenerRef = null
         }
 
-        if (iap != null) {
-            try {
-                applicationContext?.unbindService(serviceConnection)
-            } catch (e: Exception) {
-            }
-        }
-
         if (mRewardedVideoAd != null) {
             mRewardedVideoAd!!.rewardedVideoAdListener = null
             mRewardedVideoAd!!.destroy(applicationContext)
@@ -470,7 +491,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                     ) {
                         val addPlayerBottomSheet = AddPlayerBottomSheet()
                         addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-                    }.setDuration(Snacky.LENGTH_INDEFINITE).show()
+                    }.setDuration(BaseTransientBottomBar.LENGTH_INDEFINITE).show()
                 }
             }
 
@@ -769,15 +790,5 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
         Log.d("ADERROR", p0.toString())
-    }
-
-    private var serviceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(p0: ComponentName?) {
-            iap = null
-        }
-
-        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-            iap = IInAppBillingService.Stub.asInterface(p1)
-        }
     }
 }
