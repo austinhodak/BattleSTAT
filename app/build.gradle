@@ -168,7 +168,7 @@ dependencies {
 
     implementation 'com.afollestad.material-dialogs:input:2.0.0-beta2'
 
-    implementation 'com.instabug.library:instabug:8.0.8'
+    implementation 'com.instabug.library:instabug:8.0.11'
 
     implementation 'io.github.anderscheow:whatsnew:1.0.0'
 

@@ -113,6 +113,8 @@
         </activity>
 
         <activity android:name=".weapondetail.WeaponDetailTimeline" android:theme="@style/WeaponTimeline" />
+
+        <activity android:name=".premium.UpgradeActivity" android:theme="@style/WeaponTimeline" />
     </application>
 
 </manifest>

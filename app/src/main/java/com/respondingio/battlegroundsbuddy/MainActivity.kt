@@ -52,6 +52,7 @@ import com.respondingio.battlegroundsbuddy.info.ControlsFragment
 import com.respondingio.battlegroundsbuddy.info.TimerFragment
 import com.respondingio.battlegroundsbuddy.loadout.LoadoutBestTabs
 import com.respondingio.battlegroundsbuddy.loadout.LoadoutCreateMain
+import com.respondingio.battlegroundsbuddy.premium.UpgradeActivity
 import com.respondingio.battlegroundsbuddy.profile.ProfileActivity
 import com.respondingio.battlegroundsbuddy.rss.HomeUpdatesFragment
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
@@ -60,6 +61,7 @@ import com.respondingio.battlegroundsbuddy.weapons.HomeWeaponsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.net.MalformedURLException
 import java.net.URL
@@ -107,6 +109,8 @@ public class MainActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //TEST
 
         if (!isGooglePlayServicesAvailable(this)) {
             //Play Services Not Available, stop.
@@ -283,7 +287,7 @@ public class MainActivity : AppCompatActivity() {
                 .withOnAccountHeaderListener { _, _, _ -> false }
                 .build()
 
-        Glide.with(this).load(R.drawable.header2).into(headerResult.headerBackgroundView)
+        Glide.with(this).load(R.drawable.header).into(headerResult.headerBackgroundView)
 
         val updates = PrimaryDrawerItem().withIdentifier(100).withName(R.string.drawer_title_update).withIcon(R.drawable.rss)
         val weapons = PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_title_weapons).withIcon(R.drawable.icons8_rifle).withIconTintingEnabled(false)
@@ -325,7 +329,7 @@ public class MainActivity : AppCompatActivity() {
                 .withOnDrawerItemClickListener { _, _, drawerItem ->
                     if (drawerItem.identifier.toString() == "9999") {
                         if (FirebaseAuth.getInstance().currentUser == null) {
-                            Snacky.builder().setActivity(this).error().setText("You must be logged in to use this feature.").setDuration(Snacky.LENGTH_LONG).setAction("LOGIN") {
+                            Snacky.builder().setActivity(this).warning().setText("You must be logged in to use this feature.").setDuration(Snacky.LENGTH_LONG).setAction("LOGIN") {
                                 launchSignIn()
                             }.show()
                             return@withOnDrawerItemClickListener false
@@ -436,14 +440,16 @@ public class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "9001") {
-                        val flowParams = BillingFlowParams.newBuilder()
-                                .setSku("level_1")
-                                .setType(BillingClient.SkuType.INAPP)
-                                .build()
+//                        val flowParams = BillingFlowParams.newBuilder()
+//                                .setSku("level_1")
+//                                .setType(BillingClient.SkuType.INAPP)
+//                                .build()
+//
+//                        val responseCode = billingClient.launchBillingFlow(this@MainActivity, flowParams)
+//
+//                        logDrawerEvent("remove_ads")
 
-                        val responseCode = billingClient.launchBillingFlow(this@MainActivity, flowParams)
-
-                        logDrawerEvent("remove_ads")
+                        startActivity<UpgradeActivity>()
                     }
 
                     if (drawerItem.identifier.toString() == "501") {

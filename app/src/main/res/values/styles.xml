@@ -18,6 +18,9 @@
         <item name="material_drawer_selected_text">@color/md_orange_700</item>
 
         <item name="material_drawer_selected">#1FF57C00</item>
+
+        <item name="material_drawer_background">#1B1B1B</item>
+
     </style>
 
     <style name="AppThemeLight" parent="MaterialDrawerTheme.Light">
