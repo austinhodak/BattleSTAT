@@ -115,6 +115,8 @@
         <activity android:name=".weapondetail.WeaponDetailTimeline" android:theme="@style/WeaponTimeline" />
 
         <activity android:name=".premium.UpgradeActivity" android:theme="@style/WeaponTimeline" />
+
+        <activity android:label="Map Drop Roulette" android:name=".map.MapDropRouletteActivity" android:theme="@style/WeaponTimeline" />
     </application>
 
 </manifest>

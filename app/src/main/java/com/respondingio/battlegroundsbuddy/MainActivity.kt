@@ -52,6 +52,7 @@ import com.respondingio.battlegroundsbuddy.info.ControlsFragment
 import com.respondingio.battlegroundsbuddy.info.TimerFragment
 import com.respondingio.battlegroundsbuddy.loadout.LoadoutBestTabs
 import com.respondingio.battlegroundsbuddy.loadout.LoadoutCreateMain
+import com.respondingio.battlegroundsbuddy.map.MapDropRouletteActivity
 import com.respondingio.battlegroundsbuddy.premium.UpgradeActivity
 import com.respondingio.battlegroundsbuddy.profile.ProfileActivity
 import com.respondingio.battlegroundsbuddy.rss.HomeUpdatesFragment
@@ -403,6 +404,8 @@ public class MainActivity : AppCompatActivity() {
                         } catch (e: Exception) {
                             Snacky.builder().setActivity(this).error().setText("Error loading map.").show()
                         }
+
+                        //startActivity<MapDropRouletteActivity>()
 
                         logDrawerEvent("maps")
                     }

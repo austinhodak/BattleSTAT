@@ -1,0 +1,490 @@
+{
+  "maps": [
+    {
+      "name": "Erangel",
+      "logo": "erangel",
+      "mapVector": "erangel",
+      "mapFilename": "map1shadows",
+      "mapBackgroundColour": "#2A5077",
+      "mapToolbarIconFilename": "erangelicon",
+      "zones": [
+        {
+          "name": "Pochinki",
+          "weight": 1.0,
+          "x": 443,
+          "y": 496
+        },
+        {
+          "name": "School",
+          "weight": 1.0,
+          "x": 515,
+          "y": 405
+        },
+        {
+          "name": "Rozhok",
+          "weight": 1.0,
+          "x": 493,
+          "y": 355
+        },
+        {
+          "name": "Ruins",
+          "weight": 1.0,
+          "x": 385,
+          "y": 405
+        },
+        {
+          "name": "Yasnaya Polyana",
+          "weight": 1.0,
+          "x": 663,
+          "y": 292
+        },
+        {
+          "name": "Mansion",
+          "weight": 1.0,
+          "x": 763,
+          "y": 372
+        },
+        {
+          "name": "Prison",
+          "weight": 1.0,
+          "x": 768,
+          "y": 462
+        },
+        {
+          "name": "Shelter",
+          "weight": 1.0,
+          "x": 695,
+          "y": 482
+        },
+        {
+          "name": "Farm",
+          "weight": 1.0,
+          "x": 661,
+          "y": 555
+        },
+        {
+          "name": "Mylta",
+          "weight": 1.0,
+          "x": 735,
+          "y": 582
+        },
+        {
+          "name": "Mylta Power",
+          "weight": 1.0,
+          "x": 889,
+          "y": 532
+        },
+        {
+          "name": "Lipovka",
+          "weight": 1.0,
+          "x": 873,
+          "y": 402
+        },
+        {
+          "name": "Stalber",
+          "weight": 1.0,
+          "x": 696,
+          "y": 155
+        },
+        {
+          "name": "Kameshki",
+          "weight": 1.0,
+          "x": 823,
+          "y": 125
+        },
+        {
+          "name": "Novorepnoye",
+          "weight": 1.0,
+          "x": 745,
+          "y": 742
+        },
+        {
+          "name": "Sosnovka Military Base",
+          "weight": 1.0,
+          "x": 545,
+          "y": 802
+        },
+        {
+          "name": "Ferry Pier",
+          "weight": 1.0,
+          "x": 342,
+          "y": 702
+        },
+        {
+          "name": "Primorsk",
+          "weight": 1.0,
+          "x": 192,
+          "y": 744
+        },
+        {
+          "name": "Quarry",
+          "weight": 1.0,
+          "x": 213,
+          "y": 658
+        },
+        {
+          "name": "Gatka",
+          "weight": 1.0,
+          "x": 264,
+          "y": 480
+        },
+        {
+          "name": "Hospital",
+          "weight": 1.0,
+          "x": 183,
+          "y": 388
+        },
+        {
+          "name": "Georgopol",
+          "weight": 1.0,
+          "x": 223,
+          "y": 268
+        },
+        {
+          "name": "Zharki",
+          "weight": 1.0,
+          "x": 130,
+          "y": 155
+        },
+        {
+          "name": "Shooting Range",
+          "weight": 1.0,
+          "x": 413,
+          "y": 208
+        },
+        {
+          "name": "Severny",
+          "weight": 1.0,
+          "x": 473,
+          "y": 140
+        }
+      ]
+    },
+    {
+      "name": "Miramar",
+      "logo": "miramar",
+      "mapVector": "miramar",
+      "mapFilename": "map2shadows",
+      "mapBackgroundColour": "#134659",
+      "mapToolbarIconFilename": "miramaricon",
+      "zones": [
+        {
+          "name": "Los Leones",
+          "weight": 1.0,
+          "x": 570,
+          "y": 652
+        },
+        {
+          "name": "Puerto Paraiso",
+          "weight": 1.0,
+          "x": 750,
+          "y": 762
+        },
+        {
+          "name": "La Bendita",
+          "weight": 1.0,
+          "x": 610,
+          "y": 522
+        },
+        {
+          "name": "Impala",
+          "weight": 1.0,
+          "x": 770,
+          "y": 562
+        },
+        {
+          "name": "Cemetery",
+          "weight": 1.0,
+          "x": 540,
+          "y": 452
+        },
+        {
+          "name": "Minas Generales",
+          "weight": 1.0,
+          "x": 626,
+          "y": 452
+        },
+        {
+          "name": "Junkyard",
+          "weight": 1.0,
+          "x": 716,
+          "y": 412
+        },
+        {
+          "name": "El Azahar",
+          "weight": 1.0,
+          "x": 776,
+          "y": 312
+        },
+        {
+          "name": "Cruz del Valle",
+          "weight": 1.0,
+          "x": 667,
+          "y": 180
+        },
+        {
+          "name": "Tierra Bronca",
+          "weight": 1.0,
+          "x": 806,
+          "y": 144
+        },
+        {
+          "name": "Campo Militar",
+          "weight": 1.0,
+          "x": 847,
+          "y": 60
+        },
+        {
+          "name": "Torre Ahumada",
+          "weight": 1.0,
+          "x": 657,
+          "y": 60
+        },
+        {
+          "name": "Water Treatment",
+          "weight": 1.0,
+          "x": 522,
+          "y": 232
+        },
+        {
+          "name": "Hacienda del Patron",
+          "weight": 1.0,
+          "x": 531,
+          "y": 355
+        },
+        {
+          "name": "San Martin",
+          "weight": 1.0,
+          "x": 458,
+          "y": 355
+        },
+        {
+          "name": "Power Grid",
+          "weight": 1.0,
+          "x": 386,
+          "y": 432
+        },
+        {
+          "name": "Pecado",
+          "weight": 1.0,
+          "x": 450,
+          "y": 514
+        },
+        {
+          "name": "La Cobreria",
+          "weight": 1.0,
+          "x": 311,
+          "y": 164
+        },
+        {
+          "name": "Alcantara",
+          "weight": 1.0,
+          "x": 79,
+          "y": 136
+        },
+        {
+          "name": "Ruins",
+          "weight": 1.0,
+          "x": 39,
+          "y": 173
+        },
+        {
+          "name": "Trailer Park",
+          "weight": 1.0,
+          "x": 102,
+          "y": 233
+        },
+        {
+          "name": "Crater Fields",
+          "weight": 1.0,
+          "x": 252,
+          "y": 242
+        },
+        {
+          "name": "El Pozo",
+          "weight": 1.0,
+          "x": 196,
+          "y": 343
+        },
+        {
+          "name": "Monte Nuevo",
+          "weight": 1.0,
+          "x": 243,
+          "y": 492
+        },
+        {
+          "name": "Ladrillera",
+          "weight": 1.0,
+          "x": 226,
+          "y": 575
+        },
+        {
+          "name": "Valle del Mar",
+          "weight": 1.0,
+          "x": 173,
+          "y": 725
+        },
+        {
+          "name": "Los Higos",
+          "weight": 1.0,
+          "x": 303,
+          "y": 894
+        },
+        {
+          "name": "Minas del Sur",
+          "weight": 1.0,
+          "x": 153,
+          "y": 855
+        },
+        {
+          "name": "Prison",
+          "weight": 1.0,
+          "x": 103,
+          "y": 884
+        },
+        {
+          "name": "Chumacera",
+          "weight": 1.0,
+          "x": 323,
+          "y": 634
+        }
+      ]
+    },
+    {
+      "name": "Sanhok",
+      "logo": "sanhok",
+      "mapVector": "sanhok",
+      "mapFilename": "map3shadows",
+      "mapBackgroundColour": "#184C47",
+      "mapToolbarIconFilename": "sanhokicon",
+      "zones": [
+        {
+          "name": "Mongnai",
+          "weight": 1.0,
+          "x": 779,
+          "y": 198
+        },
+        {
+          "name": "Camp Bravo",
+          "weight": 1.0,
+          "x": 849,
+          "y": 388
+        },
+        {
+          "name": "Lakawi",
+          "weight": 1.0,
+          "x": 853,
+          "y": 548
+        },
+        {
+          "name": "Kampong",
+          "weight": 1.0,
+          "x": 842,
+          "y": 710
+        },
+        {
+          "name": "Docks",
+          "weight": 1.0,
+          "x": 811,
+          "y": 860
+        },
+        {
+          "name": "Quarry",
+          "weight": 1.0,
+          "x": 662,
+          "y": 626
+        },
+        {
+          "name": "Cave",
+          "weight": 1.0,
+          "x": 652,
+          "y": 776
+        },
+        {
+          "name": "Bhan",
+          "weight": 1.0,
+          "x": 726,
+          "y": 488
+        },
+        {
+          "name": "Paradise Resort",
+          "weight": 1.0,
+          "x": 614,
+          "y": 336
+        },
+        {
+          "name": "Tat Mok",
+          "weight": 1.0,
+          "x": 529,
+          "y": 247
+        },
+        {
+          "name": "Khao",
+          "weight": 1.0,
+          "x": 569,
+          "y": 177
+        },
+        {
+          "name": "Bootcamp",
+          "weight": 1.0,
+          "x": 467,
+          "y": 480
+        },
+        {
+          "name": "Pai Nan",
+          "weight": 1.0,
+          "x": 457,
+          "y": 670
+        },
+        {
+          "name": "Ruins",
+          "weight": 1.0,
+          "x": 299,
+          "y": 636
+        },
+        {
+          "name": "Ha Tinh",
+          "weight": 1.0,
+          "x": 316,
+          "y": 283
+        },
+        {
+          "name": "Camp Alpha",
+          "weight": 1.0,
+          "x": 189,
+          "y": 410
+        },
+        {
+          "name": "Tambang",
+          "weight": 1.0,
+          "x": 219,
+          "y": 720
+        },
+        {
+          "name": "Na Kham",
+          "weight": 1.0,
+          "x": 277,
+          "y": 810
+        },
+        {
+          "name": "Sahmee",
+          "weight": 1.0,
+          "x": 361,
+          "y": 877
+        },
+        {
+          "name": "Camp Charlie",
+          "weight": 1.0,
+          "x": 581,
+          "y": 850
+        },
+        {
+          "name": "Ban Tai",
+          "weight": 1.0,
+          "x": 591,
+          "y": 920
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/map_drop_roulette"
+    app:startDestination="@id/mapDropRoulettePicker">
+
+    <fragment
+        android:id="@+id/mapDropRoulettePicker"
+        android:name="com.respondingio.battlegroundsbuddy.map.MapDropRoulettePicker"
+        android:label="MapDropRoulettePicker" >
+        <action
+            android:id="@+id/mapSelected"
+            app:destination="@id/mapDropRouletteMap" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapDropRouletteMap"
+        android:name="com.respondingio.battlegroundsbuddy.map.MapDropRouletteMap"
+        android:label="MapDropRouletteMap" />
+</navigation>
