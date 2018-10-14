@@ -27,7 +27,7 @@ class Application : MultiDexApplication() {
 
         if (LeakCanary.isInAnalyzerProcess(this)) return
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG || BuildConfig.VERSION_NAME.contains("Beta", true)) {
             //LeakCanary.install(this)
             Instabug.Builder(this, "b88ab4ff06e0bb4240f1ee0f261b78d4")
                     .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT, InstabugInvocationEvent.SCREENSHOT)

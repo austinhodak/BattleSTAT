@@ -192,6 +192,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Button
+                        android:id="@+id/level1Buy"
                         style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -380,6 +381,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Button
+                        android:id="@+id/level2Buy"
                         style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -569,6 +571,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Button
+                        android:id="@+id/level3Buy"
                         style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -589,14 +592,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/timeline_round"
-                android:backgroundTint="@color/timelineOrange">
+                android:backgroundTint="@color/timelineGrey">
 
                 <TextView
                     android:id="@+id/attachmentTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
                     android:text="Please Note"
                     android:textColor="#FFF"
                     android:textSize="14sp"
@@ -608,9 +611,10 @@
                     android:id="@+id/alertSubtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
                     android:text="At this time, there is no upgrade path option, so if you buy the Level 1, then decide later you want to upgrade to Level 3, it will not be discounted. Sorry about this!"
                     android:textColor="#bbFFFFFF"
                     android:textSize="12sp"

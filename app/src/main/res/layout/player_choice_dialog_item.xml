@@ -6,12 +6,12 @@
     android:clickable="true"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="52dp"
     android:focusable="true">
 
     <ImageView
         android:id="@+id/game_version_icon"
-        android:layout_width="28dp"
+        android:layout_width="24dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:src="@drawable/xbox_logo"
@@ -33,4 +33,5 @@
         app:layout_constraintRight_toLeftOf="@+id/game_version_icon"
         app:layout_constraintStart_toEndOf="@+id/game_version_icon"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

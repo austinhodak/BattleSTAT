@@ -62,6 +62,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
 import java.net.MalformedURLException
 import java.net.URL
@@ -91,7 +92,7 @@ public class MainActivity : AppCompatActivity() {
 
     lateinit var newSharedPreferences: SharedPreferences
 
-    private val removeAds = SecondaryDrawerItem().withIdentifier(9001).withName("Remove Ads").withIcon(R.drawable.icons8_remove_ads_96).withSelectable(false)
+    private val removeAds = SecondaryDrawerItem().withIdentifier(9001).withName("Upgrade").withIcon(R.drawable.upgrade).withSelectable(false)
 
     private val signInDrawerItem = SecondaryDrawerItem().withIcon(R.drawable.icons8_password).withSelectable(false).withName("Login or Sign Up").withIdentifier(90001)
 
@@ -125,7 +126,7 @@ public class MainActivity : AppCompatActivity() {
 
         initializeFirebase()
 
-        //Premium.clearUserLevel()
+        Premium.clearUserLevel()
 
         setupDrawer()
 
@@ -163,7 +164,7 @@ public class MainActivity : AppCompatActivity() {
             }
         })
 
-        //Premium.setUserLevel(Premium.Level.LEVEL_3)
+        Premium.setUserLevel(Premium.Level.LEVEL_2)
     }
 
     private fun updatePremiumStuff() {
@@ -449,7 +450,7 @@ public class MainActivity : AppCompatActivity() {
 //
 //                        logDrawerEvent("remove_ads")
 
-                        startActivity<UpgradeActivity>()
+                        startActivityForResult<UpgradeActivity>(100)
                     }
 
                     if (drawerItem.identifier.toString() == "501") {
@@ -493,7 +494,7 @@ public class MainActivity : AppCompatActivity() {
 
         result.setSelection(1)
 
-        if (Premium.getUserLevel() == Premium.Level.FREE) {
+        if (Premium.getUserLevel() != Premium.Level.LEVEL_3) {
             result.addItem(removeAds)
         }
 
@@ -599,6 +600,12 @@ public class MainActivity : AppCompatActivity() {
                     Snacky.builder().setActivity(this).error().setText(response.error?.message.toString()).show()
                 }
             }
+        }
+
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            //Purchase Successful
+            Snacky.builder().setActivity(this@MainActivity).success().setText("Thank you for your purchase!").show()
+            updatePremiumStuff()
         }
     }
 

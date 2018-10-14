@@ -48,6 +48,7 @@ import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.models.Seasons
+import com.respondingio.battlegroundsbuddy.premium.UpgradeActivity
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_stats_main_new.bottom_navigation
 import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
@@ -62,6 +63,7 @@ import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_picke
 import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_text
 import kotlinx.android.synthetic.main.activity_stats_main_new.weapon_detail_toolbar
 import net.idik.lib.slimadapter.SlimAdapter
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.onRefresh
 
 class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
@@ -186,14 +188,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                             .setActionText("UPGRADE OR WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).setActionClickListener {
                                 MaterialDialog(this)
                                         .title(text = "Upgrade or Watch An Ad")
-                                        .message(R.string.upgrade)
-                                        .positiveButton(text = "GO PREMIUM ($2.99)") {
-                                            val flowParams = BillingFlowParams.newBuilder()
-                                                    .setSku("level_3")
-                                                    .setType(BillingClient.SkuType.INAPP)
-                                                    .build()
-
-                                            billingClient.launchBillingFlow(this, flowParams)
+                                        .message(text = "You can either watch a quick ad to refresh the stats or upgrade to a level that allows quicker refreshing!")
+                                        .positiveButton(text = "UPGRADE") {
+                                            startActivity<UpgradeActivity>()
                                         }
                                         .neutralButton(text = "NEVERMIND") { dialog -> dialog.dismiss() }
                                         .negativeButton(text = "WATCH AN AD") { dialog ->
@@ -249,38 +246,19 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                     .customListAdapter(playerListAdapter)
                     .positiveButton(text = "LINK NEW") { dialog ->
                         val addPlayerBottomSheet = AddPlayerBottomSheet()
-                        addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-                        if (playersMap.size < 5 || mSharedPreferences.getBoolean("premiumV1", false)) {
-//                            val addPlayerBottomSheet = AddPlayerBottomSheet()
-//                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-                        } else if (playersMap.size >= 5 && !mSharedPreferences.getBoolean("premiumV1", false)) {
-                            //Max players added and no premium.
-                            /*MaterialDialog.Builder(this)
-                                    .title("Max Players Reached")
-                                    .content(R.string.upgrade)
-                                    .backgroundColorRes(R.color.md_orange_700)
-                                    .titleColorRes(R.color.md_white_1000)
-                                    .contentColorRes(R.color.md_white_1000)
-                                    .positiveColorRes(R.color.md_white_1000)
-                                    .neutralColorRes(R.color.md_white_1000)
-                                    .negativeColorRes(R.color.md_white_1000)
-                                    .positiveText("GO PREMIUM ($2.99)")
-                                    .negativeText("CANCEL")
-                                    .onPositive { dialog, which ->
-                                        val buyIntentBundle = iap?.getBuyIntent(3, packageName,
-                                                "plus_v1", "inapp", "")
-
-                                        val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
-
-                                        if (pendingIntent != null) {
-
-                                            val REQUEST_CODE = 1002
-
-                                            startIntentSenderForResult(pendingIntent.intentSender,
-                                                    REQUEST_CODE, Intent(), 0, 0,
-                                                    0)
-                                        }
-                                    }.show()*/
+                        Log.d("PLAYERS", "${playersMap.size} - ${Premium.getUserLevel()}")
+                        if (playersMap.size < 5 || Premium.isUserLevel(Premium.Level.LEVEL_3)) {
+                            //If players list is less than 5 players OR if user is LEVEL 3 (UNLIMITED)
+                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
+                        } else if (playersMap.size < 15 && Premium.isUserLevel(Premium.Level.LEVEL_2)) {
+                            //Player size is less than 15 AND user is Level 2 (15 Players)
+                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
+                        } else {
+                            //Player size is at max and user isn't Level 2 or 3, show upgrade dialog.
+                            selectPlayerDialog?.dismiss()
+                            Snacky.builder().setActivity(this@MainStatsActivity).warning().setDuration(BaseTransientBottomBar.LENGTH_LONG).setText("Player Limit Reached").setAction("UPGRADE") {
+                                startActivity<UpgradeActivity>()
+                            }.show()
                         }
                     }
             selectPlayerDialog!!.show()
@@ -364,11 +342,11 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
     private var players: MutableList<PrefPlayer> = ArrayList()
 
-    private val playerListAdapter: RecyclerView.Adapter<*> = SlimAdapter.create().register<PrefPlayer>(R.layout.player_choice_dialog_item) { player, injector ->
+    var playerListSlimAdapter = SlimAdapter.create().register<PrefPlayer>(R.layout.player_choice_dialog_item) { player, injector ->
         val iconDrawable: Int = if (player.defaultShardID.contains("pc")) {
-            R.drawable.windows_color
+            R.drawable.windows_dark
         } else {
-            R.drawable.xbox_logo
+            R.drawable.xbox_dark
         }
         injector.image(R.id.game_version_icon, iconDrawable)
         injector.text(R.id.player_select_name, player.playerName)
@@ -383,6 +361,8 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             }
         }
     }.updateData(players)
+
+    private val playerListAdapter: RecyclerView.Adapter<*> = playerListSlimAdapter
 
     override fun onStop() {
         super.onStop()
@@ -472,7 +452,10 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                 }
 
                 players.add(player)
-                //players = players.sortedWith(compareBy {it.playerName}).toMutableList()
+
+                var sortedlist = players.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) {it.playerName})
+
+                playerListSlimAdapter.updateData(sortedlist)
                 playerListAdapter.notifyDataSetChanged()
 
                 playersMap[player.playerName] = player.playerID
