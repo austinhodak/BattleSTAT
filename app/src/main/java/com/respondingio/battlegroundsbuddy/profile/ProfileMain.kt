@@ -56,7 +56,7 @@ class ProfileMain : Fragment() {
             profile_phone_tv?.text = phone
         }
 
-        setupListeners(mUser)
+        //setupListeners(mUser)
 
         FirebaseDatabase.getInstance().getReference("/users/${mUser.uid}").addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}

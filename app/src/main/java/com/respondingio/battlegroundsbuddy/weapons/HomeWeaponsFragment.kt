@@ -67,7 +67,8 @@ class HomeWeaponsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTabs()
-        if (Premium.isAdFreeUser()) {
+
+        if (!Premium.isAdFreeUser()) {
             weaponListAd?.adListener = object: AdListener() {
                 override fun onAdFailedToLoad(p0: Int) {
                     super.onAdFailedToLoad(p0)

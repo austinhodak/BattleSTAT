@@ -230,7 +230,10 @@ class MainStatsFragment : Fragment() {
             rank_title?.text = getRankTitle(playerStats.rankPoints)
             rank_subtitle?.text = "POINTS: ${Math.floor(playerStats.rankPoints).toInt()}"
 
-            Glide.with(this).load(getRankIcon(playerStats.rankPoints)).into(rank_icon)
+            try {
+                Glide.with(this).load(getRankIcon(playerStats.rankPoints)).into(rank_icon)
+            } catch (e: Exception) {
+            }
 
             old_points_layout?.visibility = View.GONE
             divider13?.visibility = View.INVISIBLE

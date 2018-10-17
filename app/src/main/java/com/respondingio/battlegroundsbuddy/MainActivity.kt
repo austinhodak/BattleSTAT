@@ -205,7 +205,7 @@ public class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
         if (this::mSharedPreferences.isInitialized) {
-            if (Premium.isAdFreeUser()) {
+            if (!Premium.isAdFreeUser()) {
                 super.onBackPressed()
                 return
             } else {
