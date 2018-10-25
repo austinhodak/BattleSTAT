@@ -87,12 +87,12 @@ class WeaponComments : Fragment() {
         Log.d("WEAPON", "$weaponPath - $weaponKey")
 
         if (FirebaseAuth.getInstance().currentUser == null) {
-            comment_send?.isEnabled = false
-            comment_edittext?.setText("You must be signed in.")
-            comment_edittext?.isEnabled = false
+            if (FirebaseAuth.getInstance().currentUser?.isAnonymous == false) {
+                comment_send?.isEnabled = false
+                comment_edittext?.setText("You must be signed in.")
+                comment_edittext?.isEnabled = false
+            }
         }
-
-        //comment_send?.setOnClickListener { saveComment() }
 
         comment_rv?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

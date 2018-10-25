@@ -29,9 +29,9 @@ class Application : MultiDexApplication() {
 
         if (BuildConfig.DEBUG || BuildConfig.VERSION_NAME.contains("Beta", true)) {
             //LeakCanary.install(this)
-            Instabug.Builder(this, "b88ab4ff06e0bb4240f1ee0f261b78d4")
-                    .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT, InstabugInvocationEvent.SCREENSHOT)
-                    .build()
+//            Instabug.Builder(this, "b88ab4ff06e0bb4240f1ee0f261b78d4")
+//                    .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT, InstabugInvocationEvent.SCREENSHOT)
+//                    .build()
         } else {
             Instabug.Builder(this, "b31b0a70fb49b434daf6d39005418842")
                     .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT, InstabugInvocationEvent.SCREENSHOT)

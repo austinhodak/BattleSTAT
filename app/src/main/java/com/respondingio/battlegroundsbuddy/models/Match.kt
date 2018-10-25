@@ -5,7 +5,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import com.respondingio.battlegroundsbuddy.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.TimeZone
+import java.util.*
 
 @IgnoreExtraProperties
 data class Match (
@@ -50,6 +50,18 @@ data class Match (
 
     fun getMatchDuration(): String {
         return DateUtils.formatElapsedTime(duration.toLong())
+    }
+
+    fun getCreatedAtDate(): Date? {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        sdf.timeZone = TimeZone.getTimeZone("GMT")
+        try {
+            return sdf.parse(createdAt)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        return null
     }
 }
 

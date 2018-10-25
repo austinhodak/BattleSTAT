@@ -67,6 +67,21 @@ class UpgradeActivity : AppCompatActivity() {
                     val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
                     for (purchase in purchases.purchasesList) {
                         Premium.handlePurchase(purchase)
+
+                        when (purchase.sku) {
+                            "level_1" -> {
+                                level1Buy?.text = "ALREADY PURCHASED"
+                                level1Buy?.isEnabled = false
+                            }
+                            "level_2" -> {
+                                level2Buy?.text = "ALREADY PURCHASED"
+                                level2Buy?.isEnabled = false
+                            }
+                            "level_3" -> {
+                                level3Buy?.text = "ALREADY PURCHASED"
+                                level3Buy?.isEnabled = false
+                            }
+                        }
                     }
                 }
             }

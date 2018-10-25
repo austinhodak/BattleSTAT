@@ -20,6 +20,19 @@
             android:orientation="horizontal">
 
             <TextView
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/mobile_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/roboto_condensed_bold"
+                android:padding="4dp"
+                android:text="MOBILE INFO"
+                android:textColor="@color/md_light_primary_text"
+                android:textSize="12sp" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -58,10 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/roboto_condensed_bold"
             android:text="SELECT REGION"
             android:textColor="#000"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/region_spinner"
@@ -77,10 +90,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/roboto_condensed_bold"
             android:text="ENTER IN-GAME NAME (CASE SENSITIVE)"
             android:textColor="#000"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/add_username"
@@ -95,16 +108,16 @@
             android:textSize="14sp" />
 
         <Button
-            android:windowSoftInputMode="adjustPan|adjustResize"
+            android:foreground="?android:attr/selectableItemBackground"
             android:id="@+id/add_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_height="60dp"
             android:layout_marginTop="8dp"
+            android:background="@color/timelineOrange"
+            android:elevation="0dp"
             android:text="CONTINUE"
-            android:textColor="#FFF" />
+            android:textColor="#FFF"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
 
     </LinearLayout>
 </LinearLayout>

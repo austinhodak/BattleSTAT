@@ -91,7 +91,10 @@ class MatchDetailViewModel : ViewModel() {
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
                 if (volleyError.networkResponse == null || volleyError.networkResponse.statusCode == 404) {
                     matchModel.error = volleyError.message
-                    mMatchData.value = matchModel
+                    try {
+                        mMatchData.postValue(matchModel)
+                    } catch (e: Exception) {
+                    }
                 }
                 return super.parseNetworkError(volleyError)
             }

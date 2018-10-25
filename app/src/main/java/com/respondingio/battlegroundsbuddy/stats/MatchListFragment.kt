@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,6 +25,7 @@ import com.respondingio.battlegroundsbuddy.models.Match
 import com.respondingio.battlegroundsbuddy.models.MatchTop
 import com.respondingio.battlegroundsbuddy.models.ParticipantShort
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchDetailActivity
 import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
 import kotlinx.android.synthetic.main.fragment_matches_list.matches_RV
@@ -32,7 +35,7 @@ import net.idik.lib.slimadapter.animators.LandingAnimator
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.uiThread
-import java.util.HashMap
+import java.util.*
 
 class MatchListFragment : Fragment() {
 
@@ -207,7 +210,18 @@ class MatchListFragment : Fragment() {
             }
 
             injector.clicked(R.id.match_card) {
-                startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                val todayDate = Date()
+                if (data.match!!.getCreatedAtDate() != null) {
+                    val diff = todayDate.time - data.match!!.getCreatedAtDate()!!.time
+                    if (diff / (1000 * 60 * 60 * 24) >= 14) {
+                        val bottomNav = requireActivity().findViewById<CoordinatorLayout>(R.id.stats_coord_layout)
+                        Snacky.builder().setView(bottomNav).info().setText("Match data not available if older than 14 days.").show()
+                    } else {
+                        startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                    }
+                } else {
+                    startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                }
             }
 
         }.registerDefault(R.layout.match_list_empty) { data, injector ->

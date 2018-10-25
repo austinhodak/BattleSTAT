@@ -24,6 +24,7 @@ import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.ads.consent.*
 import com.google.ads.consent.ConsentStatus.PERSONALIZED
@@ -31,11 +32,13 @@ import com.google.ads.consent.ConsentStatus.UNKNOWN
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.instabug.bug.BugReporting
+import com.instabug.library.Instabug
 import com.marcoscg.ratedialog.RateDialog
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -127,7 +130,7 @@ public class MainActivity : AppCompatActivity() {
 
         initializeFirebase()
 
-        Premium.clearUserLevel()
+        //Premium.clearUserLevel()
 
         setupDrawer()
 
@@ -165,7 +168,7 @@ public class MainActivity : AppCompatActivity() {
             }
         })
 
-        Premium.setUserLevel(Premium.Level.LEVEL_2)
+        //Premium.setUserLevel(Premium.Level.LEVEL_2)
     }
 
     private fun updatePremiumStuff() {
@@ -247,6 +250,7 @@ public class MainActivity : AppCompatActivity() {
 
     private fun checkAuthStatus() {
         if (FirebaseAuth.getInstance().currentUser != null) {
+            if (!FirebaseAuth.getInstance().currentUser?.isAnonymous!!)
             notifyLoggedIn(false)
         }
     }
@@ -268,23 +272,7 @@ public class MainActivity : AppCompatActivity() {
                 .withActivity(this)
                 .withDividerBelowHeader(false)
                 .addProfiles(
-                        ProfileDrawerItem().withIdentifier(1).withName(R.string.app_name).withEmail("Level 1").withIcon(R.drawable.icon1),
-                        ProfileSettingDrawerItem().withName("Logout").withIcon(R.drawable.icons8_logout).withOnDrawerItemClickListener { _, _, _ ->
-
-                            mSharedPreferences.edit().remove("stats_selected_player").remove("stats_selected_player_id").apply()
-                            newSharedPreferences.edit().remove("selected-player-id").apply()
-
-                            AuthUI.getInstance().signOut(this).addOnCompleteListener {
-                                Snacky.builder().setActivity(this).info().setText("Signed Out.").show()
-
-                                notifySignedOut()
-
-                                if (result.getStickyFooterPosition(90001) == -1) {
-                                    result.addStickyFooterItem(signInDrawerItem)
-                                }
-                            }
-                            return@withOnDrawerItemClickListener true
-                        }
+                        ProfileDrawerItem().withIdentifier(1).withName(R.string.app_name).withEmail("Level 1").withIcon(R.drawable.icon1)
                 )
                 .withOnAccountHeaderListener { _, _, _ -> false }
                 .build()
@@ -330,12 +318,12 @@ public class MainActivity : AppCompatActivity() {
                 )
                 .withOnDrawerItemClickListener { _, _, drawerItem ->
                     if (drawerItem.identifier.toString() == "9999") {
-                        if (FirebaseAuth.getInstance().currentUser == null) {
-                            Snacky.builder().setActivity(this).warning().setText("You must be logged in to use this feature.").setDuration(Snacky.LENGTH_LONG).setAction("LOGIN") {
-                                launchSignIn()
-                            }.show()
-                            return@withOnDrawerItemClickListener false
-                        }
+//                        if (FirebaseAuth.getInstance().currentUser == null) {
+//                            Snacky.builder().setActivity(this).warning().setText("You must be logged in to use this feature.").setDuration(BaseTransientBottomBar.LENGTH_LONG).setAction("LOGIN") {
+//                                launchSignIn()
+//                            }.show()
+//                            return@withOnDrawerItemClickListener false
+//                        }
 
                         Handler().postDelayed({
                             startActivity(Intent(this, MainStatsActivity::class.java))
@@ -505,15 +493,21 @@ public class MainActivity : AppCompatActivity() {
         result.addItemAtPosition(DividerDrawerItem().withIdentifier(91001), 2)
 
         if (FirebaseAuth.getInstance().currentUser != null) {
-            if (FirebaseAuth.getInstance().currentUser!!.isAnonymous) {
-                AuthUI.getInstance().signOut(this)
+            //User is not null, either logged in or anon.
+            if (FirebaseAuth.getInstance().currentUser?.isAnonymous!!) {
+                //User is anon, show login signup stuff.
                 if (result.getStickyFooterPosition(90001) == -1) {
                     result.addStickyFooterItem(signInDrawerItem)
                 }
             } else {
+                //User is logged in
                 notifyLoggedIn(true)
             }
         } else {
+            FirebaseAuth.getInstance().signInAnonymously().addOnSuccessListener {
+                //User is anon logged in.
+            }
+
             if (result.getStickyFooterPosition(90001) == -1) {
                 result.addStickyFooterItem(signInDrawerItem)
             }
@@ -523,7 +517,11 @@ public class MainActivity : AppCompatActivity() {
     private fun notifyLoggedIn(setupAccount: Boolean) {
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        Log.d("USER", currentUser.toString())
+        Log.d("USER", currentUser?.isAnonymous.toString())
+
+//        Instabug.setUserAttribute("LoggedIn", "true")
+
+  //      Instabug.identifyUser(currentUser?.displayName ?: "", currentUser?.email ?: "")
 
         var displayName = currentUser?.displayName
         if (displayName.isNullOrEmpty()) {
@@ -543,6 +541,28 @@ public class MainActivity : AppCompatActivity() {
 
         if (setupAccount)
             setupAccount(currentUser)
+
+        headerResult.removeProfileByIdentifier(9999)
+
+        headerResult.addProfile(ProfileSettingDrawerItem().withIdentifier(9999).withName("Logout").withIcon(R.drawable.icons8_logout).withOnDrawerItemClickListener { _, _, _ ->
+            mSharedPreferences.edit().remove("stats_selected_player").remove("stats_selected_player_id").apply()
+            newSharedPreferences.edit().remove("selected-player-id").apply()
+
+            AuthUI.getInstance().signOut(this).addOnCompleteListener {
+                Snacky.builder().setActivity(this).info().setText("Signed Out.").show()
+
+                notifySignedOut()
+
+                if (result.getStickyFooterPosition(90001) == -1) {
+                    result.addStickyFooterItem(signInDrawerItem)
+                }
+
+                FirebaseAuth.getInstance().signInAnonymously().addOnSuccessListener {
+                    //User is anon logged in.
+                }
+            }
+            return@withOnDrawerItemClickListener true
+        }, 1)
     }
 
     private fun setupAccount(currentUser: FirebaseUser?) {
@@ -556,10 +576,10 @@ public class MainActivity : AppCompatActivity() {
                 if (userSnapshot == null || !userSnapshot.exists()) {
                     Log.d("USER", "User not created, creating...")
 
-                    var childUpdates = HashMap<String, Any>()
+                    var childUpdates = HashMap<String, Any?>()
                     childUpdates["users/" + currentUser?.uid + "/last_logon"] = ServerValue.TIMESTAMP
-                    childUpdates["users/" + currentUser?.uid + "/email"] = currentUser?.email.toString()
-                    childUpdates["users/" + currentUser?.uid + "/phone"] = currentUser?.phoneNumber.toString()
+                    childUpdates["users/" + currentUser?.uid + "/email"] = null
+                    childUpdates["users/" + currentUser?.uid + "/phone"] = null
                     childUpdates["users/" + currentUser?.uid + "/display_name"] = currentUser?.displayName.toString()
                     fbDatabase.reference.updateChildren(childUpdates)
                     return
@@ -567,10 +587,10 @@ public class MainActivity : AppCompatActivity() {
 
                 Log.d("USER", "User found, updating account info." + currentUser?.email)
 
-                var childUpdates = HashMap<String, Any>()
+                var childUpdates = HashMap<String, Any?>()
                 childUpdates["users/" + currentUser?.uid + "/last_logon"] = ServerValue.TIMESTAMP
-                childUpdates["users/" + currentUser?.uid + "/email"] = currentUser?.email.toString()
-                childUpdates["users/" + currentUser?.uid + "/phone"] = currentUser?.phoneNumber.toString()
+                childUpdates["users/" + currentUser?.uid + "/email"] = null
+                childUpdates["users/" + currentUser?.uid + "/phone"] = null
                 childUpdates["users/" + currentUser?.uid + "/display_name"] = currentUser?.displayName.toString()
                 fbDatabase.reference.updateChildren(childUpdates)
             }
@@ -584,6 +604,8 @@ public class MainActivity : AppCompatActivity() {
         headerResult.updateProfile(header)
 
         result.removeItem(90002)
+
+        Instabug.logoutUser()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -597,10 +619,34 @@ public class MainActivity : AppCompatActivity() {
                 Snacky.builder().setActivity(this).success().setText("Logged In!").show()
                 notifyLoggedIn(true)
             } else {
-                if (response?.error?.message == null) {
-                    Snacky.builder().setActivity(this).error().setText("Unknown Error.").show()
-                } else {
-                    Snacky.builder().setActivity(this).error().setText(response.error?.message.toString()).show()
+                when {
+                    response?.error?.message == null -> Snacky.builder().setActivity(this).error().setText("Unknown Error.").show()
+                    response.error?.errorCode == ErrorCodes.ANONYMOUS_UPGRADE_MERGE_CONFLICT -> {
+                        val anonUserID = FirebaseAuth.getInstance().currentUser!!.uid
+                        val nonAnonCredential = response.credentialForLinking
+
+                        FirebaseDatabase.getInstance().getReference("/users/$anonUserID").addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {}
+
+                            override fun onDataChange(p0: DataSnapshot) {
+                                if (!p0.exists()) return
+
+                                FirebaseAuth.getInstance().signInWithCredential(nonAnonCredential!!).addOnSuccessListener {
+                                    notifyLoggedIn(true)
+                                    result.removeAllStickyFooterItems()
+                                    if (p0.hasChild("pubg_players")) {
+                                        val pubgPlayers = HashMap<String, Any>()
+                                        for (child in p0.child("pubg_players").children) {
+                                            pubgPlayers["/users/${it.user.uid}/pubg_players/${child.key}"] = child.value!!
+                                        }
+
+                                        FirebaseDatabase.getInstance().reference.updateChildren(pubgPlayers)
+                                    }
+                                }
+                            }
+                        })
+                    }
+                    else -> Snacky.builder().setActivity(this).error().setText(response.error?.errorCode.toString()).show()
                 }
             }
         }
@@ -652,15 +698,18 @@ public class MainActivity : AppCompatActivity() {
     private fun launchSignIn() {
         val requestCode = 123
 
-        val providers: List<AuthUI.IdpConfig> = Arrays.asList(AuthUI.IdpConfig.EmailBuilder().build(),
+        val providers: List<AuthUI.IdpConfig> = Arrays.asList(
+                AuthUI.IdpConfig.EmailBuilder().build(),
                 AuthUI.IdpConfig.PhoneBuilder().build(),
                 AuthUI.IdpConfig.GoogleBuilder().build(),
                 AuthUI.IdpConfig.FacebookBuilder().build(),
-                AuthUI.IdpConfig.TwitterBuilder().build())
+                AuthUI.IdpConfig.TwitterBuilder().build(),
+                AuthUI.IdpConfig.AnonymousBuilder().build())
 
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
+                        .enableAnonymousUsersAutoUpgrade()
                         .setAvailableProviders(providers)
                         .setLogo(R.mipmap.ic_launcher)
                         .setTheme(R.style.SignInTheme)

@@ -362,7 +362,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         }
     }.updateData(players)
 
-    private val playerListAdapter: RecyclerView.Adapter<*> = playerListSlimAdapter
+    private var playerListAdapter: RecyclerView.Adapter<*> = playerListSlimAdapter
 
     override fun onStop() {
         super.onStop()
@@ -391,6 +391,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         players.clear()
         playersMap.clear()
         val currentUser = FirebaseAuth.getInstance().currentUser
+        Log.d("USER", currentUser!!.uid)
         val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser!!.uid).child("pubg_players").orderByChild("playerName")
         listenerRef = ref.ref
         listener = ref.addChildEventListener(object : ChildEventListener {
@@ -405,6 +406,8 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val player: PrefPlayer
+
+                Log.d("PLAYER", p0.key)
 
                 if (mSharedPreferences.contains("player-${p0.key}")) {
                     //Player exists in shared prefs, update any needed items and add to list.
@@ -490,7 +493,14 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         currentPlayer = player
 
         stats_player_text.text = player.playerName
-        stats_region_text.text = regions[regionList.indexOf(player.selectedShardID.toUpperCase())]
+
+        try {
+            stats_region_text.text = regions[regionList.indexOf(player.selectedShardID.toUpperCase())]
+        } catch (e: Exception) {
+            player.selectedShardID = player.defaultShardID
+            stats_region_text.text = regions[regionList.indexOf("XBOX-AS")]
+        }
+
         selectedRegion = regionList.indexOf(player.selectedShardID.toUpperCase())
 
         try {
@@ -623,13 +633,13 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
     private fun deletePlayer(name: String) {
         val playerID = playersMap[name]
         playersMap.remove(name)
-        for (i in players) {
-            if (i is PrefPlayer) {
-                if (i.playerName == name) {
-                    players.remove(i)
-                }
-            }
-        }
+
+        val sortedList = players.filter { it.playerName != name }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) {it.playerName})
+
+        players = sortedList.toMutableList()
+
+        playerListSlimAdapter.updateData(players)
+        playerListAdapter.notifyDataSetChanged()
 
         if (mSharedPreferences.getString("selected-player-id", "") == playerID) {
             //Deleted player is currently selected, remove that.
@@ -657,9 +667,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         }
 
         val currentUser = FirebaseAuth.getInstance().currentUser
-        FirebaseDatabase.getInstance().getReference("users").child(currentUser!!.uid).child("pubg_players").child(playerID.toString()).removeValue()
-
-        loadPlayers()
+        FirebaseDatabase.getInstance().getReference("users").child(currentUser!!.uid).child("pubg_players").child(playerID.toString()).removeValue().addOnSuccessListener {
+            //loadPlayers()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

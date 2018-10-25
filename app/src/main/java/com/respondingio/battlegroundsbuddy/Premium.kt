@@ -48,6 +48,10 @@ object Premium {
                     for (purchase in purchases.purchasesList) {
                         handlePurchase(purchase)
                     }
+
+                    if (purchases.purchasesList.isEmpty()) {
+                        clearUserLevel()
+                    }
                 }
             }
         })
@@ -81,6 +85,20 @@ object Premium {
             mSharedPreferences.getBoolean(Level.LEVEL_1.tag, false) -> Level.LEVEL_1
             else -> Level.FREE
         }
+    }
+
+    fun isUserLevel1() : Boolean {
+        return if (mOldSharedPreferences.getBoolean("removeAds", false)) true
+        else mSharedPreferences.getBoolean(Level.LEVEL_1.tag, false)
+    }
+
+    fun isUserLevel2() : Boolean {
+        return mSharedPreferences.getBoolean(Level.LEVEL_2.tag, false)
+    }
+
+    fun isUserLevel3() : Boolean {
+        return if (mOldSharedPreferences.getBoolean("premiumV1", false)) true
+        else mSharedPreferences.getBoolean(Level.LEVEL_3.tag, false)
     }
 
     fun isUserLevel(level: Level): Boolean {
@@ -123,7 +141,7 @@ object Premium {
 
     fun handlePurchase(purchase: Purchase) {
         if (purchase.sku == "remove_ads") {
-            mSharedPreferences.edit().putBoolean("removeAds", true).apply()
+            mOldSharedPreferences.edit().putBoolean("removeAds", true).apply()
         }
         when (purchase.sku) {
             "remove_ads" -> {

@@ -39,6 +39,7 @@ import kotlinx.android.synthetic.main.activity_match_detail.match_detail_toolbar
 import kotlinx.android.synthetic.main.activity_match_detail.match_loading_lottie
 import kotlinx.android.synthetic.main.activity_match_detail.toolbar_title
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.ArrayList
 
@@ -106,7 +107,13 @@ class MatchDetailActivity : AppCompatActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         headerMapIV?.setImageDrawable(resources.getDrawable(matchModel.getMapIcon()))
-        headerGamemodeTV?.text = Telemetry().gameModes[matchModel.attributes?.gameMode].toString()
+
+        try {
+            headerGamemodeTV?.text = Telemetry().gameModes[matchModel.attributes?.gameMode].toString()
+        } catch (e: JSONException) {
+            headerGamemodeTV?.visibility = View.INVISIBLE
+        }
+
         headerTimeTV?.text = matchModel.getFormattedCreatedAt()
         headerDurationTV?.text = DateUtils.formatElapsedTime(matchModel.attributes?.duration!!)
         headerRegionTV?.text = Telemetry().region[matchModel.attributes?.shardId].toString()
