@@ -261,6 +261,10 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                             }.show()
                         }
                     }
+//                    }.neutralButton(text = "Manage Players") {_ ->
+//                        PlayerListDialog().show(supportFragmentManager, "TAG")
+//                        Log.d("PLAYER", "SHOW DIALOG")
+//                    }
             selectPlayerDialog!!.show()
         }
         stats_region_picker.setOnClickListener {
@@ -388,7 +392,10 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             listener = null
             listenerRef = null
         }
-        players.clear()
+        try {
+            players.clear()
+        } catch (e: Exception) {
+        }
         playersMap.clear()
         val currentUser = FirebaseAuth.getInstance().currentUser
         Log.d("USER", currentUser!!.uid)

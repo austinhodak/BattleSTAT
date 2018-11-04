@@ -16,6 +16,7 @@ import com.instabug.library.ui.onboarding.WelcomeMessage
 import com.respondingio.battlegroundsbuddy.models.Seasons
 import com.squareup.leakcanary.LeakCanary
 import io.fabric.sdk.android.Fabric
+import nouri.`in`.goodprefslib.GoodPrefs
 import org.jetbrains.anko.doAsync
 
 class Application : MultiDexApplication() {
@@ -78,6 +79,7 @@ class Application : MultiDexApplication() {
 
         MobileAds.initialize(this, "ca-app-pub-1946691221734928~8934220899")
 
+        GoodPrefs.init(applicationContext)
     }
 
     override fun onTerminate() {

@@ -23,11 +23,14 @@ import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.appbar.AppBarLayout
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.holder.StringHolder
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.respondingio.battlegroundsbuddy.BuildConfig
+import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
@@ -38,6 +41,7 @@ import kotlinx.android.synthetic.main.activity_match_detail.app_bar
 import kotlinx.android.synthetic.main.activity_match_detail.match_detail_toolbar
 import kotlinx.android.synthetic.main.activity_match_detail.match_loading_lottie
 import kotlinx.android.synthetic.main.activity_match_detail.toolbar_title
+import nouri.`in`.goodprefslib.GoodPrefs
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -66,6 +70,8 @@ class MatchDetailActivity : AppCompatActivity() {
     var currentPlayerID: String? = null
 
     var requestQueue: RequestQueue? = null
+
+    var mInterstitialAd = InterstitialAd(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +105,13 @@ class MatchDetailActivity : AppCompatActivity() {
 
         viewModel.mMatchData.observe(this, matchDataObserver)
         viewModel.getMatchData(application, regionID, matchID, currentPlayerID!!)
+
+        GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) + 1))
+
+        mInterstitialAd.adUnitId = "ca-app-pub-1946691221734928/7664747817"
+        if (!Premium.isAdFreeUser()) {
+            mInterstitialAd.loadAd(AdRequest.Builder().addTestDevice("FBE7B6C060C778D1A44EF3F2184E089B").build())
+        }
     }
 
     private fun matchDataLoaded(matchModel: MatchModel) {
@@ -291,8 +304,21 @@ class MatchDetailActivity : AppCompatActivity() {
                 mDrawer.setSelection(10)
             }
         } else {
+            if (this::mDrawer.isInitialized && mDrawer.isDrawerOpen) {
+                mDrawer.closeDrawer()
+            } else if (!Premium.isAdFreeUser()) {
+                Log.d("LAUNCH", GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0).toString())
+                if (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) >= 2) {
+                    GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", 0)
+
+                    if (mInterstitialAd.isLoaded)
+                    mInterstitialAd.show()
+                }
+            }
             super.onBackPressed()
         }
+
+
     }
 
     private var isNavigatedDown = false

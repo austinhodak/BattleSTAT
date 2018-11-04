@@ -29,6 +29,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.ads.consent.*
 import com.google.ads.consent.ConsentStatus.PERSONALIZED
 import com.google.ads.consent.ConsentStatus.UNKNOWN
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -168,7 +169,11 @@ public class MainActivity : AppCompatActivity() {
             }
         })
 
-        //Premium.setUserLevel(Premium.Level.LEVEL_2)
+        if (!Premium.isAdFreeUser()) {
+            mInterstitialAd = InterstitialAd(this)
+            mInterstitialAd.adUnitId = "ca-app-pub-1946691221734928/5517720061"
+            mInterstitialAd.loadAd(AdRequest.Builder().build())
+        }
     }
 
     private fun updatePremiumStuff() {
@@ -208,7 +213,7 @@ public class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
         if (this::mSharedPreferences.isInitialized) {
-            if (!Premium.isAdFreeUser()) {
+            if (Premium.isAdFreeUser()) {
                 super.onBackPressed()
                 return
             } else {
@@ -220,7 +225,8 @@ public class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
-        var launchCount = mSharedPreferences.getInt("launchCount", 0)
+        val launchCount = mSharedPreferences.getInt("launchCount", 0)
+        Log.d("LAUNCH", "$launchCount")
         if (launchCount >= 2) {
             try {
                 if (mInterstitialAd.isLoaded) {
@@ -230,13 +236,13 @@ public class MainActivity : AppCompatActivity() {
                     super.onBackPressed()
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 super.onBackPressed()
             }
         } else {
             mSharedPreferences.edit().putInt("launchCount", launchCount + 1).apply()
             super.onBackPressed()
         }
-
     }
 
     override fun onStart() {

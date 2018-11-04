@@ -211,4 +211,27 @@
 
     <style name="FirebaseUI.Text.HintText" parent="@style/FirebaseUI.EditText" />
 
+    <style name="PlayerListDialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/timelineBG</item>
+        <item name="colorPrimaryDark">#171717</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+
+        <!-- This is important! Don't forget to set window background -->
+        <item name="android:windowBackground">@color/timelineBG</item>
+
+        <item name="android:statusBarColor">#171717</item>
+
+        <!-- Additionally if you want animations when dialog opening -->
+        <item name="android:windowEnterAnimation">@anim/bottom_up</item>
+        <item name="android:windowExitAnimation">@anim/bottom_up_out</item>
+    </style>
+
 </resources>

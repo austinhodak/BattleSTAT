@@ -75,6 +75,8 @@ public class WeaponDamageChart extends AppCompatActivity {
 
     private double baseDamage;
 
+    private double baseHeadDamage;
+
     private double classModBody = 1;
 
     private double classModHead = 1;
@@ -222,6 +224,7 @@ public class WeaponDamageChart extends AppCompatActivity {
 
                 if (documentSnapshot.contains("damageBody0")) {
                     baseDamage = Double.parseDouble(documentSnapshot.getString("damageBody0"));
+                    baseHeadDamage = Double.parseDouble(documentSnapshot.getString("damageHead0"));
                     baseDMGText.setText(documentSnapshot.getString("damageBody0"));
                     updateStats();
                 }
@@ -279,7 +282,7 @@ public class WeaponDamageChart extends AppCompatActivity {
 
     private void updateStats() {
         //HEAD
-        double headDMG = baseDamage * MOD_HEAD * classModHead - (baseDamage * MOD_HEAD * classModHead * helmetModifier);
+        double headDMG = baseHeadDamage * MOD_HEAD * classModHead - (baseHeadDamage * MOD_HEAD * classModHead * helmetModifier);
         ((TextView) layoutHead.getChildAt(1)).setText(String.format("%.1f", headDMG));
         ((TextView) layoutHead.getChildAt(2)).setText(String.format("%.0f", Math.ceil(100/headDMG)));
         updateHTKColor(layoutHead, (int) Math.ceil(100/headDMG));
