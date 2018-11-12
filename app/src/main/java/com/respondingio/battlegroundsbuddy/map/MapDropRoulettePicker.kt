@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.respondingio.battlegroundsbuddy.R
 import kotlinx.android.synthetic.main.fragment_map_drop_picker.*
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class MapDropRoulettePicker : Fragment() {
 
@@ -18,7 +17,7 @@ class MapDropRoulettePicker : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        selectErangel?.onClick {
+        selectErangel?.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("mapName", "erangel")
             Navigation.findNavController(requireActivity(), R.id.weaponDetailNavHost).navigate(R.id.mapSelected, bundle)

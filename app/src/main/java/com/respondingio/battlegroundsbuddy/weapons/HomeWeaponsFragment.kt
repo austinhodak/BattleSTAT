@@ -10,14 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
-import kotlinx.android.synthetic.main.fragment_home_weapons.tabs
-import kotlinx.android.synthetic.main.fragment_home_weapons.viewpager
-import kotlinx.android.synthetic.main.fragment_home_weapons.weaponListAd
-import java.util.ArrayList
-import java.util.Arrays
+import com.respondingio.battlegroundsbuddy.utils.Premium
+import kotlinx.android.synthetic.main.fragment_home_weapons.*
+import java.util.*
 
 class HomeWeaponsFragment : Fragment() {
 
@@ -80,8 +76,6 @@ class HomeWeaponsFragment : Fragment() {
                     weaponListAd?.visibility = View.VISIBLE
                 }
             }
-
-            weaponListAd?.loadAd(AdRequest.Builder().build())
         }
     }
 

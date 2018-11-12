@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,9 +14,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory.Builder
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -27,11 +23,11 @@ import kotlinx.android.synthetic.main.fragment_attachments_list.weapon_list_rv
 import kotlinx.android.synthetic.main.home_weapons_list.pg
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
-import java.util.ArrayList
+import java.util.*
 
 class HomeAttachmentsList : Fragment() {
 
-    internal var data: MutableList<Any> = ArrayList()
+    internal var data: MutableList<DocumentSnapshot> = ArrayList()
 
     internal var db = FirebaseFirestore.getInstance()
 
@@ -52,24 +48,6 @@ class HomeAttachmentsList : Fragment() {
             pg?.visibility = View.VISIBLE
             val position = arguments!!.getInt("pos")
             setupAdapter(position)
-        }
-
-        if (mSharedPreferences != null && !mSharedPreferences.getBoolean("removeAds", false)) {
-            val adView = AdView(context?.applicationContext)
-            if (adView.adUnitId == null && adView.adSize == null) {
-                adView.adSize = AdSize.BANNER
-                adView.adUnitId = "ca-app-pub-1946691221734928/5235698124"
-            }
-
-            val linearLayout = weapon_list_rv.parent as LinearLayout
-            if (linearLayout.childCount == 1) {
-                linearLayout.addView(adView)
-            } else {
-                return
-            }
-
-            if (!adView.isLoading)
-                adView.loadAd(AdRequest.Builder().build())
         }
     }
 
@@ -108,6 +86,8 @@ class HomeAttachmentsList : Fragment() {
                         e1.printStackTrace()
                     }
 
+                    data = data.sortedWith(compareBy { it.getString("name") }).toMutableList()
+
                     slimAdapter?.updateData(data)
                 }
     }
@@ -115,7 +95,7 @@ class HomeAttachmentsList : Fragment() {
     private fun setupAdapter(position: Int) {
         weapon_list_rv.layoutManager = LinearLayoutManager(activity ?: return)
         slimAdapter = SlimAdapter.create()
-                .register(R.layout.weapon_list_item_card,
+                .register(R.layout.attachment_item,
                         SlimInjector<DocumentSnapshot> { data, injector ->
                             val subtitle = injector
                                     .findViewById(R.id.weaponItemSubtitle) as TextView

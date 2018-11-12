@@ -1,6 +1,5 @@
 package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.respondingio.battlegroundsbuddy.R
@@ -18,7 +16,7 @@ import com.respondingio.battlegroundsbuddy.models.MatchRoster
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.activity_match_detail.*
-import kotlinx.android.synthetic.main.fragment_stats_teams.stats_teams_rv
+import kotlinx.android.synthetic.main.fragment_stats_teams.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.backgroundColor
 
@@ -82,14 +80,14 @@ class MatchTeamsFragment : Fragment() {
 
                 if (participant.attributes.stats.playerId == mActivity.currentPlayerID) {
                     //This participant is the current selected player.
-                    participantInjector.findViewById<CoordinatorLayout>(R.id.roster_player_top).backgroundColor = resources.getColor(R.color.md_grey_850)
+                    participantInjector.findViewById<CoordinatorLayout>(R.id.roster_player_top).backgroundColor = resources.getColor(R.color.timelineGreen)
                     participantInjector.textColor(R.id.roster_player_stats, resources.getColor(R.color.md_dark_secondary))
                     participantInjector.textColor(R.id.roster_player_name, resources.getColor(R.color.md_white_1000))
                 } else {
                     participantInjector.findViewById<CoordinatorLayout>(R.id.roster_player_top).backgroundColor = 0
                     //participantInjector.background(R.id.roster_player_top, resources.getColor(R.color.md_white_1000))
-                    participantInjector.textColor(R.id.roster_player_stats, resources.getColor(R.color.md_light_secondary))
-                    participantInjector.textColor(R.id.roster_player_name, resources.getColor(R.color.md_light_primary_text))
+                    participantInjector.textColor(R.id.roster_player_stats, resources.getColor(R.color.md_dark_secondary))
+                    participantInjector.textColor(R.id.roster_player_name, resources.getColor(R.color.md_white_1000))
                 }
 
                 participantInjector.clicked(R.id.roster_player_top) {

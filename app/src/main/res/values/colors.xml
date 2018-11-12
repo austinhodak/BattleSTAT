@@ -22,4 +22,13 @@
     <color name="timelineOrange">@color/md_deep_orange_400</color>
     <color name="timelineRed">@color/md_red_400</color>
 
+    <color name="rankBronze">#cd7f32</color>
+    <color name="rankSilver">#c0c0c0</color>
+    <color name="rankGold">@color/timelineRed</color>
+    <color name="rankPlatinum">@color/timelineGreen</color>
+    <color name="rankDiamond">@color/timelineBlue</color>
+    <color name="rankElite">#663399</color>
+    <color name="rankMaster">#daa520</color>
+    <color name="rankGrand">#ffd700</color>
+
 </resources>

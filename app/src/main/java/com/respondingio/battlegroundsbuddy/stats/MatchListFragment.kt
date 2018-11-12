@@ -10,13 +10,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.Task
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.functions.FirebaseFunctions
@@ -27,9 +21,8 @@ import com.respondingio.battlegroundsbuddy.models.ParticipantShort
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchDetailActivity
-import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
-import kotlinx.android.synthetic.main.fragment_matches_list.matches_RV
-import kotlinx.android.synthetic.main.fragment_matches_list.matches_empty
+import kotlinx.android.synthetic.main.activity_stats_main_new.*
+import kotlinx.android.synthetic.main.fragment_matches_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.animators.LandingAnimator
 import org.jetbrains.anko.doAsync
@@ -59,7 +52,6 @@ class MatchListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupAdapter()
-        Log.d("MATCHLIST", "onStart")
         loadMatches(mPlayer.playerID, mPlayer.selectedShardID, mPlayer.selectedSeason, mPlayer.selectedGamemode)
         activity?.mainStatsRefreshLayout?.isRefreshing = true
     }
@@ -115,7 +107,7 @@ class MatchListFragment : Fragment() {
     private val listeners = ArrayList<ListenerRegistration>()
 
     private fun loadMatchData(matchKey: String, selectedShardID: String, playerID: String) {
-        val matchTop = MatchTop(null, true, matchKey, playerID)
+        val matchTop = MatchTop(null, true, matchKey, playerID, "")
         matchList.add(matchTop)
         mAdapter.notifyItemInserted(matchList.indexOf(matchTop))
         listeners.add(mFirestore.collection("matchData").document(matchKey).addSnapshotListener { matchData, e ->

@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">Battle Buddy</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">424918801284779</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb424918801284779</string>
     <!-- Twitter consumer key and secret -->
 
-    <string name="desc_provided">DESCRIPTION &amp; STATS \nFROM GAMEPEDIA.COM</string>
-    <string name="best_loadout_assault_weapon">Because the assault loadout is focused heavily on damage, we recommend using the AKM. It has a ton of damage behind it with decent range and accuracy, meaning you can engage from mid range effectively while dealing good damage. The AKM is actually pretty decent up close too, which handles a lot of the negatives of our sidearm pick.</string>
+    <string name="desc_provided" translatable="false">DESCRIPTION &amp; STATS \nFROM GAMEPEDIA.COM</string>
+    <string name="best_loadout_assault_weapon" translatable="false">Because the assault loadout is focused heavily on damage, we recommend using the AKM. It has a ton of damage behind it with decent range and accuracy, meaning you can engage from mid range effectively while dealing good damage. The AKM is actually pretty decent up close too, which handles a lot of the negatives of our sidearm pick.</string>
     <string name="drawer_title_update">RSS Feeds</string>
     <string name="drawer_title_weapons">Weapons</string>
     <string name="drawer_title_attachments">Attachments</string>
@@ -18,7 +18,7 @@
     <string name="drawer_title_equipment">Equipment</string>
     <string name="drawer_title_controls">Controls</string>
     <string name="drawer_title_timer">Match Timer</string>
-    <string name="drawer_title_bestloadouts">Best Loadouts</string>
+    <string name="drawer_title_bestloadouts" translatable="false">Best Loadouts</string>
     <string name="drawer_title_about">About</string>
     <string name="drawer_title_damagecalc">Damage Calculator</string>
     <string name="drawer_title_maps">Maps</string>
@@ -26,16 +26,15 @@
     <string name="drawer_title_share">Share App</string>
 
 
-    <string name="beta"><b>β</b></string>
+    <string name="beta" translatable="false"><b>β</b></string>
 
-    <string name="upgrade"><b>With Battle Buddy Premium</b> you get the following features:\n• Remove Ads (Except Watch to Refresh)\n• Reduce Stat Refresh Limit to 2 Minutes\n• Lots of more benefits in the future!</string>
+    <string name="upgrade" translatable="false"><b>With Battle Buddy Premium</b> you get the following features:\n• Remove Ads (Except Watch to Refresh)\n• Reduce Stat Refresh Limit to 2 Minutes\n• Lots of more benefits in the future!</string>
 
-    <string name="statsOnBoarding">We are proud to introduce a new feature called <b>Player Stats</b>!\n\nYou can now view your (or anyone\'s) stats and matches! Please keep in mind this is in beta, we will be adding more features soon!\n\n<i>Only PC and Xbox stats are available, nobody can get PUBG Mobile stats yet (blame Tencent).</i>\n\n<b>Now go get some chicken dinners and have fun!</b></string>
+    <string name="statsOnBoarding" translatable="false">We are proud to introduce a new feature called <b>Player Stats</b>!\n\nYou can now view your (or anyone\'s) stats and matches! Please keep in mind this is in beta, we will be adding more features soon!\n\n<i>Only PC and Xbox stats are available, nobody can get PUBG Mobile stats yet (blame Tencent).</i>\n\n<b>Now go get some chicken dinners and have fun!</b></string>
 
     <string-array name="players_sort">
         <item>Win Place</item>
         <item>Name</item>
-        <item>Rating</item>
         <item>Kills</item>
         <item>Damage</item>
         <item>Distance</item>
@@ -49,7 +48,7 @@
         <item>Victim Name</item>
     </string-array>
 
-    <string name="match_list_empty">NO MATCHES FOUND \nMATCHES MAY TAKE UP TO 15 MINUTES AFTER GAME END TO SHOW HERE</string>
+    <string name="match_list_empty" translatable="false">NO MATCHES FOUND \nMATCHES MAY TAKE UP TO 15 MINUTES AFTER GAME END TO SHOW HERE</string>
 
     <string-array name="profile_game_versions">
         <item>PC</item>
@@ -59,5 +58,21 @@
 
     <string name="twitter_consumer_key" translatable="false">SptY5rSTRIJa4Tin9DVCq0ryM</string>
     <string name="twitter_consumer_secret" translatable="false">Te5FpxPDX7fOoj0mBGDS3NMzsFOuu2wLsCqXXDWcJUlYl5kHQt</string>
+    <string name="drawer_title_upgrade">Upgrade</string>
+    <string name="drawer_title_login">Login or Sign Up</string>
+    <string name="drawer_title_stats_enw">Battle Stats</string>
+    <string name="drawer_title_vehicles">Vehicles</string>
+    <string name="drawer_title_more">More</string>
+    <string name="drawer_title_alerts">Manage Alerts</string>
+    <string name="drawer_title_logout">Logout</string>
+    <string name="profile_title">Your Profile</string>
+    <string name="profile_display_name">Display Name</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_phone">Phone Number</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="sign_out">This will sign you out, you can always log back in later.</string>
+    <string name="sign_out_text">Sign Out</string>
+    <string name="nevermind">Nevermind</string>
+    <string name="profile_bottom">PROFILE WILL BE EDITABLE SOON</string>
 
 </resources>

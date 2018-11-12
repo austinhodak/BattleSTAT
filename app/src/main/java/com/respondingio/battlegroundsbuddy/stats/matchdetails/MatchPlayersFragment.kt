@@ -1,17 +1,10 @@
 package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
@@ -20,9 +13,8 @@ import com.respondingio.battlegroundsbuddy.models.MatchParticipant
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.activity_match_detail.*
-import kotlinx.android.synthetic.main.match_players_fragment.match_players_rv
+import kotlinx.android.synthetic.main.match_players_fragment.*
 import net.idik.lib.slimadapter.SlimAdapter
-import java.text.DecimalFormat
 
 class MatchPlayersFragment : Fragment() {
 
@@ -59,6 +51,12 @@ class MatchPlayersFragment : Fragment() {
 
         match_players_rv.layoutManager = LinearLayoutManager(mActivity)
         mAdapter = SlimAdapter.create().attachTo(match_players_rv).register(R.layout.match_players_listitem) { data: MatchParticipant, injector ->
+            when (data.attributes.stats.deathType) {
+                "alive" -> injector.text(R.id.match_player_rating, "Alive")
+                "byplayer" -> injector.text(R.id.match_player_rating, "Killed By Player")
+                "suicide" -> injector.text(R.id.match_player_rating, "Suicided")
+                "logout" -> injector.text(R.id.match_player_rating, "Left Match")
+            }
             injector.text(R.id.match_player_place, "#${data.attributes.stats.winPlace}")
             injector.text(R.id.match_player_name, data.attributes.stats.name)
             injector.text(R.id.match_player_kills, data.attributes.stats.kills.toString())
@@ -67,19 +65,12 @@ class MatchPlayersFragment : Fragment() {
 
             injector.text(R.id.match_player_longestkill, "${String.format("%.0f", Math.rint(data.attributes.stats.longestKill))}m")
 
-            val formatter = DecimalFormat("#,###,###")
-            if (data.attributes.stats.winPoints == 0.0) {
-                injector.text(R.id.match_player_rating, "Rank Points: ${data.attributes.stats.rankPoints.toInt()}")
-            } else {
-                injector.text(R.id.match_player_rating, "Rating: ${formatter.format(data.attributes.stats.winPoints)}")
-            }
-
             if (mActivity.currentPlayerID == data.attributes.stats.playerId) {
                 injector.background(R.id.match_player_place, R.drawable.chip_green_outline)
                 injector.textColor(R.id.match_player_place, resources.getColor(R.color.md_white_1000))
             } else {
-                injector.background(R.id.match_player_place, R.drawable.chip_white_outline)
-                injector.textColor(R.id.match_player_place, resources.getColor(R.color.md_light_primary_text))
+                injector.background(R.id.match_player_place, R.drawable.chip_grey_outline)
+                injector.textColor(R.id.match_player_place, resources.getColor(R.color.md_white_1000))
             }
 
             injector.clicked(R.id.card) {
@@ -141,28 +132,18 @@ class MatchPlayersFragment : Fragment() {
                                 mAdapter.updateData(sortedList)
                             }
                             2 -> {
-                                sortedList = sortedList.sortedWith(compareByDescending {
-                                    if (it.attributes.stats.winPoints != 0.0) {
-                                        it.attributes.stats.winPoints
-                                    } else {
-                                        it.attributes.stats.rankPoints
-                                    }
-                                })
-                                mAdapter.updateData(sortedList)
-                            }
-                            3 -> {
                                 sortedList = sortedList.sortedWith(compareByDescending { it.attributes.stats.kills })
                                 mAdapter.updateData(sortedList)
                             }
-                            4 -> {
+                            3 -> {
                                 sortedList = sortedList.sortedWith(compareByDescending { it.attributes.stats.damageDealt })
                                 mAdapter.updateData(sortedList)
                             }
-                            5 -> {
+                            4 -> {
                                 sortedList = sortedList.sortedWith(compareByDescending { getTotalDistanceTravelledInM(it) })
                                 mAdapter.updateData(sortedList)
                             }
-                            6 -> {
+                            5 -> {
                                 sortedList = sortedList.sortedWith(compareByDescending { it.attributes.stats.longestKill })
                                 mAdapter.updateData(sortedList)
                             }

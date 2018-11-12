@@ -1,13 +1,12 @@
 package com.respondingio.battlegroundsbuddy.weapondetail
 
 import android.os.Bundle
-import android.view.Menu
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
+import com.google.android.gms.ads.AdView
 import com.respondingio.battlegroundsbuddy.R
+import com.respondingio.battlegroundsbuddy.utils.Ads
+import com.respondingio.battlegroundsbuddy.utils.Premium
 import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
 import kotlinx.android.synthetic.main.activity_weapon_detail_timeline.*
 
@@ -26,6 +25,12 @@ class WeaponDetailTimeline : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weapon_detail_timeline)
 
-        //NavigationUI.setupWithNavController(weaponTimelineToolbar, Navigation.findNavController(this, R.id.weaponDetailNavHost))
+        if (!Premium.isAdFreeUser()) {
+            val statsBanner = AdView(this)
+            statsBanner.adSize = com.google.android.gms.ads.AdSize.BANNER
+            statsBanner.adUnitId = "ca-app-pub-1946691221734928/9265393389"
+            statsBanner.loadAd(Ads.getAdBuilder())
+            weaponStatsAdLL?.addView(statsBanner)
+        }
     }
 }

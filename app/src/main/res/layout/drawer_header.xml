@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="8dp">
 
     <TextView
-        android:id="@+id/header_gamemode"
+        android:id="@+id/header_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="42dp"
         android:fontFamily="@font/roboto_medium"
         android:text="Duo TPP"
-        android:textColor="@color/material_drawer_primary_text"
+        android:textColor="#FFF"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,13 +23,13 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginEnd="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/header_gamemode"
+        app:layout_constraintBottom_toBottomOf="@+id/header_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/header_gamemode"
+        app:layout_constraintTop_toTopOf="@+id/header_name"
         app:srcCompat="@drawable/sanhok_icon" />
 
     <TextView
-        android:id="@+id/header_duration"
+        android:id="@+id/header_upgrade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -41,10 +39,10 @@
         android:textSize="13sp"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_gamemode" />
+        app:layout_constraintTop_toBottomOf="@+id/header_name" />
 
     <TextView
-        android:id="@+id/header_time"
+        android:id="@+id/header_ingame_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -53,8 +51,8 @@
         android:text="40 Minutes Ago"
         android:textSize="13sp"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/header_duration"
-        app:layout_constraintTop_toBottomOf="@+id/header_gamemode" />
+        app:layout_constraintStart_toEndOf="@+id/header_upgrade"
+        app:layout_constraintTop_toBottomOf="@+id/header_name" />
 
     <TextView
         android:id="@+id/header_region"
@@ -65,6 +63,6 @@
         android:fontFamily="@font/roboto_medium"
         android:text="Xbox NA"
         android:textSize="13sp"
-        app:layout_constraintStart_toEndOf="@+id/header_time"
-        app:layout_constraintTop_toBottomOf="@+id/header_gamemode" />
+        app:layout_constraintStart_toEndOf="@+id/header_ingame_name"
+        app:layout_constraintTop_toBottomOf="@+id/header_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,16 +1,15 @@
-package com.respondingio.battlegroundsbuddy
+package com.respondingio.battlegroundsbuddy.utils
 
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.android.billingclient.api.*
-import com.google.android.gms.tasks.Task
-import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import java.lang.NullPointerException
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 object Premium {
 
@@ -22,7 +21,8 @@ object Premium {
         mOldSharedPreferences = context.getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
         mSharedPreferences = context.getSharedPreferences("com.respondingio.battlegroundsbuddy", Context.MODE_PRIVATE)
         setupBilling(context)
-        launch(UI) { getIAPs() }
+
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) { getIAPs() }
     }
 
     private fun setupBilling(context: Context) {
@@ -169,7 +169,25 @@ object Premium {
     }
 
     fun launchBuyFlow(activity: Activity, params: BillingFlowParams, listener: (() -> Unit)) {
-        val responseCode = Premium.billingClient.launchBillingFlow(activity, params)
+        val responseCode = billingClient.launchBillingFlow(activity, params)
+    }
+
+    fun getLevelText(level: Level): String {
+        return when (level.tag) {
+            "FREE" -> {
+                "Free"
+            }
+            "LEVEL_1" -> {
+                "Level 1"
+            }
+            "LEVEL_2" -> {
+                "Level 2"
+            }
+            "LEVEL_3" -> {
+                "Level 3"
+            }
+            else -> "Free"
+        }
     }
 
     enum class Level (val tag: String) {

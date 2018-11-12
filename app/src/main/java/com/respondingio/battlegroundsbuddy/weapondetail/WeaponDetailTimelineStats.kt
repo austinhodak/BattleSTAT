@@ -26,7 +26,6 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.storage.FirebaseStorage
 import com.hugocastelani.waterfalltoolbar.WaterfallToolbar
 import com.instabug.bug.BugReporting
-import com.instabug.library.Instabug
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.Weapon
@@ -34,18 +33,19 @@ import com.respondingio.battlegroundsbuddy.models.WeaponSound
 import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
 import com.respondingio.battlegroundsbuddy.weapons.CompareWeaponPicker
 import com.respondingio.battlegroundsbuddy.weapons.WeaponDamageChart
-import kotlinx.android.synthetic.main.fragment_home_weapons_tab.*
 import kotlinx.android.synthetic.main.fragment_weapon_timeline_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import net.idik.lib.slimadapter.animators.FadeInAnimator
 import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.browse
 import pl.hypeapp.materialtimelineview.MaterialTimelineView
 import java.io.File
 import java.io.IOException
 import java.util.HashMap
+import kotlin.Comparator
+import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 class WeaponDetailTimelineStats : Fragment() {
 
@@ -79,17 +79,14 @@ class WeaponDetailTimelineStats : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         timelineStatsRV.layoutManager = LinearLayoutManager(requireContext())
 
+        weaponTimelineToolbarWaterfall = requireActivity().findViewById(R.id.weaponTimelineToolbarWaterfall)
+        weaponTimelineToolbar = requireActivity().findViewById(R.id.weaponTimelineToolbar)
+
+        weaponTimelineToolbar?.inflateMenu(R.menu.weapo_home_new)
+
         setupAdapter()
 
         weaponTimelineToolbarWaterfall?.recyclerView = timelineStatsRV
-
-        weaponTimelineToolbar?.title = requireActivity().intent.getStringExtra("weaponName")
-        weaponTimelineToolbar?.setNavigationIcon(R.drawable.ic_arrow_back_24dp)
-        weaponTimelineToolbar?.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
-
         timelineStatsRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 15) {
@@ -120,14 +117,21 @@ class WeaponDetailTimelineStats : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        weaponTimelineToolbarWaterfall = requireActivity().findViewById(R.id.weaponTimelineToolbarWaterfall)
-        weaponTimelineToolbar = requireActivity().findViewById(R.id.weaponTimelineToolbar)
-        weaponTimelineToolbar?.inflateMenu(R.menu.weapo_home_new)
     }
 
     private var weaponObserver: Observer<DocumentSnapshot> = Observer {
         weapon = it
         weaponLoaded(it)
+
+        if (activity != null) {
+
+
+            weaponTimelineToolbar?.title = requireActivity().intent.getStringExtra("weaponName")
+            weaponTimelineToolbar?.setNavigationIcon(R.drawable.ic_arrow_back_24dp)
+            weaponTimelineToolbar?.setNavigationOnClickListener {
+                requireActivity().onBackPressed()
+            }
+        }
     }
 
     override fun onResume() {
@@ -207,13 +211,21 @@ class WeaponDetailTimelineStats : Fragment() {
 
     fun setupAdapter() {
         mAdapter = SlimAdapter.create().attachTo(timelineStatsRV).register<TopSection>(R.layout.weapon_timeline_top) { data, injector ->
-            Glide.with(this).load(FirebaseStorage.getInstance().getReferenceFromUrl(data.icon!!)).into(injector.findViewById(R.id.timelineIcon))
-            injector.text(R.id.timelineTitle, data.title)
+            Glide.with(this).load(FirebaseStorage.getInstance().getReferenceFromUrl(data.icon!!)).into(injector.findViewById(R.id.statsRankIcon))
+            injector.text(R.id.statsPlayerName, data.title)
             injector.text(R.id.timelineSubtitle, data.subtitle)
             injector.text(R.id.timelineAmmo, data.ammo)
             injector.text(R.id.timelineSpeed, data.speed)
             injector.text(R.id.timelineMag, data.mag)
-            injector.text(R.id.timelinePower, data.power)
+
+            if (data.weapon.damageBody0.toIntOrNull() != null && data.weapon.TBS != "--") {
+                var newTBS = 60.00 / data.weapon.TBS.removeSuffix("s").toDouble()
+                var damagePerShot = data.weapon.damageBody0.toDouble()
+                injector.text(R.id.timelinePower, ((damagePerShot * newTBS) / 60).roundToInt().toString())
+            } else {
+                injector.text(R.id.timelinePower, "--")
+            }
+
             injector.text(R.id.timelineTBS, data.weapon.TBS)
             injector.text(R.id.timelinePickupDelay, data.weapon.pickupDelay)
             injector.text(R.id.timelineReadyDelay, data.weapon.readyDelay)
@@ -238,7 +250,7 @@ class WeaponDetailTimelineStats : Fragment() {
                     injector.gone(R.id.top_div2)
 
                     injector.findViewById<LinearLayout>(R.id.top_extras2).visibility = View.GONE
-                    injector.findViewById<LinearLayout>(R.id.top_extras).visibility = View.GONE
+                    injector.findViewById<LinearLayout>(R.id.statsTopExtras1).visibility = View.GONE
 
                     injector.image(R.id.timelineTopDropdown, R.drawable.ic_arrow_drop_down_24dp)
                 } else {
@@ -246,7 +258,7 @@ class WeaponDetailTimelineStats : Fragment() {
                     injector.visible(R.id.top_div2)
 
                     injector.findViewById<LinearLayout>(R.id.top_extras2).visibility = View.VISIBLE
-                    injector.findViewById<LinearLayout>(R.id.top_extras).visibility = View.VISIBLE
+                    injector.findViewById<LinearLayout>(R.id.statsTopExtras1).visibility = View.VISIBLE
 
                     injector.image(R.id.timelineTopDropdown, R.drawable.ic_arrow_drop_up_24dp)
                 }

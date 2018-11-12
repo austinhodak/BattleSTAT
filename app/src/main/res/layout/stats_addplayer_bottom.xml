@@ -1,123 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/top_ll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bottom_sheet_rounded"
-    android:windowSoftInputMode="adjustPan|adjustResize"
+    android:background="@color/timelineBG"
+    android:elevation="0dp"
     android:orientation="vertical"
-    android:theme="@style/DamageChart">
+    android:theme="@style/DamageChart"
+    android:windowSoftInputMode="adjustPan|adjustResize">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/mobile_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/roboto_condensed_bold"
+            android:padding="4dp"
+            android:text="MOBILE INFO"
+            android:textColor="#FFF"
+            android:textSize="12sp" />
 
-            <TextView
-                android:background="?android:attr/selectableItemBackground"
-                android:id="@+id/mobile_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:fontFamily="@font/roboto_condensed_bold"
-                android:padding="4dp"
-                android:text="MOBILE INFO"
-                android:textColor="@color/md_light_primary_text"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="16dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center_horizontal"
-                android:text="ADD A PLAYER"
-                android:textColor="@color/md_black_1000"
-                android:textSize="13sp"
-                android:visibility="visible" />
-
-            <ProgressBar
-                android:id="@+id/add_progress"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                android:visibility="gone" />
-        </RelativeLayout>
-
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="20dp"
-            android:layout_height="2dp"
-            android:layout_gravity="center_horizontal"
-            android:background="?android:attr/listDivider"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center_horizontal"
+            android:text="ADD A PLAYER"
+            android:textColor="#FFF"
+            android:textSize="13sp"
             android:visibility="visible" />
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="SELECT REGION"
-            android:textColor="#000"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <com.jaredrummler.materialspinner.MaterialSpinner
-            android:id="@+id/region_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+        <ProgressBar
+            android:id="@+id/add_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp" />
+            android:visibility="gone" />
+    </RelativeLayout>
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="ENTER IN-GAME NAME (CASE SENSITIVE)"
-            android:textColor="#000"
-            android:textSize="12sp"
-            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/add_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="Exactly how it appears in game..."
-            android:inputType="textPersonName"
-            android:textSize="14sp" />
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="20dp"
+        android:layout_height="2dp"
+        android:layout_gravity="center_horizontal"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible" />
 
-        <Button
-            android:foreground="?android:attr/selectableItemBackground"
-            android:id="@+id/add_button"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/timelineOrange"
-            android:elevation="0dp"
-            android:text="CONTINUE"
-            android:textColor="#FFF"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="SELECT REGION"
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
-    </LinearLayout>
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/region_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        app:ms_arrow_tint="#FFF"
+        app:ms_background_color="@color/timelineBG"
+        app:ms_text_color="#FFF" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="ENTER IN-GAME NAME (CASE SENSITIVE)"
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/add_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:ems="10"
+        android:hint="Exactly how it appears in game..."
+        android:inputType="textPersonName"
+        android:textColor="#FFF"
+        android:textColorHint="#BEFFFFFF"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/timelineOrange"
+        android:elevation="0dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="CONTINUE"
+        android:textColor="#FFF"
+        android:windowSoftInputMode="adjustPan|adjustResize" />
+
 </LinearLayout>

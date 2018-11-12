@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:background="@color/material_drawer_dark_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/leaderboardRank" />
+
+    <TextView
+        android:id="@+id/leaderboardName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="THExLEGENDxxx"
+        android:textColor="@color/md_white_1000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/leaderboardRank"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/leaderboardRank"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:text="Points: 4,046"
+        android:textColor="@color/md_dark_secondary"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@+id/leaderboardName"
+        app:layout_constraintStart_toStartOf="@+id/leaderboardName"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboardName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

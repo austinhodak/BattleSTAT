@@ -286,6 +286,9 @@ public class Telemetry {
         object.put("pc-sa", "PC SA");
         object.put("pc-as", "PC AS");
         object.put("pc-tournament", "PC TOURNEY");
+        object.put("steam", "Steam");
+        object.put("xbox", "Xbox");
+        object.put("kakao", "Kakao");
         return object;
     }
 

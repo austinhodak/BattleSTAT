@@ -1,15 +1,11 @@
 package com.respondingio.battlegroundsbuddy.stats
 
 import android.app.Activity
-import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -23,9 +19,7 @@ import com.afollestad.materialdialogs.list.customListAdapter
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
 import com.android.vending.billing.IInAppBillingService
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
@@ -34,34 +28,19 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.gson.Gson
 import com.instabug.bug.BugReporting
-import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.models.Seasons
 import com.respondingio.battlegroundsbuddy.premium.UpgradeActivity
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
-import kotlinx.android.synthetic.main.activity_stats_main_new.bottom_navigation
-import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
-import kotlinx.android.synthetic.main.activity_stats_main_new.no_player
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_gamemode_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_gamemode_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_player_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_player_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_region_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_region_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.weapon_detail_toolbar
+import com.respondingio.battlegroundsbuddy.utils.Ads
+import com.respondingio.battlegroundsbuddy.utils.Premium
+import kotlinx.android.synthetic.main.activity_stats_main_new.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.onRefresh
@@ -88,6 +67,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
         setContentView(R.layout.activity_stats_main_new)
 
         setSupportActionBar(weapon_detail_toolbar)
@@ -102,7 +82,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             updateTimeout = 2
         } else {
             mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
-                    AdRequest.Builder().build())
+                    Ads.getAdBuilder())
         }
 
         if (mSharedPreferences.getBoolean("isStatsFirstLaunch", true)) {
@@ -203,7 +183,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                             }.build().show()
                 } else if (Premium.getUserLevel() == Premium.Level.LEVEL_2 || Premium.getUserLevel() == Premium.Level.LEVEL_3) {
                     mRewardedVideoAd?.loadAd("ca-app-pub-3940256099942544/5224354917",
-                            AdRequest.Builder().build())
+                            Ads.getAdBuilder())
 
                     mainStatsRefreshLayout.isRefreshing = false
                     Snacky.builder().setActivity(this).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes with premium. This is a PUBG API limit.").setActionClickListener {
@@ -260,11 +240,10 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                                 startActivity<UpgradeActivity>()
                             }.show()
                         }
+                    }.neutralButton(text = "Manage Players") {
+                        startActivity<PlayerListDialog>()
+                        Log.d("PLAYER", "SHOW DIALOG")
                     }
-//                    }.neutralButton(text = "Manage Players") {_ ->
-//                        PlayerListDialog().show(supportFragmentManager, "TAG")
-//                        Log.d("PLAYER", "SHOW DIALOG")
-//                    }
             selectPlayerDialog!!.show()
         }
         stats_region_picker.setOnClickListener {
@@ -760,7 +739,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         }
 
         mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
-                AdRequest.Builder().build())
+                Ads.getAdBuilder())
     }
 
     override fun onRewardedVideoAdLeftApplication() {

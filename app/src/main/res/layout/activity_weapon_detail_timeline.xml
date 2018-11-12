@@ -23,11 +23,12 @@
 
     <fragment
         android:id="@+id/weaponDetailNavHost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/weapon_detail_graph"
-        app:defaultNavHost="true"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/weapon_detail_graph" />
 
     <!--<FrameLayout-->
         <!--android:id="@+id/weaponTimelineFrame"-->
@@ -35,5 +36,15 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="0dp"-->
         <!--android:layout_weight="1"/>-->
+
+    <LinearLayout
+        android:id="@+id/weaponStatsAdLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/timelineBG"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
 
 </LinearLayout>

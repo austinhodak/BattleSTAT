@@ -3,7 +3,6 @@ package com.respondingio.battlegroundsbuddy.stats.matchdetails
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
@@ -23,29 +22,23 @@ import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.Volley
-import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.appbar.AppBarLayout
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.holder.StringHolder
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.respondingio.battlegroundsbuddy.BuildConfig
-import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
-import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
+import com.respondingio.battlegroundsbuddy.utils.Ads
+import com.respondingio.battlegroundsbuddy.utils.Premium
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
-import kotlinx.android.synthetic.main.activity_match_detail.app_bar
-import kotlinx.android.synthetic.main.activity_match_detail.match_detail_toolbar
-import kotlinx.android.synthetic.main.activity_match_detail.match_loading_lottie
-import kotlinx.android.synthetic.main.activity_match_detail.toolbar_title
+import kotlinx.android.synthetic.main.activity_match_detail.*
 import nouri.`in`.goodprefslib.GoodPrefs
-import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
-import java.util.ArrayList
 
 
 class MatchDetailActivity : AppCompatActivity() {
@@ -90,6 +83,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
         toolbar_title.text = "Your Match Stats"
 
+
         val matchID = intent.getStringExtra("matchID")
         val regionID = intent.getStringExtra("regionID")
         currentPlayerID =  "account.${intent.getStringExtra("playerID")}"
@@ -110,7 +104,15 @@ class MatchDetailActivity : AppCompatActivity() {
 
         mInterstitialAd.adUnitId = "ca-app-pub-1946691221734928/7664747817"
         if (!Premium.isAdFreeUser()) {
-            mInterstitialAd.loadAd(AdRequest.Builder().addTestDevice("FBE7B6C060C778D1A44EF3F2184E089B").build())
+            mInterstitialAd.loadAd(Ads.getAdBuilder())
+        }
+
+        if (!Premium.isAdFreeUser()) {
+            val statsBanner = AdView(this)
+            statsBanner.adSize = com.google.android.gms.ads.AdSize.BANNER
+            statsBanner.adUnitId = "ca-app-pub-1946691221734928/7236919124"
+            statsBanner.loadAd(Ads.getAdBuilder())
+            matchDetailBottomLL?.addView(statsBanner)
         }
     }
 
@@ -130,6 +132,8 @@ class MatchDetailActivity : AppCompatActivity() {
         headerTimeTV?.text = matchModel.getFormattedCreatedAt()
         headerDurationTV?.text = DateUtils.formatElapsedTime(matchModel.attributes?.duration!!)
         headerRegionTV?.text = Telemetry().region[matchModel.attributes?.shardId].toString()
+
+        Log.d("MATCH", "${matchModel.attributes?.shardId}")
 
         if (matchModel.attributes?.gameMode!!.contains("solo", true)) mDrawer.removeItems(11, 12)
 
@@ -155,7 +159,7 @@ class MatchDetailActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
                             .commit()
 
-                    updateToolbarElevation(0f)
+                    updateToolbarElevation(15f)
                     updateToolbarFlags(false)
 
                     toolbar_title.text = "Your Match Stats"
@@ -225,7 +229,7 @@ class MatchDetailActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, KillFeedFragment())
                             .commit()
                     toolbar_title.text = "Kills"
-                    updateToolbarElevation(0f)
+                    updateToolbarElevation(15f)
                     updateToolbarFlags(false)
                     false
                 }
@@ -241,7 +245,7 @@ class MatchDetailActivity : AppCompatActivity() {
                         supportFragmentManager.beginTransaction().replace(R.id.match_frame, MatchWeaponStatsFragment())
                                 .commit()
                         toolbar_title.text = "Weapon Stats"
-                        updateToolbarElevation(0f)
+                        updateToolbarElevation(15f)
                         updateToolbarFlags(false)
                         false
                     }
@@ -254,9 +258,9 @@ class MatchDetailActivity : AppCompatActivity() {
             }
         }
 
-        headerGamemodeTV = mDrawer.header.findViewById(R.id.header_gamemode)
-        headerDurationTV = mDrawer.header.findViewById(R.id.header_duration)
-        headerTimeTV = mDrawer.header.findViewById(R.id.header_time)
+        headerGamemodeTV = mDrawer.header.findViewById(R.id.header_name)
+        headerDurationTV = mDrawer.header.findViewById(R.id.header_upgrade)
+        headerTimeTV = mDrawer.header.findViewById(R.id.header_ingame_name)
         headerRegionTV = mDrawer.header.findViewById(R.id.header_region)
         headerMapIV = mDrawer.header.findViewById(R.id.header_icon)
 
@@ -277,7 +281,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         setSupportActionBar(match_detail_toolbar)
-        toolbar_title.text = "Your Match Stats"
+        toolbar_title.text = "Match Stats"
     }
 
     fun updateToolbarElevation(int: Float) {
@@ -287,11 +291,11 @@ class MatchDetailActivity : AppCompatActivity() {
     fun updateToolbarFlags(canShowOnScroll: Boolean) {
         var params = match_detail_toolbar.layoutParams as AppBarLayout.LayoutParams
         if (canShowOnScroll) {
-            params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+            //params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
         } else {
-            params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+            //params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
         }
-        app_bar.requestLayout()
+        //app_bar.requestLayout()
     }
 
     override fun onBackPressed() {

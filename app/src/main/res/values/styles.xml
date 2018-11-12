@@ -19,7 +19,9 @@
 
         <item name="material_drawer_selected">#1FF57C00</item>
 
-        <item name="material_drawer_background">#1B1B1B</item>
+        <item name="material_drawer_background">@color/md_grey_900</item>
+
+        <item name="android:statusBarColor">#171717</item>
 
     </style>
 
@@ -105,7 +107,9 @@
         <item name="colorAccent">@color/md_amber_900</item>
 
         <item name="material_drawer_selected_text">@color/md_orange_A700</item>
+
         <item name="material_drawer_selected">#EEEEEE</item>
+        <item name="material_drawer_background">@color/timelineBG</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
 
@@ -117,20 +121,29 @@
     </style>
 
 
-    <style name="MatchDetailsTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">#e65100</item>
-        <item name="colorPrimaryDark">#e65100</item>
-        <item name="colorAccent">@color/md_amber_900</item>
+    <style name="MatchDetailsTheme" parent="MaterialDrawerTheme">
+        <item name="colorPrimary">@color/timelineBG</item>
+        <item name="colorPrimaryDark">#171717</item>
+        <item name="colorAccent">@color/timelineOrange</item>
 
         <item name="material_drawer_selected_text">@color/md_orange_700</item>
         <item name="material_drawer_selected">#1FF57C00</item>
+        <item name="material_drawer_background">@color/md_grey_900</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
 
-        <item name="android:statusBarColor">#e65100</item>
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
 
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+        <!-- This is important! Don't forget to set window background -->
+        <item name="android:windowBackground">@color/timelineBG</item>
+
+        <item name="android:statusBarColor">#171717</item>
+
+        <item name="md_background_color">@color/timelineBG</item>
+        <item name="md_corner_radius">4dp</item>
+
     </style>
 
     <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
@@ -140,12 +153,28 @@
     <style name="MapTileActivity" parent="MaterialDrawerTheme.Light.DarkToolbar">
     </style>
 
-    <style name="NewHomeActivity" parent="MaterialDrawerTheme">
-        <item name="colorPrimary">@color/primary700</item>
-        <item name="colorPrimaryDark">@color/primary800</item>
-        <item name="colorAccent">@color/secondary500</item>
+    <style name="HomeTheme" parent="MaterialDrawerTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#171717</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="material_drawer_selected">#1FF3981D</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="tab_underline">@color/colorAccent</item>
+
+        <item name="android:textColor">@color/md_dark_primary_text</item>
+
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+
+        <item name="material_drawer_selected">#1FF57C00</item>
+
+        <item name="material_drawer_background">@color/md_grey_900</item>
+
+        <item name="android:statusBarColor">#171717</item>
+
     </style>
 
     <style name="WeaponHome" parent="Theme.AppCompat.Light.NoActionBar" >
@@ -157,6 +186,25 @@
 
     <style name="WeaponChipText" parent="TextAppearance.MaterialComponents.Chip">
         <item name="android:fontFamily">@font/work_sans_semibold</item>
+    </style>
+
+    <style name="TabText" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:fontFamily">@font/work_sans_semibold</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="TabSelectedText" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:fontFamily">@font/work_sans_semibold</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="TabUnselectedText" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:fontFamily">@font/work_sans</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="PointsText">
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="PickerTheme" parent="Theme.AppCompat.NoActionBar">
@@ -211,10 +259,10 @@
 
     <style name="FirebaseUI.Text.HintText" parent="@style/FirebaseUI.EditText" />
 
-    <style name="PlayerListDialog" parent="Theme.AppCompat.Dialog">
+    <style name="PlayerListDialog" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/timelineBG</item>
         <item name="colorPrimaryDark">#171717</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/timelineOrange</item>
 
         <item name="material_drawer_selected_text">@color/md_amber_700</item>
 
@@ -229,9 +277,18 @@
 
         <item name="android:statusBarColor">#171717</item>
 
-        <!-- Additionally if you want animations when dialog opening -->
-        <item name="android:windowEnterAnimation">@anim/bottom_up</item>
-        <item name="android:windowExitAnimation">@anim/bottom_up_out</item>
+        <item name="md_background_color">@color/timelineBG</item>
+        <item name="md_corner_radius">4dp</item>
+
+    </style>
+
+    <style name="StatsBottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:fontFamily">@font/work_sans_medium</item>
+        <item name="android:textAppearance">@style/TabText</item>
+    </style>
+
+    <style name="HomeToolbarTheme" parent="ThemeOverlay.AppCompat">
+        <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
 </resources>

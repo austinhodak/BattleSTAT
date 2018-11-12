@@ -69,7 +69,8 @@ data class MatchTop (
         var match: Match?,
         var isLoading: Boolean,
         var matchKey: String,
-        var currentPlayer: String
+        var currentPlayer: String,
+        var createdAt: String
 )
 
 @IgnoreExtraProperties

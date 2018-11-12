@@ -594,7 +594,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="TIMER WILL TURN ORANGE AND NOTIFY YOU 30 SECONDS BEFORE THE CIRCLE STARTS"
+                    android:text="THIS DOES NOT WORK WITH SANHOK AS THAT HAS A DYNAMIC CIRCLE WHICH CLOSES QUICKER WHEN LESS PEOPLE ARE ALIVE"
                     android:textColor="#FFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />

@@ -1,9 +1,7 @@
 package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,21 +9,10 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.respondingio.battlegroundsbuddy.R
-import com.respondingio.battlegroundsbuddy.Telemetry
-import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
-import com.respondingio.battlegroundsbuddy.models.Stats
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.fragment_matches_player_stats.*
-import net.idik.lib.slimadapter.SlimAdapter
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.textColor
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.TimeZone
 import kotlin.math.roundToLong
 
 class MatchPlayerStatsFragment : Fragment() {
@@ -54,10 +41,10 @@ class MatchPlayerStatsFragment : Fragment() {
         if (arguments != null && arguments!!.containsKey("playerID")) {
             playerID = arguments!!.getString("playerID")
             if (arguments!!.containsKey("isTabs")) {
-                top.backgroundColor = Color.parseColor("#FAFAFA")
+                //top.backgroundColor = Color.parseColor("#FAFAFA")
             } else {
                 val bottomUp = AnimationUtils.loadAnimation(context, R.anim.bottom_up)
-                stats_scroll_view.startAnimation(bottomUp)
+                //stats_scroll_view.startAnimation(bottomUp)
 
             }
 
@@ -69,19 +56,18 @@ class MatchPlayerStatsFragment : Fragment() {
         } else {
             viewModel.mMatchData.observe(this, matchDataObserver)
             val bottomUp = AnimationUtils.loadAnimation(context, R.anim.bottom_up)
-            stats_scroll_view.startAnimation(bottomUp)
+            //stats_scroll_view.startAnimation(bottomUp)
         }
 
-        stats_scroll_view.visibility = View.VISIBLE
+        //stats_scroll_view.visibility = View.VISIBLE
     }
 
     private fun matchDataLoaded(it: MatchModel) {
-        Log.d("MATCH", it.attributes?.gameMode)
         fillStats(it)
-        setupAndFillKills(it)
+        //setupAndFillKills(it)
     }
 
-    private fun setupAndFillKills(it: MatchModel) {
+    /*private fun setupAndFillKills(it: MatchModel) {
         var match = it
 
         val killsList = ArrayList<LogPlayerKill>()
@@ -147,94 +133,50 @@ class MatchPlayerStatsFragment : Fragment() {
 
             injector.text(R.id.kill_feed_distance, "${String.format("%.0f", Math.rint(data.distance/100))}m")
         }
-    }
+    }*/
 
     @SuppressLint("SetTextI18n")
     private fun fillStats(matchModel: MatchModel) {
-        var match = matchModel
+        val match = matchModel
 
-        Log.d("MATCH", match.getFormattedCreatedAt())
-
-        val stats: Stats
-        if (playerID != null && !playerID!!.contains("account.", true)) {
-            stats = match.participantHash[playerID!!]?.attributes?.stats!!
+        val stats = if (playerID != null && !playerID!!.contains("account.", true)) {
+            match.participantHash[playerID!!]?.attributes?.stats!!
         } else if (playerID != null &&playerID!!.contains("account.", false)) {
-            stats = match.getPlayerByAccountID(playerID!!)?.attributes?.stats!!
+            match.getPlayerByAccountID(playerID!!)?.attributes?.stats!!
         } else {
-            stats = match.currentPlayer?.attributes!!.stats
+            match.currentPlayer?.attributes!!.stats
         }
 
-        stats_rideDist.text = "${Math.rint(stats.rideDistance).toLong()}m"
-        stats_walkDist.text = "${Math.rint(stats.walkDistance).toLong()}m"
-        stats_swimDist.text = "${Math.rint(stats.swimDistance).toLong()}m"
+        statsRideDist?.text = "${String.format("%.0f", Math.ceil(stats.rideDistance))}m"
+        statsSwimDist?.text = "${String.format("%.0f", Math.ceil(stats.swimDistance))}m"
+        statsWalkDist?.text = "${String.format("%.0f", Math.ceil(stats.walkDistance))}m"
 
-        val winPointsText: String
+        statsLongestKill?.text = "${String.format("%.0f", Math.ceil(stats.longestKill))}m"
+        statsRoadKills?.text = stats.roadKills.toString()
+        statsTeamKills?.text = stats.teamKills.toString()
 
-        if (stats.winPointsDelta >= 0) {
-            winPointsText = "${stats.winPoints} (+${String.format("%.0f", stats.winPointsDelta)})"
-            //stats_winPoints.textColor = resources.getColor(R.color.md_green_A700)
-        } else {
-            winPointsText = "${stats.winPoints} (${String.format("%.0f", stats.winPointsDelta)})"
-            //stats_winPoints.textColor = resources.getColor(R.color.md_red_A700)
-        }
+        statsBoosts?.text = stats.boosts.toString()
+        statsHeals?.text = stats.heals.toString()
+        statsRevives?.text = stats.revives.toString()
 
-        val killPointsText: String
+        statsKills?.text = stats.kills.toString()
 
-        if (stats.killPointsDelta >= 0) {
-            killPointsText = "${stats.killPoints} (+${String.format("%.0f", stats.killPointsDelta)})"
-            //stats_killPoints.textColor = resources.getColor(R.color.md_green_A700)
-        } else {
-            killPointsText = "${stats.killPoints} (${String.format("%.0f", stats.killPointsDelta)})"
-            //stats_killPoints.textColor = resources.getColor(R.color.md_red_A700)
-        }
+        statsWinPlace?.text = "${ordinal(stats.winPlace)} Place"
+        statsPlayerName?.text = stats.name
 
-        stats_winPoints.text = winPointsText
-        stats_killPoints.text = killPointsText
-        stats_weaponsAqd.text = stats.weaponsAcquired.toString()
-        stats_boosts.text = stats.boosts.toString()
-        stats_killStreaks.text = stats.killStreaks.toString()
-        stats_timeSurv.text = "${(stats.timeSurvived/60).roundToLong()} Min"
-        stats_vehicleDestroy.text = stats.vehicleDestroys.toString()
-        stats_mostDamageDealt.text = stats.mostDamage.roundToLong().toString()
+        statsWeaponsAq?.text = stats.weaponsAcquired.toString()
 
-        stats_kills.text = stats.kills.toString()
-        stats_headshots.text = stats.headshotKills.toString()
-        stats_assists.text = stats.assists.toString()
-        stats_roadKills.text = stats.roadKills.toString()
-        stats_dbnos.text = stats.DBNOs.toString()
-        stats_longestKill.text = "${stats.longestKill.roundToLong()}m"
-        stats_teamKills.text = stats.teamKills.toString()
-        stats_heals.text = stats.heals.toString()
-        stats_damageDealt.text = stats.damageDealt.roundToLong().toString()
-        stats_revives.text = stats.revives.toString()
+        if (stats.kills != 0 && stats.headshotKills != 0)
+            statsHeadshotPct?.text = "${String.format("%.2f", (stats.headshotKills.toDouble() / stats.kills.toDouble()) * 100)}%"
 
-        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints >= 0.0) {
-            rank_card?.visibility = View.VISIBLE
-            rank_title?.text = getRankTitle(stats.rankPoints)
-            rank_subtitle?.text = "POINTS: ${Math.floor(stats.rankPoints).toInt()}"
-
-            Glide.with(this).load(getRankIcon(stats.rankPoints)).into(rank_icon)
-
-            old_points_layout?.visibility = View.GONE
-            divider13?.visibility = View.INVISIBLE
-        } else {
-            rank_card?.visibility = View.GONE
-
-            old_points_layout?.visibility = View.VISIBLE
-
-            stats_killPoints?.text = String.format("%.0f", Math.rint(stats.killPoints))
-            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.winPoints))
-        }
-
-        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints >= 0.0) {
-            winPointsTitle?.text = "RANK POINTS *NEW"
-            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.rankPoints))
-
-            killPoints_view?.visibility = View.GONE
-        } else {
-            stats_killPoints?.text = String.format("%.0f", Math.rint(stats.killPoints))
-            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.winPoints))
-        }
+        statsKillsPlace?.text = stats.killPlace.toString()
+        statsAssists?.text = stats.assists.toString()
+        statsdBNOs?.text = stats.DBNOs.toString()
+        statsKillStreaks?.text = stats.killStreaks.toString()
+        statsMostDamage?.text = stats.mostDamage.roundToLong().toString()
+        statsDamageDealt?.text = stats.damageDealt.roundToLong().toString()
+        statsTimeSurv?.text = "${Math.ceil(stats.timeSurvived / 60).toInt()} Min"
+        statsHeadshots?.text = stats.headshotKills.toString()
     }
 
     fun ordinal(i: Int): String {

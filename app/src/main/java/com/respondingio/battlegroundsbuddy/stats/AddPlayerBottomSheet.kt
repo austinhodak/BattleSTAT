@@ -16,7 +16,6 @@ import com.google.firebase.functions.FirebaseFunctionsException.Code
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import kotlinx.android.synthetic.main.stats_addplayer_bottom.*
-import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.support.v4.browse
 import java.util.*
 
@@ -44,7 +43,7 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
             region = regionList[position]
         }
 
-        mobile_info?.onClick {
+        mobile_info?.setOnClickListener {
             browse("https://twitter.com/buddy_pubg/status/1055261520429506560")
         }
     }

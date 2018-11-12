@@ -31,8 +31,8 @@
         android:text="Single"
         android:textColor="@color/primary800"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/timelineTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/statsPlayerName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/timelineTitle" />
+        app:layout_constraintTop_toTopOf="@+id/statsPlayerName" />
 
 </LinearLayout>

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.hugocastelani.waterfalltoolbar.WaterfallToolbar
+        android:id="@+id/playerListToolbarWaterfall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp">
+        app:final_elevation="6dp"
+        app:scroll_final_elevation="6">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,7 +31,7 @@
                     android:layout_marginRight="16dp"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
-                    android:text="Manage Players"
+                    android:text="Players"
                     android:textColor="#FFF"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -38,49 +41,62 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </com.hugocastelani.waterfalltoolbar.WaterfallToolbar>
 
-    <androidx.core.widget.NestedScrollView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/playerListCord"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/playerListScrollview"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/playerListRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:fadingEdge="none"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:id="@+id/playerListLimitTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:text="UNLIMITED PLAYERS 4 U  🍗"
+                    android:textColor="@color/md_grey_500"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/playerListAdd"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add_black_24dp"
+            app:backgroundTint="@color/md_green_A700"
+            app:fabSize="normal" />
 
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/playerListRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="LIMIT OF 5 PLAYERS • UPGRADE"
-                android:textColor="@color/md_grey_500"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-    </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="@color/timelineOrange"
-        app:fabSize="normal" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

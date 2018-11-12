@@ -21,30 +21,20 @@ import com.afollestad.materialdialogs.actions.setActionButtonEnabled
 import com.afollestad.materialdialogs.input.input
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.hugocastelani.waterfalltoolbar.WaterfallToolbar
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
 import com.respondingio.battlegroundsbuddy.weapondetail.WeaponDetailTimelineStats
 import kotlinx.android.synthetic.main.fragment_weapon_comments.*
-import kotlinx.android.synthetic.main.fragment_weapon_timeline_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import net.idik.lib.slimadapter.animators.FadeInAnimator
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.support.v4.longToast
 import pl.hypeapp.materialtimelineview.MaterialTimelineView
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.HashMap
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -105,10 +95,10 @@ class WeaponComments : Fragment() {
         })
 
 
-        commentAddFAB?.onClick {
+        commentAddFAB?.setOnClickListener {
             if (FirebaseAuth.getInstance().currentUser == null) {
                 longToast("You must be logged in to comment.")
-                return@onClick
+                return@setOnClickListener
             }
 
             MaterialDialog(requireActivity())
@@ -128,7 +118,7 @@ class WeaponComments : Fragment() {
                         childUpdates["$path/comment"] = text.toString()
                         childUpdates["$path/user"] = UID
                         if (FirebaseAuth.getInstance().currentUser!!.displayName!!.isEmpty()) {
-                            childUpdates["$path/user_name"] = UID
+                            childUpdates["$path/user_name"] = "PUBG Player"
                         } else {
                             childUpdates["$path/user_name"] = FirebaseAuth.getInstance().currentUser?.displayName.toString()
                         }
@@ -292,8 +282,12 @@ class WeaponComments : Fragment() {
         commentRef = FirebaseDatabase.getInstance().getReference("/comments_weapons/$weaponKey")
         commentListener = FirebaseDatabase.getInstance().getReference("/comments_weapons/$weaponKey").orderByChild("timestamp").addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                listData.add(1, dataSnapshot)
-                mSlimAdapter.notifyItemInserted(1)
+                try {
+                    listData.add(1, dataSnapshot)
+                } catch (e: Exception) {
+                    listData.add(dataSnapshot)
+                }
+                mSlimAdapter.notifyItemInserted(listData.indexOf(dataSnapshot))
                 empty_tv?.visibility = View.GONE
             }
 
