@@ -297,7 +297,7 @@ class MainActivityKT : AppCompatActivity() {
                             .withActivityTitle("Battlegrounds Battle Buddy")
                             .withAboutDescription("")
                             .withAboutSpecial1("Twitter")
-                            .withAboutSpecial1Description("<a href=\"https://twitter.com/buddy_pubg\">Follow us on Twitter!!</a>")
+                            .withAboutSpecial1Description("<a href=\"https://twitter.com/pubgbuddy\">Follow us on Twitter!!</a>")
                             .withAboutSpecial2("Discord")
                             .withAboutSpecial2Description("<a href=\"https://discord.gg/5bbJNvx\">Join Our Discord!</a>")
                             .start(this@MainActivityKT)
@@ -452,7 +452,6 @@ class MainActivityKT : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateHeader()
-
         checkLogin()
     }
 

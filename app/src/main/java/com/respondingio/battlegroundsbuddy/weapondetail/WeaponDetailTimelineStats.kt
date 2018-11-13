@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.storage.FirebaseStorage
-import com.hugocastelani.waterfalltoolbar.WaterfallToolbar
 import com.instabug.bug.BugReporting
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.respondingio.battlegroundsbuddy.R
@@ -49,7 +48,6 @@ import kotlin.math.roundToInt
 
 class WeaponDetailTimelineStats : Fragment() {
 
-    var weaponTimelineToolbarWaterfall: WaterfallToolbar? = null
     var weaponTimelineToolbar: Toolbar? = null
 
     var weapon: DocumentSnapshot? = null
@@ -72,6 +70,10 @@ class WeaponDetailTimelineStats : Fragment() {
     var mData = ArrayList<Any>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        weaponTimelineToolbar = requireActivity().findViewById(R.id.weaponTimelineToolbar)
+        weaponTimelineToolbar?.inflateMenu(R.menu.weapo_home_new)
+
         return inflater.inflate(R.layout.fragment_weapon_timeline_stats, container, false)
     }
 
@@ -79,14 +81,8 @@ class WeaponDetailTimelineStats : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         timelineStatsRV.layoutManager = LinearLayoutManager(requireContext())
 
-        weaponTimelineToolbarWaterfall = requireActivity().findViewById(R.id.weaponTimelineToolbarWaterfall)
-        weaponTimelineToolbar = requireActivity().findViewById(R.id.weaponTimelineToolbar)
-
-        weaponTimelineToolbar?.inflateMenu(R.menu.weapo_home_new)
-
         setupAdapter()
 
-        weaponTimelineToolbarWaterfall?.recyclerView = timelineStatsRV
         timelineStatsRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 15) {

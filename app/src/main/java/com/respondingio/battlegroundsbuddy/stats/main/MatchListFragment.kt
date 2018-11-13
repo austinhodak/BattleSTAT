@@ -225,6 +225,7 @@ class MatchListFragment : Fragment() {
                 data.match!!.participants.forEach { (key, participant) ->
                     if (participant.playerId == "account.${data.currentPlayer}") {
                         uiThread {
+                            if (!isAdded || activity == null) return@uiThread
                             setStats(participant)
                         }
                         return@forEach

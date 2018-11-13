@@ -26,13 +26,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/timelineBG"></FrameLayout>
+        android:background="@color/timelineBG" />
 
     <LinearLayout
         android:id="@+id/newHomeTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/timelineBG"
-        android:gravity="center_horizontal"></LinearLayout>
+        android:gravity="center_horizontal"
+        android:orientation="vertical" />
 
 </LinearLayout>

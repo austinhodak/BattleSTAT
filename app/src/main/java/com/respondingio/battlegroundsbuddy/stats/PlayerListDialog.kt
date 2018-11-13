@@ -232,6 +232,13 @@ class PlayerListDialog : AppCompatActivity() {
         }
         val currentUser = FirebaseAuth.getInstance().currentUser
 
+        if (currentUser == null) {
+            FirebaseAuth.getInstance().signInAnonymously().addOnSuccessListener {
+                loadPlayers()
+            }
+            return
+        }
+
         val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser!!.uid)
 
         listenerRef = ref.ref

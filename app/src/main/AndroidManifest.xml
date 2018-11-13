@@ -151,6 +151,10 @@
             android:name=".profile.ProfileMain"
             android:theme="@style/PlayerListDialog" />
 
+        <activity
+            android:name=".profile.ProfilePicPicker"
+            android:theme="@style/PlayerListDialog" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1946691221734928~8934220899" />

@@ -26,8 +26,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
 //      {Major} 0 {Minor} 0 {Patch} {00-Build}
-        versionCode 10401002
-        versionName "1.4.0"
+        versionCode 10401000
+        versionName "1.4.1"
         multiDexEnabled true
     }
     signingConfigs {

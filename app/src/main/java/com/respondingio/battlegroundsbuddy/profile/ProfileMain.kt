@@ -25,6 +25,10 @@ class ProfileMain : AppCompatActivity() {
         profileDisplayName?.text = user.displayName ?: "Battle Buddy"
         profileEmail?.text = user.email ?: "No Email"
         profilePhone?.text = user.phoneNumber ?: "No Phone Number"
+
+        profileDisplayName?.setOnClickListener {
+            //startActivityForResult(Intent(this@ProfileMain, ProfilePicPicker::class.java), 1)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
