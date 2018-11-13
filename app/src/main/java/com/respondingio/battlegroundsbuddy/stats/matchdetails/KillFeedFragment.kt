@@ -2,7 +2,6 @@ package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -80,21 +79,21 @@ class KillFeedFragment: Fragment() {
 
             injector.text(R.id.textView9, (killFeedList.size - killFeedList.indexOf(data)).toString())
 
-            Log.d("MATCH", "${match.currentPlayerID} - ${data.killer.accountId}")
-
-            when {
-                data.killer.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_green_outline)
-                data.victim.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_red_outline)
-                else -> {
-                    for (teammate in matchModel?.currentPlayerRoster?.relationships?.participants?.data!!) {
-                        if (data.killer.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
-                            injector.background(R.id.textView9, drawable.chip_green_outline_teammate)
-                            break
-                        } else if (data.victim.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
-                            injector.background(R.id.textView9, drawable.chip_red_outline_teammate)
-                            break
-                        } else {
-                            injector.background(R.id.textView9, drawable.chip_grey_outline)
+            if (match.currentPlayerID.isNotEmpty() && matchModel?.currentPlayerRoster != null) {
+                when {
+                    data.killer.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_green_outline)
+                    data.victim.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_red_outline)
+                    else -> {
+                        for (teammate in matchModel?.currentPlayerRoster?.relationships?.participants?.data!!) {
+                            if (data.killer.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
+                                injector.background(R.id.textView9, drawable.chip_green_outline_teammate)
+                                break
+                            } else if (data.victim.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
+                                injector.background(R.id.textView9, drawable.chip_red_outline_teammate)
+                                break
+                            } else {
+                                injector.background(R.id.textView9, drawable.chip_grey_outline)
+                            }
                         }
                     }
                 }

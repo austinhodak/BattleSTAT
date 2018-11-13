@@ -204,6 +204,8 @@ class MatchListFragment : Fragment() {
             }
 
             fun setStats(player: ParticipantShort) {
+                if (!isAdded) return
+
                 injector.text(R.id.match_kills, player.kills.toString())
                 injector.text(R.id.match_place, "#${player.winPlace}/${data.match?.participantCount}")
                 injector.image(R.id.map_icon, data.match!!.getMapIcon())

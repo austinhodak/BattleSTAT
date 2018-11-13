@@ -87,7 +87,7 @@ class MatchPlayersFragment : Fragment() {
         }.updateData(sortedList)
     }
 
-    fun getTotalDistanceTravelled(data: MatchParticipant): String {
+    private fun getTotalDistanceTravelled(data: MatchParticipant): String {
         val distance: String
         var distanceLong: Long = 0
 

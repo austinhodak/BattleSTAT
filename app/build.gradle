@@ -26,7 +26,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
 //      {Major} 0 {Minor} 0 {Patch} {00-Build}
-        versionCode 10400002
+        versionCode 10401002
         versionName "1.4.0"
         multiDexEnabled true
     }
@@ -100,6 +100,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-functions:16.1.2'
 
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.3'
+    implementation 'com.google.firebase:firebase-dynamic-links:16.1.2'
 
     //Support
     //implementation 'com.google.android.gms:play-services-ads:16.0.0'
