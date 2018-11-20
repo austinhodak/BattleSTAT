@@ -119,7 +119,8 @@ public class Telemetry {
             "  \"WeapVector_C\": \"Vector\",\n" +
             "  \"WeapVSS_C\": \"VSS\",\n" +
             "  \"WeapWin94_C\": \"Win94\",\n" +
-            "  \"WeapWinchester_C\": \"S1897\"\n" +
+            "  \"WeapWinchester_C\": \"S1897\",\n" +
+            "  \"Weapvz61Skorpion_C\": \"Skorpion\"\n" +
             "}";
 
     public JSONObject getDamageCauserName() throws JSONException {

@@ -2,18 +2,33 @@ package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.respondingio.battlegroundsbuddy.R
+import com.respondingio.battlegroundsbuddy.Telemetry
+import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
+import com.respondingio.battlegroundsbuddy.models.LogPlayerTakeDamage
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.fragment_matches_player_stats.*
+import net.idik.lib.slimadapter.SlimAdapter
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+
 
 class MatchPlayerStatsFragment : Fragment() {
 
@@ -59,15 +74,32 @@ class MatchPlayerStatsFragment : Fragment() {
             //stats_scroll_view.startAnimation(bottomUp)
         }
 
+        playerKillsCard?.setOnClickListener {
+            if (playerKillsRV?.visibility == View.GONE) {
+                playerKillsRV?.visibility = View.VISIBLE
+            } else {
+                playerKillsRV?.visibility = View.GONE
+            }
+        }
+
+        statsDamageCard?.setOnClickListener {
+            if (damageBottomExtras?.visibility == View.GONE) {
+                damageBottomExtras?.visibility = View.VISIBLE
+            } else {
+                damageBottomExtras?.visibility = View.GONE
+            }
+        }
+
         //stats_scroll_view.visibility = View.VISIBLE
     }
 
     private fun matchDataLoaded(it: MatchModel) {
         fillStats(it)
-        //setupAndFillKills(it)
+        setupAndFillKills(it)
+        setupAndFillDamage(it)
     }
 
-    /*private fun setupAndFillKills(it: MatchModel) {
+    private fun setupAndFillKills(it: MatchModel) {
         var match = it
 
         val killsList = ArrayList<LogPlayerKill>()
@@ -85,25 +117,51 @@ class MatchPlayerStatsFragment : Fragment() {
             }
         }
 
-        if (killsList.isEmpty()) {
-            div2.visibility = View.GONE
-        }
-
-        stats_killsRV.layoutManager = LinearLayoutManager(requireActivity())
-        stats_killsRV.isNestedScrollingEnabled = false
-        SlimAdapter.create().attachTo(stats_killsRV).updateData(killsList).register(R.layout.stats_kill_feed_item2) { data: LogPlayerKill, injector ->
+        playerKillsRV.layoutManager = LinearLayoutManager(requireActivity())
+        playerKillsRV.isNestedScrollingEnabled = false
+        SlimAdapter.create().attachTo(playerKillsRV).updateData(killsList).register(R.layout.stats_kill_feed_item2) { data: LogPlayerKill, injector ->
             if (killsList.indexOf(data) == (killsList.size -1)) {
                 //Last item so remove div.
-                injector.gone(R.id.div)
+                //injector.gone(R.id.div)
             }
 
             injector.text(R.id.kill_feed_victim, data.victim.name)
-            injector.text(R.id.textView9, ordinal(data.victim.ranking))
+            //injector.text(R.id.textView9, ordinal(data.victim.ranking))
+
+            var reasonTV = injector.findViewById<TextView>(R.id.killReasonTV)
+            var reasonIcon = injector.findViewById<ImageView>(R.id.killReasonIcon)
 
             if (Telemetry().damageCauserName[data.damageCauserName].toString() == "Player") {
                 injector.text(R.id.kill_feed_cause, Telemetry().damageTypeCategory[data.damageTypeCategory].toString())
             } else {
                 injector.text(R.id.kill_feed_cause, Telemetry().damageCauserName[data.damageCauserName].toString())
+            }
+
+            when (data.damageReason) {
+                "ArmShot" -> {
+                    reasonTV.text = "ARM"
+                    reasonIcon.setImageResource(R.drawable.icons8_arm)
+                }
+                "HeadShot" -> {
+                    reasonTV.text = "HEAD"
+                    reasonIcon.setImageResource(R.drawable.icons8_skull)
+                }
+                "LegShot" -> {
+                    reasonTV.text = "LEG"
+                    reasonIcon.setImageResource(R.drawable.icons8_leg)
+                }
+                "PelvisShot" -> {
+                    reasonTV.text = "PELVIS"
+                    reasonIcon.setImageResource(R.drawable.pelvis)
+                }
+                "TorsoShot" -> {
+                    reasonTV.text = "TORSO"
+                    reasonIcon.setImageResource(R.drawable.torso)
+                }
+                else -> {
+                    reasonTV.text = "N/A"
+                    reasonIcon.setImageResource(R.drawable.question)
+                }
             }
 
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -133,7 +191,114 @@ class MatchPlayerStatsFragment : Fragment() {
 
             injector.text(R.id.kill_feed_distance, "${String.format("%.0f", Math.rint(data.distance/100))}m")
         }
-    }*/
+    }
+
+    private fun setupAndFillDamage(it: MatchModel) {
+        val match = it
+
+        var damageList: MutableList<LogPlayerTakeDamage>
+
+        Log.d("PLAYERID", "$playerID - ${match.currentPlayerID}")
+
+        var id = match.currentPlayerID
+        if (playerID != null) id = match.participantHash[playerID!!]!!.attributes.stats.playerId
+
+        damageList = it.logPlayerTakeDamage.filter { it.attacker.accountId == id || it.victim.accountId == id && it.attacker.name.isNotEmpty() && it.victim.name.isNotEmpty() }.toMutableList()
+        damageList = damageList.sortedWith(compareBy { it._D }).toMutableList()
+
+        playerDamageRV.layoutManager = LinearLayoutManager(requireActivity())
+        playerDamageRV.isNestedScrollingEnabled = false
+        SlimAdapter.create().attachTo(playerDamageRV).updateData(damageList).register(R.layout.stats_damage_list_item) { data: LogPlayerTakeDamage, injector ->
+
+            injector.clicked(R.id.damageTop) {
+                //toast(data.)
+            }
+
+            injector.text(R.id.kill_feed_victim, "${data.attacker.name} attacked ${data.victim.name}")
+
+            var reasonTV = injector.findViewById<TextView>(R.id.killReasonTV)
+            var reasonIcon = injector.findViewById<ImageView>(R.id.killReasonIcon)
+
+            if (Telemetry().damageCauserName[data.damageCauserName].toString() == "Player") {
+                injector.text(R.id.kill_feed_cause, Telemetry().damageTypeCategory[data.damageTypeCategory].toString())
+            } else {
+                injector.text(R.id.kill_feed_cause, Telemetry().damageCauserName[data.damageCauserName].toString())
+            }
+
+            when (data.damageReason) {
+                "ArmShot" -> {
+                    reasonTV.text = "ARM"
+                    reasonIcon.setImageResource(R.drawable.icons8_arm)
+                }
+                "HeadShot" -> {
+                    reasonTV.text = "HEAD"
+                    reasonIcon.setImageResource(R.drawable.icons8_skull)
+                }
+                "LegShot" -> {
+                    reasonTV.text = "LEG"
+                    reasonIcon.setImageResource(R.drawable.icons8_leg)
+                }
+                "PelvisShot" -> {
+                    reasonTV.text = "PELVIS"
+                    reasonIcon.setImageResource(R.drawable.pelvis)
+                }
+                "TorsoShot" -> {
+                    reasonTV.text = "TORSO"
+                    reasonIcon.setImageResource(R.drawable.torso)
+                }
+                else -> {
+                    reasonTV.text = "N/A"
+                    reasonIcon.setImageResource(R.drawable.question)
+                }
+            }
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            sdf.timeZone = TimeZone.getTimeZone("GMT")
+            val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            sdf2.timeZone = TimeZone.getTimeZone("GMT")
+            val matchStartDate = sdf.parse(match.attributes?.createdAt)
+            val killTime = sdf2.parse(data._D)
+
+            var difference = killTime.time - matchStartDate.time
+
+            val secondsInMilli: Long = 1000
+            val minutesInMilli = secondsInMilli * 60
+            val hoursInMilli = minutesInMilli * 60
+            val daysInMilli = hoursInMilli * 24
+
+            difference %= daysInMilli
+
+            difference %= hoursInMilli
+
+            val elapsedMinutes = difference / minutesInMilli
+            difference %= minutesInMilli
+
+            val elapsedSeconds = difference / secondsInMilli
+
+            injector.text(R.id.kill_feed_time, String.format("%02d:%02d", elapsedMinutes, elapsedSeconds))
+
+            val damageString = if ((data.victim.health.roundToInt() - data.damage.roundToInt()) <= 0) {
+                "${data.victim.health.roundToInt()} TO DEAD"
+            } else {
+                "${data.victim.health.roundToInt()} TO ${(data.victim.health.roundToInt() - data.damage.roundToInt())}"
+            }
+
+            injector.text(R.id.kill_feed_distance, "$damageString • ${data.damage.roundToInt()} DMG")
+
+            val sideBarHeight = 60.0 * ((data.victim.health.roundToInt() - data.damage.roundToInt()) / 100.0)
+            Log.d("SIDEBAR", "${(data.victim.health.roundToInt() - data.damage.roundToInt()) / 100.0}")
+
+            val damageBar = injector.findViewById<View>(R.id.damagebar)
+            val params = RelativeLayout.LayoutParams(getDp(3f), getDp(sideBarHeight.toFloat()))
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+            damageBar?.layoutParams = params
+            if (sideBarHeight == 0.0) {
+                damageBar?.visibility = View.INVISIBLE
+            } else {
+                damageBar?.visibility = View.VISIBLE
+            }
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     private fun fillStats(matchModel: MatchModel) {
@@ -161,7 +326,7 @@ class MatchPlayerStatsFragment : Fragment() {
 
         statsKills?.text = stats.kills.toString()
 
-        statsWinPlace?.text = "${ordinal(stats.winPlace)} Place"
+        statsWinPlace?.text = "#${stats.winPlace}"
         statsPlayerName?.text = stats.name
 
         statsWeaponsAq?.text = stats.weaponsAcquired.toString()
@@ -177,6 +342,12 @@ class MatchPlayerStatsFragment : Fragment() {
         statsDamageDealt?.text = stats.damageDealt.roundToLong().toString()
         statsTimeSurv?.text = "${Math.ceil(stats.timeSurvived / 60).toInt()} Min"
         statsHeadshots?.text = stats.headshotKills.toString()
+
+
+        val playerAttacks = matchModel.logPlayerAttack.filter { it.attacker.accountId == stats.playerId }
+        val playerDamageAttacks = matchModel.logPlayerTakeDamage.filter { it.attacker.accountId == stats.playerId }
+        damageTotalAttacks?.text = "${playerAttacks.size}"
+        damageTotalDamageAttacks?.text = "${playerDamageAttacks.size}"
     }
 
     fun ordinal(i: Int): String {
@@ -219,5 +390,14 @@ class MatchPlayerStatsFragment : Fragment() {
             rankPoints >= 2000 -> R.drawable.rank_icon_grandmaster
             else -> R.drawable.rank_icon_unranked
         }
+    }
+
+    fun getDp(dp: Float): Int {
+        val r = requireContext().resources
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                r.displayMetrics
+        ).toInt()
     }
 }

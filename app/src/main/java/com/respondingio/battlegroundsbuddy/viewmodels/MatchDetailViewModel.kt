@@ -1,6 +1,7 @@
 package com.respondingio.battlegroundsbuddy.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.volley.*
@@ -9,13 +10,11 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
-import com.respondingio.battlegroundsbuddy.models.LogItemPickup
-import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
-import com.respondingio.battlegroundsbuddy.models.MatchParticipant
-import com.respondingio.battlegroundsbuddy.models.MatchRoster
+import com.respondingio.battlegroundsbuddy.models.*
 import com.respondingio.battlegroundsbuddy.utils.Regions
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchData
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
+import org.jetbrains.anko.doAsync
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -206,21 +205,37 @@ class MatchDetailViewModel : ViewModel() {
     }
 
     private fun parseTelemetryData(json: JSONArray, matchModel: MatchModel) {
-        for (i in 0 until json.length()) {
-            var item = json.getJSONObject(i)
+        doAsync {
+            for (i in 0 until json.length()) {
+                var item = json.getJSONObject(i)
 
-            when (item["_T"]) {
-                "LogPlayerKill" -> {
-                    matchModel.killFeedList.add(Gson().fromJson(item.toString(), LogPlayerKill::class.java))
-                }
-                "LogItemPickup" -> {
-                    matchModel.logItemPickup.add(Gson().fromJson(item.toString(), LogItemPickup::class.java))
+                when (item["_T"]) {
+                    "LogPlayerKill" -> {
+                        matchModel.killFeedList.add(Gson().fromJson(item.toString(), LogPlayerKill::class.java))
+                    }
+                    "LogItemPickup" -> {
+                        matchModel.logItemPickup.add(Gson().fromJson(item.toString(), LogItemPickup::class.java))
+                    }
+                    "LogPlayerTakeDamage" -> {
+                        var item2 = Gson().fromJson(item.toString(), LogPlayerTakeDamage::class.java)
+                        if (item.isNull("attacker")) {
+                            Log.d("TELEMETRY", "ATTACK NULL")
+                            item2.attacker = LogCharacter()
+                        }
+                        matchModel.logPlayerTakeDamage.add(item2)
+                    }
+                    "LogPlayerAttack" -> {
+                        matchModel.logPlayerAttack.add(Gson().fromJson(item.toString(), LogPlayerAttack::class.java))
+                    }
+                    "LogMatchDefinition" -> {
+                        matchModel.matchDefinition = Gson().fromJson(item.toString(), LogMatchDefinition::class.java)
+                    }
                 }
             }
+
+            matchModel.killFeedList.sortedWith(compareBy { it._D })
+
+            mMatchData.postValue(matchModel)
         }
-
-        matchModel.killFeedList.sortedWith(compareBy { it._D })
-
-        mMatchData.postValue(matchModel)
     }
 }

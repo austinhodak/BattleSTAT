@@ -19,7 +19,7 @@ class HomeWeaponsFragment : Fragment() {
 
     private val mStringArray = ArrayList<String>()
 
-    private val title = arrayOf("Assault Rifles", "Sniper Rifles", "SMGs", "Shotguns", "Pistols", "LMGs", "Throwables", "Melee", "Misc")
+
 
     internal inner class ViewPagerAdapter
 
@@ -85,6 +85,16 @@ class HomeWeaponsFragment : Fragment() {
     }
 
     private fun setupTabs() {
+        val title = arrayOf(
+                getString(R.string.assault_rifles),
+                getString(R.string.sniper_rifles),
+                "SMGs",
+                getString(R.string.shotguns),
+                getString(R.string.pistols),
+                "LMGs",
+                getString(R.string.throwables),
+                getString(R.string.melee), "Misc"
+        )
         mStringArray.addAll(Arrays.asList(*title))
 
         val adapter = ViewPagerAdapter(childFragmentManager)

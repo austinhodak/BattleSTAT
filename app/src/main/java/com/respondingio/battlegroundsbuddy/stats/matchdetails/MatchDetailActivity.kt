@@ -26,6 +26,7 @@ import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.appbar.AppBarLayout
@@ -46,6 +47,7 @@ import nouri.`in`.goodprefslib.GoodPrefs
 import org.jetbrains.anko.toast
 import org.json.JSONException
 import java.net.URLEncoder
+import java.util.regex.Pattern
 
 
 class MatchDetailActivity : AppCompatActivity() {
@@ -101,8 +103,6 @@ class MatchDetailActivity : AppCompatActivity() {
                 Log.d("MATCH", "${it.link} - $matchID - $regionID")
             }
 
-            mDrawer.addStickyFooterItem(SecondaryDrawerItem().withName(matchID).withEnabled(false).withSelectable(false))
-
             viewModel.mMatchData.observe(this, matchDataObserver)
             viewModel.getMatchData(application, regionID!!, matchID!!, currentPlayerID)
 
@@ -112,15 +112,9 @@ class MatchDetailActivity : AppCompatActivity() {
             matchID = intent.getStringExtra("matchID")
             regionID = intent.getStringExtra("regionID")
 
-            mDrawer.addStickyFooterItem(SecondaryDrawerItem().withName(matchID).withEnabled(false).withSelectable(false))
             viewModel.mMatchData.observe(this, matchDataObserver)
             viewModel.getMatchData(application, regionID!!, matchID!!, currentPlayerID)
         }
-
-//        if (!intent.hasExtra("matchID")) {
-//            Snacky.builder().setActivity(this).error().setText("No Match ID").show()
-//            return
-//        }
 
         currentPlayerID = "account.${intent.getStringExtra("playerID") ?: ""}"
 
@@ -142,7 +136,31 @@ class MatchDetailActivity : AppCompatActivity() {
             statsBanner.adSize = com.google.android.gms.ads.AdSize.BANNER
             statsBanner.adUnitId = "ca-app-pub-1946691221734928/7236919124"
             statsBanner.loadAd(Ads.getAdBuilder())
-            matchDetailBottomLL?.addView(statsBanner)
+            statsBanner.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    // Code to be executed when an ad finishes loading.
+                    matchDetailBottomLL?.removeAllViews()
+                    matchDetailBottomLL?.addView(statsBanner)
+                }
+
+                override fun onAdFailedToLoad(errorCode: Int) {
+                    // Code to be executed when an ad request fails.
+                }
+
+                override fun onAdOpened() {
+                    // Code to be executed when an ad opens an overlay that
+                    // covers the screen.
+                }
+
+                override fun onAdLeftApplication() {
+                    // Code to be executed when the user has left the app.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when when the user is about to return
+                    // to the app after tapping on an ad.
+                }
+            }
         }
     }
 
@@ -163,8 +181,6 @@ class MatchDetailActivity : AppCompatActivity() {
         headerDurationTV?.text = DateUtils.formatElapsedTime(matchModel.attributes?.duration!!)
         headerRegionTV?.text = Telemetry().region[matchModel.attributes?.shardId].toString()
 
-        Log.d("MATCH", "${matchModel.attributes?.shardId}")
-
         if (matchModel.attributes?.gameMode!!.contains("solo", true)) mDrawer.removeItems(11, 12)
 
         mDrawer.updateBadge(10, StringHolder("${matchModel.participantList.size}"))
@@ -177,6 +193,8 @@ class MatchDetailActivity : AppCompatActivity() {
             mDrawer.removeItem(12)
             mDrawer.setSelection(10)
         }
+
+        mDrawer.addStickyFooterItem(SecondaryDrawerItem().withName("Match Ping: ${capitalize(matchModel.matchDefinition!!.PingQuality)} Quality").withEnabled(false).withSelectable(false))
     }
 
     private fun setupDrawer() {
@@ -270,6 +288,18 @@ class MatchDetailActivity : AppCompatActivity() {
                     false
                 }
             }
+            primaryItem("Kill Tree") {
+                icon = R.drawable.flow_chart
+                onClick { view, position, drawerItem ->
+                    isNavigatedDown = false
+                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, KillTreeFragment())
+                            .commit()
+                    toolbar_title.text = "Kill Tree"
+                    updateToolbarElevation(15f)
+                    updateToolbarFlags(false)
+                    false
+                }
+            }
             if (BuildConfig.DEBUG) {
                 primaryItem("Care Packages") {
                     icon = R.drawable.carepackage_open
@@ -348,7 +378,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 mDrawer.closeDrawer()
             } else if (!Premium.isAdFreeUser()) {
                 Log.d("LAUNCH", GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0).toString())
-                if (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) >= 2) {
+                if (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) >= 3) {
                     GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", 0)
 
                     if (mInterstitialAd.isLoaded)
@@ -378,12 +408,14 @@ class MatchDetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        Log.d("OPTION", "CLCIKED: ${item?.itemId}")
         when (item?.itemId) {
             R.id.match_share -> {
                 shareMatch()
+                return true
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     private fun shareMatch() {
@@ -423,5 +455,15 @@ class MatchDetailActivity : AppCompatActivity() {
                         toast(task.exception?.message.toString())
                     }
                 }
+    }
+
+    private fun capitalize(capString: String): String {
+        val capBuffer = StringBuffer()
+        val capMatcher = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(capString)
+        while (capMatcher.find()) {
+            capMatcher.appendReplacement(capBuffer, capMatcher.group(1).toUpperCase() + capMatcher.group(2).toLowerCase())
+        }
+
+        return capMatcher.appendTail(capBuffer).toString()
     }
 }

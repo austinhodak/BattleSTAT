@@ -12,6 +12,7 @@ apply plugin: 'com.android.application'
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://dl.bintray.com/drummer-aidan/maven/" }
+    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
 }
 
 
@@ -26,8 +27,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
 //      {Major} 0 {Minor} 0 {Patch} {00-Build}
-        versionCode 10401000
-        versionName "1.4.1"
+        versionCode 10402000
+        versionName "1.4.2"
         multiDexEnabled true
     }
     signingConfigs {
@@ -75,6 +76,7 @@ apply from: "$rootProject.projectDir/buildsystem/library.gradle"
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":slimadapter")
+    implementation project(":graphview")
     //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testImplementation 'junit:junit:4.12'
@@ -105,9 +107,10 @@ dependencies {
     //Support
     //implementation 'com.google.android.gms:play-services-ads:16.0.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
 
     implementation 'androidx.browser:browser:1.0.0'
-    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "androidx.appcompat:appcompat:1.0.2"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     implementation "androidx.annotation:annotation:1.0.0"
     implementation "com.google.android.material:material:1.0.0-"
@@ -127,7 +130,7 @@ dependencies {
     implementation "com.mikepenz:materialdrawer:6.1.1"
     implementation 'co.zsmb:materialdrawer-kt:2.0.1'
 
-    implementation 'com.afollestad.material-dialogs:core:2.0.0-beta2'
+    implementation 'com.afollestad.material-dialogs:core:2.0.0-beta5'
 
     implementation('com.mikepenz:aboutlibraries:6.0.9@aar') {
         transitive = true
@@ -138,40 +141,39 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.aurelhubert:ahbottomnavigation:2.0.4'
-    implementation 'com.prof.rssparser:rssparser:1.3.1'
-    implementation 'com.github.marcoscgdev:RateDialog:1.0.4'
-    implementation('com.facebook.android:facebook-android-sdk:4.27.0')
+    implementation 'com.prof.rssparser:rssparser:1.4.4'
+
+    implementation 'com.github.marcoscgdev:RateDialog:1.0.5'
+
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.google.android.ads.consent:consent-library:1.0.6'
-    implementation 'com.android.volley:volley:1.1.0'
-    implementation 'com.jaredrummler:material-spinner:1.2.5'
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.jaredrummler:material-spinner:1.3.0'
 
     implementation 'nl.dionsegijn:konfetti:1.1.2'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
-    // Optional, if you use support library fragments:
-    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
 
-    implementation 'com.github.apl-devs:appintro:v4.2.3'
+    implementation 'com.facebook.android:facebook-login:4.38.1'
+    // Optional, if you use support library fragments:
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
+
 
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
-    implementation 'com.afollestad:aesthetic:0.7.1'
 
     implementation "com.airbnb.android:lottie:2.6.1"
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
-    implementation 'com.afollestad.material-dialogs:input:2.0.0-beta2'
+    implementation 'com.afollestad.material-dialogs:input:2.0.0-beta5'
 
     implementation 'com.instabug.library:instabug:8.0.11'
 
-    implementation 'io.github.anderscheow:whatsnew:1.0.0'
-
-    implementation 'com.android.billingclient:billing:1.1'
+    implementation 'com.android.billingclient:billing:1.2'
 
     implementation 'pl.hypeapp:materialtimelineview:1.1'
 
@@ -186,10 +188,11 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0'
 
-    implementation 'com.github.andrefrsousa:SuperToolbar:1.1.0'
+    implementation 'com.facebook.android:audience-network-sdk:5.1.0'
 
-    implementation 'com.facebook.android:audience-network-sdk:5.+'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
+    implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

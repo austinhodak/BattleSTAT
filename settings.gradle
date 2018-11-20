@@ -1,1 +1,1 @@
-include ':app', ':slimadapter'
+include ':app', ':slimadapter', ':graphview'

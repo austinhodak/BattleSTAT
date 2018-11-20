@@ -571,7 +571,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/killReasonTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
@@ -580,17 +580,17 @@
                     android:textSize="8sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/top_extras2"
-                    app:layout_constraintStart_toStartOf="@+id/imageView7"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/killReasonIcon"
                     android:layout_width="36dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="24dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/odometer"
-                    app:layout_constraintBottom_toTopOf="@+id/textView14"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
@@ -605,7 +605,7 @@
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
@@ -722,7 +722,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/killReasonTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
@@ -731,16 +731,16 @@
                     android:textSize="8sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/top_extras2"
-                    app:layout_constraintStart_toStartOf="@+id/imageView7"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/killReasonIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="24dp"
                     android:src="@drawable/dog_tag"
-                    app:layout_constraintBottom_toTopOf="@+id/textView14"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
@@ -755,7 +755,7 @@
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
@@ -871,7 +871,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/killReasonTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
@@ -880,16 +880,16 @@
                     android:textSize="8sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/top_extras2"
-                    app:layout_constraintStart_toStartOf="@+id/imageView7"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/killReasonIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="24dp"
                     android:src="@drawable/bandage"
-                    app:layout_constraintBottom_toTopOf="@+id/textView14"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
@@ -904,7 +904,7 @@
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout

@@ -30,4 +30,12 @@
     <string name="sign_out_text">Sair</string>
     <string name="nevermind">deixa pra lá</string>
     <string name="profile_bottom">PERFIL SERÁ EDITÁVEL EM BREVE</string>
+    <string name="range">ALCANCE</string>
+    <string name="body_damage">DANO AO CORPO</string>
+    <string name="head_damage">DANO DA CABEÇA</string>
+    <string name="assault_rifles">Rifles de Assalto</string>
+    <string name="sniper_rifles">Rifles de precisão</string>
+    <string name="shotguns">Espingardas</string>
+    <string name="pistols">Pistolas</string>
+    <string name="melee">Melee</string>
 </resources>

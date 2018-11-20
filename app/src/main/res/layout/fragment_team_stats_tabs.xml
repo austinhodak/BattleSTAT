@@ -6,8 +6,6 @@
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:elevation="6dp"
-        app:elevation="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

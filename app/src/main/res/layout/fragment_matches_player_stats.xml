@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/statsScrollView"
@@ -33,6 +33,17 @@
             app:timeline_radio_radius="15"
             app:timeline_type="item">
 
+            <TextView
+                android:id="@+id/statsWinPlace"
+                android:layout_width="45dp"
+                android:layout_height="30dp"
+                android:background="@drawable/alert_text_box_blue"
+                android:fontFamily="@font/roboto_condensed_bold"
+                android:gravity="center"
+                android:text="#100"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+
             <LinearLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="0dp"
@@ -56,17 +67,6 @@
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/statsRankIcon"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/statsWinPlace"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_medium"
-                    android:text="1st PLACE"
-                    android:textColor="#FFF"
-                    android:textSize="13sp"
-                    app:layout_constraintStart_toEndOf="@+id/statsRankIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/statsPlayerName" />
 
             </LinearLayout>
 
@@ -339,32 +339,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/statsDamageDealt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text="0"
-                        android:textColor="#FFF"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Damage Dealt"
-                        android:textColor="#BBFFFFFF"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
                         android:id="@+id/statsTimeSurv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -457,7 +431,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/killReasonTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
@@ -466,17 +440,17 @@
                     android:textSize="8sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/top_extras2"
-                    app:layout_constraintStart_toStartOf="@+id/imageView7"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/killReasonIcon"
                     android:layout_width="36dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="24dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/odometer"
-                    app:layout_constraintBottom_toTopOf="@+id/textView14"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
@@ -491,7 +465,7 @@
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
@@ -592,8 +566,9 @@
         </pl.hypeapp.materialtimelineview.MaterialTimelineView>
 
         <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:id="@+id/playerKillsCard"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/timeline_round"
@@ -607,26 +582,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_arrow_drop_down_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/killReasonTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
                     android:text="KILLS"
                     android:textColor="#FFF"
                     android:textSize="8sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/top_extras2"
                     app:layout_constraintEnd_toStartOf="@+id/top_extras2"
-                    app:layout_constraintStart_toStartOf="@+id/imageView7"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/killReasonIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="24dp"
                     android:src="@drawable/dog_tag"
-                    app:layout_constraintBottom_toTopOf="@+id/textView14"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
@@ -634,14 +618,13 @@
                 <LinearLayout
                     android:id="@+id/top_extras2"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="72dp"
                     android:gravity="center"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
                     android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
@@ -724,6 +707,17 @@
 
                 </LinearLayout>
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/playerKillsRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="4dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/top_extras2" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </pl.hypeapp.materialtimelineview.MaterialTimelineView>
@@ -747,7 +741,7 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/timeline_round"
             android:backgroundTint="@color/timelineBlue"
-            app:timeline_position="last"
+            app:timeline_position="middle"
             app:timeline_radio_outline_radius="23"
             app:timeline_radio_radius="15"
             app:timeline_type="item">
@@ -757,7 +751,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/killReasonTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
@@ -766,16 +760,16 @@
                     android:textSize="8sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/top_extras2"
-                    app:layout_constraintStart_toStartOf="@+id/imageView7"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/killReasonIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="24dp"
                     android:src="@drawable/bandage"
-                    app:layout_constraintBottom_toTopOf="@+id/textView14"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
@@ -790,7 +784,7 @@
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
@@ -877,6 +871,192 @@
 
         </pl.hypeapp.materialtimelineview.MaterialTimelineView>
 
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:timeline_position="middle"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="line">
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:id="@+id/statsDamageCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/timeline_round"
+            android:backgroundTint="@color/timelineRed"
+            app:timeline_position="last"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="item">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_arrow_drop_down_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/killReasonTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:text="DAMAGE"
+                    android:textColor="#FFF"
+                    android:textSize="8sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/top_extras2"
+                    app:layout_constraintEnd_toStartOf="@+id/top_extras2"
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
+
+                <ImageView
+                    android:id="@+id/killReasonIcon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="24dp"
+                    android:padding="3dp"
+                    android:src="@drawable/blood_2"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <LinearLayout
+                    android:id="@+id/top_extras2"
+                    android:layout_width="0dp"
+                    android:layout_height="72dp"
+                    android:gravity="center"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statsDamageDealt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Damage Dealt"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/damageTotalAttacks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Attacks"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/damageTotalDamageAttacks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Damage Attacks"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/damageBottomExtras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/timeline_round_bottom_only"
+                    android:backgroundTint="@color/md_grey_850"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/top_extras2">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="@drawable/material_drawer_shadow_bottom" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/playerDamageRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/md_grey_850" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

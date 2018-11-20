@@ -11,7 +11,7 @@ object Regions {
     var pcNewShardNames = arrayOf("Steam", "Kakao")
 
     fun getRegionNames(shardID: String, seasonID: String?): Array<String> {
-        if (shardID.contains("pc", true)) {
+        if (getNewRegion(shardID) == Region.STEAM || getNewRegion(shardID) == Region.KAKAO) {
             return pcShardNames
             /*when (seasonID) {
                 "pc-2018-01" -> {
@@ -69,8 +69,38 @@ object Regions {
     fun getNewRegionID(oldShardID: String): String {
         return if (oldShardID.contains("kakao", true)) {
             "kakao"
-        } else if (oldShardID.contains("pc", true)) {
+        } else if (oldShardID.contains("pc", true) || oldShardID.contains("steam", true)) {
             "steam"
         } else "xbox"
     }
+
+    fun getNewRegionName(shardID: String): String {
+        return when {
+            shardID.contains("kakao", true) || shardID.equals("kakao", true) -> "Kakao"
+            shardID.contains("pc", true) || shardID.equals("steam", true) -> "Steam"
+            shardID.contains("xbox", true) || shardID.equals("xbox", true) -> "Xbox"
+            else -> "Unknown"
+        }
+    }
+
+    fun getNewRegion(shardID: String): Region {
+        return if (shardID.contains("kakao", true)) {
+            Region.KAKAO
+        } else if (shardID.contains("pc", true) || shardID.contains("steam", true)) {
+            Region.STEAM
+        } else if (shardID.contains("xbox", true)) {
+            Region.XBOX
+        } else {
+            Region.PS4
+        }
+    }
+
+    enum class Region {
+        STEAM,
+        KAKAO,
+        XBOX,
+        PS4
+    }
+
+
 }

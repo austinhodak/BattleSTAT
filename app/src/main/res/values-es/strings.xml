@@ -30,4 +30,12 @@
     <string name="sign_out_text">Desconectar</string>
     <string name="nevermind">No importa</string>
     <string name="profile_bottom">PERFIL SERÁ EDITABLE PRONTO</string>
+    <string name="range">DISTANCIA</string>
+    <string name="body_damage">DAÑO CORPORAL</string>
+    <string name="head_damage">DAÑO EN LA CABEZA</string>
+    <string name="assault_rifles">Rifles de asalto</string>
+    <string name="sniper_rifles">Rifles de francotirador</string>
+    <string name="shotguns">Escopetas</string>
+    <string name="pistols">Pistolas</string>
+    <string name="melee">Pelea confusa</string>
 </resources>

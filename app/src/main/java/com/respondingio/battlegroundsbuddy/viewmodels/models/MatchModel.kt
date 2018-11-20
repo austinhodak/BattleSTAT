@@ -2,16 +2,11 @@ package com.respondingio.battlegroundsbuddy.viewmodels.models
 
 import android.text.format.DateUtils
 import com.respondingio.battlegroundsbuddy.R
-import com.respondingio.battlegroundsbuddy.models.LogItemPickup
-import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
-import com.respondingio.battlegroundsbuddy.models.MatchParticipant
-import com.respondingio.battlegroundsbuddy.models.MatchRoster
+import com.respondingio.battlegroundsbuddy.models.*
 import java.io.Serializable
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.TimeZone
+import java.util.*
 
 data class MatchModel(
         var error: String? = null,
@@ -24,7 +19,10 @@ data class MatchModel(
         var killFeedList: ArrayList<LogPlayerKill> = ArrayList(),
         var currentPlayerID: String,
         var currentPlayerMatchID: String = "",
-        var logItemPickup: ArrayList<LogItemPickup> = ArrayList()
+        var logItemPickup: ArrayList<LogItemPickup> = ArrayList(),
+        var logPlayerTakeDamage: ArrayList<LogPlayerTakeDamage> = ArrayList(),
+        var logPlayerAttack: ArrayList<LogPlayerAttack> = ArrayList(),
+        var matchDefinition: LogMatchDefinition? = null
 ) : Serializable {
 
     fun getMapIcon(): Int {

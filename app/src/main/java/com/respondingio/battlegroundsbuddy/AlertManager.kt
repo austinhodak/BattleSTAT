@@ -1,5 +1,6 @@
 package com.respondingio.battlegroundsbuddy
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
@@ -22,6 +23,7 @@ class AlertManager : AppCompatActivity() {
 
         val enabledColor = resources.getColor(R.color.timelineGreen)
         val pcEnabledColor = resources.getColor(R.color.timelineBlue)
+        val ps4EnabledColor = Color.parseColor("#003791")
         val orangeColor = resources.getColor(R.color.timelineOrange)
         val disabledColor = resources.getColor(R.color.md_grey_850)
 
@@ -66,6 +68,18 @@ class AlertManager : AppCompatActivity() {
             pubgUpdateMajorCard?.setCardBackgroundColor(orangeColor)
         } else {
             pubgUpdateMajorCard?.setCardBackgroundColor(disabledColor)
+        }
+
+        if (Alerts.isAlertActive(Alerts.Alert.PS4_MAINT)) {
+            ps4MainCard?.setCardBackgroundColor(ps4EnabledColor)
+        } else {
+            ps4MainCard?.setCardBackgroundColor(disabledColor)
+        }
+
+        if (Alerts.isAlertActive(Alerts.Alert.PS4_UPDATE)) {
+            ps4UpdateCard?.setCardBackgroundColor(ps4EnabledColor)
+        } else {
+            ps4UpdateCard?.setCardBackgroundColor(disabledColor)
         }
 
         pcMaintCard?.setOnClickListener {
@@ -154,6 +168,42 @@ class AlertManager : AppCompatActivity() {
                 mFCM.unsubscribeFromTopic(Alerts.Alert.MAJOR_NEWS.tag).addOnFailureListener {
                     pubgUpdateMajorCard?.setCardBackgroundColor(orangeColor)
                     Alerts.setAlertActive(Alerts.Alert.MAJOR_NEWS, true)
+                }
+            }
+        }
+
+        ps4MainCard?.setOnClickListener {
+            if (!Alerts.isAlertActive(Alerts.Alert.PS4_MAINT)) {
+                ps4MainCard?.setCardBackgroundColor(ps4EnabledColor)
+                Alerts.setAlertActive(Alerts.Alert.PS4_MAINT, true)
+                mFCM.subscribeToTopic(Alerts.Alert.PS4_MAINT.tag).addOnFailureListener {
+                    ps4MainCard?.setCardBackgroundColor(disabledColor)
+                    Alerts.setAlertActive(Alerts.Alert.PS4_MAINT, false)
+                }
+            } else {
+                ps4MainCard?.setCardBackgroundColor(disabledColor)
+                Alerts.setAlertActive(Alerts.Alert.PS4_MAINT, false)
+                mFCM.unsubscribeFromTopic(Alerts.Alert.PS4_MAINT.tag).addOnFailureListener {
+                    Alerts.setAlertActive(Alerts.Alert.PS4_MAINT, true)
+                    ps4MainCard?.setCardBackgroundColor(ps4EnabledColor)
+                }
+            }
+        }
+
+        ps4UpdateCard?.setOnClickListener {
+            if (!Alerts.isAlertActive(Alerts.Alert.PS4_UPDATE)) {
+                Alerts.setAlertActive(Alerts.Alert.PS4_UPDATE, true)
+                ps4UpdateCard?.setCardBackgroundColor(ps4EnabledColor)
+                mFCM.subscribeToTopic(Alerts.Alert.PS4_UPDATE.tag).addOnFailureListener {
+                    ps4UpdateCard?.setCardBackgroundColor(disabledColor)
+                    Alerts.setAlertActive(Alerts.Alert.PS4_UPDATE, false)
+                }
+            } else {
+                ps4UpdateCard?.setCardBackgroundColor(disabledColor)
+                Alerts.setAlertActive(Alerts.Alert.PS4_UPDATE, false)
+                mFCM.unsubscribeFromTopic(Alerts.Alert.PS4_UPDATE.tag).addOnFailureListener {
+                    ps4UpdateCard?.setCardBackgroundColor(ps4EnabledColor)
+                    Alerts.setAlertActive(Alerts.Alert.PS4_UPDATE, true)
                 }
             }
         }

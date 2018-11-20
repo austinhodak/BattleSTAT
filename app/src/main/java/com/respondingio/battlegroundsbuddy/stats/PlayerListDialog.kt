@@ -1,7 +1,9 @@
 package com.respondingio.battlegroundsbuddy.stats
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -10,30 +12,36 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.afollestad.materialdialogs.checkbox.isCheckPromptChecked
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.functions.FirebaseFunctions
+import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.models.SeasonStatsAll
-import com.respondingio.battlegroundsbuddy.models.Seasons
 import com.respondingio.battlegroundsbuddy.premium.UpgradeActivity
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.stats.main.StatsHome
 import com.respondingio.battlegroundsbuddy.utils.Premium
 import com.respondingio.battlegroundsbuddy.utils.Ranks
-import jp.wasabeef.recyclerview.animators.FadeInAnimator
+import com.respondingio.battlegroundsbuddy.utils.Regions
 import kotlinx.android.synthetic.main.dialog_player_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.appcompat.v7.navigationIconResource
 import org.jetbrains.anko.startActivity
+import java.util.HashMap
+import kotlin.collections.ArrayList
+import kotlin.collections.set
 
 class PlayerListDialog : AppCompatActivity() {
 
@@ -41,10 +49,15 @@ class PlayerListDialog : AppCompatActivity() {
     lateinit var mAdapter: SlimAdapter
     private var userAccountID = ""
 
+    private val listeners: MutableMap<DatabaseReference, ValueEventListener> = HashMap()
+    private var mSharedPreferences: SharedPreferences? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
         setContentView(R.layout.dialog_player_list)
+
+        mSharedPreferences = this.getSharedPreferences("com.respondingio.battlegroundsbuddy", Context.MODE_PRIVATE)
 
         if (intent.action != null) {
             toolbar_title?.text = "Pick a Player"
@@ -61,12 +74,28 @@ class PlayerListDialog : AppCompatActivity() {
             playerListRV?.layoutManager = GridLayoutManager(this, 2)
         }
 
-        playerListRV?.itemAnimator = FadeInAnimator()
+
+        //playerListRV?.layoutAnimation = android.view.animation.AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_fall_down)
 
         mAdapter = SlimAdapter.create().attachTo(playerListRV).updateData(players).register<PrefPlayer>(R.layout.player_list_item) { player, injector ->
             val cardView = injector.findViewById<CardView>(R.id.playerListCard)
-            injector.invisible(R.id.game_version_icon)
-            cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
+
+            val rankIcon = injector.findViewById<ImageView>(R.id.game_version_icon)
+            val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+            if (mSharedPreferences?.contains("playerRank-${player.playerID}") == true) {
+                Glide.with(applicationContext)
+                        .load(Ranks.getRankIcon(mSharedPreferences?.getFloat("playerRank-${player.playerID}", 0f)?.toDouble()
+                                ?: 0.0))
+                        //.transition(DrawableTransitionOptions.withCrossFade(factory))
+                        .into(rankIcon)
+
+                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(mSharedPreferences?.getFloat("playerRank-${player.playerID}", 0f)?.toDouble()
+                        ?: 0.0)))
+            } else {
+                injector.invisible(R.id.game_version_icon)
+                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
+            }
 
             if (userAccountID == player.playerID) {
                 injector.text(R.id.player_select_name, "${player.playerName}  \uf2bd ")
@@ -74,36 +103,56 @@ class PlayerListDialog : AppCompatActivity() {
                 injector.text(R.id.player_select_name, player.playerName)
             }
 
-            injector.text(R.id.playerListSubtitle, regions[regionList.indexOf(player.defaultShardID)])
+            injector.text(R.id.playerListSubtitle, Regions.getNewRegionName(player.defaultShardID))
 
-            injector.clicked(R.id.constraintLayout) {
-
+            cardView.setOnClickListener {
+                if (intent.action != null) {
+                    //Called to pick a player, return with selection.
+                    val intent = Intent()
+                    intent.putExtra("selectedPlayer", player)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                } else {
+                    //Start Stats Activity with Selected Player
+                    startActivity<StatsHome>("selectedPlayer" to player)
+                }
             }
 
-            var currentSeason = if (player.defaultShardID.contains("pc", true)) {
-                Seasons.getInstance().pcCurrentSeason
-            } else {
-                Seasons.getInstance().xboxCurrentSeason
-            }.toLowerCase()
+            val currentSeason = com.respondingio.battlegroundsbuddy.utils.Seasons.getCurrentSeasonForShard(player.defaultShardID)
 
             injector.gone(R.id.player_pg)
 
             Log.d("RANK", "${player.playerID} - ${player.defaultShardID.toLowerCase()} - $currentSeason")
 
-            FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.defaultShardID.toLowerCase()}/$currentSeason/stats").addValueEventListener(object : ValueEventListener {
+            if (player.selectedShardID.equals("xbox", true)) {
+                player.selectedShardID = "xbox-na"
+            }
+
+            var searchShardID = ""
+
+            if (player.defaultShardID == "xbox") {
+                if (player.isSeasonNewFormat("xbox")) {
+                    searchShardID = "xbox"
+                } else {
+                    searchShardID = player.oldXboxShard ?: "xbox-na"
+                }
+            } else {
+                searchShardID = player.defaultShardID
+            }
+
+            listeners[FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${searchShardID.toLowerCase()}/$currentSeason/stats")] = FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${searchShardID.toLowerCase()}/$currentSeason/stats").addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    val rankIcon = injector.findViewById<ImageView>(R.id.game_version_icon)
-                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-
                     if (!p0.exists()) {
-                        Glide.with(this@PlayerListDialog)
-                                .load(Ranks.getRankIcon(0.0))
-                                .transition(DrawableTransitionOptions.withCrossFade(factory))
-                                .into(rankIcon)
+                        if (!isDestroyed) {
+                            Glide.with(this@PlayerListDialog)
+                                    .load(Ranks.getRankIcon(0.0))
+                                    .transition(DrawableTransitionOptions.withCrossFade(factory))
+                                    .into(rankIcon)
+                        }
 
                         injector.invisible(R.id.game_version_icon)
                         cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
@@ -112,7 +161,7 @@ class PlayerListDialog : AppCompatActivity() {
 
                         Log.d("PLAYER", "LOAD ${player.playerID} - ${player.selectedShardID} - ${player.selectedSeason}")
 
-                        startPlayerStatsFunction(player.playerID, player.selectedShardID.toLowerCase(), player.selectedSeason!!)?.addOnSuccessListener {
+                        startPlayerStatsFunction(player.playerID, searchShardID, player.selectedSeason!!)?.addOnSuccessListener {
                             injector.gone(R.id.player_pg)
                         }?.addOnFailureListener {
                             injector.gone(R.id.player_pg)
@@ -144,16 +193,21 @@ class PlayerListDialog : AppCompatActivity() {
 
                     cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(pointsList[0])))
 
+                    mSharedPreferences?.edit()?.putFloat("playerRank-${player.playerID}", pointsList[0].toFloat())?.apply()
+
                     cardView.setOnLongClickListener {
                         MaterialDialog(this@PlayerListDialog)
                                 .title(text = player.playerName)
                                 .message(text = "Only one player can be chosen as yours, this will be used to show your stats across different screens and features.")
                                 .positiveButton(text = "Save") {
                                     val isChecked = it.isCheckPromptChecked()
-                                    if (isChecked)
-                                        FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID").setValue(player.playerID)
+                                    if (isChecked) {
+                                        FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID/accountID").setValue(player.playerID)
+                                        FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID/shardID").setValue(player.defaultShardID.toLowerCase())
+                                    }
 
                                     if (!isChecked && player.playerID == userAccountID) {
+                                        userAccountID = ""
                                         FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID").removeValue()
                                     }
                                 }
@@ -163,6 +217,7 @@ class PlayerListDialog : AppCompatActivity() {
                                     mAdapter.notifyItemRemoved(index)
 
                                     if (player.playerID == userAccountID) {
+                                        userAccountID = ""
                                         FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID").removeValue()
                                     }
 
@@ -172,47 +227,113 @@ class PlayerListDialog : AppCompatActivity() {
                                 .show()
                         true
                     }
-
-                    cardView.setOnClickListener {
-                        if (intent.action != null) {
-                            //Called to pick a player, return with selection.
-                            val intent = Intent()
-                            intent.putExtra("selectedPlayer", player)
-                            setResult(Activity.RESULT_OK, intent)
-                            finish()
-                        } else {
-                            //Start Stats Activity with Selected Player
-                            startActivity<StatsHome>("selectedPlayer" to player)
-                        }
-                    }
                 }
             })
         }
 
         playerListRV?.adapter = mAdapter
 
-        playerListAdd?.setOnClickListener {
-            val addPlayerBottomSheet = AddPlayerBottomSheet()
-            if (players.size < 5 || Premium.isUserLevel(Premium.Level.LEVEL_3)) {
-                //If players list is less than 5 players OR if user is LEVEL 3 (UNLIMITED)
-                addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-            } else if (players.size < 15 && Premium.isUserLevel(Premium.Level.LEVEL_2)) {
-                //Player size is less than 15 AND user is Level 2 (15 Players)
-                addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-            } else {
-                //Player size is at max and user isn't Level 2 or 3, show upgrade dialog.
-                Snacky.builder().setView(playerListCord).warning().setDuration(BaseTransientBottomBar.LENGTH_LONG).setText("Player Limit Reached").setAction("UPGRADE") {
+        playerListFAB.addActionItem(SpeedDialActionItem.Builder(R.id.fab_new_steam, R.drawable.windows_black)
+                .setFabBackgroundColor(resources.getColor(R.color.md_light_blue_A400))
+                .setLabel("Add Steam Player")
+                .setLabelColor(resources.getColor(R.color.md_black_1000))
+                .setLabelBackgroundColor(resources.getColor(R.color.md_light_blue_A400))
+                .create())
+
+        playerListFAB.addActionItem(SpeedDialActionItem.Builder(R.id.fab_new_kakao, R.drawable.windows_black)
+                .setFabBackgroundColor(resources.getColor(R.color.md_grey_500))
+                .setLabel("Add Kakao Player")
+                .setLabelColor(resources.getColor(R.color.md_black_1000))
+                .setLabelBackgroundColor(resources.getColor(R.color.md_grey_500))
+                .create())
+
+        playerListFAB.addActionItem(SpeedDialActionItem.Builder(R.id.fab_new_xbox, R.drawable.ic_xbox_black)
+                .setFabBackgroundColor(resources.getColor(R.color.md_green_A700))
+                .setLabel("Add Xbox Player")
+                .setLabelColor(resources.getColor(R.color.md_black_1000))
+                .setLabelBackgroundColor(resources.getColor(R.color.md_green_A700))
+                .create())
+
+        playerListFAB?.setOnActionSelectedListener {
+            playerListFAB?.close(true)
+            if (Premium.isUserLevel2() && players.size >= 15) {
+                Snacky.builder().setActivity(this).warning().setText("Player Limit Reached").setAction("UPGRADE") {
                     startActivity<UpgradeActivity>()
                 }.show()
+                return@setOnActionSelectedListener true
+            } else if (!Premium.isPremiumUser() && players.size >= 5) {
+                Snacky.builder().setActivity(this).warning().setText("Player Limit Reached").setAction("UPGRADE") {
+                    startActivity<UpgradeActivity>()
+                }.show()
+                return@setOnActionSelectedListener true
             }
-        }
+            when (it.id) {
+                R.id.fab_new_steam -> {
+                    MaterialDialog(this@PlayerListDialog)
+                            .title(text = "Add Steam Player")
+                            .noAutoDismiss()
+                            .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                dialog.positiveButton(text = "Adding")
+                                dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                                addPlayerByName(text.toString(), "steam").addOnCompleteListener { task ->
+                                    if (!task.isSuccessful) {
+                                        dialog.getInputField()!!.error = "No player found for \"$text\". Please try again."
+                                        dialog.positiveButton(text = "Add")
+                                        dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
 
-        playerListToolbarWaterfall?.scrollView = playerListScrollview
+                                        return@addOnCompleteListener
+                                    }
+                                    dialog.dismiss()
+                                }
+                            }
+                            .positiveButton(text = "Add")
+                            .show()
+                }
+                R.id.fab_new_kakao -> {
+                    MaterialDialog(this@PlayerListDialog)
+                            .title(text = "Add Kakao Player")
+                            .noAutoDismiss()
+                            .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                dialog.positiveButton(text = "Adding")
+                                dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                                addPlayerByName(text.toString(), "kakao").addOnSuccessListener {
+                                    dialog.dismiss()
+                                }.addOnFailureListener {
+                                    dialog.getInputField()!!.error = "No player found for \"$text\". Please try again."
+                                    dialog.positiveButton(text = "Add")
+                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
+                                }
+                            }
+                            .positiveButton(text = "Add")
+                            .show()
+                }
+                R.id.fab_new_xbox -> {
+                    MaterialDialog(this@PlayerListDialog)
+                            .title(text = "Add Xbox Player")
+                            .noAutoDismiss()
+                            .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                dialog.positiveButton(text = "Adding")
+                                dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                                addPlayerByName(text.toString(), "xbox").addOnSuccessListener {
+                                    dialog.dismiss()
+                                }.addOnFailureListener {
+                                    dialog.getInputField()!!.error = "No player found for \"$text\". Please try again."
+                                    dialog.positiveButton(text = "Add")
+                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
+                                }
+                            }
+                            .positiveButton(text = "Add")
+                            .show()
+                }
+            }
+
+            return@setOnActionSelectedListener true
+        }
 
         when (Premium.getUserLevel()) {
             Premium.Level.LEVEL_1,
-            Premium.Level.FREE -> playerListLimitTV.text = "LIMIT OF 5 PLAYERS \uD83C\uDF57 UPGRADE"
-            Premium.Level.LEVEL_2 -> playerListLimitTV.text = "LIMIT OF 15 PLAYERS \uD83C\uDF57 UPGRADE"
+            Premium.Level.FREE -> playerListLimitTV.text = "LIMIT OF 5 PLAYERS \uD83C\uDF57"
+            Premium.Level.LEVEL_2 -> playerListLimitTV.text = "LIMIT OF 15 PLAYERS \uD83C\uDF57"
             else -> playerListLimitTV.text = "UNLIMITED PLAYERS 4 U! \uD83C\uDF57"
         }
     }
@@ -239,7 +360,7 @@ class PlayerListDialog : AppCompatActivity() {
             return
         }
 
-        val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser!!.uid)
+        val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser.uid)
 
         listenerRef = ref.ref
         listener = ref.addValueEventListener(object : ValueEventListener {
@@ -251,21 +372,49 @@ class PlayerListDialog : AppCompatActivity() {
                     return
                 }
 
-                userAccountID = if (p0.hasChild("pubgAccountID")) {
-                    p0.child("pubgAccountID").value.toString()
-                } else {
-                    ""
+                if (p0.hasChild("pubgAccountID") && !p0.hasChild("pubgAccountID/accountID") && !p0.hasChild("pubgAccountID/shardID")) {
+                    userAccountID = p0.child("pubgAccountID").value.toString()
+                    p0.ref.child("pubgAccountID/accountID").setValue(userAccountID)
+                }
+
+                if (p0.hasChild("pubgAccountID/accountID")) {
+                    userAccountID = p0.child("pubgAccountID/accountID").value.toString()
                 }
 
                 players.clear()
 
                 for (child in p0.child("pubg_players").children) {
+                    var shardID = child.child("shardID").value.toString().toLowerCase()
+                    var oldXboxShard: String? = null
+                    if (shardID.contains("kakao") && shardID != "kakao") {
+                        child.ref.child("shardID").setValue("kakao")
+                        shardID = "kakao"
+                    } else if (shardID.contains("pc")) {
+                        child.ref.child("shardID").setValue("steam")
+                        shardID = "steam"
+                    } else if (shardID.contains("xbox") && shardID != "xbox") {
+                        child.ref.child("shardID").setValue("xbox")
+                        child.ref.child("oldXboxShard").setValue(shardID)
+                        oldXboxShard = shardID
+                        shardID = "xbox"
+                    }
+
+                    if (!p0.hasChild("pubgAccountID/shardID") && userAccountID == child.key) {
+                        p0.ref.child("pubgAccountID/shardID").setValue(shardID)
+                    }
+
                     val player = PrefPlayer(
                             playerID = child.key.toString(),
                             playerName = child.child("playerName").value.toString(),
-                            defaultShardID = child.child("shardID").value.toString().toUpperCase(),
+                            defaultShardID = shardID.toLowerCase(),
                             selectedGamemode = "solo"
                     )
+
+                    if (oldXboxShard != null) {
+                        player.oldXboxShard = oldXboxShard
+                    } else if (child.hasChild("oldXboxShard")) {
+                        player.oldXboxShard = child.child("oldXboxShard").value.toString()
+                    }
 
                     Log.d("PLAYER", player.playerID)
 
@@ -275,6 +424,8 @@ class PlayerListDialog : AppCompatActivity() {
                 players = players.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.playerName }).toMutableList()
 
                 mAdapter.updateData(players)
+                //if (!isDestroyed)
+                //playerListRV?.scheduleLayoutAnimation()
             }
         })
     }
@@ -296,6 +447,12 @@ class PlayerListDialog : AppCompatActivity() {
             listener = null
             listenerRef = null
         }
+
+        if (listeners.isNotEmpty()) {
+            for (item in listeners) {
+                item.key.removeEventListener(item.value)
+            }
+        }
     }
 
     private fun startPlayerStatsFunction(playerID: String, shardID: String, seasonID: String): Task<Map<String, Any>>? {
@@ -307,6 +464,18 @@ class PlayerListDialog : AppCompatActivity() {
         return FirebaseFunctions.getInstance().getHttpsCallable("loadPlayerStats")?.call(data)?.continueWith { task ->
             val result = task.result?.data as Map<String, Any>
             Log.d("REQUEST", result.toString())
+            result
+        }
+    }
+
+    private fun addPlayerByName(playerName: String, shardID: String): Task<Map<String, Any>> {
+        val data = HashMap<String, Any>()
+        data["playerName"] = playerName
+        data["shardID"] = shardID
+
+        return FirebaseFunctions.getInstance().getHttpsCallable("addPlayerByName").call(data).continueWith { task ->
+            val result = task.result
+                    ?.data as Map<String, Any>
             result
         }
     }

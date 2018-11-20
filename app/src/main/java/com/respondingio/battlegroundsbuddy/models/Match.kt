@@ -24,10 +24,10 @@ data class Match (
 ) {
     fun getMapIcon(): Int {
         when (mapName) {
-            "Savage_Main" -> return R.drawable.sanhok_icon
-            "Erangel_Main" -> return R.drawable.erangel_icon
-            "Desert_Main" -> return R.drawable.cactu
-            else -> return R.drawable.erangel_icon
+            "Savage_Main" -> return R.drawable.ic_palm_tree
+            "Erangel_Main" -> return R.drawable.ic_tree
+            "Desert_Main" -> return R.drawable.ic_cactus
+            else -> return R.drawable.ic_tree
         }
     }
 

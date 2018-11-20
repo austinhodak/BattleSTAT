@@ -9,19 +9,22 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.widget.NestedScrollView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.respondingio.battlegroundsbuddy.R;
+
 import javax.annotation.Nullable;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class WeaponDamageChart extends AppCompatActivity {
 
@@ -288,7 +291,7 @@ public class WeaponDamageChart extends AppCompatActivity {
         updateHTKColor(layoutHead, (int) Math.ceil(100/headDMG));
 
         //NECK
-        double neckDMG = baseDamage * MOD_NECK * classModHead - (baseDamage * MOD_NECK * classModHead * helmetModifier);
+        double neckDMG = baseHeadDamage * MOD_NECK * classModHead - (baseHeadDamage * MOD_NECK * classModHead * helmetModifier);
         ((TextView) layoutNeck.getChildAt(1)).setText(String.format("%.1f", neckDMG));
         ((TextView) layoutNeck.getChildAt(2)).setText(String.format("%.0f", Math.ceil(100/neckDMG)));
         updateHTKColor(layoutNeck, (int) Math.ceil(100/neckDMG));

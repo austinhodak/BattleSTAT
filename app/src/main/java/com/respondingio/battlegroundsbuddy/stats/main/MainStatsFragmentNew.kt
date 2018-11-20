@@ -78,12 +78,11 @@ class MainStatsFragmentNew : Fragment() {
             updateStats(it.getStatsByGamemode(player.selectedGamemode!!)!!)
             statsKills.text = it.getStatsByGamemode(player.selectedGamemode!!)?.kills.toString()
 
-            if (it.lastUpdated != null) {
+            if (it.lastUpdated != null && it.lastUpdated != 0.toLong()) {
                 val relTime = DateUtils
                         .getRelativeTimeSpanString(it.lastUpdated!! * 1000L,
                                 System.currentTimeMillis(),
                                 DateUtils.MINUTE_IN_MILLIS).toString().toUpperCase()
-
 
 
                 statsLastUpdatedTop?.text = "LAST UPDATED: $relTime"
@@ -95,6 +94,8 @@ class MainStatsFragmentNew : Fragment() {
                 } else {
                     stats_corner_alert?.hide()
                 }
+            } else {
+                statsLastUpdatedTop?.text = "LAST UPDATED: NEVER, PULL TO REFRESH"
             }
         })
 

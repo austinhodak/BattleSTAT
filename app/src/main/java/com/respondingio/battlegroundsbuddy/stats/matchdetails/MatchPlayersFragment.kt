@@ -1,6 +1,7 @@
 package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -66,10 +67,10 @@ class MatchPlayersFragment : Fragment() {
             injector.text(R.id.match_player_longestkill, "${String.format("%.0f", Math.rint(data.attributes.stats.longestKill))}m")
 
             if (mActivity.currentPlayerID == data.attributes.stats.playerId) {
-                injector.background(R.id.match_player_place, R.drawable.chip_green_outline)
+                //injector.background(R.id.match_player_place, R.drawable.chip_green_outline)
                 injector.textColor(R.id.match_player_place, resources.getColor(R.color.md_white_1000))
             } else {
-                injector.background(R.id.match_player_place, R.drawable.chip_grey_outline)
+                //injector.background(R.id.match_player_place, R.drawable.chip_grey_outline)
                 injector.textColor(R.id.match_player_place, resources.getColor(R.color.md_white_1000))
             }
 
@@ -110,13 +111,13 @@ class MatchPlayersFragment : Fragment() {
         return distanceLong
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.match_players, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        Log.d("OPTIONS", "SELECTED")
         if (item?.itemId == R.id.match_players_sort) {
             MaterialDialog(requireActivity())
                     .title(text = "Sort By")
@@ -149,6 +150,7 @@ class MatchPlayersFragment : Fragment() {
                             }
                         }
                     }.show()
+            return true
         }
         return super.onOptionsItemSelected(item)
     }

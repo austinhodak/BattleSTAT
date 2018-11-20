@@ -1,0 +1,39 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m151,241c-16.539,0 -30,-13.461 -30,-30l-15,-15 15,-15v-15c0,-24.813 -20.188,-45 -45,-45s-45,20.188 -45,45v45c0,10.418 1.754,20.355 4.262,30l25.738,15 -13.305,15c20.816,35.691 59.09,60 103.305,60h90v-90zM151,241" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m481,151 l-15,15 10.801,15c-13.5,51.598 -60,90 -115.801,90h-45v90l-15,15 15,15v121h-120v-271l15,-15 -15,-15v-90l15,-15 -15,-15v-31c0,-33 27,-60 60,-60s60,27 60,60v91l-15,15 15,15h45c16.5,0 30,-13.5 30,-30v-30l15,-15 -15,-15v-15c0,-24.902 20.098,-45 45,-45s45,20.098 45,45zM481,151" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m481,151 l-15,15 10.801,15c-13.5,51.598 -60,90 -115.801,90h-45v90l-15,15 15,15v121h-60v-512c33,0 60,27 60,60v91l-15,15 15,15h45c16.5,0 30,-13.5 30,-30v-30l15,-15 -15,-15v-15c0,-24.902 20.098,-45 45,-45s45,20.098 45,45zM481,151" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m76,181h45v30h-45zM76,181" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m91,241h-55.738c2.777,10.676 7,20.688 12.434,30h43.305zM91,241" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m436,151v30h40.738c2.508,-9.645 4.262,-19.582 4.262,-30zM436,151" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m391,91h45v30h-45zM391,91" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m271,151h45v30h-45zM271,151" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m196,91h45v30h-45zM196,91" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m196,211h45v30h-45zM196,211" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="m271,361h45v30h-45zM271,361" />
+</vector>

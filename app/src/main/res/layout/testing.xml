@@ -147,7 +147,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
-                        android:text="RANGE"
+                        android:text="@string/range"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -177,7 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
-                        android:text="BODY DAMAGE"
+                        android:text="@string/body_damage"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -207,7 +207,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
-                        android:text="HEAD DAMAGE"
+                        android:text="@string/head_damage"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />

@@ -74,5 +74,14 @@
     <string name="sign_out_text">Sign Out</string>
     <string name="nevermind">Nevermind</string>
     <string name="profile_bottom">PROFILE WILL BE EDITABLE SOON</string>
+    <string name="range">RANGE</string>
+    <string name="body_damage">BODY DAMAGE</string>
+    <string name="head_damage">HEAD DAMAGE</string>
+    <string name="assault_rifles">Assault Rifles</string>
+    <string name="sniper_rifles">Sniper Rifles</string>
+    <string name="shotguns">Shotguns</string>
+    <string name="pistols">Pistols</string>
+    <string name="throwables" translatable="false">Throwables</string>
+    <string name="melee">Melee</string>
 
 </resources>

@@ -29,17 +29,16 @@
 
             <TextView
                 android:id="@+id/match_player_place"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/chip_white_outline"
-                android:fontFamily="@font/roboto_black"
+                android:layout_width="45dp"
+                android:layout_height="30dp"
+                android:background="@drawable/alert_text_box_grey"
+                android:backgroundTint="@color/rankBronze"
+                android:fontFamily="@font/roboto_condensed_bold"
                 android:gravity="center"
                 android:text="#1"
-                android:textColor="@color/md_light_primary_text"
+                android:textColor="#FFF"
                 android:textSize="16sp"
-                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintDimensionRatio="w,"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,14 +46,15 @@
                 android:id="@+id/match_player_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:fontFamily="@font/roboto_bold"
                 android:text="THExLEGENDxxx"
                 android:textColor="#FFF"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/match_player_place"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/match_player_place"
-                app:layout_constraintTop_toTopOf="@+id/match_player_place" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/match_player_rating"
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="12dp"
                 android:orientation="horizontal"
@@ -161,10 +161,11 @@
                 android:id="@+id/imageView5"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/crosshair"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_place_black_24dp"
                 app:layout_constraintEnd_toEndOf="@+id/match_player_longestkill"
                 app:layout_constraintStart_toStartOf="@+id/match_player_longestkill"
-                app:layout_constraintTop_toTopOf="@+id/match_player_place" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/match_player_longestkill"
