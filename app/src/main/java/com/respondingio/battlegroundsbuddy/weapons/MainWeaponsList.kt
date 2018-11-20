@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.firebase.firestore.DocumentSnapshot
@@ -23,13 +22,12 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.models.Weapon
+import com.respondingio.battlegroundsbuddy.utils.Ads
 import com.respondingio.battlegroundsbuddy.weapondetail.WeaponDetailTimeline
-import com.respondingio.battlegroundsbuddy.weapondetail.WeaponHome
-import kotlinx.android.synthetic.main.home_weapons_list.pg
-import kotlinx.android.synthetic.main.home_weapons_list.weapon_list_rv
+import kotlinx.android.synthetic.main.home_weapons_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.support.v4.startActivity
-import java.util.ArrayList
+import java.util.*
 
 class MainWeaponsList : Fragment() {
 
@@ -161,7 +159,7 @@ class MainWeaponsList : Fragment() {
             }
 
             if (!adView.isLoading)
-                adView.loadAd(AdRequest.Builder().build())
+                adView.loadAd(Ads.getAdBuilder())
         }
         
         loadWeapons(int)

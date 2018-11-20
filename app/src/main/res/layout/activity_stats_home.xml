@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/stats_home_coord"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/playerListToolbarWaterfall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_grey_900"
+            app:layout_scrollFlags="scroll"
+            app:navigationIcon="@drawable/instabug_ic_back">
+
+            <LinearLayout
+                android:id="@+id/top_bar_linear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:gravity="center_vertical"
+                    android:text="Player Stats"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/toolbar_image"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/windows_white" />
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/stats_home_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_grey_900"
+            app:layout_scrollFlags="snap"
+            app:tabGravity="center"
+            app:tabIndicator="@drawable/tab_indicator"
+            app:tabIndicatorColor="@color/timelineOrange"
+            app:tabIndicatorFullWidth="false"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/timelineOrange"
+            app:tabTextAppearance="@style/TabText"
+            app:tabTextColor="#FFF"
+            app:tabUnboundedRipple="true">
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Solo" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Solo FPP" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duo" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duo FPP" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Squad" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Squad FPP" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/statsRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/stats_home_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_gravity="top"
+        android:background="@drawable/shadow_top"
+        app:layout_anchor="@id/stats_bottom_nav" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/stats_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/md_grey_900"
+        app:itemIconTint="@drawable/tab_colored"
+        app:itemTextColor="@drawable/tab_colored"
+        app:layout_behavior="com.respondingio.battlegroundsbuddy.BottomNavigationBehavior"
+        app:menu="@menu/stats_home">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

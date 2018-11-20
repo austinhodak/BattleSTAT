@@ -15,13 +15,15 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabBackground="?attr/colorPrimary"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="?attr/tab_underline"
+            app:tabGravity="center"
+            app:tabIndicator="@drawable/tab_indicator"
+            app:tabIndicatorColor="@color/timelineOrange"
+            app:tabIndicatorFullWidth="false"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="?android:attr/textColorPrimary"
-            app:tabIndicatorHeight="2dp"
-            app:tabTextColor="?android:attr/textColorSecondary" />
+            app:tabSelectedTextColor="@color/timelineOrange"
+            app:tabTextAppearance="@style/TabText"
+            app:tabTextColor="#FFF"
+            app:tabUnboundedRipple="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

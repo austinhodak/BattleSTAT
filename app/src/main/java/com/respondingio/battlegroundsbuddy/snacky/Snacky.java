@@ -178,7 +178,7 @@ public class Snacky {
 
         private Type type = Type.DEFAULT;
 
-        private int duration = Snackbar.LENGTH_SHORT;
+        private int duration = BaseTransientBottomBar.LENGTH_SHORT;
 
         private CharSequence text = "";
 

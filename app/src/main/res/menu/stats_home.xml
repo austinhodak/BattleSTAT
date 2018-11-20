@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/your_stats_menu"
+        android:icon="@drawable/pie_chart"
+        android:title="Stats" />
+
+    <item
+        android:id="@+id/matches_menu"
+        android:icon="@drawable/gun_firing"
+        android:title="Matches" />
+
+    <item
+        android:id="@+id/stats_war_mode"
+        android:icon="@drawable/explosion"
+        android:title="War Mode"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/stats_leaderboards"
+        android:icon="@drawable/leaderboard_icon"
+        android:title="Leaderboards" />
+
+</menu>

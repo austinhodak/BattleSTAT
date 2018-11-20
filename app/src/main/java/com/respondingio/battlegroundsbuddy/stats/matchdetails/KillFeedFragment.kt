@@ -2,13 +2,7 @@ package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,14 +14,12 @@ import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
-import kotlinx.android.synthetic.main.fragment_stats_kill_feed.kill_feed_rv
+import kotlinx.android.synthetic.main.fragment_stats_kill_feed.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import org.jetbrains.anko.support.v4.startActivity
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.TimeZone
+import java.util.*
 
 class KillFeedFragment: Fragment() {
 
@@ -65,7 +57,6 @@ class KillFeedFragment: Fragment() {
             injector.text(R.id.kill_feed_killer, "")
             injector.text(R.id.kill_feed_victim, "")
 
-            //TODO FIX THIS, NOT GOING BACK TO NORMAL AFTER ITALIC.
             var killerTV = injector.findViewById<TextView>(R.id.kill_feed_killer)
             if (data.killer.name.isEmpty()) {
                 data.killer.name = Telemetry().damageTypeCategory[data.damageTypeCategory].toString()
@@ -88,21 +79,21 @@ class KillFeedFragment: Fragment() {
 
             injector.text(R.id.textView9, (killFeedList.size - killFeedList.indexOf(data)).toString())
 
-            Log.d("MATCH", "${match.currentPlayerID} - ${data.killer.accountId}")
-
-            when {
-                data.killer.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_green_outline)
-                data.victim.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_red_outline)
-                else -> {
-                    for (teammate in matchModel?.currentPlayerRoster?.relationships?.participants?.data!!) {
-                        if (data.killer.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
-                            injector.background(R.id.textView9, drawable.chip_green_outline_teammate)
-                            break
-                        } else if (data.victim.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
-                            injector.background(R.id.textView9, drawable.chip_red_outline_teammate)
-                            break
-                        } else {
-                            injector.background(R.id.textView9, drawable.chip_grey_outline)
+            if (match.currentPlayerID.isNotEmpty() && matchModel?.currentPlayerRoster != null) {
+                when {
+                    data.killer.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_green_outline)
+                    data.victim.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_red_outline)
+                    else -> {
+                        for (teammate in matchModel?.currentPlayerRoster?.relationships?.participants?.data!!) {
+                            if (data.killer.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
+                                injector.background(R.id.textView9, drawable.chip_green_outline_teammate)
+                                break
+                            } else if (data.victim.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
+                                injector.background(R.id.textView9, drawable.chip_red_outline_teammate)
+                                break
+                            } else {
+                                injector.background(R.id.textView9, drawable.chip_grey_outline)
+                            }
                         }
                     }
                 }

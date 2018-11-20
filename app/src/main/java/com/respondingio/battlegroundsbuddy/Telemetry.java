@@ -119,7 +119,8 @@ public class Telemetry {
             "  \"WeapVector_C\": \"Vector\",\n" +
             "  \"WeapVSS_C\": \"VSS\",\n" +
             "  \"WeapWin94_C\": \"Win94\",\n" +
-            "  \"WeapWinchester_C\": \"S1897\"\n" +
+            "  \"WeapWinchester_C\": \"S1897\",\n" +
+            "  \"Weapvz61Skorpion_C\": \"Skorpion\"\n" +
             "}";
 
     public JSONObject getDamageCauserName() throws JSONException {
@@ -286,6 +287,9 @@ public class Telemetry {
         object.put("pc-sa", "PC SA");
         object.put("pc-as", "PC AS");
         object.put("pc-tournament", "PC TOURNEY");
+        object.put("steam", "Steam");
+        object.put("xbox", "Xbox");
+        object.put("kakao", "Kakao");
         return object;
     }
 

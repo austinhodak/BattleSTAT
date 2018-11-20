@@ -10,20 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
-import kotlinx.android.synthetic.main.fragment_home_weapons.tabs
-import kotlinx.android.synthetic.main.fragment_home_weapons.viewpager
-import kotlinx.android.synthetic.main.fragment_home_weapons.weaponListAd
-import java.util.ArrayList
-import java.util.Arrays
+import com.respondingio.battlegroundsbuddy.utils.Premium
+import kotlinx.android.synthetic.main.fragment_home_weapons.*
+import java.util.*
 
 class HomeWeaponsFragment : Fragment() {
 
     private val mStringArray = ArrayList<String>()
 
-    private val title = arrayOf("Assault Rifles", "Sniper Rifles", "SMGs", "Shotguns", "Pistols", "LMGs", "Throwables", "Melee", "Misc")
+
 
     internal inner class ViewPagerAdapter
 
@@ -67,7 +63,8 @@ class HomeWeaponsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTabs()
-        if (Premium.isAdFreeUser()) {
+
+        if (!Premium.isAdFreeUser()) {
             weaponListAd?.adListener = object: AdListener() {
                 override fun onAdFailedToLoad(p0: Int) {
                     super.onAdFailedToLoad(p0)
@@ -79,8 +76,6 @@ class HomeWeaponsFragment : Fragment() {
                     weaponListAd?.visibility = View.VISIBLE
                 }
             }
-
-            weaponListAd?.loadAd(AdRequest.Builder().build())
         }
     }
 
@@ -90,6 +85,16 @@ class HomeWeaponsFragment : Fragment() {
     }
 
     private fun setupTabs() {
+        val title = arrayOf(
+                getString(R.string.assault_rifles),
+                getString(R.string.sniper_rifles),
+                "SMGs",
+                getString(R.string.shotguns),
+                getString(R.string.pistols),
+                "LMGs",
+                getString(R.string.throwables),
+                getString(R.string.melee), "Misc"
+        )
         mStringArray.addAll(Arrays.asList(*title))
 
         val adapter = ViewPagerAdapter(childFragmentManager)

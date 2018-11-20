@@ -1,32 +1,34 @@
 package com.respondingio.battlegroundsbuddy.stats.matchdetails
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.LogPlayerKill
-import com.respondingio.battlegroundsbuddy.models.Stats
+import com.respondingio.battlegroundsbuddy.models.LogPlayerTakeDamage
 import com.respondingio.battlegroundsbuddy.viewmodels.MatchDetailViewModel
 import com.respondingio.battlegroundsbuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.fragment_matches_player_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.textColor
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.TimeZone
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+
 
 class MatchPlayerStatsFragment : Fragment() {
 
@@ -54,10 +56,10 @@ class MatchPlayerStatsFragment : Fragment() {
         if (arguments != null && arguments!!.containsKey("playerID")) {
             playerID = arguments!!.getString("playerID")
             if (arguments!!.containsKey("isTabs")) {
-                top.backgroundColor = Color.parseColor("#FAFAFA")
+                //top.backgroundColor = Color.parseColor("#FAFAFA")
             } else {
                 val bottomUp = AnimationUtils.loadAnimation(context, R.anim.bottom_up)
-                stats_scroll_view.startAnimation(bottomUp)
+                //stats_scroll_view.startAnimation(bottomUp)
 
             }
 
@@ -69,16 +71,32 @@ class MatchPlayerStatsFragment : Fragment() {
         } else {
             viewModel.mMatchData.observe(this, matchDataObserver)
             val bottomUp = AnimationUtils.loadAnimation(context, R.anim.bottom_up)
-            stats_scroll_view.startAnimation(bottomUp)
+            //stats_scroll_view.startAnimation(bottomUp)
         }
 
-        stats_scroll_view.visibility = View.VISIBLE
+        playerKillsCard?.setOnClickListener {
+            if (playerKillsRV?.visibility == View.GONE) {
+                playerKillsRV?.visibility = View.VISIBLE
+            } else {
+                playerKillsRV?.visibility = View.GONE
+            }
+        }
+
+        statsDamageCard?.setOnClickListener {
+            if (damageBottomExtras?.visibility == View.GONE) {
+                damageBottomExtras?.visibility = View.VISIBLE
+            } else {
+                damageBottomExtras?.visibility = View.GONE
+            }
+        }
+
+        //stats_scroll_view.visibility = View.VISIBLE
     }
 
     private fun matchDataLoaded(it: MatchModel) {
-        Log.d("MATCH", it.attributes?.gameMode)
         fillStats(it)
         setupAndFillKills(it)
+        setupAndFillDamage(it)
     }
 
     private fun setupAndFillKills(it: MatchModel) {
@@ -99,25 +117,51 @@ class MatchPlayerStatsFragment : Fragment() {
             }
         }
 
-        if (killsList.isEmpty()) {
-            div2.visibility = View.GONE
-        }
-
-        stats_killsRV.layoutManager = LinearLayoutManager(requireActivity())
-        stats_killsRV.isNestedScrollingEnabled = false
-        SlimAdapter.create().attachTo(stats_killsRV).updateData(killsList).register(R.layout.stats_kill_feed_item2) { data: LogPlayerKill, injector ->
+        playerKillsRV.layoutManager = LinearLayoutManager(requireActivity())
+        playerKillsRV.isNestedScrollingEnabled = false
+        SlimAdapter.create().attachTo(playerKillsRV).updateData(killsList).register(R.layout.stats_kill_feed_item2) { data: LogPlayerKill, injector ->
             if (killsList.indexOf(data) == (killsList.size -1)) {
                 //Last item so remove div.
-                injector.gone(R.id.div)
+                //injector.gone(R.id.div)
             }
 
             injector.text(R.id.kill_feed_victim, data.victim.name)
-            injector.text(R.id.textView9, ordinal(data.victim.ranking))
+            //injector.text(R.id.textView9, ordinal(data.victim.ranking))
+
+            var reasonTV = injector.findViewById<TextView>(R.id.killReasonTV)
+            var reasonIcon = injector.findViewById<ImageView>(R.id.killReasonIcon)
 
             if (Telemetry().damageCauserName[data.damageCauserName].toString() == "Player") {
                 injector.text(R.id.kill_feed_cause, Telemetry().damageTypeCategory[data.damageTypeCategory].toString())
             } else {
                 injector.text(R.id.kill_feed_cause, Telemetry().damageCauserName[data.damageCauserName].toString())
+            }
+
+            when (data.damageReason) {
+                "ArmShot" -> {
+                    reasonTV.text = "ARM"
+                    reasonIcon.setImageResource(R.drawable.icons8_arm)
+                }
+                "HeadShot" -> {
+                    reasonTV.text = "HEAD"
+                    reasonIcon.setImageResource(R.drawable.icons8_skull)
+                }
+                "LegShot" -> {
+                    reasonTV.text = "LEG"
+                    reasonIcon.setImageResource(R.drawable.icons8_leg)
+                }
+                "PelvisShot" -> {
+                    reasonTV.text = "PELVIS"
+                    reasonIcon.setImageResource(R.drawable.pelvis)
+                }
+                "TorsoShot" -> {
+                    reasonTV.text = "TORSO"
+                    reasonIcon.setImageResource(R.drawable.torso)
+                }
+                else -> {
+                    reasonTV.text = "N/A"
+                    reasonIcon.setImageResource(R.drawable.question)
+                }
             }
 
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -149,92 +193,161 @@ class MatchPlayerStatsFragment : Fragment() {
         }
     }
 
+    private fun setupAndFillDamage(it: MatchModel) {
+        val match = it
+
+        var damageList: MutableList<LogPlayerTakeDamage>
+
+        Log.d("PLAYERID", "$playerID - ${match.currentPlayerID}")
+
+        var id = match.currentPlayerID
+        if (playerID != null) id = match.participantHash[playerID!!]!!.attributes.stats.playerId
+
+        damageList = it.logPlayerTakeDamage.filter { it.attacker.accountId == id || it.victim.accountId == id && it.attacker.name.isNotEmpty() && it.victim.name.isNotEmpty() }.toMutableList()
+        damageList = damageList.sortedWith(compareBy { it._D }).toMutableList()
+
+        playerDamageRV.layoutManager = LinearLayoutManager(requireActivity())
+        playerDamageRV.isNestedScrollingEnabled = false
+        SlimAdapter.create().attachTo(playerDamageRV).updateData(damageList).register(R.layout.stats_damage_list_item) { data: LogPlayerTakeDamage, injector ->
+
+            injector.clicked(R.id.damageTop) {
+                //toast(data.)
+            }
+
+            injector.text(R.id.kill_feed_victim, "${data.attacker.name} attacked ${data.victim.name}")
+
+            var reasonTV = injector.findViewById<TextView>(R.id.killReasonTV)
+            var reasonIcon = injector.findViewById<ImageView>(R.id.killReasonIcon)
+
+            if (Telemetry().damageCauserName[data.damageCauserName].toString() == "Player") {
+                injector.text(R.id.kill_feed_cause, Telemetry().damageTypeCategory[data.damageTypeCategory].toString())
+            } else {
+                injector.text(R.id.kill_feed_cause, Telemetry().damageCauserName[data.damageCauserName].toString())
+            }
+
+            when (data.damageReason) {
+                "ArmShot" -> {
+                    reasonTV.text = "ARM"
+                    reasonIcon.setImageResource(R.drawable.icons8_arm)
+                }
+                "HeadShot" -> {
+                    reasonTV.text = "HEAD"
+                    reasonIcon.setImageResource(R.drawable.icons8_skull)
+                }
+                "LegShot" -> {
+                    reasonTV.text = "LEG"
+                    reasonIcon.setImageResource(R.drawable.icons8_leg)
+                }
+                "PelvisShot" -> {
+                    reasonTV.text = "PELVIS"
+                    reasonIcon.setImageResource(R.drawable.pelvis)
+                }
+                "TorsoShot" -> {
+                    reasonTV.text = "TORSO"
+                    reasonIcon.setImageResource(R.drawable.torso)
+                }
+                else -> {
+                    reasonTV.text = "N/A"
+                    reasonIcon.setImageResource(R.drawable.question)
+                }
+            }
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            sdf.timeZone = TimeZone.getTimeZone("GMT")
+            val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            sdf2.timeZone = TimeZone.getTimeZone("GMT")
+            val matchStartDate = sdf.parse(match.attributes?.createdAt)
+            val killTime = sdf2.parse(data._D)
+
+            var difference = killTime.time - matchStartDate.time
+
+            val secondsInMilli: Long = 1000
+            val minutesInMilli = secondsInMilli * 60
+            val hoursInMilli = minutesInMilli * 60
+            val daysInMilli = hoursInMilli * 24
+
+            difference %= daysInMilli
+
+            difference %= hoursInMilli
+
+            val elapsedMinutes = difference / minutesInMilli
+            difference %= minutesInMilli
+
+            val elapsedSeconds = difference / secondsInMilli
+
+            injector.text(R.id.kill_feed_time, String.format("%02d:%02d", elapsedMinutes, elapsedSeconds))
+
+            val damageString = if ((data.victim.health.roundToInt() - data.damage.roundToInt()) <= 0) {
+                "${data.victim.health.roundToInt()} TO DEAD"
+            } else {
+                "${data.victim.health.roundToInt()} TO ${(data.victim.health.roundToInt() - data.damage.roundToInt())}"
+            }
+
+            injector.text(R.id.kill_feed_distance, "$damageString • ${data.damage.roundToInt()} DMG")
+
+            val sideBarHeight = 60.0 * ((data.victim.health.roundToInt() - data.damage.roundToInt()) / 100.0)
+            Log.d("SIDEBAR", "${(data.victim.health.roundToInt() - data.damage.roundToInt()) / 100.0}")
+
+            val damageBar = injector.findViewById<View>(R.id.damagebar)
+            val params = RelativeLayout.LayoutParams(getDp(3f), getDp(sideBarHeight.toFloat()))
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+            damageBar?.layoutParams = params
+            if (sideBarHeight == 0.0) {
+                damageBar?.visibility = View.INVISIBLE
+            } else {
+                damageBar?.visibility = View.VISIBLE
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun fillStats(matchModel: MatchModel) {
-        var match = matchModel
+        val match = matchModel
 
-        Log.d("MATCH", match.getFormattedCreatedAt())
-
-        val stats: Stats
-        if (playerID != null && !playerID!!.contains("account.", true)) {
-            stats = match.participantHash[playerID!!]?.attributes?.stats!!
+        val stats = if (playerID != null && !playerID!!.contains("account.", true)) {
+            match.participantHash[playerID!!]?.attributes?.stats!!
         } else if (playerID != null &&playerID!!.contains("account.", false)) {
-            stats = match.getPlayerByAccountID(playerID!!)?.attributes?.stats!!
+            match.getPlayerByAccountID(playerID!!)?.attributes?.stats!!
         } else {
-            stats = match.currentPlayer?.attributes!!.stats
+            match.currentPlayer?.attributes!!.stats
         }
 
-        stats_rideDist.text = "${Math.rint(stats.rideDistance).toLong()}m"
-        stats_walkDist.text = "${Math.rint(stats.walkDistance).toLong()}m"
-        stats_swimDist.text = "${Math.rint(stats.swimDistance).toLong()}m"
+        statsRideDist?.text = "${String.format("%.0f", Math.ceil(stats.rideDistance))}m"
+        statsSwimDist?.text = "${String.format("%.0f", Math.ceil(stats.swimDistance))}m"
+        statsWalkDist?.text = "${String.format("%.0f", Math.ceil(stats.walkDistance))}m"
 
-        val winPointsText: String
+        statsLongestKill?.text = "${String.format("%.0f", Math.ceil(stats.longestKill))}m"
+        statsRoadKills?.text = stats.roadKills.toString()
+        statsTeamKills?.text = stats.teamKills.toString()
 
-        if (stats.winPointsDelta >= 0) {
-            winPointsText = "${stats.winPoints} (+${String.format("%.0f", stats.winPointsDelta)})"
-            //stats_winPoints.textColor = resources.getColor(R.color.md_green_A700)
-        } else {
-            winPointsText = "${stats.winPoints} (${String.format("%.0f", stats.winPointsDelta)})"
-            //stats_winPoints.textColor = resources.getColor(R.color.md_red_A700)
-        }
+        statsBoosts?.text = stats.boosts.toString()
+        statsHeals?.text = stats.heals.toString()
+        statsRevives?.text = stats.revives.toString()
 
-        val killPointsText: String
+        statsKills?.text = stats.kills.toString()
 
-        if (stats.killPointsDelta >= 0) {
-            killPointsText = "${stats.killPoints} (+${String.format("%.0f", stats.killPointsDelta)})"
-            //stats_killPoints.textColor = resources.getColor(R.color.md_green_A700)
-        } else {
-            killPointsText = "${stats.killPoints} (${String.format("%.0f", stats.killPointsDelta)})"
-            //stats_killPoints.textColor = resources.getColor(R.color.md_red_A700)
-        }
+        statsWinPlace?.text = "#${stats.winPlace}"
+        statsPlayerName?.text = stats.name
 
-        stats_winPoints.text = winPointsText
-        stats_killPoints.text = killPointsText
-        stats_weaponsAqd.text = stats.weaponsAcquired.toString()
-        stats_boosts.text = stats.boosts.toString()
-        stats_killStreaks.text = stats.killStreaks.toString()
-        stats_timeSurv.text = "${(stats.timeSurvived/60).roundToLong()} Min"
-        stats_vehicleDestroy.text = stats.vehicleDestroys.toString()
-        stats_mostDamageDealt.text = stats.mostDamage.roundToLong().toString()
+        statsWeaponsAq?.text = stats.weaponsAcquired.toString()
 
-        stats_kills.text = stats.kills.toString()
-        stats_headshots.text = stats.headshotKills.toString()
-        stats_assists.text = stats.assists.toString()
-        stats_roadKills.text = stats.roadKills.toString()
-        stats_dbnos.text = stats.DBNOs.toString()
-        stats_longestKill.text = "${stats.longestKill.roundToLong()}m"
-        stats_teamKills.text = stats.teamKills.toString()
-        stats_heals.text = stats.heals.toString()
-        stats_damageDealt.text = stats.damageDealt.roundToLong().toString()
-        stats_revives.text = stats.revives.toString()
+        if (stats.kills != 0 && stats.headshotKills != 0)
+            statsHeadshotPct?.text = "${String.format("%.2f", (stats.headshotKills.toDouble() / stats.kills.toDouble()) * 100)}%"
 
-        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints >= 0.0) {
-            rank_card?.visibility = View.VISIBLE
-            rank_title?.text = getRankTitle(stats.rankPoints)
-            rank_subtitle?.text = "POINTS: ${Math.floor(stats.rankPoints).toInt()}"
+        statsKillsPlace?.text = stats.killPlace.toString()
+        statsAssists?.text = stats.assists.toString()
+        statsdBNOs?.text = stats.DBNOs.toString()
+        statsKillStreaks?.text = stats.killStreaks.toString()
+        statsMostDamage?.text = stats.mostDamage.roundToLong().toString()
+        statsDamageDealt?.text = stats.damageDealt.roundToLong().toString()
+        statsTimeSurv?.text = "${Math.ceil(stats.timeSurvived / 60).toInt()} Min"
+        statsHeadshots?.text = stats.headshotKills.toString()
 
-            Glide.with(this).load(getRankIcon(stats.rankPoints)).into(rank_icon)
 
-            old_points_layout?.visibility = View.GONE
-            divider13?.visibility = View.INVISIBLE
-        } else {
-            rank_card?.visibility = View.GONE
-
-            old_points_layout?.visibility = View.VISIBLE
-
-            stats_killPoints?.text = String.format("%.0f", Math.rint(stats.killPoints))
-            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.winPoints))
-        }
-
-        if (stats.killPoints == 0.0 && stats.winPoints == 0.0 && stats.rankPoints >= 0.0) {
-            winPointsTitle?.text = "RANK POINTS *NEW"
-            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.rankPoints))
-
-            killPoints_view?.visibility = View.GONE
-        } else {
-            stats_killPoints?.text = String.format("%.0f", Math.rint(stats.killPoints))
-            stats_winPoints?.text = String.format("%.0f", Math.rint(stats.winPoints))
-        }
+        val playerAttacks = matchModel.logPlayerAttack.filter { it.attacker.accountId == stats.playerId }
+        val playerDamageAttacks = matchModel.logPlayerTakeDamage.filter { it.attacker.accountId == stats.playerId }
+        damageTotalAttacks?.text = "${playerAttacks.size}"
+        damageTotalDamageAttacks?.text = "${playerDamageAttacks.size}"
     }
 
     fun ordinal(i: Int): String {
@@ -277,5 +390,14 @@ class MatchPlayerStatsFragment : Fragment() {
             rankPoints >= 2000 -> R.drawable.rank_icon_grandmaster
             else -> R.drawable.rank_icon_unranked
         }
+    }
+
+    fun getDp(dp: Float): Int {
+        val r = requireContext().resources
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                r.displayMetrics
+        ).toInt()
     }
 }

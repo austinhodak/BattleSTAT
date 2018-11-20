@@ -1,10 +1,8 @@
 package com.respondingio.battlegroundsbuddy.weapondetail
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -19,18 +17,11 @@ import com.google.firebase.database.FirebaseDatabase
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
-import com.respondingio.battlegroundsbuddy.weapondetail.WeaponHome.Fragment.COMMENTS
-import com.respondingio.battlegroundsbuddy.weapondetail.WeaponHome.Fragment.NONE
-import com.respondingio.battlegroundsbuddy.weapondetail.WeaponHome.Fragment.OVERVIEW
+import com.respondingio.battlegroundsbuddy.weapondetail.WeaponHome.Fragment.*
 import com.respondingio.battlegroundsbuddy.weapons.CompareWeaponPicker
 import com.respondingio.battlegroundsbuddy.weapons.WeaponComments
-import kotlinx.android.synthetic.main.fragment_weapon_comments.*
-import kotlinx.android.synthetic.main.new_weapon_home_test.bar
-import kotlinx.android.synthetic.main.new_weapon_home_test.bottomDrawer
-import kotlinx.android.synthetic.main.new_weapon_home_test.bottomDrawerSheet
-import kotlinx.android.synthetic.main.new_weapon_home_test.weaponHomeFAB
+import kotlinx.android.synthetic.main.new_weapon_home_test.*
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.startActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -121,7 +112,7 @@ class WeaponHome : AppCompatActivity() {
             return@setNavigationItemSelectedListener false
         }
 
-        weaponHomeFAB?.onClick {
+        weaponHomeFAB?.setOnClickListener {
             when (getCurrentFragment()) {
                 OVERVIEW -> {
                     //Launch compare activity
@@ -130,7 +121,7 @@ class WeaponHome : AppCompatActivity() {
                 COMMENTS -> {
                     if (FirebaseAuth.getInstance().currentUser == null) {
                         longToast("You must be logged in to comment.")
-                        return@onClick
+                        return@setOnClickListener
                     }
 
                     MaterialDialog(this@WeaponHome)

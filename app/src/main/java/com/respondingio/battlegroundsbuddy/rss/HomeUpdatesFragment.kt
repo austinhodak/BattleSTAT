@@ -8,9 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.respondingio.battlegroundsbuddy.MainActivity
+import com.respondingio.battlegroundsbuddy.MainActivityKT
 import com.respondingio.battlegroundsbuddy.R
-import kotlinx.android.synthetic.main.activity_main.toolbar_title
 
 /**
  * A simple [Fragment] subclass.
@@ -29,27 +28,27 @@ class HomeUpdatesFragment : Fragment() {
                     activity!!.supportFragmentManager.beginTransaction().replace(R.id.home_frame, homeFragment2)
                             .commit()
 
-                    (activity as MainActivity).toolbar_title.text = "PC Feed"
+                    (activity as MainActivityKT).title = "PC Feed"
                 }
                 R.id.xbox_menu -> {
                     val homeFragment2 = XboxRSS()
                     activity!!.supportFragmentManager.beginTransaction().replace(R.id.home_frame, homeFragment2)
                             .commit()
 
-                    (activity as MainActivity).toolbar_title.text = "Xbox Feed"
+                    (activity as MainActivityKT).title = "Xbox Feed"
                 }
                 R.id.mobile_menu -> {
                     val homeFragment2 = MobileRSS()
                     activity!!.supportFragmentManager.beginTransaction().replace(R.id.home_frame, homeFragment2)
                             .commit()
 
-                    (activity as MainActivity).toolbar_title.text = "Mobile Feed"
+                    (activity as MainActivityKT).title = "Mobile Feed"
                 }
             }
             true
         }
 
-        (activity as MainActivity).toolbar_title.text = "PC Feed"
+        (activity as MainActivityKT).title = "PC Feed"
 
         view.findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.pc_menu
         val homeFragment2 = WindowsUpdatesFragment()

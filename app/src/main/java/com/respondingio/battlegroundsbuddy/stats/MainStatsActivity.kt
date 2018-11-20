@@ -1,15 +1,11 @@
 package com.respondingio.battlegroundsbuddy.stats
 
 import android.app.Activity
-import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -23,9 +19,7 @@ import com.afollestad.materialdialogs.list.customListAdapter
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
 import com.android.vending.billing.IInAppBillingService
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
@@ -34,34 +28,21 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.gson.Gson
 import com.instabug.bug.BugReporting
-import com.respondingio.battlegroundsbuddy.Premium
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.Telemetry
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
 import com.respondingio.battlegroundsbuddy.models.Seasons
+import com.respondingio.battlegroundsbuddy.premium.UpgradeActivity
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
-import kotlinx.android.synthetic.main.activity_stats_main_new.bottom_navigation
-import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
-import kotlinx.android.synthetic.main.activity_stats_main_new.no_player
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_gamemode_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_gamemode_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_player_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_player_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_region_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_region_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_picker
-import kotlinx.android.synthetic.main.activity_stats_main_new.stats_season_text
-import kotlinx.android.synthetic.main.activity_stats_main_new.weapon_detail_toolbar
+import com.respondingio.battlegroundsbuddy.utils.Ads
+import com.respondingio.battlegroundsbuddy.utils.Premium
+import kotlinx.android.synthetic.main.activity_stats_main_new.*
 import net.idik.lib.slimadapter.SlimAdapter
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.onRefresh
 
 class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
@@ -86,6 +67,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
         setContentView(R.layout.activity_stats_main_new)
 
         setSupportActionBar(weapon_detail_toolbar)
@@ -100,7 +82,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             updateTimeout = 2
         } else {
             mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
-                    AdRequest.Builder().build())
+                    Ads.getAdBuilder())
         }
 
         if (mSharedPreferences.getBoolean("isStatsFirstLaunch", true)) {
@@ -186,14 +168,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                             .setActionText("UPGRADE OR WATCH AN AD").setDuration(5000).setActionTextColor(Color.WHITE).setActionClickListener {
                                 MaterialDialog(this)
                                         .title(text = "Upgrade or Watch An Ad")
-                                        .message(R.string.upgrade)
-                                        .positiveButton(text = "GO PREMIUM ($2.99)") {
-                                            val flowParams = BillingFlowParams.newBuilder()
-                                                    .setSku("level_3")
-                                                    .setType(BillingClient.SkuType.INAPP)
-                                                    .build()
-
-                                            billingClient.launchBillingFlow(this, flowParams)
+                                        .message(text = "You can either watch a quick ad to refresh the stats or upgrade to a level that allows quicker refreshing!")
+                                        .positiveButton(text = "UPGRADE") {
+                                            startActivity<UpgradeActivity>()
                                         }
                                         .neutralButton(text = "NEVERMIND") { dialog -> dialog.dismiss() }
                                         .negativeButton(text = "WATCH AN AD") { dialog ->
@@ -206,7 +183,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                             }.build().show()
                 } else if (Premium.getUserLevel() == Premium.Level.LEVEL_2 || Premium.getUserLevel() == Premium.Level.LEVEL_3) {
                     mRewardedVideoAd?.loadAd("ca-app-pub-3940256099942544/5224354917",
-                            AdRequest.Builder().build())
+                            Ads.getAdBuilder())
 
                     mainStatsRefreshLayout.isRefreshing = false
                     Snacky.builder().setActivity(this).setBackgroundColor(Color.parseColor("#3F51B5")).setText("You can refresh once every $updateTimeout minutes with premium. This is a PUBG API limit.").setActionClickListener {
@@ -249,39 +226,23 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                     .customListAdapter(playerListAdapter)
                     .positiveButton(text = "LINK NEW") { dialog ->
                         val addPlayerBottomSheet = AddPlayerBottomSheet()
-                        addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-                        if (playersMap.size < 5 || mSharedPreferences.getBoolean("premiumV1", false)) {
-//                            val addPlayerBottomSheet = AddPlayerBottomSheet()
-//                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
-                        } else if (playersMap.size >= 5 && !mSharedPreferences.getBoolean("premiumV1", false)) {
-                            //Max players added and no premium.
-                            /*MaterialDialog.Builder(this)
-                                    .title("Max Players Reached")
-                                    .content(R.string.upgrade)
-                                    .backgroundColorRes(R.color.md_orange_700)
-                                    .titleColorRes(R.color.md_white_1000)
-                                    .contentColorRes(R.color.md_white_1000)
-                                    .positiveColorRes(R.color.md_white_1000)
-                                    .neutralColorRes(R.color.md_white_1000)
-                                    .negativeColorRes(R.color.md_white_1000)
-                                    .positiveText("GO PREMIUM ($2.99)")
-                                    .negativeText("CANCEL")
-                                    .onPositive { dialog, which ->
-                                        val buyIntentBundle = iap?.getBuyIntent(3, packageName,
-                                                "plus_v1", "inapp", "")
-
-                                        val pendingIntent = buyIntentBundle?.getParcelable<PendingIntent>("BUY_INTENT")
-
-                                        if (pendingIntent != null) {
-
-                                            val REQUEST_CODE = 1002
-
-                                            startIntentSenderForResult(pendingIntent.intentSender,
-                                                    REQUEST_CODE, Intent(), 0, 0,
-                                                    0)
-                                        }
-                                    }.show()*/
+                        Log.d("PLAYERS", "${playersMap.size} - ${Premium.getUserLevel()}")
+                        if (playersMap.size < 5 || Premium.isUserLevel(Premium.Level.LEVEL_3)) {
+                            //If players list is less than 5 players OR if user is LEVEL 3 (UNLIMITED)
+                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
+                        } else if (playersMap.size < 15 && Premium.isUserLevel(Premium.Level.LEVEL_2)) {
+                            //Player size is less than 15 AND user is Level 2 (15 Players)
+                            addPlayerBottomSheet.show(supportFragmentManager, addPlayerBottomSheet.tag)
+                        } else {
+                            //Player size is at max and user isn't Level 2 or 3, show upgrade dialog.
+                            selectPlayerDialog?.dismiss()
+                            Snacky.builder().setActivity(this@MainStatsActivity).warning().setDuration(BaseTransientBottomBar.LENGTH_LONG).setText("Player Limit Reached").setAction("UPGRADE") {
+                                startActivity<UpgradeActivity>()
+                            }.show()
                         }
+                    }.neutralButton(text = "Manage Players") {
+                        startActivity<PlayerListDialog>()
+                        Log.d("PLAYER", "SHOW DIALOG")
                     }
             selectPlayerDialog!!.show()
         }
@@ -364,11 +325,11 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
     private var players: MutableList<PrefPlayer> = ArrayList()
 
-    private val playerListAdapter: RecyclerView.Adapter<*> = SlimAdapter.create().register<PrefPlayer>(R.layout.player_choice_dialog_item) { player, injector ->
+    var playerListSlimAdapter = SlimAdapter.create().register<PrefPlayer>(R.layout.player_choice_dialog_item) { player, injector ->
         val iconDrawable: Int = if (player.defaultShardID.contains("pc")) {
-            R.drawable.windows_color
+            R.drawable.windows_dark
         } else {
-            R.drawable.xbox_logo
+            R.drawable.xbox_dark
         }
         injector.image(R.id.game_version_icon, iconDrawable)
         injector.text(R.id.player_select_name, player.playerName)
@@ -383,6 +344,8 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             }
         }
     }.updateData(players)
+
+    private var playerListAdapter: RecyclerView.Adapter<*> = playerListSlimAdapter
 
     override fun onStop() {
         super.onStop()
@@ -408,9 +371,13 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
             listener = null
             listenerRef = null
         }
-        players.clear()
+        try {
+            players.clear()
+        } catch (e: Exception) {
+        }
         playersMap.clear()
         val currentUser = FirebaseAuth.getInstance().currentUser
+        Log.d("USER", currentUser!!.uid)
         val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser!!.uid).child("pubg_players").orderByChild("playerName")
         listenerRef = ref.ref
         listener = ref.addChildEventListener(object : ChildEventListener {
@@ -425,6 +392,8 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val player: PrefPlayer
+
+                Log.d("PLAYER", p0.key)
 
                 if (mSharedPreferences.contains("player-${p0.key}")) {
                     //Player exists in shared prefs, update any needed items and add to list.
@@ -472,7 +441,10 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
                 }
 
                 players.add(player)
-                //players = players.sortedWith(compareBy {it.playerName}).toMutableList()
+
+                var sortedlist = players.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) {it.playerName})
+
+                playerListSlimAdapter.updateData(sortedlist)
                 playerListAdapter.notifyDataSetChanged()
 
                 playersMap[player.playerName] = player.playerID
@@ -507,7 +479,14 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         currentPlayer = player
 
         stats_player_text.text = player.playerName
-        stats_region_text.text = regions[regionList.indexOf(player.selectedShardID.toUpperCase())]
+
+        try {
+            stats_region_text.text = regions[regionList.indexOf(player.selectedShardID.toUpperCase())]
+        } catch (e: Exception) {
+            player.selectedShardID = player.defaultShardID
+            stats_region_text.text = regions[regionList.indexOf("XBOX-AS")]
+        }
+
         selectedRegion = regionList.indexOf(player.selectedShardID.toUpperCase())
 
         try {
@@ -640,13 +619,13 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
     private fun deletePlayer(name: String) {
         val playerID = playersMap[name]
         playersMap.remove(name)
-        for (i in players) {
-            if (i is PrefPlayer) {
-                if (i.playerName == name) {
-                    players.remove(i)
-                }
-            }
-        }
+
+        val sortedList = players.filter { it.playerName != name }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) {it.playerName})
+
+        players = sortedList.toMutableList()
+
+        playerListSlimAdapter.updateData(players)
+        playerListAdapter.notifyDataSetChanged()
 
         if (mSharedPreferences.getString("selected-player-id", "") == playerID) {
             //Deleted player is currently selected, remove that.
@@ -674,9 +653,9 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         }
 
         val currentUser = FirebaseAuth.getInstance().currentUser
-        FirebaseDatabase.getInstance().getReference("users").child(currentUser!!.uid).child("pubg_players").child(playerID.toString()).removeValue()
-
-        loadPlayers()
+        FirebaseDatabase.getInstance().getReference("users").child(currentUser!!.uid).child("pubg_players").child(playerID.toString()).removeValue().addOnSuccessListener {
+            //loadPlayers()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -760,7 +739,7 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
         }
 
         mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
-                AdRequest.Builder().build())
+                Ads.getAdBuilder())
     }
 
     override fun onRewardedVideoAdLeftApplication() {
@@ -790,5 +769,12 @@ class MainStatsActivity : AppCompatActivity(), RewardedVideoAdListener {
 
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
         Log.d("ADERROR", p0.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::billingClient.isInitialized && billingClient.isReady) {
+            billingClient.endConnection()
+        }
     }
 }

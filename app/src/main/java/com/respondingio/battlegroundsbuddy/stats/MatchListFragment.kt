@@ -6,15 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.Task
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.functions.FirebaseFunctions
@@ -23,16 +19,16 @@ import com.respondingio.battlegroundsbuddy.models.Match
 import com.respondingio.battlegroundsbuddy.models.MatchTop
 import com.respondingio.battlegroundsbuddy.models.ParticipantShort
 import com.respondingio.battlegroundsbuddy.models.PrefPlayer
+import com.respondingio.battlegroundsbuddy.snacky.Snacky
 import com.respondingio.battlegroundsbuddy.stats.matchdetails.MatchDetailActivity
-import kotlinx.android.synthetic.main.activity_stats_main_new.mainStatsRefreshLayout
-import kotlinx.android.synthetic.main.fragment_matches_list.matches_RV
-import kotlinx.android.synthetic.main.fragment_matches_list.matches_empty
+import kotlinx.android.synthetic.main.activity_stats_main_new.*
+import kotlinx.android.synthetic.main.fragment_matches_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.animators.LandingAnimator
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.uiThread
-import java.util.HashMap
+import java.util.*
 
 class MatchListFragment : Fragment() {
 
@@ -56,7 +52,6 @@ class MatchListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupAdapter()
-        Log.d("MATCHLIST", "onStart")
         loadMatches(mPlayer.playerID, mPlayer.selectedShardID, mPlayer.selectedSeason, mPlayer.selectedGamemode)
         activity?.mainStatsRefreshLayout?.isRefreshing = true
     }
@@ -112,7 +107,7 @@ class MatchListFragment : Fragment() {
     private val listeners = ArrayList<ListenerRegistration>()
 
     private fun loadMatchData(matchKey: String, selectedShardID: String, playerID: String) {
-        val matchTop = MatchTop(null, true, matchKey, playerID)
+        val matchTop = MatchTop(null, true, matchKey, playerID, "")
         matchList.add(matchTop)
         mAdapter.notifyItemInserted(matchList.indexOf(matchTop))
         listeners.add(mFirestore.collection("matchData").document(matchKey).addSnapshotListener { matchData, e ->
@@ -207,7 +202,18 @@ class MatchListFragment : Fragment() {
             }
 
             injector.clicked(R.id.match_card) {
-                startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                val todayDate = Date()
+                if (data.match!!.getCreatedAtDate() != null) {
+                    val diff = todayDate.time - data.match!!.getCreatedAtDate()!!.time
+                    if (diff / (1000 * 60 * 60 * 24) >= 14) {
+                        val bottomNav = requireActivity().findViewById<CoordinatorLayout>(R.id.stats_coord_layout)
+                        Snacky.builder().setView(bottomNav).info().setText("Match data not available if older than 14 days.").show()
+                    } else {
+                        startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                    }
+                } else {
+                    startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                }
             }
 
         }.registerDefault(R.layout.match_list_empty) { data, injector ->

@@ -2,7 +2,6 @@ package com.respondingio.battlegroundsbuddy.stats
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,26 +15,15 @@ import com.google.firebase.functions.FirebaseFunctionsException
 import com.google.firebase.functions.FirebaseFunctionsException.Code
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.snacky.Snacky
-import kotlinx.android.synthetic.main.stats_addplayer_bottom.add_button
-import kotlinx.android.synthetic.main.stats_addplayer_bottom.add_progress
-import kotlinx.android.synthetic.main.stats_addplayer_bottom.add_username
-import kotlinx.android.synthetic.main.stats_addplayer_bottom.divider2
-import kotlinx.android.synthetic.main.stats_addplayer_bottom.region_spinner
-import java.util.HashMap
+import kotlinx.android.synthetic.main.stats_addplayer_bottom.*
+import org.jetbrains.anko.support.v4.browse
+import java.util.*
 
 class AddPlayerBottomSheet : BottomSheetDialogFragment() {
 
     private var mFunctions: FirebaseFunctions? = null
-
     private var region = "XBOX-AS"
-
     var regionList = arrayOf("XBOX-AS", "XBOX-EU", "XBOX-NA", "XBOX-OC", "XBOX-SA", "PC-KRJP", "PC-JP", "PC-NA", "PC-EU", "PC-RU", "PC-OC", "PC-KAKAO", "PC-SEA", "PC-SA", "PC-AS")
-
-    var modesList = arrayOf("solo", "solo-fpp", "duo", "duo-fpp", "squad", "squad-fpp")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -49,11 +37,14 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
 
         add_button?.setOnClickListener { startAdd() }
 
-        region_spinner?.setItems("Xbox Asia", "Xbox Europe", "Xbox North America", "Xbox Oceania", "PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC Kakao", "PC South East Asia",
+        region_spinner?.setItems("Xbox Asia", "Xbox Europe", "Xbox North America", "Xbox Oceania", "Xbox South America", "PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC Kakao", "PC South East Asia",
                 "PC South and Central America", "PC Asia")
         region_spinner?.setOnItemSelectedListener { view, position, id, item ->
             region = regionList[position]
-            Log.d("ReGION", region)
+        }
+
+        mobile_info?.setOnClickListener {
+            browse("https://twitter.com/buddy_pubg/status/1055261520429506560")
         }
     }
 
@@ -84,21 +75,11 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
                             val ffe = e as FirebaseFunctionsException?
                             val code = ffe!!.code
 
-                            Log.e("AddPlayer", "onComplete: " + code.toString())
-
                             try {
-                                if (code == Code.NOT_FOUND) {
-                                    Toast.makeText(activity, "Player not found, try again.", Toast.LENGTH_LONG).show()
-                                    //                                    Snacky.builder().setView(getView()).info().setText("Player not found, try again.").setDuration(
-                                    //                                            Snacky.LENGTH_LONG).show();
-                                } else if (code == Code.RESOURCE_EXHAUSTED) {
-                                    Toast.makeText(activity, "API limit reached, try again in a minute.", Toast.LENGTH_LONG).show()
-                                    //                                    Snacky.builder().setView(getView()).error().setText("API limit reached, try again in a minute.").setDuration(
-                                    //                                            Snacky.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(activity, "Unknown error.", Toast.LENGTH_SHORT).show()
-                                    //                                    Snacky.builder().setView(getView()).error().setText("Unknown error.").setDuration(
-                                    //                                            Snacky.LENGTH_LONG).show();
+                                when (code) {
+                                    Code.NOT_FOUND -> Toast.makeText(activity, "Player not found, try again.", Toast.LENGTH_LONG).show()
+                                    Code.RESOURCE_EXHAUSTED -> Toast.makeText(activity, "API limit reached, try again in a minute.", Toast.LENGTH_LONG).show()
+                                    else -> Toast.makeText(activity, "Unknown error.", Toast.LENGTH_SHORT).show()
                                 }
                             } catch (e: Exception) {
                             }
@@ -115,14 +96,15 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
                     val statusCode = task.result?.get("statusCode") as Int
                     if (statusCode == 200) {
                         if (activity != null)
-                        if (activity is MainStatsActivity) {
-                            val activity = activity as MainStatsActivity
-                            if (activity.playersMap.containsKey(userName)) {
-                                //Player is in list. Switch to them.
-                                activity.setPlayerSelected(activity.playersMap[userName]!!)
+                            if (activity is MainStatsActivity) {
+                                val activity = activity as MainStatsActivity
+                                if (activity.playersMap.containsKey(userName)) {
+                                    //Player is in list. Switch to them.
+                                    activity.setPlayerSelected(activity.playersMap[userName]!!)
+                                }
                             }
-                        }
-                        Snacky.builder().setActivity(activity ?: return@OnCompleteListener).success().setText("Player found and added!").setDuration(
+                        Snacky.builder().setActivity(activity
+                                ?: return@OnCompleteListener).success().setText("Player found and added!").setDuration(
                                 Snacky.LENGTH_SHORT).show()
                         dismiss()
                     }
@@ -138,7 +120,6 @@ class AddPlayerBottomSheet : BottomSheetDialogFragment() {
         return mFunctions!!.getHttpsCallable("addPlayerByName").call(data).continueWith { task ->
             val result = task.result
                     ?.data as Map<String, Any>
-            Log.d("REQUEST", result.toString())
             result
         }
     }

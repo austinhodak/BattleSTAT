@@ -21,7 +21,6 @@ import com.respondingio.battlegroundsbuddy.viewmodels.WeaponDetailViewModel
 import kotlinx.android.synthetic.main.new_weapon_home.lottie_star
 import kotlinx.android.synthetic.main.weapon_home_fragment.*
 import net.idik.lib.slimadapter.SlimAdapter
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class WeaponHomeFragment : Fragment() {
 
@@ -39,7 +38,7 @@ class WeaponHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lottie_star.onClick {
+        lottie_star.setOnClickListener {
             if (!isStarred) {
                 lottie_star.playAnimation()
                 isStarred = true
@@ -58,7 +57,7 @@ class WeaponHomeFragment : Fragment() {
         })
 
         var isBasicExpanded = true
-        basicDropTop.onClick {
+        basicDropTop.setOnClickListener {
             if (isBasicExpanded) {
                 weaponBasicStatsRV?.visibility = View.GONE
                 isBasicExpanded = false

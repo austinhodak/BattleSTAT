@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Battle Buddy</string>
+    <string name="drawer_title_upgrade">Atualizar</string>
+    <string name="drawer_title_attachments">Anexos</string>
+    <string name="drawer_title_ammo">Munição</string>
+    <string name="drawer_title_consumables">Consumíveis</string>
+    <string name="drawer_title_equipment">Equipamento</string>
+    <string name="drawer_title_controls">Controles</string>
+    <string name="drawer_title_about">Sobre</string>
+    <string name="drawer_title_damagecalc">Calculadora de Danos</string>
+    <string name="drawer_title_maps">Mapas</string>
+    <string name="drawer_title_suggestion">Enviar comentários</string>
+    <string name="drawer_title_share">Compartilhe o aplicativo</string>
+    <string name="drawer_title_timer">Match Timer</string>
+    <string name="drawer_title_weapons">Armas</string>
+    <string name="drawer_title_update">Atualizações</string>
+    <string name="drawer_title_login">Faça o login ou cadastre-se</string>
+    <string name="drawer_title_stats_enw">Estatísticas de batalha</string>
+    <string name="drawer_title_vehicles">Veículos</string>
+    <string name="drawer_title_more">Mais</string>
+    <string name="drawer_title_alerts">Gerenciar alertas</string>
+    <string name="drawer_title_logout">Sair</string>
+    <string name="profile_title">Seu perfil</string>
+    <string name="profile_display_name">Mostrar nome</string>
+    <string name="profile_email">O email</string>
+    <string name="profile_phone">Número de telefone</string>
+    <string name="are_you_sure">Você tem certeza?</string>
+    <string name="sign_out">Isso será encerrado, você sempre poderá fazer login novamente mais tarde.</string>
+    <string name="sign_out_text">Sair</string>
+    <string name="nevermind">deixa pra lá</string>
+    <string name="profile_bottom">PERFIL SERÁ EDITÁVEL EM BREVE</string>
+    <string name="range">ALCANCE</string>
+    <string name="body_damage">DANO AO CORPO</string>
+    <string name="head_damage">DANO DA CABEÇA</string>
+    <string name="assault_rifles">Rifles de Assalto</string>
+    <string name="sniper_rifles">Rifles de precisão</string>
+    <string name="shotguns">Espingardas</string>
+    <string name="pistols">Pistolas</string>
+    <string name="melee">Melee</string>
+</resources>

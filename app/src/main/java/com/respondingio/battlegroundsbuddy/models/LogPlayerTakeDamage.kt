@@ -2,7 +2,7 @@ package com.respondingio.battlegroundsbuddy.models
 
 data class LogPlayerTakeDamage (
         val attackId: Int,
-        val attacker: LogCharacter,
+        var attacker: LogCharacter,
         val victim: LogCharacter,
         val damageTypeCategory: String,
         val damageReason: String,

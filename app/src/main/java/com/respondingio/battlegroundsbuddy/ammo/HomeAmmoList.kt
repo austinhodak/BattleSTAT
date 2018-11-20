@@ -18,11 +18,10 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import com.respondingio.battlegroundsbuddy.R
 import com.respondingio.battlegroundsbuddy.R.layout
-import kotlinx.android.synthetic.main.home_weapons_list.pg
-import kotlinx.android.synthetic.main.home_weapons_list.weapon_list_rv
+import kotlinx.android.synthetic.main.home_weapons_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
-import java.util.ArrayList
+import java.util.*
 
 class HomeAmmoList : Fragment() {
 
@@ -73,7 +72,7 @@ class HomeAmmoList : Fragment() {
     private fun setupAdapter() {
         weapon_list_rv.layoutManager = LinearLayoutManager(activity ?: return)
         slimAdapter = SlimAdapter.create()
-                .register(R.layout.weapon_list_item_card,
+                .register(R.layout.attachment_item,
                         SlimInjector<DocumentSnapshot> { data, injector ->
                             val subtitle = injector
                                     .findViewById(R.id.weaponItemSubtitle) as TextView

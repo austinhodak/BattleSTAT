@@ -5,7 +5,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import com.respondingio.battlegroundsbuddy.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.TimeZone
+import java.util.*
 
 @IgnoreExtraProperties
 data class Match (
@@ -24,10 +24,10 @@ data class Match (
 ) {
     fun getMapIcon(): Int {
         when (mapName) {
-            "Savage_Main" -> return R.drawable.sanhok_icon
-            "Erangel_Main" -> return R.drawable.erangel_icon
-            "Desert_Main" -> return R.drawable.cactu
-            else -> return R.drawable.erangel_icon
+            "Savage_Main" -> return R.drawable.ic_palm_tree
+            "Erangel_Main" -> return R.drawable.ic_tree
+            "Desert_Main" -> return R.drawable.ic_cactus
+            else -> return R.drawable.ic_tree
         }
     }
 
@@ -51,13 +51,26 @@ data class Match (
     fun getMatchDuration(): String {
         return DateUtils.formatElapsedTime(duration.toLong())
     }
+
+    fun getCreatedAtDate(): Date? {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        sdf.timeZone = TimeZone.getTimeZone("GMT")
+        try {
+            return sdf.parse(createdAt)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        return null
+    }
 }
 
 data class MatchTop (
         var match: Match?,
         var isLoading: Boolean,
         var matchKey: String,
-        var currentPlayer: String
+        var currentPlayer: String,
+        var createdAt: String
 )
 
 @IgnoreExtraProperties

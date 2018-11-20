@@ -11,8 +11,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
-
     <application
         android:largeHeap="true"
         android:name=".Application"
@@ -25,11 +23,6 @@
         tools:ignore="GoogleAppIndexingWarning">
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".weapons.WeaponDetailsActivity" />
@@ -56,7 +49,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/icons8_rifle" />
+            android:resource="@drawable/grandmaster_noti" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
@@ -71,10 +64,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".profile.ProfileActivity"
-            android:theme="@style/Profile" />
 
         <activity android:name=".info.TimerActivity" />
 
@@ -92,7 +81,25 @@
             android:name="firebase_crashlytics_collection_enabled"
             android:value="${crashEnabled}" />
 
-        <activity android:name=".stats.matchdetails.MatchDetailActivity" android:theme="@style/MatchDetailsTheme"/>
+        <activity
+            android:name=".stats.matchdetails.MatchDetailActivity"
+            android:theme="@style/MatchDetailsTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.pubgbuddy.gg"
+                    android:pathPrefix="/match"
+                    android:scheme="http" />
+                <data
+                    android:host="www.pubgbuddy.gg"
+                    android:pathPrefix="/match"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -105,14 +112,72 @@
         <activity android:name=".stats.MainStatsActivity" android:theme="@style/MainStatsTheme" />
 
         <!-- START NEW STUFF -->
-        <activity android:name=".MainActivityKT" android:label="Battle Buddy New" android:theme="@style/NewHomeActivity">
+        <activity
+            android:name=".MainActivityKT"
+            android:label="Battle Buddy">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".weapondetail.WeaponHome" android:theme="@style/WeaponHome">
         </activity>
 
         <activity android:name=".weapondetail.WeaponDetailTimeline" android:theme="@style/WeaponTimeline" />
+
+        <activity android:name=".premium.UpgradeActivity" android:theme="@style/WeaponTimeline" />
+
+        <activity android:label="Map Drop Roulette" android:name=".map.MapDropRouletteActivity" android:theme="@style/WeaponTimeline" />
+
+        <activity
+            android:name=".stats.PlayerListDialog"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
+            android:name=".AlertManager"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
+            android:name=".stats.main.StatsHome"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
+            android:name=".profile.ProfileMain"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
+            android:name=".profile.ProfilePicPicker"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
+            android:name="com.mopub.mobileads.MoPubActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name="com.mopub.mobileads.MraidActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name="com.mopub.common.MoPubBrowser"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name="com.mopub.mobileads.RewardedMraidActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1946691221734928~8934220899" />
     </application>
 
 </manifest>
