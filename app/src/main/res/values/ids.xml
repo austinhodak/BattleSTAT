@@ -6,4 +6,5 @@
     <item name="fab_new_steam" type="id" />
     <item name="fab_new_kakao" type="id" />
     <item name="fab_new_xbox" type="id" />
+    <item name="fab_new_ps4" type="id" />
 </resources>

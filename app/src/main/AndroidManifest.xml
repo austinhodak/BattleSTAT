@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.respondingio.battlegroundsbuddy">
+    package="com.austinh.battlebuddy">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.vending.BILLING" />
@@ -13,7 +13,7 @@
 
     <application
         android:largeHeap="true"
-        android:name=".Application"
+        android:name="com.austinh.battlebuddy.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,29 +22,29 @@
         android:theme="@style/AppTheme.Launcher"
         tools:ignore="GoogleAppIndexingWarning">
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-        <activity android:name=".MainActivity">
+        <activity android:name="com.austinh.battlebuddy.MainActivity">
         </activity>
 
-        <activity android:name=".weapons.WeaponDetailsActivity" />
+        <activity android:name="com.austinh.battlebuddy.weapons.WeaponDetailsActivity" />
 
         <activity
-            android:name=".loadout.LoadoutCreateMain"
+            android:name="com.austinh.battlebuddy.loadout.LoadoutCreateMain"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".damage_calculator.DamageCalcActivity"
+            android:name="com.austinh.battlebuddy.damage_calculator.DamageCalcActivity"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".weapons.CompareWeaponActivity"
+            android:name="com.austinh.battlebuddy.weapons.CompareWeaponActivity"
             android:theme="@style/CompareTheme" />
 
         <activity
-            android:name=".weapons.CompareWeaponPicker"
+            android:name="com.austinh.battlebuddy.weapons.CompareWeaponPicker"
             android:theme="@style/PickerTheme" />
 
         <activity
-            android:name=".damage_calculator.DamageCalcPicker"
+            android:name="com.austinh.battlebuddy.damage_calculator.DamageCalcPicker"
             android:theme="@style/AppTheme" />
 
         <meta-data
@@ -59,30 +59,30 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <service android:name=".FirebaseIDService">
+        <service android:name="com.austinh.battlebuddy.FirebaseIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".info.TimerActivity" />
+        <activity android:name="com.austinh.battlebuddy.info.TimerActivity" />
 
         <activity
-            android:name=".weapons.WeaponDamageChart"
+            android:name="com.austinh.battlebuddy.weapons.WeaponDamageChart"
             android:theme="@style/AppTheme" />
 
-        <service android:name=".info.TimerService" />
+        <service android:name="com.austinh.battlebuddy.info.TimerService" />
 
-        <receiver android:name=".info.AlarmReceiver" />
+        <receiver android:name="com.austinh.battlebuddy.info.AlarmReceiver" />
 
-        <activity android:name=".SocialLinksActivity" />
+        <activity android:name="com.austinh.battlebuddy.SocialLinksActivity" />
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
-            android:value="${crashEnabled}" />
+            android:value="false" />
 
         <activity
-            android:name=".stats.matchdetails.MatchDetailActivity"
+            android:name="com.austinh.battlebuddy.stats.matchdetails.MatchDetailActivity"
             android:theme="@style/MatchDetailsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -101,19 +101,19 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />
+        <!--<meta-data-->
+            <!--android:name="io.fabric.ApiKey"-->
+            <!--android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />-->
 
-        <activity android:name=".stats.matchdetails.SinglePlayerStatsActivity" android:theme="@style/MatchDetailsTheme" />
+        <activity android:name="com.austinh.battlebuddy.stats.matchdetails.SinglePlayerStatsActivity" android:theme="@style/MatchDetailsTheme" />
 
-        <activity android:name=".stats.matchdetails.KillFeedListMap"/>
+        <activity android:name="com.austinh.battlebuddy.stats.matchdetails.KillFeedListMap"/>
 
-        <activity android:name=".stats.MainStatsActivity" android:theme="@style/MainStatsTheme" />
+        <activity android:name="com.austinh.battlebuddy.stats.MainStatsActivity" android:theme="@style/MainStatsTheme" />
 
         <!-- START NEW STUFF -->
         <activity
-            android:name=".MainActivityKT"
+            android:name="com.austinh.battlebuddy.MainActivityKT"
             android:label="Battle Buddy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -122,37 +122,37 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".weapondetail.WeaponHome" android:theme="@style/WeaponHome">
+        <activity android:name="com.austinh.battlebuddy.weapondetail.WeaponHome" android:theme="@style/WeaponHome">
         </activity>
 
-        <activity android:name=".weapondetail.WeaponDetailTimeline" android:theme="@style/WeaponTimeline" />
+        <activity android:name="com.austinh.battlebuddy.weapondetail.WeaponDetailTimeline" android:theme="@style/WeaponTimeline" />
 
-        <activity android:name=".premium.UpgradeActivity" android:theme="@style/WeaponTimeline" />
+        <activity android:name="com.austinh.battlebuddy.premium.UpgradeActivity" android:theme="@style/WeaponTimeline" />
 
-        <activity android:label="Map Drop Roulette" android:name=".map.MapDropRouletteActivity" android:theme="@style/WeaponTimeline" />
+        <activity android:label="Map Drop Roulette" android:name="com.austinh.battlebuddy.map.MapDropRouletteActivity" android:theme="@style/DropRoulette" />
 
         <activity
-            android:name=".stats.PlayerListDialog"
+            android:name="com.austinh.battlebuddy.stats.PlayerListDialog"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".AlertManager"
+            android:name="com.austinh.battlebuddy.AlertManager"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".stats.main.StatsHome"
+            android:name="com.austinh.battlebuddy.stats.main.StatsHome"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.austinh.battlebuddy.SettingsActivity"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".profile.ProfileMain"
+            android:name="com.austinh.battlebuddy.profile.ProfileMain"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".profile.ProfilePicPicker"
+            android:name="com.austinh.battlebuddy.profile.ProfilePicPicker"
             android:theme="@style/PlayerListDialog" />
 
         <activity
@@ -177,7 +177,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1946691221734928~8934220899" />
+            android:value="ca-app-pub-2318893623894354~7961010686" />
     </application>
 
 </manifest>

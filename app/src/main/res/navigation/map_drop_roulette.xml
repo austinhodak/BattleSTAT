@@ -5,14 +5,18 @@
 
     <fragment
         android:id="@+id/mapDropRoulettePicker"
-        android:name="com.respondingio.battlegroundsbuddy.map.MapDropRoulettePicker"
+        android:name="com.austinh.battlebuddy.map.MapDropRoulettePicker"
         android:label="MapDropRoulettePicker" >
         <action
             android:id="@+id/mapSelected"
-            app:destination="@id/mapDropRouletteMap" />
+            app:destination="@id/mapDropRouletteMap"
+            app:enterAnim="@anim/instabug_fadein"
+            app:exitAnim="@anim/instabug_fadeout"
+            app:popEnterAnim="@anim/instabug_fadein"
+            app:popExitAnim="@anim/instabug_fadeout" />
     </fragment>
     <fragment
         android:id="@+id/mapDropRouletteMap"
-        android:name="com.respondingio.battlegroundsbuddy.map.MapDropRouletteMap"
+        android:name="com.austinh.battlebuddy.map.MapDropRouletteMap"
         android:label="MapDropRouletteMap" />
 </navigation>
