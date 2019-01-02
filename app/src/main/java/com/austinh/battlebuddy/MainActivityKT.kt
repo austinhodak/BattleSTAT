@@ -22,6 +22,22 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.expandable.expandableItem
+import com.austinh.battlebuddy.ammo.HomeAmmoList
+import com.austinh.battlebuddy.attachments.HomeAttachmentsFragment
+import com.austinh.battlebuddy.info.ControlsFragment
+import com.austinh.battlebuddy.info.TimerFragment
+import com.austinh.battlebuddy.map.MapDropRouletteActivity
+import com.austinh.battlebuddy.models.PlayerListModel
+import com.austinh.battlebuddy.models.PlayerStats
+import com.austinh.battlebuddy.models.SeasonStatsAll
+import com.austinh.battlebuddy.premium.UpgradeActivity
+import com.austinh.battlebuddy.profile.ProfileMain
+import com.austinh.battlebuddy.rss.HomeUpdatesFragment
+import com.austinh.battlebuddy.snacky.Snacky
+import com.austinh.battlebuddy.stats.PlayerListDialog
+import com.austinh.battlebuddy.stats.main.StatsHome
+import com.austinh.battlebuddy.utils.*
+import com.austinh.battlebuddy.weapons.HomeWeaponsFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
@@ -39,22 +55,6 @@ import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import com.austinh.battlebuddy.ammo.HomeAmmoList
-import com.austinh.battlebuddy.attachments.HomeAttachmentsFragment
-import com.austinh.battlebuddy.damage_calculator.DamageCalcActivity
-import com.austinh.battlebuddy.info.ControlsFragment
-import com.austinh.battlebuddy.info.TimerFragment
-import com.austinh.battlebuddy.map.MapDropRouletteActivity
-import com.austinh.battlebuddy.models.PrefPlayer
-import com.austinh.battlebuddy.models.SeasonStatsAll
-import com.austinh.battlebuddy.premium.UpgradeActivity
-import com.austinh.battlebuddy.profile.ProfileMain
-import com.austinh.battlebuddy.rss.HomeUpdatesFragment
-import com.austinh.battlebuddy.snacky.Snacky
-import com.austinh.battlebuddy.stats.PlayerListDialog
-import com.austinh.battlebuddy.stats.main.StatsHome
-import com.austinh.battlebuddy.utils.*
-import com.austinh.battlebuddy.weapons.HomeWeaponsFragment
 import kotlinx.android.synthetic.main.activity_new_home.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.browse
@@ -114,7 +114,7 @@ class MainActivityKT : AppCompatActivity() {
         if (!Premium.isAdFreeUser()) {
             val adView = com.google.android.gms.ads.AdView(this)
             adView.adSize = com.google.android.gms.ads.AdSize.BANNER
-            adView.adUnitId = "ca-app-pub-2318893623894354/2646896834"
+            adView.adUnitId = "ca-app-pub-2237535196399997/3314606473"
             adView.loadAd(Ads.getAdBuilder())
             adView.adListener = object : AdListener() {
                 override fun onAdLoaded() {
@@ -145,7 +145,7 @@ class MainActivityKT : AppCompatActivity() {
             val launchCount = mSharedPreferences?.getInt("launchCount", 0) ?: 0
             if (launchCount >= 2) {
                 mInterstitialAd = InterstitialAd(this)
-                mInterstitialAd?.adUnitId = "ca-app-pub-2318893623894354/5085357913"
+                mInterstitialAd?.adUnitId = "ca-app-pub-2237535196399997/4951121771"
                 mInterstitialAd?.loadAd(Ads.getAdBuilder())
             }
 
@@ -275,14 +275,14 @@ class MainActivityKT : AppCompatActivity() {
                         false
                     }
                 }
-                primaryItem(R.string.drawer_title_damagecalc) {
+                /*primaryItem(R.string.drawer_title_damagecalc) {
                     icon = R.drawable.shield
                     selectable = false
                     onClick { _ ->
                         startActivity<DamageCalcActivity>()
                         false
                     }
-                }
+                }*/
                 primaryItem(R.string.drawer_title_maps) {
                     icon = R.drawable.map_96
                     selectable = false
@@ -388,7 +388,7 @@ class MainActivityKT : AppCompatActivity() {
     }
 
     var mRightAdapter: SlimAdapter? = null
-    var players: MutableList<PrefPlayer> = ArrayList()
+    var players: MutableList<PlayerListModel> = ArrayList()
     var userAccountID = ""
 
     private fun setupRightDrawer() {
@@ -402,94 +402,76 @@ class MainActivityKT : AppCompatActivity() {
         mRightDrawer?.recyclerView?.clipToPadding = false
         mRightDrawer?.recyclerView?.setPadding(0, mRightDrawer?.recyclerView?.topPadding!!, 0, 24)
 
-        mRightAdapter = SlimAdapter.create().attachTo(mRightDrawer?.recyclerView).updateData(players).register<PrefPlayer>(R.layout.home_player_list_item) { player, injector ->
+        mRightAdapter = SlimAdapter.create().attachTo(mRightDrawer?.recyclerView).updateData(players).register<PlayerListModel>(R.layout.home_player_list_item) { player, injector ->
             val cardView = injector.findViewById<CardView>(R.id.playerListCard)
-            injector.invisible(R.id.game_version_icon)
-            cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
 
-            if (userAccountID == player.playerID) {
-                injector.text(R.id.player_select_name, "${player.playerName}  \uf2bd ")
+            val rankIcon = injector.findViewById<ImageView>(R.id.game_version_icon)
+            val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+            if (mSharedPreferences?.contains("playerRankNew-${player.playerID}") == true) {
+                Glide.with(applicationContext)
+                        .load(Ranks.getRankIcon(Rank.valueOf(mSharedPreferences?.getString("playerRankNew-${player.playerID}", "UNKNOWN")!!.toUpperCase())))
+                        //.transition(DrawableTransitionOptions.withCrossFade(factory))
+                        .into(rankIcon)
+
+                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(Rank.valueOf(mSharedPreferences?.getString("playerRankNew-${player.playerID}", "UNKNOWN")!!.toUpperCase()))))
             } else {
-                injector.text(R.id.player_select_name, player.playerName)
+                injector.invisible(R.id.game_version_icon)
+                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
             }
 
-            injector.text(R.id.playerListSubtitle, Regions.getNewRegionName(player.defaultShardID))
-
-            injector.clicked(R.id.constraintLayout) {
-
+            when (player.platform) {
+                Platform.KAKAO,
+                Platform.STEAM -> injector.image(R.id.player_list_platform_icon, R.drawable.windows_white)
+                Platform.XBOX -> injector.image(R.id.player_list_platform_icon, R.drawable.xbox_white)
+                Platform.PS4 -> injector.image(R.id.player_list_platform_icon, R.drawable.ic_icons8_playstation)
             }
 
-            val currentSeason = com.austinh.battlebuddy.utils.Seasons.getCurrentSeasonForShard(player.defaultShardID)
+            val text = injector.findViewById<TextView>(R.id.player_select_name)
+            text.text = player.playerName
+
+            cardView.setOnClickListener {
+                startActivity<StatsHome>("selectedPlayer" to player)
+            }
 
             injector.gone(R.id.player_pg)
 
-            if (player.selectedShardID.equals("xbox", true)) {
-                player.selectedShardID = "xbox-na"
-            }
+            Log.d("DATABASEURL", "user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL()}/${Seasons.getCurrentSeasonForPlatform(player.platform).codeString}/stats")
 
-            val searchShardID: String
-
-            if (player.defaultShardID == "xbox") {
-                if (player.isSeasonNewFormat("xbox")) {
-                    searchShardID = "xbox"
-                } else {
-                    searchShardID = player.oldXboxShard ?: "xbox-na"
-                }
-            } else {
-                searchShardID = player.defaultShardID
-            }
-
-            FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${searchShardID.toLowerCase()}/$currentSeason/stats").addValueEventListener(object : ValueEventListener {
+            FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL()}/${Seasons.getCurrentSeasonForPlatform(player.platform).codeString}/stats").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    val rankIcon = injector.findViewById<ImageView>(R.id.game_version_icon)
-                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-
-                    if (!p0.exists()) {
-                        Glide.with(this@MainActivityKT)
-                                .load(Ranks.getRankIcon(0.0))
-                                .transition(DrawableTransitionOptions.withCrossFade(factory))
-                                .into(rankIcon)
-
-                        injector.invisible(R.id.game_version_icon)
-                        cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
-
-                        injector.visible(R.id.player_pg)
-
-                        Log.d("PLAYER", "LOAD ${player.playerID} - ${player.selectedShardID} - ${player.selectedSeason}")
-                        return
-                    }
-
                     injector.gone(R.id.player_pg)
 
                     val seasonStats = p0.getValue(SeasonStatsAll::class.java)!!
-                    val pointsList: MutableList<Double> = ArrayList()
+                    var pointsList: MutableList<PlayerStats> = ArrayList()
 
-                    pointsList.add(seasonStats.solo.rankPoints)
-                    pointsList.add(seasonStats.`solo-fpp`.rankPoints)
-                    pointsList.add(seasonStats.duo.rankPoints)
-                    pointsList.add(seasonStats.`duo-fpp`.rankPoints)
-                    pointsList.add(seasonStats.squad.rankPoints)
-                    pointsList.add(seasonStats.`squad-fpp`.rankPoints)
+                    pointsList.add(seasonStats.solo)
+                    pointsList.add(seasonStats.`solo-fpp`)
+                    pointsList.add(seasonStats.duo)
+                    pointsList.add(seasonStats.`duo-fpp`)
+                    pointsList.add(seasonStats.squad)
+                    pointsList.add(seasonStats.`squad-fpp`)
 
-                    pointsList.sort()
-                    pointsList.reverse()
+                    pointsList = pointsList.sortedWith(compareByDescending {
+                        it.getRank().order
+                    }).toMutableList()
 
                     injector.visible(R.id.game_version_icon)
 
                     Glide.with(applicationContext)
-                            .load(Ranks.getRankIcon(pointsList[0]))
+                            .load(Ranks.getRankIcon(pointsList[0].getRank()))
                             .transition(DrawableTransitionOptions.withCrossFade(factory))
                             .into(rankIcon)
 
-                    cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(pointsList[0])))
+                    cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(pointsList[0].getRank())))
 
-                    cardView.setOnClickListener {
-                        startActivity<StatsHome>("selectedPlayer" to player)
-                    }
+                    injector.text(R.id.playerListSubtitle, pointsList[0].getRank().title + " " + pointsList[0].getRankLevel())
+
+                    mSharedPreferences?.edit()?.putString("playerRankNew-${player.playerID}", pointsList[0].getRank().name)?.apply()
                 }
             })
         }
@@ -510,9 +492,11 @@ class MainActivityKT : AppCompatActivity() {
     private fun updateHeader() {
         val levelText = mDrawer?.header?.findViewById<TextView>(R.id.header_upgrade)
         val headerText = mDrawer?.header?.findViewById<TextView>(R.id.header_name)
+        val pubgName = mDrawer?.header?.findViewById<TextView>(R.id.header_ingame_name)
 
         levelText?.text = Premium.getLevelText(Premium.getUserLevel())
         headerText?.text = FirebaseAuth.getInstance().currentUser?.displayName ?: "Battle Buddy"
+        pubgName?.text = ""
 
         FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -520,140 +504,74 @@ class MainActivityKT : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 val icon = mDrawer?.header?.findViewById<ImageView>(R.id.header_rank_icon)
-                //val pubgName = mDrawer?.header?.findViewById<TextView>(R.id.header_ingame_name)
-                if (!p0.exists() || !p0.hasChild("accountID") || !p0.hasChild("shardID")) {
+
+                Log.d("HEADER", p0.ref.toString())
+
+                if (!p0.exists() || !p0.hasChild("accountID") || !p0.hasChild("platform") || !p0.hasChild("region")) {
                     icon?.visibility = View.GONE
                     return
                 }
 
-                val accountID = p0.child("accountID").value.toString()
-                val shardID = p0.child("shardID").value.toString()
-
-                if (shardID == "xbox") {
-                    if (isSeasonNewFormat(shardID)) {
-                        FirebaseDatabase.getInstance().getReference("user_stats/$accountID/season_data/xbox/${Seasons.xboxCurrentSeason}/stats").addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError) {
-
-                            }
-
-                            override fun onDataChange(p0: DataSnapshot) {
-                                if (!p0.exists()) return
-
-                                Log.d("HEADER", p0.value.toString())
-
-                                val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-
-                                val seasonStats = p0.getValue(SeasonStatsAll::class.java)!!
-                                val pointsList: MutableList<Double> = ArrayList()
-
-                                pointsList.add(seasonStats.solo.rankPoints)
-                                pointsList.add(seasonStats.`solo-fpp`.rankPoints)
-                                pointsList.add(seasonStats.duo.rankPoints)
-                                pointsList.add(seasonStats.`duo-fpp`.rankPoints)
-                                pointsList.add(seasonStats.squad.rankPoints)
-                                pointsList.add(seasonStats.`squad-fpp`.rankPoints)
-
-                                pointsList.sort()
-                                pointsList.reverse()
-
-                                icon?.visibility = View.VISIBLE
-
-                                Glide.with(applicationContext)
-                                        .load(Ranks.getRankIcon(pointsList[0]))
-                                        .transition(DrawableTransitionOptions.withCrossFade(factory))
-                                        .into(icon!!)
-
-
-                            }
-                        })
-                    } else {
-                        FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubg_players/$accountID").addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError) {
-                            }
-
-                            override fun onDataChange(p0: DataSnapshot) {
-                                if (!p0.exists()) return
-
-                                val oldXboxShard = p0.child("oldXboxShard").value.toString()
-
-                                Log.d("HEADER", "${p0.value.toString()} -- /user_stats/$accountID/season_data/$oldXboxShard/${Seasons.xboxCurrentSeason}/stats")
-
-                                FirebaseDatabase.getInstance().getReference("user_stats/$accountID/season_data/$oldXboxShard/${Seasons.xboxCurrentSeason}/stats").addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onCancelled(p0: DatabaseError) {
-
-                                    }
-
-                                    override fun onDataChange(p0: DataSnapshot) {
-                                        Log.d("HEADER", p0.ref.toString())
-                                        if (!p0.exists()) return
-
-                                        Log.d("HEADER", p0.ref.toString())
-
-                                        val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-
-                                        val seasonStats = p0.getValue(SeasonStatsAll::class.java)!!
-                                        val pointsList: MutableList<Double> = ArrayList()
-
-                                        pointsList.add(seasonStats.solo.rankPoints)
-                                        pointsList.add(seasonStats.`solo-fpp`.rankPoints)
-                                        pointsList.add(seasonStats.duo.rankPoints)
-                                        pointsList.add(seasonStats.`duo-fpp`.rankPoints)
-                                        pointsList.add(seasonStats.squad.rankPoints)
-                                        pointsList.add(seasonStats.`squad-fpp`.rankPoints)
-
-                                        pointsList.sort()
-                                        pointsList.reverse()
-
-                                        icon?.visibility = View.VISIBLE
-
-                                        Glide.with(applicationContext)
-                                                .load(Ranks.getRankIcon(pointsList[0]))
-                                                .transition(DrawableTransitionOptions.withCrossFade(factory))
-                                                .into(icon!!)
-
-
-                                    }
-                                })
-                            }
-                        })
-                    }
+                val platform = if (p0.child("platform").value.toString() == "psn") {
+                    Platform.PS4
                 } else {
-                    FirebaseDatabase.getInstance().getReference("user_stats/$accountID/season_data/$shardID/${Seasons.pcCurrentSeason}/stats").addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-
-                        }
-
-                        override fun onDataChange(data: DataSnapshot) {
-                            if (!data.exists()) {
-
-                                Log.d("HEADER", p0.value.toString())
-                                return
-                            }
-
-                            val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-
-                            val seasonStats = data.getValue(SeasonStatsAll::class.java)!!
-                            val pointsList: MutableList<Double> = ArrayList()
-
-                            pointsList.add(seasonStats.solo.rankPoints)
-                            pointsList.add(seasonStats.`solo-fpp`.rankPoints)
-                            pointsList.add(seasonStats.duo.rankPoints)
-                            pointsList.add(seasonStats.`duo-fpp`.rankPoints)
-                            pointsList.add(seasonStats.squad.rankPoints)
-                            pointsList.add(seasonStats.`squad-fpp`.rankPoints)
-
-                            pointsList.sort()
-                            pointsList.reverse()
-
-                            icon?.visibility = View.VISIBLE
-
-                            Glide.with(applicationContext)
-                                    .load(Ranks.getRankIcon(pointsList[0]))
-                                    .transition(DrawableTransitionOptions.withCrossFade(factory))
-                                    .into(icon!!)
-                        }
-                    })
+                    Platform.valueOf(p0.child("platform").value.toString().toUpperCase())
                 }
+
+                val player = PlayerListModel(
+                        playerID = p0.child("accountID").value.toString(),
+                        platform = platform,
+                        defaultConsoleRegion = p0.child("region").value.toString()
+                )
+
+                val URL = "user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL()}/${Seasons.getCurrentSeasonForPlatform(player.platform).codeString}/stats"
+                Log.d("HEADER", URL)
+                FirebaseDatabase.getInstance().getReference(URL).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (!p0.exists()) {
+                            pubgName?.text = ""
+                            return
+                        }
+
+                        val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+                        val seasonStats = p0.getValue(SeasonStatsAll::class.java)!!
+                        var pointsList: MutableList<PlayerStats> = ArrayList()
+
+                        pointsList.add(seasonStats.solo)
+                        pointsList.add(seasonStats.`solo-fpp`)
+                        pointsList.add(seasonStats.duo)
+                        pointsList.add(seasonStats.`duo-fpp`)
+                        pointsList.add(seasonStats.squad)
+                        pointsList.add(seasonStats.`squad-fpp`)
+
+                        pointsList = pointsList.sortedWith(compareByDescending {
+                            it.getRank().order
+                        }).toMutableList()
+
+                        icon?.visibility = View.VISIBLE
+
+                        Glide.with(applicationContext)
+                                .load(Ranks.getRankIcon(pointsList[0].getRank()))
+                                .transition(DrawableTransitionOptions.withCrossFade(factory))
+                                .into(icon!!)
+
+                        pubgName?.text = "•    ${pointsList[0].getRank().title}"
+                    }
+                })
+
+                /*FirebaseDatabase.getInstance().getReference("playerNameMapping/${player.platform.id}").orderByValue().equalTo("account.${player.playerID}").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        pubgName?.text = p0.children.first().key
+                    }
+                })*/
             }
         })
     }
@@ -681,7 +599,6 @@ class MainActivityKT : AppCompatActivity() {
         }
 
         val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser.uid)
-
         listenerRef = ref.ref
         listener = ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -692,59 +609,33 @@ class MainActivityKT : AppCompatActivity() {
                     return
                 }
 
-                if (p0.hasChild("pubgAccountID") && !p0.hasChild("pubgAccountID/accountID") && !p0.hasChild("pubgAccountID/shardID")) {
-                    userAccountID = p0.child("pubgAccountID").value.toString()
-                    p0.ref.child("pubgAccountID/accountID").setValue(userAccountID)
-                }
+                players.clear()
 
                 if (p0.hasChild("pubgAccountID/accountID")) {
                     userAccountID = p0.child("pubgAccountID/accountID").value.toString()
                 }
 
-                players.clear()
+                val children = p0.child("pubgPlayers").children.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.child("playerName").value.toString() })
 
-                for (child in p0.child("pubg_players").children) {
-                    var shardID = child.child("shardID").value.toString().toLowerCase()
-                    var oldXboxShard: String? = null
-                    if (shardID.contains("kakao") && shardID != "kakao") {
-                        child.ref.child("shardID").setValue("kakao")
-                        shardID = "kakao"
-                    } else if (shardID.contains("pc")) {
-                        child.ref.child("shardID").setValue("steam")
-                        shardID = "steam"
-                    } else if (shardID.contains("xbox") && shardID != "xbox") {
-                        child.ref.child("shardID").setValue("xbox")
-                        child.ref.child("oldXboxShard").setValue(shardID)
-                        oldXboxShard = shardID
-                        shardID = "xbox"
+                for (item in children) {
+                    val platform = if (item.child("platform").value.toString() == "psn") {
+                        Platform.PS4
+                    } else {
+                        Platform.valueOf(item.child("platform").value.toString().toUpperCase())
                     }
-
-                    if (!p0.hasChild("pubgAccountID/shardID") && userAccountID == child.key) {
-                        p0.ref.child("pubgAccountID/shardID").setValue(shardID)
-                    }
-
-                    val player = PrefPlayer(
-                            playerID = child.key.toString(),
-                            playerName = child.child("playerName").value.toString(),
-                            defaultShardID = shardID.toLowerCase(),
-                            selectedGamemode = "solo"
+                    val player = PlayerListModel(
+                            playerID = item.key.toString(),
+                            playerIDAccount = "account.${item.key.toString()}",
+                            playerName = item.child("playerName").value.toString(),
+                            platform = platform,
+                            defaultConsoleRegion = item.child("region").value.toString(),
+                            isPlayerCurrentUser = item.key.toString() == userAccountID
                     )
-
-                    if (oldXboxShard != null) {
-                        player.oldXboxShard = oldXboxShard
-                    } else if (child.hasChild("oldXboxShard")) {
-                        player.oldXboxShard = child.child("oldXboxShard").value.toString()
-                    }
-
-                    Log.d("PLAYER", player.playerID)
 
                     players.add(player)
                 }
 
-                players = players.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.playerName }).toMutableList()
-
-                mRightAdapter?.updateData(players)
-
+                mRightAdapter?.notifyDataSetChanged()
                 mRightDrawer?.drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END)
             }
         })
@@ -775,10 +666,10 @@ class MainActivityKT : AppCompatActivity() {
                                 FirebaseAuth.getInstance().signInWithCredential(nonAnonCredential!!).addOnSuccessListener {
                                     checkLogin()
                                     mDrawer?.removeAllStickyFooterItems()
-                                    if (p0.hasChild("pubg_players")) {
+                                    if (p0.hasChild("pubgPlayers")) {
                                         val pubgPlayers = HashMap<String, Any>()
-                                        for (child in p0.child("pubg_players").children) {
-                                            pubgPlayers["/users/${it.user.uid}/pubg_players/${child.key}"] = child.value!!
+                                        for (child in p0.child("pubgPlayers").children) {
+                                            pubgPlayers["/users/${it.user.uid}/pubgPlayers/${child.key}"] = child.value!!
                                         }
 
                                         FirebaseDatabase.getInstance().reference.updateChildren(pubgPlayers)
@@ -921,39 +812,6 @@ class MainActivityKT : AppCompatActivity() {
             }
         } else {
             super.onBackPressed()
-        }
-    }
-
-    fun isSeasonNewFormat(shardID: String): Boolean {
-        val region = Regions.getNewRegion(shardID)
-        if (region == Regions.Region.KAKAO || region == Regions.Region.STEAM) {
-            return when (Seasons.pcCurrentSeason) {
-                "pc-2018-01" -> true
-                "2018-01",
-                "2018-02",
-                "2018-03",
-                "2018-04",
-                "2018-05",
-                "2018-06",
-                "2018-07",
-                "2018-08",
-                "2018-09" -> false
-                else -> true
-            }
-        } else if (region == Regions.Region.XBOX) {
-            return when (Seasons.xboxCurrentSeason) {
-                "2018-08",
-                "2018-01",
-                "2018-02",
-                "2018-03",
-                "2018-04",
-                "2018-05",
-                "2018-06",
-                "2018-07" -> false
-                else -> true
-            }
-        } else {
-            return true
         }
     }
 }

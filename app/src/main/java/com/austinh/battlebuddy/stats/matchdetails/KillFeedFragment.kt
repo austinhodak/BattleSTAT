@@ -1,6 +1,5 @@
 package com.austinh.battlebuddy.stats.matchdetails
 
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
@@ -9,10 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.R.drawable
-import com.austinh.battlebuddy.Telemetry
+import com.austinh.battlebuddy.map.MapDownloadActivity
 import com.austinh.battlebuddy.models.LogPlayerKill
 import com.austinh.battlebuddy.snacky.Snacky
+import com.austinh.battlebuddy.utils.Telemetry
 import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
 import com.austinh.battlebuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.fragment_stats_kill_feed.*
@@ -22,6 +21,7 @@ import org.jetbrains.anko.support.v4.startActivity
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 class KillFeedFragment: Fragment() {
 
@@ -55,38 +55,38 @@ class KillFeedFragment: Fragment() {
 
         kill_feed_rv.layoutManager = LinearLayoutManager(activity)
 
-        mAdapter  = SlimAdapter.create().attachTo(kill_feed_rv).register(R.layout.stats_kill_feed_item, SlimInjector<LogPlayerKill> { data, injector ->
+        mAdapter  = SlimAdapter.create().attachTo(kill_feed_rv).register(R.layout.stats_kill_feed_item_card, SlimInjector<LogPlayerKill> { data, injector ->
             injector.text(R.id.kill_feed_killer, "")
-            injector.text(R.id.kill_feed_victim, "")
+            //injector.text(R.id.kill_feed_victim, "")
 
-            var killerTV = injector.findViewById<TextView>(R.id.kill_feed_killer)
+            val killerTV = injector.findViewById<TextView>(R.id.kill_feed_killer)
             if (data.killer.name.isEmpty()) {
-                data.killer.name = Telemetry().damageTypeCategory[data.damageTypeCategory].toString()
+                data.killer.name = Telemetry.getDamageTypes(requireContext())[data.damageTypeCategory].toString()
 
-                killerTV.setTypeface(null, Typeface.BOLD_ITALIC)
+                //killerTV.setTypeface(null, Typeface.BOLD_ITALIC)
                 //injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.ITALIC)
             } else {
-                killerTV.setTypeface(null, Typeface.BOLD)
+                //killerTV.setTypeface(null, Typeface.BOLD)
                 //injector.typeface(R.id.kill_feed_killer, injector.findViewById<TextView>(R.id.kill_feed_killer).typeface, Typeface.NORMAL)
             }
 
-            injector.text(R.id.kill_feed_killer, data.killer.name.trim())
-            injector.text(R.id.kill_feed_victim, data.victim.name.trim())
+            injector.text(R.id.kill_feed_killer, "${data.killer.name.trim()}  \uf714  ${data.victim.name.trim()}")
 
-            if (Telemetry().damageCauserName[data.damageCauserName].toString() == "Player") {
-                injector.text(R.id.kill_feed_cause, Telemetry().damageTypeCategory[data.damageTypeCategory].toString())
+            if (Telemetry.getDamageCausers(requireContext())[data.damageCauserName].toString() == "Player") {
+                injector.text(R.id.kill_feed_cause, Telemetry.getDamageTypes(requireContext())[data.damageTypeCategory].toString().toUpperCase())
             } else {
-                injector.text(R.id.kill_feed_cause, Telemetry().damageCauserName[data.damageCauserName].toString())
+                injector.text(R.id.kill_feed_cause, Telemetry.getDamageCausers(requireContext())[data.damageCauserName].toString().toUpperCase())
             }
 
             injector.text(R.id.textView9, (killFeedList.size - killFeedList.indexOf(data)).toString())
 
             if (match.currentPlayerID.isNotEmpty() && matchModel?.currentPlayerRoster != null) {
                 when {
-                    data.killer.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_green_outline)
-                    data.victim.accountId == match.currentPlayerID -> injector.background(R.id.textView9, drawable.chip_red_outline)
+                    data.killer.accountId == match.currentPlayerID -> injector.background(R.id.constraintLayout4, R.drawable.alert_text_box)
+                    data.victim.accountId == match.currentPlayerID -> injector.background(R.id.constraintLayout4, R.drawable.alert_text_box_red)
                     else -> {
-                        for (teammate in matchModel?.currentPlayerRoster?.relationships?.participants?.data!!) {
+                        injector.background(R.id.constraintLayout4, R.drawable.alert_text_box_grey)
+                        /*for (teammate in matchModel?.currentPlayerRoster?.relationships?.participants?.data!!) {
                             if (data.killer.accountId == matchModel.participantHash[teammate.id]!!.attributes.stats.playerId) {
                                 injector.background(R.id.textView9, drawable.chip_green_outline_teammate)
                                 break
@@ -96,7 +96,7 @@ class KillFeedFragment: Fragment() {
                             } else {
                                 injector.background(R.id.textView9, drawable.chip_grey_outline)
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -128,16 +128,24 @@ class KillFeedFragment: Fragment() {
             val elapsedSeconds = difference / secondsInMilli
 
             injector.text(R.id.kill_feed_time, String.format("%02d:%02d", elapsedMinutes, elapsedSeconds))
-
             injector.text(R.id.kill_feed_distance, "${String.format("%.0f", Math.rint(data.distance/100))}m")
+            injector.text(R.id.kill_feed_hp, "${data.killer.health.roundToInt()}HP")
+
             injector.clicked(R.id.kill_feed_top) {
-                if (File(activity?.filesDir, match.getMapAsset()).exists()) {
-                    startActivity<KillFeedListMap>("mapName" to match.getMapAsset(), "killLog" to data, "killLogList" to killFeedList, "createdAt" to match.attributes?.createdAt)
+                if (File(requireContext().filesDir, match.getMapAsset(requireContext())).exists()) {
+                    startActivity<KillFeedListMap>("mapName" to match.getMapAsset(requireContext()), "killLog" to data, "killLogList" to killFeedList, "createdAt" to match.attributes?.createdAt, "safeZoneCircleList" to match.safeZoneList)
                 } else {
                     Snacky.builder().setActivity(requireActivity()).warning().setDuration(Snacky.LENGTH_LONG).setText("Map not downloaded.").setAction("DOWNLOAD") {
-
+                        startActivity<MapDownloadActivity>()
                     }.show()
                 }
+            }
+
+            if (data.assistant?.name != data.killer.name && data.assistant?.name?.isEmpty() == false && data.assistant.name != data.victim.name) {
+                injector.text(R.id.kill_feed_assist_text, data.assistant.name)
+                injector.visible(R.id.kill_feed_assist_layout)
+            } else {
+                injector.gone(R.id.kill_feed_assist_layout)
             }
         }).updateData(killFeedList)
     }

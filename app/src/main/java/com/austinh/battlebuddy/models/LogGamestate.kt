@@ -6,11 +6,11 @@ data class LogGamestate (
         val numJoinPlayers: Int,
         val numStartPlayers: Int,
         val safetyZonePosition: LogLocation,
-        val safetyZoneRadius: Int,
+        val safetyZoneRadius: Double,
         val poisonGasWarningPosition: LogLocation,
-        val poisonGasWarningRadius: Int,
+        val poisonGasWarningRadius: Double,
         val redZonePosition: LogLocation,
-        val redZoneRadius: Int
+        val redZoneRadius: Double
 )
 
 data class LogGamestatePeriodic (

@@ -2,6 +2,9 @@ package com.austinh.battlebuddy
 
 import android.util.Log
 import androidx.multidex.MultiDexApplication
+import com.austinh.battlebuddy.models.Seasons
+import com.austinh.battlebuddy.utils.Ads
+import com.austinh.battlebuddy.utils.Premium
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
@@ -15,15 +18,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.instabug.library.Instabug
 import com.instabug.library.invocation.InstabugInvocationEvent
 import com.instabug.library.ui.onboarding.WelcomeMessage
-import com.austinh.battlebuddy.models.Seasons
-import com.austinh.battlebuddy.utils.Ads
-import com.austinh.battlebuddy.utils.Premium
+import com.mopub.common.MoPub
+import com.mopub.common.SdkConfiguration
 import com.squareup.leakcanary.LeakCanary
 import io.fabric.sdk.android.Fabric
 import nouri.`in`.goodprefslib.GoodPrefs
 import org.jetbrains.anko.doAsync
-import com.mopub.common.MoPub
-import com.mopub.common.SdkConfiguration
 
 class Application : MultiDexApplication() {
 
@@ -77,13 +77,15 @@ class Application : MultiDexApplication() {
             mFirebaseRemoteConfig.activateFetched()
             doAsync {
                 Seasons.getInstance().withAPIKey(mFirebaseRemoteConfig.getString(PUBG_API_KEY)).loadSeasons()
-                com.austinh.battlebuddy.utils.Seasons.init()
+
             }
         }
 
+        com.austinh.battlebuddy.utils.Seasons.init()
+
         Ads.init(applicationContext)
 
-        MobileAds.initialize(this, "ca-app-pub-2318893623894354~7961010686")
+        MobileAds.initialize(this, "ca-app-pub-2237535196399997~6448924321")
 
         GoodPrefs.init(applicationContext)
 

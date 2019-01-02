@@ -9,13 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.Telemetry
 import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
 import com.austinh.battlebuddy.viewmodels.models.MatchModel
-import kotlinx.android.synthetic.main.match_weaponstats_fragment.weapon_mostKills
-import kotlinx.android.synthetic.main.match_weaponstats_fragment.weapon_mostKillsTitle
-import kotlinx.android.synthetic.main.match_weaponstats_fragment.weapon_mostPickup
-import kotlinx.android.synthetic.main.match_weaponstats_fragment.weapon_mostPickupTitle
 
 class MatchWeaponStatsFragment : Fragment() {
 
@@ -72,8 +67,8 @@ class MatchWeaponStatsFragment : Fragment() {
 
             Log.d("TOPWEAPON", topResult.toString())
 
-            weapon_mostPickup.text = Telemetry().itemId.getString(topResult.key)
-            weapon_mostPickupTitle.text = "MOST PICKED UP (${topResult.value})"
+            //weapon_mostPickup.text = Telemetry().itemId.getString(topResult.key)
+            //weapon_mostPickupTitle.text = "MOST PICKED UP (${topResult.value})"
         }
     }
 
@@ -96,8 +91,8 @@ class MatchWeaponStatsFragment : Fragment() {
             val result = mWeaponKills.toList().sortedByDescending { (_, value) -> value }.toMap()
             val topResult = result.entries.iterator().next()
 
-            weapon_mostKills.text = Telemetry().damageCauserName.getString(topResult.key)
-            weapon_mostKillsTitle.text = "MOST KILLS (${topResult.value})"
+            //weapon_mostKills.text = Telemetry().damageCauserName.getString(topResult.key)
+            //weapon_mostKillsTitle.text = "MOST KILLS (${topResult.value})"
         }
     }
 }

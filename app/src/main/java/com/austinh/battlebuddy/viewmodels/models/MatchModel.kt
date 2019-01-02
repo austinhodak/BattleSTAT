@@ -1,12 +1,16 @@
 package com.austinh.battlebuddy.viewmodels.models
 
+import android.content.Context
 import android.text.format.DateUtils
 import com.austinh.battlebuddy.R
+import com.austinh.battlebuddy.map.Map
 import com.austinh.battlebuddy.models.*
+import java.io.File
 import java.io.Serializable
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 data class MatchModel(
         var error: String? = null,
@@ -22,7 +26,9 @@ data class MatchModel(
         var logItemPickup: ArrayList<LogItemPickup> = ArrayList(),
         var logPlayerTakeDamage: ArrayList<LogPlayerTakeDamage> = ArrayList(),
         var logPlayerAttack: ArrayList<LogPlayerAttack> = ArrayList(),
-        var matchDefinition: LogMatchDefinition? = null
+        var matchDefinition: LogMatchDefinition? = null,
+        var carePackageList: ArrayList<LogCarePackageSpawn> = ArrayList(),
+        var safeZoneList: ArrayList<SafeZoneCircle> = ArrayList()
 ) : Serializable {
 
     fun getMapIcon(): Int {
@@ -30,25 +36,40 @@ data class MatchModel(
             "Savage_Main" -> R.drawable.sanhok_icon
             "Erangel_Main" -> R.drawable.erangel_icon
             "Desert_Main" -> R.drawable.cactu
-            else -> R.drawable.erangel_icon
+            else -> R.drawable.snowflake
         }
     }
 
-    fun getMapName(): String {
+    fun getMapAsset(context: Context): String {
         return when (attributes?.mapName) {
-            "Savage_Main" -> "Sanhok"
-            "Erangel_Main" -> "Erangel"
-            "Desert_Main" -> "Miramar"
-            else -> ""
-        }
-    }
-
-    fun getMapAsset(): String {
-        return when (attributes?.mapName) {
-            "Savage_Main" -> "sanhok/Savage_Main_Low_Res.jpg"
-            "Erangel_Main" -> "erangel/Erangel_Main.jpg"
-            "Desert_Main" -> "miramar/Miramar_Main_High_Res.jpg"
-            else -> ""
+            "Savage_Main" -> {
+                if (File(context.filesDir, Map.SANHOK_HIGH.fileName).exists()) {
+                    Map.SANHOK_HIGH.fileName
+                } else {
+                    Map.SANHOK_LOW.fileName
+                }
+            }
+            "Erangel_Main" -> {
+                if (File(context.filesDir, Map.ERANGEL_HIGH.fileName).exists()) {
+                    Map.ERANGEL_HIGH.fileName
+                } else {
+                    Map.ERANGEL_LOW.fileName
+                }
+            }
+            "Desert_Main" -> {
+                if (File(context.filesDir, Map.MIRAMAR_HIGH.fileName).exists()) {
+                    Map.MIRAMAR_HIGH.fileName
+                } else {
+                    Map.MIRAMAR_LOW.fileName
+                }
+            }
+            else -> {
+                if (File(context.filesDir, Map.VIKENDI_HIGH.fileName).exists()) {
+                    Map.VIKENDI_HIGH.fileName
+                } else {
+                    Map.VIKENDI_LOW.fileName
+                }
+            }
         }
     }
 

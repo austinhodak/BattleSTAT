@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/timelineBG">
+            android:background="@color/md_grey_900">
 
             <LinearLayout
                 android:id="@+id/top_bar_linear"

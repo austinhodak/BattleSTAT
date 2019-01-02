@@ -9,17 +9,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.google.android.gms.ads.AdListener
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.utils.Premium
+import com.google.android.gms.ads.AdListener
 import kotlinx.android.synthetic.main.fragment_home_weapons.*
 import java.util.*
 
 class HomeWeaponsFragment : Fragment() {
 
     private val mStringArray = ArrayList<String>()
-
-
 
     internal inner class ViewPagerAdapter
 

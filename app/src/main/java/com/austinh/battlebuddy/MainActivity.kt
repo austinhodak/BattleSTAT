@@ -20,6 +20,22 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
+import com.austinh.battlebuddy.R.string
+import com.austinh.battlebuddy.ammo.HomeAmmoList
+import com.austinh.battlebuddy.attachments.HomeAttachmentsFragment
+import com.austinh.battlebuddy.damage_calculator.DamageCalcActivity
+import com.austinh.battlebuddy.info.ControlsFragment
+import com.austinh.battlebuddy.info.TimerFragment
+import com.austinh.battlebuddy.models.SeasonStatsAll
+import com.austinh.battlebuddy.premium.UpgradeActivity
+import com.austinh.battlebuddy.rss.HomeUpdatesFragment
+import com.austinh.battlebuddy.snacky.Snacky
+import com.austinh.battlebuddy.stats.PlayerListDialog
+import com.austinh.battlebuddy.utils.Ads
+import com.austinh.battlebuddy.utils.Premium
+import com.austinh.battlebuddy.utils.Ranks
+import com.austinh.battlebuddy.utils.Seasons
+import com.austinh.battlebuddy.weapons.HomeWeaponsFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
@@ -46,25 +62,6 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.*
-import com.austinh.battlebuddy.R.string
-import com.austinh.battlebuddy.ammo.HomeAmmoList
-import com.austinh.battlebuddy.attachments.HomeAttachmentsFragment
-import com.austinh.battlebuddy.damage_calculator.DamageCalcActivity
-import com.austinh.battlebuddy.info.ControlsFragment
-import com.austinh.battlebuddy.info.TimerFragment
-import com.austinh.battlebuddy.loadout.LoadoutBestTabs
-import com.austinh.battlebuddy.loadout.LoadoutCreateMain
-import com.austinh.battlebuddy.models.SeasonStatsAll
-import com.austinh.battlebuddy.premium.UpgradeActivity
-import com.austinh.battlebuddy.rss.HomeUpdatesFragment
-import com.austinh.battlebuddy.snacky.Snacky
-import com.austinh.battlebuddy.stats.MainStatsActivity
-import com.austinh.battlebuddy.stats.PlayerListDialog
-import com.austinh.battlebuddy.utils.Ads
-import com.austinh.battlebuddy.utils.Premium
-import com.austinh.battlebuddy.utils.Ranks
-import com.austinh.battlebuddy.utils.Seasons
-import com.austinh.battlebuddy.weapons.HomeWeaponsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.startActivity
@@ -77,7 +74,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.set
 
-public class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var result: Drawer
 
@@ -101,7 +98,7 @@ public class MainActivity : AppCompatActivity() {
 
     private lateinit var mInterstitialAd: InterstitialAd
 
-    lateinit private var billingClient: BillingClient
+    private lateinit var billingClient: BillingClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -343,7 +340,7 @@ public class MainActivity : AppCompatActivity() {
 //                        }
 
                         Handler().postDelayed({
-                            startActivity(Intent(this, MainStatsActivity::class.java))
+                            //startActivity(Intent(this, MainStatsActivity::class.java))
                         }, 400)
                     }
 
@@ -440,7 +437,6 @@ public class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "999") {
-                        startActivity(Intent(this, LoadoutCreateMain::class.java))
                     }
 
                     if (drawerItem.identifier.toString() == "998") {
@@ -468,14 +464,9 @@ public class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "301") {
-                        updateFragment(LoadoutBestTabs())
-                        toolbar_title.text = getString(string.drawer_title_bestloadouts)
-                        updateToolbarElevation(0f)
-                        logDrawerEvent("best_loadouts")
                     }
 
                     if (drawerItem.identifier.toString() == "302") {
-                        startActivity(Intent(this, LoadoutCreateMain::class.java))
                     }
 
                     if (drawerItem.identifier.toString() == "502") {
@@ -757,9 +748,6 @@ public class MainActivity : AppCompatActivity() {
 
                     consentForm = ConsentForm.Builder(this@MainActivity, privacyUrl)
                             .withListener(object : ConsentFormListener() {
-                                override fun onConsentFormOpened() {
-                                    super.onConsentFormOpened()
-                                }
 
                                 override fun onConsentFormLoaded() {
                                     super.onConsentFormLoaded()

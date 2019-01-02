@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.models.PrefPlayer
+import com.austinh.battlebuddy.models.PlayerListModel
 import com.austinh.battlebuddy.viewmodels.PlayerStatsViewModel
 import com.austinh.battlebuddy.viewmodels.models.LeaderboardPlayer
 import kotlinx.android.synthetic.main.fragment_matches_list.*
@@ -25,14 +25,14 @@ class LeaderboardFragment : Fragment() {
         ViewModelProviders.of(this).get(PlayerStatsViewModel::class.java)
     }
 
-    private lateinit var mPlayer: PrefPlayer
+    private lateinit var mPlayer: PlayerListModel
     private lateinit var mAdapter: SlimAdapter
 
     var isLoaded = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (arguments == null) return null
-        return inflater.inflate(R.layout.fragment_matches_list, container, false)
+        return inflater.inflate(R.layout.fragment_leaderboards_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ class LeaderboardFragment : Fragment() {
                 }
         }
 
-        viewModel.getLeaderboards(mPlayer.selectedShardID, mPlayer.selectedGamemode!!, mActivity?.application
+        viewModel.getLeaderboards(mPlayer, mActivity?.application
                 ?: requireContext().applicationContext)
         viewModel.leaderboardData.observe(this, Observer {
             mAdapter.updateData(it.playerList)
@@ -92,7 +92,7 @@ class LeaderboardFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null && arguments!!.containsKey("selectedPlayer")) {
-            mPlayer = arguments!!.getSerializable("selectedPlayer") as PrefPlayer
+            mPlayer = arguments!!.getSerializable("selectedPlayer") as PlayerListModel
         } else {
             return
         }

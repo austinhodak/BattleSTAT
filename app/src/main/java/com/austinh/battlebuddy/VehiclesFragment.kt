@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.austinh.battlebuddy.R.layout
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.home_weapons_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
@@ -50,6 +50,7 @@ class VehiclesFragment : Fragment() {
         mList.add(Vehicle("Scooter", "Land", "2 ••", "- Km/H", "~1025", R.drawable.scooter))
         mList.add(Vehicle("Mirado", "Land", "4 ••••", "152 Km/H", "-", R.drawable.mirado))
         mList.add(Vehicle("Rony", "Land", "4 ••••", "- Km/H", "-", R.drawable.rony))
+        mList.add(Vehicle("Snowmobile", "Land", "2 ••", "- Km/H", "-", R.drawable.snowmobile))
 
         doAsync {
             mList = mList.sortedWith(compareBy { it.name }).toMutableList()

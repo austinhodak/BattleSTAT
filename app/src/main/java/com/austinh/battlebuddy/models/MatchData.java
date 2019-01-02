@@ -1,8 +1,10 @@
 package com.austinh.battlebuddy.models;
 
 import android.text.format.DateUtils;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.austinh.battlebuddy.R;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -78,7 +80,7 @@ public class MatchData {
             case "Desert_Main":
                 return R.drawable.cactu;
             default:
-                return R.drawable.erangel_icon;
+                return R.drawable.snowflake;
         }
     }
 

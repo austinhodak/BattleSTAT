@@ -1,8 +1,10 @@
 package com.austinh.battlebuddy.viewmodels.models
 
+import com.austinh.battlebuddy.models.Gamemode
+
 data class LeaderboardModel(
         var playerList: MutableList<LeaderboardPlayer> = ArrayList(),
-        var gameMode: String
+        var gameMode: Gamemode
 )
 
 data class LeaderboardPlayer(

@@ -23,6 +23,7 @@ object Premium {
         setupBilling(context)
 
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) { getIAPs() }
+
     }
 
     private fun setupBilling(context: Context) {

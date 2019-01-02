@@ -1,5 +1,6 @@
 package com.austinh.battlebuddy.viewmodels.models
 
+import com.austinh.battlebuddy.models.Gamemode
 import com.austinh.battlebuddy.models.PlayerStats
 
 data class PlayerModel(
@@ -12,14 +13,14 @@ data class PlayerModel(
         var lastUpdated: Long? = null,
         var error: Int? = null
 ) {
-    fun getStatsByGamemode(gamemode: String): PlayerStats? {
+    fun getStatsByGamemode(gamemode: Gamemode): PlayerStats? {
         return when (gamemode) {
-            "solo" -> soloStats
-            "solo-fpp" -> soloFPPStats
-            "duo" -> duoStats
-            "duo-fpp" -> duoFPPStats
-            "squad" -> squadStats
-            "squad-fpp" -> squadFPPStats
+            Gamemode.SOLO -> soloStats
+            Gamemode.SOLOFPP -> soloFPPStats
+            Gamemode.DUO -> duoStats
+            Gamemode.DUOFPP -> duoFPPStats
+            Gamemode.SQUAD -> squadStats
+            Gamemode.SQUADFPP -> squadFPPStats
             else -> null
         }
     }

@@ -12,21 +12,19 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onShow
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
-import com.afollestad.materialdialogs.input.input
-import com.bumptech.glide.Glide
 import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.utils.Ads
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.map_drop_roulette_map.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.find
 import kotlin.random.Random
 
 class MapDropRouletteMap : Fragment() {
 
     lateinit var mSharedPreferences: SharedPreferences
+    var r = Random
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.map_drop_roulette_map, container, false)
@@ -84,9 +82,18 @@ class MapDropRouletteMap : Fragment() {
             true
         }
 
+        if (r.nextFloat() <= 0.05f) {
+            dropButton?.text = "UH, WHERE THE HELL WE GOIN'?"
+        }
+
         when (arguments?.getString("mapName")) {
             "erangel" -> {
                 mapToolbar?.title = "Erangel"
+
+                if (r.nextFloat() <= 0.02f) {
+                    dropText?.text = "WADU HEK"
+                    dropMap?.setImageResource(R.drawable.wadu_hek)
+                } else
 
                 Glide.with(this)
                         .load(R.drawable.erangel_shadow)
@@ -95,7 +102,11 @@ class MapDropRouletteMap : Fragment() {
                 dropButton?.setOnClickListener {
                     GlobalScope.launch(Dispatchers.Main) {
                         dropButton?.isEnabled = false
-                        dropButton?.text = "Rolling..."
+                        if (r.nextFloat() <= 0.05f) {
+                            dropButton?.text = "YEETING..."
+                        } else {
+                            dropButton?.text = "Rolling..."
+                        }
                         var previousNum = -1
                         for (i in 1..mSharedPreferences.getLong("dropRoulette_rollTimes", 50)) {
                             if (!isAdded) return@launch
@@ -115,9 +126,16 @@ class MapDropRouletteMap : Fragment() {
                         dropButton?.text = "ROLL AGAIN"
                     }
                 }
+
+
             }
             "miramar" -> {
                 mapToolbar?.title = "Miramar"
+
+                if (r.nextFloat() <= 0.02f) {
+                    dropText?.text = "WADU HEK"
+                    dropMap?.setImageResource(R.drawable.wadu_hek)
+                } else
                 Glide.with(this)
                         .load(R.drawable.miramar_shadow)
                         .into(dropMap)
@@ -125,7 +143,11 @@ class MapDropRouletteMap : Fragment() {
                 dropButton?.setOnClickListener {
                     GlobalScope.launch(Dispatchers.Main) {
                         dropButton?.isEnabled = false
-                        dropButton?.text = "Rolling..."
+                        if (r.nextFloat() <= 0.05f) {
+                            dropButton?.text = "YEETING..."
+                        } else {
+                            dropButton?.text = "Rolling..."
+                        }
                         var previousNum = -1
                         for (i in 1..mSharedPreferences.getLong("dropRoulette_rollTimes", 50)) {
                             if (!isAdded) return@launch
@@ -149,6 +171,10 @@ class MapDropRouletteMap : Fragment() {
             "sanhok" -> {
                 mapToolbar?.title = "Sanhok"
 
+                if (r.nextFloat() <= 0.02f) {
+                    dropText?.text = "WADU HEK"
+                    dropMap?.setImageResource(R.drawable.wadu_hek)
+                } else
                 Glide.with(this)
                         .load(R.drawable.sanhok_new)
                         .into(dropMap)
@@ -156,7 +182,11 @@ class MapDropRouletteMap : Fragment() {
                 dropButton?.setOnClickListener {
                     GlobalScope.launch(Dispatchers.Main) {
                         dropButton?.isEnabled = false
-                        dropButton?.text = "Rolling..."
+                        if (r.nextFloat() <= 0.05f) {
+                            dropButton?.text = "YEETING..."
+                        } else {
+                            dropButton?.text = "Rolling..."
+                        }
                         var previousNum = -1
                         for (i in 1..mSharedPreferences.getLong("dropRoulette_rollTimes", 50)) {
                             if (!isAdded) return@launch
@@ -180,6 +210,10 @@ class MapDropRouletteMap : Fragment() {
             "vikendi" -> {
                 mapToolbar?.title = "Vikendi"
 
+                if (r.nextFloat() <= 0.02f) {
+                    dropText?.text = "WADU HEK"
+                    dropMap?.setImageResource(R.drawable.wadu_hek)
+                } else
                 Glide.with(this)
                         .load(R.drawable.vikendi_shadow)
                         .into(dropMap)
@@ -187,7 +221,11 @@ class MapDropRouletteMap : Fragment() {
                 dropButton?.setOnClickListener {
                     GlobalScope.launch(Dispatchers.Main) {
                         dropButton?.isEnabled = false
-                        dropButton?.text = "Rolling..."
+                        if (r.nextFloat() <= 0.05f) {
+                            dropButton?.text = "YEETING..."
+                        } else {
+                            dropButton?.text = "Rolling..."
+                        }
                         var previousNum = -1
                         for (i in 1..mSharedPreferences.getLong("dropRoulette_rollTimes", 50)) {
                             if (!isAdded) return@launch
@@ -219,7 +257,7 @@ class MapDropRouletteMap : Fragment() {
         }
 
         if (!mSharedPreferences.getBoolean("dropRoulette_hasLongPressed", false)) {
-            mapDropHint?.visibility = View.VISIBLE
+            //mapDropHint?.visibility = View.VISIBLE
         }
     }
 }

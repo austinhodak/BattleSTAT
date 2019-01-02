@@ -7,7 +7,10 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +21,16 @@ import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.afollestad.materialdialogs.checkbox.isCheckPromptChecked
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
+import com.austinh.battlebuddy.R
+import com.austinh.battlebuddy.map.MapDownloadActivity
+import com.austinh.battlebuddy.models.PlayerListModel
+import com.austinh.battlebuddy.models.PlayerStats
+import com.austinh.battlebuddy.models.SeasonStatsAll
+import com.austinh.battlebuddy.premium.UpgradeActivity
+import com.austinh.battlebuddy.snacky.Snacky
+import com.austinh.battlebuddy.stats.main.StatsHome
+import com.austinh.battlebuddy.utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
@@ -26,31 +39,28 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.functions.FirebaseFunctions
 import com.leinardi.android.speeddial.SpeedDialActionItem
-import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.models.PrefPlayer
-import com.austinh.battlebuddy.models.SeasonStatsAll
-import com.austinh.battlebuddy.premium.UpgradeActivity
-import com.austinh.battlebuddy.snacky.Snacky
-import com.austinh.battlebuddy.stats.main.StatsHome
-import com.austinh.battlebuddy.utils.Premium
-import com.austinh.battlebuddy.utils.Ranks
-import com.austinh.battlebuddy.utils.Regions
 import kotlinx.android.synthetic.main.dialog_player_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.appcompat.v7.navigationIconResource
 import org.jetbrains.anko.startActivity
 import java.util.HashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.set
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class PlayerListDialog : AppCompatActivity() {
 
-    private var players: MutableList<PrefPlayer> = ArrayList()
+    private var players: MutableList<PlayerListModel> = ArrayList()
     lateinit var mAdapter: SlimAdapter
     private var userAccountID = ""
 
     private val listeners: MutableMap<DatabaseReference, ValueEventListener> = HashMap()
     private var mSharedPreferences: SharedPreferences? = null
+    private var mDatabase: FirebaseDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +68,10 @@ class PlayerListDialog : AppCompatActivity() {
         setContentView(R.layout.dialog_player_list)
 
         mSharedPreferences = this.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
+        mDatabase = FirebaseDatabase.getInstance()
+        setSupportActionBar(toolbar)
+
+        //Seasons.init()
 
         if (intent.action != null) {
             toolbar_title?.text = "Pick a Player"
@@ -74,36 +88,37 @@ class PlayerListDialog : AppCompatActivity() {
             playerListRV?.layoutManager = GridLayoutManager(this, 2)
         }
 
-
-        //playerListRV?.layoutAnimation = android.view.animation.AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_fall_down)
-
-        mAdapter = SlimAdapter.create().attachTo(playerListRV).updateData(players).register<PrefPlayer>(R.layout.player_list_item) { player, injector ->
+        mAdapter = SlimAdapter.create().attachTo(playerListRV).updateData(players).register<PlayerListModel>(R.layout.player_list_item) { player, injector ->
             val cardView = injector.findViewById<CardView>(R.id.playerListCard)
 
             val rankIcon = injector.findViewById<ImageView>(R.id.game_version_icon)
             val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
-            if (mSharedPreferences?.contains("playerRank-${player.playerID}") == true) {
+            if (mSharedPreferences?.contains("playerRankNew-${player.playerID}") == true) {
                 Glide.with(applicationContext)
-                        .load(Ranks.getRankIcon(mSharedPreferences?.getFloat("playerRank-${player.playerID}", 0f)?.toDouble()
-                                ?: 0.0))
+                        .load(Ranks.getRankIcon(Rank.valueOf(mSharedPreferences?.getString("playerRankNew-${player.playerID}", "UNKNOWN")!!.toUpperCase())))
                         //.transition(DrawableTransitionOptions.withCrossFade(factory))
                         .into(rankIcon)
 
-                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(mSharedPreferences?.getFloat("playerRank-${player.playerID}", 0f)?.toDouble()
-                        ?: 0.0)))
+                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(Rank.valueOf(mSharedPreferences?.getString("playerRankNew-${player.playerID}", "UNKNOWN")!!.toUpperCase()))))
             } else {
                 injector.invisible(R.id.game_version_icon)
                 cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
             }
 
-            if (userAccountID == player.playerID) {
-                injector.text(R.id.player_select_name, "${player.playerName}  \uf2bd ")
-            } else {
-                injector.text(R.id.player_select_name, player.playerName)
+            when (player.platform) {
+                Platform.KAKAO,
+                Platform.STEAM -> injector.image(R.id.player_list_platform_icon, R.drawable.windows_white)
+                Platform.XBOX -> injector.image(R.id.player_list_platform_icon, R.drawable.xbox_white)
+                Platform.PS4 -> injector.image(R.id.player_list_platform_icon, R.drawable.ic_icons8_playstation)
             }
 
-            injector.text(R.id.playerListSubtitle, Regions.getNewRegionName(player.defaultShardID))
+            if (player.isPlayerCurrentUser) {
+                injector.text(R.id.player_select_name, "${player.playerName}  \uf2bd")
+            } else {
+                val text = injector.findViewById<TextView>(R.id.player_select_name)
+                text.text = player.playerName
+            }
 
             cardView.setOnClickListener {
                 if (intent.action != null) {
@@ -118,35 +133,11 @@ class PlayerListDialog : AppCompatActivity() {
                 }
             }
 
-            val currentSeason = com.austinh.battlebuddy.utils.Seasons.getCurrentSeasonForShard(player.defaultShardID)
-
             injector.gone(R.id.player_pg)
 
-            Log.d("RANK", "${player.playerID} - ${player.defaultShardID.toLowerCase()} - $currentSeason")
+            Log.d("DATABASEURL", "user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL()}/${Seasons.getCurrentSeasonForPlatform(player.platform).codeString}/stats")
 
-            if (player.selectedShardID.equals("xbox", true)) {
-                player.selectedShardID = "xbox-na"
-            }
-
-            var searchShardID = ""
-
-            if (player.defaultShardID == "xbox") {
-                if (player.isSeasonNewFormat("xbox")) {
-                    searchShardID = "xbox"
-                } else {
-                    searchShardID = player.oldXboxShard ?: "xbox-na"
-                }
-            } else if (player.defaultShardID == "psn")  {
-                if (player.isSeasonNewFormat("psn")) {
-                    searchShardID = "psn"
-                } else {
-                    searchShardID = player.oldXboxShard ?: "psn-na"
-                }
-            } else {
-                searchShardID = player.defaultShardID
-            }
-
-            listeners[FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${searchShardID.toLowerCase()}/$currentSeason/stats")] = FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${searchShardID.toLowerCase()}/$currentSeason/stats").addValueEventListener(object : ValueEventListener {
+            listeners[FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL()}/${Seasons.getCurrentSeasonForPlatform(player.platform).codeString}/stats")] = FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL()}/${Seasons.getCurrentSeasonForPlatform(player.platform).codeString}/stats").addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 
                 }
@@ -165,11 +156,11 @@ class PlayerListDialog : AppCompatActivity() {
 
                         injector.visible(R.id.player_pg)
 
-                        Log.d("PLAYER", "LOAD ${player.playerID} - ${player.selectedShardID} - ${player.selectedSeason}")
 
-                        startPlayerStatsFunction(player.playerID, searchShardID, player.selectedSeason!!)?.addOnSuccessListener {
+
+                        player.getAllStats()[0].addOnSuccessListener {
                             injector.gone(R.id.player_pg)
-                        }?.addOnFailureListener {
+                        }.addOnFailureListener {
                             injector.gone(R.id.player_pg)
                         }
                         return
@@ -178,30 +169,31 @@ class PlayerListDialog : AppCompatActivity() {
                     injector.gone(R.id.player_pg)
 
                     val seasonStats = p0.getValue(SeasonStatsAll::class.java)!!
-                    val pointsList: MutableList<Double> = ArrayList()
+                    var pointsList: MutableList<PlayerStats> = ArrayList()
 
-                    pointsList.add(seasonStats.solo.rankPoints)
-                    pointsList.add(seasonStats.`solo-fpp`.rankPoints)
-                    pointsList.add(seasonStats.duo.rankPoints)
-                    pointsList.add(seasonStats.`duo-fpp`.rankPoints)
-                    pointsList.add(seasonStats.squad.rankPoints)
-                    pointsList.add(seasonStats.`squad-fpp`.rankPoints)
+                    pointsList.add(seasonStats.solo)
+                    pointsList.add(seasonStats.`solo-fpp`)
+                    pointsList.add(seasonStats.duo)
+                    pointsList.add(seasonStats.`duo-fpp`)
+                    pointsList.add(seasonStats.squad)
+                    pointsList.add(seasonStats.`squad-fpp`)
 
-                    pointsList.sort()
-                    pointsList.reverse()
+                    pointsList = pointsList.sortedWith(compareByDescending {
+                        it.getRank().order
+                    }).toMutableList()
 
                     injector.visible(R.id.game_version_icon)
 
                     Glide.with(applicationContext)
-                            .load(Ranks.getRankIcon(pointsList[0]))
+                            .load(Ranks.getRankIcon(pointsList[0].getRank()))
                             .transition(DrawableTransitionOptions.withCrossFade(factory))
                             .into(rankIcon)
 
-                    cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(pointsList[0])))
+                    cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(pointsList[0].getRank())))
 
-                    mSharedPreferences?.edit()?.putFloat("playerRank-${player.playerID}", pointsList[0].toFloat())?.apply()
+                    injector.text(R.id.playerListSubtitle, pointsList[0].getRank().title + " " + pointsList[0].getRankLevel())
 
-                    Log.d("PLAYER", "ID: ${player.playerID}")
+                    mSharedPreferences?.edit()?.putString("playerRankNew-${player.playerID}", pointsList[0].getRank().name)?.apply()
 
                     cardView.setOnLongClickListener {
                         MaterialDialog(this@PlayerListDialog)
@@ -211,7 +203,8 @@ class PlayerListDialog : AppCompatActivity() {
                                     val isChecked = it.isCheckPromptChecked()
                                     if (isChecked) {
                                         FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID/accountID").setValue(player.playerID)
-                                        FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID/shardID").setValue(player.defaultShardID.toLowerCase())
+                                        FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID/platform").setValue(player.platform.id)
+                                        FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID/region").setValue(player.defaultConsoleRegion)
                                     }
 
                                     if (!isChecked && player.playerID == userAccountID) {
@@ -224,12 +217,12 @@ class PlayerListDialog : AppCompatActivity() {
                                     players.removeAt(index)
                                     mAdapter.notifyItemRemoved(index)
 
+                                    FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgPlayers/${player.playerID}").removeValue()
+
                                     if (player.playerID == userAccountID) {
                                         userAccountID = ""
                                         FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID").removeValue()
                                     }
-
-                                    FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubg_players/${player.playerID}").removeValue()
                                 }
                                 .checkBoxPrompt(text = "This is my player", isCheckedDefault = player.playerID == userAccountID) {}
                                 .show()
@@ -290,15 +283,17 @@ class PlayerListDialog : AppCompatActivity() {
                             .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
                                 dialog.positiveButton(text = "Adding")
                                 dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
-                                addPlayerByName(text.toString(), "steam").addOnCompleteListener { task ->
-                                    if (!task.isSuccessful) {
-                                        dialog.getInputField()!!.error = "No player found for \"$text\". Please try again."
-                                        dialog.positiveButton(text = "Add")
-                                        dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
+                                dialog.getInputField()?.isEnabled = false
 
-                                        return@addOnCompleteListener
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    val mapping = isUserAlreadyMapped(text.toString(), Platform.STEAM)
+                                    if (mapping != null) {
+                                        addExistingPlayerToUser(mapping.split(".")[1], Platform.STEAM, text.toString())
+                                        dialog.dismiss()
+                                    } else {
+                                        //User doesn't exist
+                                        addPlayer(dialog, text.toString(), Platform.STEAM)
                                     }
-                                    dialog.dismiss()
                                 }
                             }
                             .positiveButton(text = "Add")
@@ -311,12 +306,17 @@ class PlayerListDialog : AppCompatActivity() {
                             .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
                                 dialog.positiveButton(text = "Adding")
                                 dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
-                                addPlayerByName(text.toString(), "kakao").addOnSuccessListener {
-                                    dialog.dismiss()
-                                }.addOnFailureListener {
-                                    dialog.getInputField()!!.error = "No player found for \"$text\". Please try again."
-                                    dialog.positiveButton(text = "Add")
-                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
+                                dialog.getInputField()?.isEnabled = false
+
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    val mapping = isUserAlreadyMapped(text.toString(), Platform.KAKAO)
+                                    if (mapping != null) {
+                                        addExistingPlayerToUser(mapping.split(".")[1], Platform.KAKAO, text.toString())
+                                        dialog.dismiss()
+                                    } else {
+                                        //User doesn't exist
+                                        addPlayer(dialog, text.toString(), Platform.KAKAO)
+                                    }
                                 }
                             }
                             .positiveButton(text = "Add")
@@ -324,38 +324,60 @@ class PlayerListDialog : AppCompatActivity() {
                 }
                 R.id.fab_new_xbox -> {
                     MaterialDialog(this@PlayerListDialog)
-                            .title(text = "Add Xbox Player")
-                            .noAutoDismiss()
-                            .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
-                                dialog.positiveButton(text = "Adding")
-                                dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
-                                addPlayerByName(text.toString(), "xbox").addOnSuccessListener {
-                                    dialog.dismiss()
-                                }.addOnFailureListener {
-                                    dialog.getInputField()!!.error = "No player found for \"$text\". Please try again."
-                                    dialog.positiveButton(text = "Add")
-                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
-                                }
+                            .title(text = "First Things First...")
+                            .message(text = "Select a default region for this player.")
+                            .listItemsSingleChoice(items = Regions.xboxShardNames.toList()) { _, index, text ->
+                                MaterialDialog(this@PlayerListDialog)
+                                        .title(text = "Add Xbox Player (${Regions.shortXboxShardIDs[index].toUpperCase()})")
+                                        .noAutoDismiss()
+                                        .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                            dialog.positiveButton(text = "Adding")
+                                            dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                                            dialog.getInputField()?.isEnabled = false
+
+                                            GlobalScope.launch(Dispatchers.Main) {
+                                                val mapping = isUserAlreadyMapped(text.toString(), Platform.XBOX)
+                                                if (mapping != null) {
+                                                    addExistingPlayerToUser(mapping.split(".")[1], Platform.XBOX, text.toString(), Regions.shortXboxShardIDs[index])
+                                                    dialog.dismiss()
+                                                } else {
+                                                    //User doesn't exist
+                                                    addPlayer(dialog, text.toString(), Platform.XBOX, Regions.shortXboxShardIDs[index])
+                                                }
+                                            }
+                                        }
+                                        .positiveButton(text = "Add")
+                                        .show()
                             }
-                            .positiveButton(text = "Add")
                             .show()
                 }
                 R.id.fab_new_ps4 -> {
                     MaterialDialog(this@PlayerListDialog)
-                            .title(text = "Add PS4 Player")
-                            .noAutoDismiss()
-                            .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
-                                dialog.positiveButton(text = "Adding")
-                                dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
-                                addPlayerByName(text.toString(), "psn").addOnSuccessListener {
-                                    dialog.dismiss()
-                                }.addOnFailureListener {
-                                    dialog.getInputField()!!.error = "No player found for \"$text\". Please try again."
-                                    dialog.positiveButton(text = "Add")
-                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
-                                }
+                            .title(text = "First Things First...")
+                            .message(text = "Select a default region for this player.")
+                            .listItemsSingleChoice(items = Regions.psnShardNames.toList()) { _, index, text ->
+                                MaterialDialog(this@PlayerListDialog)
+                                        .title(text = "Add PS4 Player (${Regions.shortPSNShardIDs[index].toUpperCase()})")
+                                        .noAutoDismiss()
+                                        .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                            dialog.positiveButton(text = "Adding")
+                                            dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                                            dialog.getInputField()?.isEnabled = false
+
+                                            GlobalScope.launch(Dispatchers.Main) {
+                                                val mapping = isUserAlreadyMapped(text.toString(), Platform.PS4)
+                                                if (mapping != null) {
+                                                    addExistingPlayerToUser(mapping.split(".")[1], Platform.PS4, text.toString(), Regions.shortPSNShardIDs[index])
+                                                    dialog.dismiss()
+                                                } else {
+                                                    //User doesn't exist
+                                                    addPlayer(dialog, text.toString(), Platform.PS4, Regions.shortPSNShardIDs[index])
+                                                }
+                                            }
+                                        }
+                                        .positiveButton(text = "Add")
+                                        .show()
                             }
-                            .positiveButton(text = "Add")
                             .show()
                 }
             }
@@ -365,10 +387,18 @@ class PlayerListDialog : AppCompatActivity() {
 
         when (Premium.getUserLevel()) {
             Premium.Level.LEVEL_1,
-            Premium.Level.FREE -> playerListLimitTV.text = "LIMIT OF 5 PLAYERS \uD83C\uDF57"
-            Premium.Level.LEVEL_2 -> playerListLimitTV.text = "LIMIT OF 15 PLAYERS \uD83C\uDF57"
-            else -> playerListLimitTV.text = "UNLIMITED PLAYERS 4 U! \uD83C\uDF57"
+            Premium.Level.FREE -> playerListLimitTV.text = "LIMIT OF 5 PLAYERS  \uD83C\uDF57"
+            Premium.Level.LEVEL_2 -> playerListLimitTV.text = "LIMIT OF 15 PLAYERS  \uD83C\uDF57"
+            else -> playerListLimitTV.text = "UNLIMITED PLAYERS 4 U!  \uD83C\uDF57"
         }
+    }
+
+    private fun addExistingPlayerToUser(playerID: String, platform: Platform, playerName: String, regionID: String? = null) {
+        val updates: MutableMap<String, Any> = HashMap()
+        updates["users/${FirebaseAuth.getInstance().currentUser!!.uid}/pubgPlayers/$playerID/platform"] = platform.id
+        updates["users/${FirebaseAuth.getInstance().currentUser!!.uid}/pubgPlayers/$playerID/playerName"] = playerName
+        updates["users/${FirebaseAuth.getInstance().currentUser!!.uid}/pubgPlayers/$playerID/region"] = regionID ?: ""
+        mDatabase!!.reference.updateChildren(updates)
     }
 
     private var listener: ValueEventListener? = null
@@ -394,7 +424,6 @@ class PlayerListDialog : AppCompatActivity() {
         }
 
         val ref = FirebaseDatabase.getInstance().reference.child("users").child(currentUser.uid)
-
         listenerRef = ref.ref
         listener = ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -405,65 +434,40 @@ class PlayerListDialog : AppCompatActivity() {
                     return
                 }
 
-                if (p0.hasChild("pubgAccountID") && !p0.hasChild("pubgAccountID/accountID") && !p0.hasChild("pubgAccountID/shardID")) {
-                    userAccountID = p0.child("pubgAccountID").value.toString()
-                    p0.ref.child("pubgAccountID/accountID").setValue(userAccountID)
-                }
+                players.clear()
 
                 if (p0.hasChild("pubgAccountID/accountID")) {
                     userAccountID = p0.child("pubgAccountID/accountID").value.toString()
                 }
 
-                players.clear()
+                val children = p0.child("pubgPlayers").children.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.child("playerName").value.toString() })
 
-                for (child in p0.child("pubg_players").children) {
-                    var shardID = child.child("shardID").value.toString().toLowerCase()
-                    var oldXboxShard: String? = null
-                    if (shardID.contains("kakao") && shardID != "kakao") {
-                        child.ref.child("shardID").setValue("kakao")
-                        shardID = "kakao"
-                    } else if (shardID.contains("pc")) {
-                        child.ref.child("shardID").setValue("steam")
-                        shardID = "steam"
-                    } else if (shardID.contains("xbox") && shardID != "xbox") {
-                        child.ref.child("shardID").setValue("xbox")
-                        child.ref.child("oldXboxShard").setValue(shardID)
-                        oldXboxShard = shardID
-                        shardID = "xbox"
-                    } else if (shardID.contains("psn") && shardID != "psn") {
-                        child.ref.child("shardID").setValue("psn")
-                        child.ref.child("oldXboxShard").setValue(shardID)
-                        oldXboxShard = shardID
-                        shardID = "psn"
+                for (item in children) {
+                    val platform = if (item.child("platform").value.toString() == "psn") {
+                        Platform.PS4
+                    } else {
+                        Platform.valueOf(item.child("platform").value.toString().toUpperCase())
                     }
 
-                    if (!p0.hasChild("pubgAccountID/shardID") && userAccountID == child.key) {
-                        p0.ref.child("pubgAccountID/shardID").setValue(shardID)
+                    val defaultConsoleRegion = if (item.child("region").value.toString().isEmpty()) {
+                        "na"
+                    } else {
+                        item.child("region").value.toString()
                     }
 
-                    val player = PrefPlayer(
-                            playerID = child.key.toString(),
-                            playerName = child.child("playerName").value.toString(),
-                            defaultShardID = shardID.toLowerCase(),
-                            selectedGamemode = "solo"
+                    val player = PlayerListModel(
+                            playerID = item.key.toString(),
+                            playerIDAccount = "account.${item.key.toString()}",
+                            playerName = item.child("playerName").value.toString(),
+                            platform = platform,
+                            defaultConsoleRegion = defaultConsoleRegion,
+                            isPlayerCurrentUser = item.key.toString() == userAccountID
                     )
-
-                    if (oldXboxShard != null) {
-                        player.oldXboxShard = oldXboxShard
-                    } else if (child.hasChild("oldXboxShard")) {
-                        player.oldXboxShard = child.child("oldXboxShard").value.toString()
-                    }
-
-                    Log.d("PLAYER", player.playerID)
 
                     players.add(player)
                 }
 
-                players = players.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.playerName }).toMutableList()
-
-                mAdapter.updateData(players)
-                //if (!isDestroyed)
-                //playerListRV?.scheduleLayoutAnimation()
+                mAdapter.notifyDataSetChanged()
             }
         })
     }
@@ -493,31 +497,93 @@ class PlayerListDialog : AppCompatActivity() {
         }
     }
 
-    private fun startPlayerStatsFunction(playerID: String, shardID: String, seasonID: String): Task<Map<String, Any>>? {
-        val data = java.util.HashMap<String, Any>()
-        data["playerID"] = playerID
-        data["shardID"] = shardID
-        data["seasonID"] = seasonID
+    private fun addPlayer(dialog: MaterialDialog, playerName: String, platform: Platform, regionID: String = "") {
+        addPlayerByName(playerName, platform, regionID).addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                dialog.getInputField()!!.error = "No player found for \"$playerName\". Check capitalization and try again."
+                dialog.positiveButton(text = "Add")
+                dialog.setActionButtonEnabled(WhichButton.POSITIVE, true)
+                dialog.getInputField()?.isEnabled = true
 
-        return FirebaseFunctions.getInstance().getHttpsCallable("loadPlayerStats")?.call(data)?.continueWith { task ->
-            val result = task.result?.data as Map<String, Any>
-            Log.d("REQUEST", result.toString())
-            result
+                return@addOnCompleteListener
+            }
+            dialog.dismiss()
+            bypassCache = false
+            playerListFAB.mainFabClosedBackgroundColor = resources.getColor(R.color.md_green_A700)
         }
     }
 
-    private fun addPlayerByName(playerName: String, shardID: String): Task<Map<String, Any>> {
+    private fun addPlayerByName(playerName: String, platform: Platform, regionID: String = ""): Task<Map<String, Any>> {
         val data = HashMap<String, Any>()
         data["playerName"] = playerName
-        data["shardID"] = shardID
+        data["platform"] = platform.id
+        data["regionID"] = regionID
 
-        return FirebaseFunctions.getInstance().getHttpsCallable("addPlayerByName").call(data).continueWith { task ->
+        return FirebaseFunctions.getInstance().getHttpsCallable("addPlayerUsingName").call(data).continueWith { task ->
             val result = task.result
                     ?.data as Map<String, Any>
             result
         }
     }
 
-    var regionList = arrayOf("XBOX-AS", "XBOX-EU", "XBOX-NA", "XBOX-OC", "XBOX-SA", "PC-KRJP", "PC-JP", "PC-NA", "PC-EU", "PC-RU", "PC-OC", "PC-KAKAO", "PC-SEA", "PC-SA", "PC-AS")
-    var regions = arrayOf("Xbox Asia", "Xbox Europe", "Xbox North America", "Xbox Oceania", "Xbox South America", "PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC Kakao", "PC South East Asia", "PC South and Central America", "PC Asia")
+
+
+    /**
+     * @param playerName Takes string of playerName inputted from dialog.
+     * @param platform Takes platform
+     *
+     * @return Account ID string if user already exists, empty string is not.
+     */
+    private suspend fun isUserAlreadyMapped(playerName: String, platform: Platform) : String? {
+        return suspendCoroutine {
+            if (bypassCache)  {
+                it.resume(null)
+                return@suspendCoroutine
+            }
+            mDatabase!!.getReference("playerNameMapping").child(platform.id).child(playerName).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (!p0.exists()) {
+                        //Player is not in database, return null.
+                        it.resume(null)
+                        return
+                    }
+                    it.resume(p0.value.toString())
+                }
+            })
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.player_list_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private var bypassCache: Boolean = false
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.cache_bypass) {
+            var dialog = MaterialDialog(this@PlayerListDialog)
+                    .title(text = "Bypass Cache")
+                    .message(text = "The cache only needs to be bypassed if the stats you are getting are not for the correct player, most likely a player name change has happened and the cache needs updated.\n\nAfter clicking bypass, add a player like normal, this setting will reset once you add a player.")
+                    .positiveButton(text = "BYPASS") {
+                        bypassCache = true
+                        playerListFAB.mainFabClosedBackgroundColor = resources.getColor(R.color.timelineRed)
+                    }
+                    .neutralButton(text = "CANCEL BYPASS") {
+                        bypassCache = false
+                        playerListFAB.mainFabClosedBackgroundColor = resources.getColor(R.color.md_green_A700)
+                    }
+            dialog.setActionButtonEnabled(WhichButton.NEUTRAL, bypassCache)
+            dialog.show()
+            return true
+        }
+
+        if (item?.itemId == R.id.maps_manager) {
+            startActivity<MapDownloadActivity>()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

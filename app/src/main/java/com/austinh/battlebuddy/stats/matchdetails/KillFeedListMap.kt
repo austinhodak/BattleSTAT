@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PointF
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.view.Window
 import android.widget.TextView
@@ -12,16 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.R.id
 import com.austinh.battlebuddy.Telemetry
+import com.austinh.battlebuddy.map.Map
 import com.austinh.battlebuddy.models.LogPlayerKill
 import com.austinh.battlebuddy.models.Pin
+import com.austinh.battlebuddy.models.SafeZoneCircle
 import com.austinh.battlebuddy.views.PinSet
-import kotlinx.android.synthetic.main.maptile_activity.mapRV
-import kotlinx.android.synthetic.main.maptile_activity.pinview
+import com.davemorrissey.labs.subscaleview.ImageSource
+import kotlinx.android.synthetic.main.maptile_activity.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.TimeZone
+import java.util.*
 
 
 class KillFeedListMap : Activity() {
@@ -34,36 +37,44 @@ class KillFeedListMap : Activity() {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.maptile_activity)
 
-        var killFeedList = intent.getSerializableExtra("killLogList") as ArrayList<LogPlayerKill>
+        val safeZoneCircleList = intent.getSerializableExtra("safeZoneCircleList") as ArrayList<SafeZoneCircle>
 
         val mapName = intent.getStringExtra("mapName")
         val imageView = pinview
-        //imageView.setImage(ImageSource.asset(mapName))
+        imageView.setImage(ImageSource.uri(Uri.fromFile(File(filesDir, mapName))))
         imageView.maxScale = 36f
 
         val killFeedLogPlayerKill = intent.getSerializableExtra("killLog") as LogPlayerKill
 
-        var offest = 1.0
-        if (mapName == "sanhok/Savage_Main_Low_Res.jpg") {
-            offest = 3.41333333
+        var map: Map? = Map.ERANGEL_LOW
+        for (item in Map.values()) {
+            if (item.fileName == mapName) map = item
         }
 
-        File("")
+        val offset = when (map) {
+            Map.MIRAMAR_LOW -> 4.048
+            Map.SANHOK_LOW -> 3.41333333
+            Map.VIKENDI_LOW -> 3.072
+            Map.SANHOK_HIGH -> 0.5
+            else -> 1.0
+        }
 
-        var pinSet = PinSet(drawLine = true)
+        val pinSet = PinSet(drawLine = true)
 
         if (killFeedLogPlayerKill.killer.location.isValidLocation()) {
-            val killerPoint = PointF((killFeedLogPlayerKill.killer.location.x / 100 / offest).toFloat(), (killFeedLogPlayerKill.killer.location.y / 100 / offest).toFloat())
+            val killerPoint = PointF((killFeedLogPlayerKill.killer.location.x / 100 / offset).toFloat(), (killFeedLogPlayerKill.killer.location.y / 100 / offset).toFloat())
             pinSet.pin1 = Pin(killerPoint, "KILLER", getBitmapDrawable(R.drawable.pin_gun))
         }
 
         if (killFeedLogPlayerKill.victim.location.isValidLocation()) {
-            val victimPoint = PointF((killFeedLogPlayerKill.victim.location.x / 100 / offest).toFloat(), (killFeedLogPlayerKill.victim.location.y / 100 / offest).toFloat())
+            val victimPoint = PointF((killFeedLogPlayerKill.victim.location.x / 100 / offset).toFloat(), (killFeedLogPlayerKill.victim.location.y / 100 / offset).toFloat())
             imageView.setScaleAndCenter(5f, PointF(victimPoint.x, victimPoint.y))
             pinSet.pin2 = Pin(victimPoint, "VICTIM", getBitmapDrawable(R.drawable.point_skull))
         }
 
         imageView.addKill(pinSet, true)
+
+        imageView.placeSafeZones(processCircles(safeZoneCircleList, offset))
     }
 
     private fun loadList(list: ArrayList<LogPlayerKill>, createdAt: String) {
@@ -135,5 +146,15 @@ class KillFeedListMap : Activity() {
 
     private fun getBitmapDrawable(int: Int): Bitmap {
         return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, int), 100, 121, false)
+    }
+
+    private fun processCircles(list: ArrayList<SafeZoneCircle>, offset: Double) : ArrayList<SafeZoneCircle> {
+        for (item in list) {
+            item.position.x = item.position.x / 100 / offset
+            item.position.y = item.position.y / 100 / offset
+            item.radius = item.radius / 100 / offset
+        }
+
+        return list
     }
 }

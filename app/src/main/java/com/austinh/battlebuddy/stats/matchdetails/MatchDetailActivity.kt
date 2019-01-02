@@ -26,6 +26,12 @@ import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.Volley
+import com.austinh.battlebuddy.BuildConfig
+import com.austinh.battlebuddy.R
+import com.austinh.battlebuddy.Telemetry
+import com.austinh.battlebuddy.utils.Premium
+import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
+import com.austinh.battlebuddy.viewmodels.models.MatchModel
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
@@ -35,13 +41,6 @@ import com.google.firebase.dynamiclinks.ShortDynamicLink
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.holder.StringHolder
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import com.austinh.battlebuddy.BuildConfig
-import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.Telemetry
-import com.austinh.battlebuddy.utils.Ads
-import com.austinh.battlebuddy.utils.Premium
-import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
-import com.austinh.battlebuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import nouri.`in`.goodprefslib.GoodPrefs
 import org.jetbrains.anko.toast
@@ -62,7 +61,7 @@ class MatchDetailActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var mDrawer: Drawer
+    lateinit var mDrawer: Drawer
 
     private var headerGamemodeTV: TextView? = null
     private var headerDurationTV: TextView? = null
@@ -126,7 +125,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
         GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) + 1))
 
-        mInterstitialAd.adUnitId = "ca-app-pub-2318893623894354/3592065425"
+        mInterstitialAd.adUnitId = "ca-app-pub-2237535196399997/3817346965"
         if (!Premium.isAdFreeUser()) {
             //mInterstitialAd.loadAd(Ads.getAdBuilder())
         }
@@ -134,7 +133,7 @@ class MatchDetailActivity : AppCompatActivity() {
         if (!Premium.isAdFreeUser()) {
             val statsBanner = AdView(this)
             statsBanner.adSize = com.google.android.gms.ads.AdSize.BANNER
-            statsBanner.adUnitId = "ca-app-pub-2318893623894354/8404697969"
+            statsBanner.adUnitId = "ca-app-pub-2237535196399997/7373448592"
             //statsBanner.loadAd(Ads.getAdBuilder())
             statsBanner.adListener = object : AdListener() {
                 override fun onAdLoaded() {
@@ -204,6 +203,22 @@ class MatchDetailActivity : AppCompatActivity() {
             headerDivider = false
             stickyFooterShadow = false
             selectedItem = -1
+            /*primaryItem("Map") {
+                icon = R.drawable.map_96
+                onClick { _, _, _ ->
+                    isNavigatedDown = false
+                    val matchesPlayerStatsFragment = MatchMapFragment()
+                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
+                            .commit()
+
+                    updateToolbarElevation(15f)
+                    updateToolbarFlags(false)
+
+                    toolbar_title.text = "Map"
+                    false
+                }
+            }
+            divider()*/
             primaryItem("Your Match Stats") {
                 icon = R.drawable.icons8_person_male
                 identifier = 1
@@ -282,7 +297,7 @@ class MatchDetailActivity : AppCompatActivity() {
                     isNavigatedDown = false
                     supportFragmentManager.beginTransaction().replace(R.id.match_frame, KillFeedFragment())
                             .commit()
-                    toolbar_title.text = "Kills"
+                    toolbar_title.text = "Kill Feed"
                     updateToolbarElevation(15f)
                     updateToolbarFlags(false)
                     false
@@ -300,10 +315,20 @@ class MatchDetailActivity : AppCompatActivity() {
                     false
                 }
             }
-            if (BuildConfig.DEBUG) {
-                primaryItem("Care Packages") {
-                    icon = R.drawable.carepackage_open
+            primaryItem("Care Packages") {
+                icon = R.drawable.carepackage_open
+                onClick { view, position, drawerItem ->
+                    isNavigatedDown = false
+                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, CarePackageListFragment())
+                            .commit()
+                    toolbar_title.text = "Care Packages"
+                    updateToolbarElevation(15f)
+                    updateToolbarFlags(false)
+                    false
                 }
+            }
+            if (BuildConfig.DEBUG) {
+
                 primaryItem("Weapon Stats") {
                     icon = R.drawable.icons8_rifle
                     onClick { view, position, drawerItem ->
@@ -376,6 +401,7 @@ class MatchDetailActivity : AppCompatActivity() {
         } else {
             if (this::mDrawer.isInitialized && mDrawer.isDrawerOpen) {
                 mDrawer.closeDrawer()
+                return
             } else if (!Premium.isAdFreeUser()) {
                 Log.d("LAUNCH", GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0).toString())
                 if (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) >= 3) {

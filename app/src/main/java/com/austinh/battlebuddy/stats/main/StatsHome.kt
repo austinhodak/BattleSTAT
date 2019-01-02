@@ -11,30 +11,26 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
+import com.austinh.battlebuddy.R
+import com.austinh.battlebuddy.models.Gamemode
+import com.austinh.battlebuddy.models.PlayerListModel
+import com.austinh.battlebuddy.premium.UpgradeActivity
+import com.austinh.battlebuddy.snacky.Snacky
+import com.austinh.battlebuddy.utils.*
+import com.austinh.battlebuddy.viewmodels.PlayerStatsViewModel
+import com.austinh.battlebuddy.viewmodels.models.PlayerModel
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
-import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.functions.FirebaseFunctions
-import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.models.PrefPlayer
-import com.austinh.battlebuddy.premium.UpgradeActivity
-import com.austinh.battlebuddy.snacky.Snacky
-import com.austinh.battlebuddy.utils.Ads
-import com.austinh.battlebuddy.utils.Premium
-import com.austinh.battlebuddy.utils.Regions
-import com.austinh.battlebuddy.utils.Seasons
-import com.austinh.battlebuddy.viewmodels.PlayerStatsViewModel
-import com.austinh.battlebuddy.viewmodels.models.PlayerModel
 import kotlinx.android.synthetic.main.activity_stats_home.*
 import org.jetbrains.anko.startActivity
 
 class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
-    private var player: PrefPlayer? = null
+    private var player: PlayerListModel? = null
     private var playerModel: PlayerModel? = null
 
     private var selectedSeason = 0
@@ -59,13 +55,13 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         stats_bottom_nav?.itemTextAppearanceInactive = R.style.TabUnselectedText
 
         statsRefreshLayout?.setColorSchemeColors(resources.getColor(R.color.timelineOrange))
-        statsRefreshLayout?.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.md_grey_850))
+        statsRefreshLayout?.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.md_grey_900))
 
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(applicationContext)
         mRewardedVideoAd?.rewardedVideoAdListener = this
 
         if (!Premium.isUserLevel3() || !Premium.isUserLevel2()) {
-            mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
+            mRewardedVideoAd?.loadAd("ca-app-pub-2237535196399997/3853662528",
                     Ads.getAdBuilder())
         }
 
@@ -74,31 +70,30 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
     private fun receiveIntent() {
         if (intent != null && intent.hasExtra("selectedPlayer")) {
-            val selectedPlayer = intent.getSerializableExtra("selectedPlayer") as PrefPlayer
+            val selectedPlayer = intent.getSerializableExtra("selectedPlayer") as PlayerListModel
             player = selectedPlayer
 
-            Log.d("SEASON", Regions.getRegionNames(selectedPlayer.selectedShardID, null).indexOf(selectedPlayer.selectedShardID).toString())
-            selectedSeason = Seasons.getCurrentSeasonInt(selectedPlayer.selectedShardID)
-            selectedShard = Regions.getRegionIDs(selectedPlayer.selectedShardID, null).indexOf(selectedPlayer.selectedShardID)
+            selectedSeason = 0
+            selectedShard = Regions.getShortRegionIDs(player!!.platform).indexOf("na")
 
             toolbar_title?.text = selectedPlayer.playerName
 
             val bundle = Bundle()
             val fragmentNew = MainStatsFragmentNew()
-            selectedPlayer.selectedGamemode = "solo"
+            selectedPlayer.selectedGamemode = Gamemode.SOLO
             bundle.putSerializable("selectedPlayer", selectedPlayer)
             fragmentNew.arguments = bundle
             supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragmentNew).commit()
 
-            when (Regions.getNewRegion(selectedPlayer.selectedShardID)) {
-                Regions.Region.KAKAO,
-                Regions.Region.STEAM -> {
+            when (selectedPlayer.platform) {
+                Platform.KAKAO,
+                Platform.STEAM -> {
                     toolbar_image?.setImageResource(R.drawable.windows_white)
                 }
-                Regions.Region.XBOX -> {
+                Platform.XBOX -> {
                     toolbar_image?.setImageResource(R.drawable.xbox_white)
                 }
-                Regions.Region.PS4 -> {
+                Platform.PS4 -> {
                     toolbar_image?.setImageResource(R.drawable.ic_icons8_playstation)
                 }
             }
@@ -116,14 +111,17 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 }
             })
 
-            viewModel.getPlayerStats(selectedPlayer.playerID, selectedPlayer.defaultShardID, selectedPlayer.selectedSeason!!, player!!)
+            viewModel.getPlayerStats(player!!)
             viewModel.playerData.observe(this, Observer<PlayerModel> {
                 playerModel = it
+                if (it.error != null && it.error == 1) {
+                    player!!.runGetStats()
+                }
             })
 
             setupBottomNav(selectedPlayer)
 
-            Log.d("PLAYER", "${player?.isSeasonNewFormat(player?.defaultShardID!!)} --")
+            //Log.d("PLAYER", "${player?.isSeasonNewFormat(player?.defaultShardID!!)} --")
 
             statsRefreshLayout?.setOnRefreshListener {
                 var updateTimeout = 15
@@ -172,9 +170,9 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         }
     }
 
-    private fun loadPlayerStats(selectedPlayer: PrefPlayer) {
+    private fun loadPlayerStats(selectedPlayer: PlayerListModel) {
         statsRefreshLayout?.isRefreshing = true
-        var shardID = ""
+        /*var shardID = ""
         if (Regions.getNewRegion(selectedPlayer.selectedShardID) == Regions.Region.XBOX) {
             if (selectedPlayer.isSeasonNewFormat(selectedPlayer.selectedShardID)) {
                 shardID = "xbox"
@@ -206,18 +204,20 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                     shardID = selectedPlayer.selectedShardID
                 }
             }
+        }*/
+
+        //Log.d("PLAYER LOAD", shardID)
+
+        selectedPlayer.runGetStats().addOnSuccessListener {
+            statsRefreshLayout?.isRefreshing = false
+        }.addOnFailureListener {
+            statsRefreshLayout?.isRefreshing = false
         }
 
-        Log.d("PLAYER LOAD", shardID)
-
-        startPlayerStatsFunction(selectedPlayer.playerID, shardID, player!!.selectedSeason!!)?.addOnSuccessListener {
-            statsRefreshLayout?.isRefreshing = false
-        }?.addOnFailureListener {
-            statsRefreshLayout?.isRefreshing = false
-        }
+        selectedPlayer.runGetMatches()
     }
 
-    private fun tabSelected(gameMode: String, player: PrefPlayer, itemId: Int) {
+    private fun tabSelected(gameMode: String, player: PlayerListModel, itemId: Int) {
         when (gameMode) {
             "Solo" -> {
                 val fragment = if (itemId == R.id.your_stats_menu) {
@@ -228,7 +228,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                     MatchListFragmentNew()
                 }
 
-                player.selectedGamemode = "solo"
+                player.selectedGamemode = Gamemode.SOLO
                 val bundle = Bundle()
                 bundle.putSerializable("selectedPlayer", player)
 
@@ -244,7 +244,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                     MatchListFragmentNew()
                 }
 
-                player.selectedGamemode = "solo-fpp"
+                player.selectedGamemode = Gamemode.SOLOFPP
                 val bundle = Bundle()
                 bundle.putSerializable("selectedPlayer", player)
 
@@ -260,7 +260,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                     MatchListFragmentNew()
                 }
 
-                player.selectedGamemode = "duo"
+                player.selectedGamemode = Gamemode.DUO
                 val bundle = Bundle()
                 bundle.putSerializable("selectedPlayer", player)
 
@@ -276,7 +276,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                     MatchListFragmentNew()
                 }
 
-                player.selectedGamemode = "duo-fpp"
+                player.selectedGamemode = Gamemode.DUOFPP
                 val bundle = Bundle()
                 bundle.putSerializable("selectedPlayer", player)
 
@@ -292,7 +292,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                     MatchListFragmentNew()
                 }
 
-                player.selectedGamemode = "squad"
+                player.selectedGamemode = Gamemode.SQUAD
                 val bundle = Bundle()
                 bundle.putSerializable("selectedPlayer", player)
 
@@ -308,7 +308,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                     MatchListFragmentNew()
                 }
 
-                player.selectedGamemode = "squad-fpp"
+                player.selectedGamemode = Gamemode.SQUADFPP
                 val bundle = Bundle()
                 bundle.putSerializable("selectedPlayer", player)
 
@@ -318,17 +318,19 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         }
     }
 
-    private fun setupBottomNav(player: PrefPlayer) {
-        if (player.selectedShardID.contains("xbox", true) || player.selectedShardID.contains("psn", true)) {
+    private fun setupBottomNav(player: PlayerListModel) {
+        if (player.isConsolePlayer()) {
             stats_bottom_nav?.menu?.removeItem(R.id.stats_leaderboards)
         }
         stats_bottom_nav?.setOnNavigationItemSelectedListener {
-            if (it.itemId == R.id.stats_war_mode) {
-                //Load War Mode section
-                stats_home_tabs?.visibility = View.GONE
+            if (it.itemId == R.id.matches_menu) {
+                tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player, it.itemId)
+                //stats_home_tabs?.visibility = View.GONE
+                //playerListToolbarWaterfall?.elevation = 0f
             } else {
                 tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player, it.itemId)
                 stats_home_tabs?.visibility = View.VISIBLE
+                //playerListToolbarWaterfall?.elevation = 15f
             }
             true
         }
@@ -342,67 +344,20 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         this.menu = menu
         menuInflater.inflate(R.menu.new_stats_home, menu)
-        menu?.findItem(R.id.change_region)?.isVisible = !player?.isSeasonNewFormat(player?.defaultShardID!!)!!
+        menu?.findItem(R.id.change_region)?.isVisible = !Seasons.isSeasonNewFormat(player!!.platform)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.change_region -> {
-                if (player!!.defaultShardID == "xbox") {
-                    if (player!!.isSeasonNewFormat("xbox")) {
-                        selectedShard = -1
-                    } else {
-                        if (player!!.oldXboxShard != null) {
-                            if (player!!.selectedShardID.toLowerCase() != player!!.oldXboxShard) {
-                                selectedShard = Regions.getRegionIDs(player!!.selectedShardID, null).indexOf(player!!.selectedShardID.toUpperCase())
-                            } else {
-                                selectedShard = Regions.getRegionIDs(player!!.oldXboxShard
-                                        ?: "xbox-na", null).indexOf(player!!.oldXboxShard!!.toUpperCase())
-                            }
-                        } else {
-                            selectedShard = Regions.getRegionIDs(player!!.selectedShardID, null).indexOf(player!!.selectedShardID.toUpperCase())
-                        }
-                    }
-                } else if (player!!.defaultShardID == "psn") {
-                    if (player!!.isSeasonNewFormat("psn")) {
-                        selectedShard = -1
-                    } else {
-                        if (player!!.oldXboxShard != null) {
-                            if (player!!.selectedShardID.toLowerCase() != player!!.oldXboxShard) {
-                                selectedShard = Regions.getRegionIDs(player!!.selectedShardID, null).indexOf(player!!.selectedShardID.toUpperCase())
-                            } else {
-                                selectedShard = Regions.getRegionIDs(player!!.oldXboxShard
-                                        ?: "psn-na", null).indexOf(player!!.oldXboxShard!!.toUpperCase())
-                            }
-                        }
-
-
-                        if (player!!.selectedShardID == "psn") {
-                            selectedShard = Regions.getRegionIDs(player!!.oldXboxShard
-                                    ?: "psn-na", null).indexOf(player!!.oldXboxShard?.toUpperCase() ?: "PSN-NA")
-                        } else {
-                            selectedShard = Regions.getRegionIDs(player!!.selectedShardID
-                                    ?: "psn-na", null).indexOf(player!!.selectedShardID?.toUpperCase() ?: "PSN-NA")
-                        }
-
-                        Log.d("REGION DIALOG", "SELECTED: $selectedShard - ${player!!.oldXboxShard} -- ${player!!.selectedShardID}")
-                    }
-                } else {
-                    if (player!!.selectedShardID == "steam") {
-                        selectedShard = 2
-                    } else if (player!!.selectedShardID == "kakao") {
-                        selectedShard = 6
-                    } else {
-                        selectedShard = Regions.getRegionIDs(player!!.selectedShardID, null).indexOf(player!!.selectedShardID.toUpperCase())
-                    }
-                }
                 MaterialDialog(this@StatsHome)
-                        .listItemsSingleChoice(items = Regions.getRegionNames(player!!.selectedShardID, player!!.selectedSeason!!).toMutableList(), initialSelection = selectedShard) { _, index, text ->
+                        .listItemsSingleChoice(items = Regions.getRegionNames(player!!.platform), initialSelection = selectedShard) { _, index, text ->
                             selectedShard = index
-                            player?.selectedShardID = Regions.getRegionIDs(text, null)[Regions.getRegionNames(text, null).indexOf(text)].toLowerCase()
+                            //player?.selectedRegion = Regions.getRegionIDs(text, null)[Regions.getRegionNames(text, null).indexOf(text)].toLowerCase()
+                            player?.selectedRegion = Regions.getShortRegionIDs(player!!.platform)[(Regions.getRegionNames(player!!.platform).indexOf(text))].toLowerCase()
 
-                            viewModel.getPlayerStats(player!!.playerID, player!!.selectedShardID, player!!.selectedSeason!!, player!!)
+                            viewModel.getPlayerStats(player!!)
 
                             if (stats_bottom_nav?.selectedItemId == R.id.matches_menu) {
                                 tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player!!, stats_bottom_nav?.selectedItemId!!)
@@ -413,17 +368,17 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
             }
             R.id.change_season -> {
                 MaterialDialog(this@StatsHome)
-                        .listItemsSingleChoice(items = Seasons.getSeasonsListForShard(player!!.selectedShardID, true), initialSelection = selectedSeason) { _, index, text ->
+                        .listItemsSingleChoice(items = Seasons.getSeasonStringList(player!!.platform, true), initialSelection = selectedSeason) { _, index, text ->
                             selectedSeason = index
-                            player?.selectedSeason = Seasons.getSeasonsListForShard(player!!.selectedShardID, false)[index]
+                            player?.selectedSeason = Seasons.getSeasonsForPlatform(player!!.platform).find { it.name == text }!!
 
-                            viewModel.getPlayerStats(player!!.playerID, player!!.selectedShardID, player!!.selectedSeason!!, player!!)
+                            viewModel.getPlayerStats(player!!)
 
                             if (stats_bottom_nav?.selectedItemId == R.id.matches_menu) {
                                 tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player!!, stats_bottom_nav?.selectedItemId!!)
                             }
 
-                            menu?.findItem(R.id.change_region)?.isVisible = !player?.isSeasonNewFormat(player?.defaultShardID!!)!!
+                            menu?.findItem(R.id.change_region)?.isVisible = !Seasons.isSeasonNewFormat(player!!.platform, player!!.selectedSeason)
                         }
                         .title(text = "Change Season")
                         .show()
@@ -438,19 +393,6 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         // overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
     }
 
-    private fun startPlayerStatsFunction(playerID: String, shardID: String, seasonID: String): Task<Map<String, Any>>? {
-        val data = java.util.HashMap<String, Any>()
-        data["playerID"] = playerID
-        data["shardID"] = shardID.toLowerCase()
-        data["seasonID"] = seasonID.toLowerCase()
-
-        return FirebaseFunctions.getInstance().getHttpsCallable("loadPlayerStats")?.call(data)?.continueWith { task ->
-            val result = task.result?.data as Map<String, Any>
-            Log.d("REQUEST", result.toString())
-            result
-        }
-    }
-
     fun setRefreshing(isRefreshing: Boolean) {
         statsRefreshLayout?.isRefreshing = isRefreshing
     }
@@ -462,7 +404,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
             hasReward = false
         }
 
-        mRewardedVideoAd?.loadAd("ca-app-pub-1946691221734928/1941699809",
+        mRewardedVideoAd?.loadAd("ca-app-pub-2237535196399997/3853662528",
                 Ads.getAdBuilder())
     }
 
@@ -493,5 +435,9 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
         Log.d("ADERROR", p0.toString())
+    }
+
+    fun setTabVisibility(visible: Int) {
+        stats_home_tabs?.visibility = visible
     }
 }

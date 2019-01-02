@@ -56,6 +56,23 @@
         <item>Mobile</item>
     </string-array>
 
+    <string-array name="match_mode_dialog">
+        <item>Normal Matches</item>
+        <item>Event Matches</item>
+        <item>Custom Matches</item>
+    </string-array>
+
+    <string-array name="matches_sort">
+        <item>Win Place</item>
+        <item>Date (New to Old)</item>
+        <item>Kills</item>
+        <item>Damage</item>
+        <item>Distance</item>
+        <item>Map</item>
+    </string-array>
+
+    <string name="pts">Public Test Server matches and stats are not available, this is a limitation of the official API, please contact Bluehole if you\'d like to see PTS stats added!</string>
+
     <string name="twitter_consumer_key" translatable="false">SptY5rSTRIJa4Tin9DVCq0ryM</string>
     <string name="twitter_consumer_secret" translatable="false">Te5FpxPDX7fOoj0mBGDS3NMzsFOuu2wLsCqXXDWcJUlYl5kHQt</string>
     <string name="drawer_title_upgrade">Upgrade</string>

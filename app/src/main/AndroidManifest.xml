@@ -12,24 +12,20 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:largeHeap="true"
         android:name="com.austinh.battlebuddy.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher"
         tools:ignore="GoogleAppIndexingWarning">
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-        <activity android:name="com.austinh.battlebuddy.MainActivity">
-        </activity>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
-        <activity android:name="com.austinh.battlebuddy.weapons.WeaponDetailsActivity" />
-
-        <activity
-            android:name="com.austinh.battlebuddy.loadout.LoadoutCreateMain"
-            android:theme="@style/AppTheme" />
+        <activity android:name="com.austinh.battlebuddy.MainActivity"/>
 
         <activity
             android:name="com.austinh.battlebuddy.damage_calculator.DamageCalcActivity"
@@ -102,14 +98,10 @@
         </activity>
 
         <!--<meta-data-->
-            <!--android:name="io.fabric.ApiKey"-->
-            <!--android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />-->
+        <!--android:name="io.fabric.ApiKey"-->
+        <!--android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />-->
 
-        <activity android:name="com.austinh.battlebuddy.stats.matchdetails.SinglePlayerStatsActivity" android:theme="@style/MatchDetailsTheme" />
-
-        <activity android:name="com.austinh.battlebuddy.stats.matchdetails.KillFeedListMap"/>
-
-        <activity android:name="com.austinh.battlebuddy.stats.MainStatsActivity" android:theme="@style/MainStatsTheme" />
+        <activity android:name="com.austinh.battlebuddy.stats.matchdetails.KillFeedListMap" />
 
         <!-- START NEW STUFF -->
         <activity
@@ -122,14 +114,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.austinh.battlebuddy.weapondetail.WeaponHome" android:theme="@style/WeaponHome">
-        </activity>
+        <activity
+            android:name="com.austinh.battlebuddy.weapondetail.WeaponDetailTimeline"
+            android:theme="@style/WeaponTimeline" />
 
-        <activity android:name="com.austinh.battlebuddy.weapondetail.WeaponDetailTimeline" android:theme="@style/WeaponTimeline" />
+        <activity
+            android:name="com.austinh.battlebuddy.premium.UpgradeActivity"
+            android:theme="@style/WeaponTimeline" />
 
-        <activity android:name="com.austinh.battlebuddy.premium.UpgradeActivity" android:theme="@style/WeaponTimeline" />
-
-        <activity android:label="Map Drop Roulette" android:name="com.austinh.battlebuddy.map.MapDropRouletteActivity" android:theme="@style/DropRoulette" />
+        <activity
+            android:name="com.austinh.battlebuddy.map.MapDropRouletteActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="Map Drop Roulette"
+            android:screenOrientation="portrait"
+            android:theme="@style/DropRoulette" />
 
         <activity
             android:name="com.austinh.battlebuddy.stats.PlayerListDialog"
@@ -137,6 +135,10 @@
 
         <activity
             android:name="com.austinh.battlebuddy.AlertManager"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
+            android:name="com.austinh.battlebuddy.map.MapDownloadActivity"
             android:theme="@style/PlayerListDialog" />
 
         <activity
@@ -177,7 +179,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2318893623894354~7961010686" />
+            android:value="ca-app-pub-2237535196399997~6448924321" />
     </application>
 
 </manifest>

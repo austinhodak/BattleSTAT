@@ -10,6 +10,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.austinh.battlebuddy.R
+import com.austinh.battlebuddy.models.Weapon
+import com.austinh.battlebuddy.weapondetail.WeaponDetailTimeline
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -20,10 +23,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
-import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.models.Weapon
-import com.austinh.battlebuddy.utils.Ads
-import com.austinh.battlebuddy.weapondetail.WeaponDetailTimeline
 import kotlinx.android.synthetic.main.home_weapons_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.support.v4.startActivity
@@ -57,7 +56,7 @@ class MainWeaponsList : Fragment() {
         val favoriteWeapons = mSharedPreferences?.getStringSet("favoriteWeapons", null)
 
         weapon_list_rv.layoutManager = LinearLayoutManager(activity ?: return)
-        mAdapter = SlimAdapter.create().attachTo(weapon_list_rv).register(R.layout.testing) { doc: DocumentSnapshot, injector ->
+        mAdapter = SlimAdapter.create().attachTo(weapon_list_rv).register(R.layout.weapon_item) { doc: DocumentSnapshot, injector ->
             val data = doc.toObject(Weapon::class.java)!!
             val subtitle = injector.findViewById<TextView>(R.id.weapon_subtitle)
             subtitle.text = ""

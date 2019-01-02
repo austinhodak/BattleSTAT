@@ -1,11 +1,12 @@
 package com.austinh.battlebuddy.models
 
 import android.text.format.DateUtils
-import com.google.firebase.firestore.IgnoreExtraProperties
 import com.austinh.battlebuddy.R
+import com.google.firebase.firestore.IgnoreExtraProperties
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
 @IgnoreExtraProperties
 data class Match (
@@ -23,15 +24,15 @@ data class Match (
         val type: String = ""
 ) {
     fun getMapIcon(): Int {
-        when (mapName) {
-            "Savage_Main" -> return R.drawable.ic_palm_tree
-            "Erangel_Main" -> return R.drawable.ic_tree
-            "Desert_Main" -> return R.drawable.ic_cactus
-            else -> return R.drawable.ic_tree
+        return when (mapName) {
+            "Savage_Main" -> R.drawable.ic_palm_tree
+            "Erangel_Main" -> R.drawable.ic_tree
+            "Desert_Main" -> R.drawable.ic_cactus
+            else -> R.drawable.snowflake_white
         }
     }
 
-    fun getFormattedCreatedAt(): String {
+    fun getFormattedCreatedAt(capitalize: Boolean? = false): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         sdf.timeZone = TimeZone.getTimeZone("GMT")
         var time: Long = 0
@@ -45,7 +46,11 @@ data class Match (
 
         val ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS)
 
-        return ago as String
+        return if (capitalize == true) {
+            com.austinh.battlebuddy.models.capitalize(ago as String)
+        } else {
+            ago as String
+        }
     }
 
     fun getMatchDuration(): String {
@@ -71,7 +76,19 @@ data class MatchTop (
         var matchKey: String,
         var currentPlayer: String,
         var createdAt: String
-)
+) {
+
+    /**
+     * Gets participant data
+     * @param playerID (optional) playerID without account.
+     * If playerID is not specified, the current players id is used.
+     *
+     * @return participant object
+     */
+    fun getPlayerWithID(playerID: String? = null): ParticipantShort? {
+        return match?.participants?.values?.find { it.playerId == "account.$currentPlayer" }
+    }
+}
 
 @IgnoreExtraProperties
 data class ParticipantShort (
@@ -86,3 +103,13 @@ data class ParticipantShort (
         val winPlace: Int = 0,
         val totalDistance: Double = 0.0
 )
+
+private fun capitalize(capString: String): String {
+    val capBuffer = StringBuffer()
+    val capMatcher = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(capString)
+    while (capMatcher.find()) {
+        capMatcher.appendReplacement(capBuffer, capMatcher.group(1).toUpperCase() + capMatcher.group(2).toLowerCase())
+    }
+
+    return capMatcher.appendTail(capBuffer).toString()
+}

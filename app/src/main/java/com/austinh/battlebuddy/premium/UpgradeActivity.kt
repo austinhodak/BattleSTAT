@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class UpgradeActivity : AppCompatActivity() {
 
-    lateinit private var billingClient: BillingClient
+    private lateinit var billingClient: BillingClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,6 @@ class UpgradeActivity : AppCompatActivity() {
 
         setSupportActionBar(upgradeToolbar)
         title = "Upgrade"
-        upgradeToolbarWaterfall?.scrollView = upgradeScrollview
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         billingClient = BillingClient.newBuilder(this).setListener { responseCode, purchases ->

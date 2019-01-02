@@ -3,12 +3,12 @@ package com.austinh.battlebuddy.weapondetail
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdView
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.utils.Ads
 import com.austinh.battlebuddy.utils.Premium
 import com.austinh.battlebuddy.viewmodels.WeaponDetailViewModel
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdView
 import kotlinx.android.synthetic.main.activity_weapon_detail_timeline.*
 
 class WeaponDetailTimeline : AppCompatActivity() {
@@ -29,7 +29,7 @@ class WeaponDetailTimeline : AppCompatActivity() {
         if (!Premium.isAdFreeUser()) {
             val statsBanner = AdView(this)
             statsBanner.adSize = com.google.android.gms.ads.AdSize.BANNER
-            statsBanner.adUnitId = "ca-app-pub-2318893623894354/6513031796"
+            statsBanner.adUnitId = "ca-app-pub-2237535196399997/3242631898"
             statsBanner.loadAd(Ads.getAdBuilder())
             statsBanner.adListener = object : AdListener() {
                 override fun onAdLoaded() {

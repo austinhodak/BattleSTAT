@@ -2,25 +2,24 @@ package com.austinh.battlebuddy.views
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.models.Pin
+import com.austinh.battlebuddy.models.SafeZoneCircle
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import kotlin.math.roundToInt
 
 class TelemetryMapVIew constructor(context: Context, attr: AttributeSet? = null) : SubsamplingScaleImageView(context, attr) {
 
     init {
         this.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
+        this.setMinimumScaleType(SCALE_TYPE_CENTER_CROP)
     }
 
     val pinListM = ArrayList<PinSet>()
+    var safeZoneCircleList = ArrayList<SafeZoneCircle>()
     private val paint = Paint()
 
     fun addKill(killer: Pin? = null, victim: Pin? = null, removeOtherKills: Boolean = false, drawLine: Boolean) {
@@ -33,6 +32,10 @@ class TelemetryMapVIew constructor(context: Context, attr: AttributeSet? = null)
         if (removeOtherKills) pinListM.clear()
         pinListM.add(pinSet)
         invalidate()
+    }
+
+    fun placeSafeZones(list: ArrayList<SafeZoneCircle>) {
+        safeZoneCircleList = list
     }
 
     @SuppressLint("DrawAllocation")
@@ -79,6 +82,19 @@ class TelemetryMapVIew constructor(context: Context, attr: AttributeSet? = null)
 
                 canvas?.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.pin_gun), height, width, false), vX, vY, paint)
             }
+        }
+
+        val circlePaint = Paint()
+        circlePaint.style = Paint.Style.STROKE
+        circlePaint.color = Color.WHITE
+        circlePaint.strokeWidth = 4f
+
+        for (circle in safeZoneCircleList) {
+            val cirlcePin = sourceToViewCoord(circle.position.x.toFloat(), circle.position.y.toFloat())!!
+
+            canvas?.drawCircle(cirlcePin.x, cirlcePin.y,circle.radius.toFloat() * this.scale, circlePaint)
+
+            Log.d("CIRCLE", circle.position.toString())
         }
     }
 }

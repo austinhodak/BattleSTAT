@@ -19,6 +19,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.austinh.battlebuddy.R
+import com.austinh.battlebuddy.models.Weapon
+import com.austinh.battlebuddy.models.WeaponSound
+import com.austinh.battlebuddy.viewmodels.WeaponDetailViewModel
+import com.austinh.battlebuddy.weapons.CompareWeaponPicker
+import com.austinh.battlebuddy.weapons.WeaponDamageChart
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,12 +32,6 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.storage.FirebaseStorage
 import com.instabug.bug.BugReporting
 import com.leinardi.android.speeddial.SpeedDialActionItem
-import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.models.Weapon
-import com.austinh.battlebuddy.models.WeaponSound
-import com.austinh.battlebuddy.viewmodels.WeaponDetailViewModel
-import com.austinh.battlebuddy.weapons.CompareWeaponPicker
-import com.austinh.battlebuddy.weapons.WeaponDamageChart
 import kotlinx.android.synthetic.main.fragment_weapon_timeline_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
@@ -72,6 +72,7 @@ class WeaponDetailTimelineStats : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         weaponTimelineToolbar = requireActivity().findViewById(R.id.mapToolbar)
+        weaponTimelineToolbar?.menu?.clear()
         weaponTimelineToolbar?.inflateMenu(R.menu.weapo_home_new)
 
         return inflater.inflate(R.layout.fragment_weapon_timeline_stats, container, false)
@@ -109,10 +110,6 @@ class WeaponDetailTimelineStats : Fragment() {
                 .setLabelColor(resources.getColor(R.color.md_orange_A400))
                 .setLabelBackgroundColor(resources.getColor(R.color.md_grey_850))
                 .create())
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     private var weaponObserver: Observer<DocumentSnapshot> = Observer {

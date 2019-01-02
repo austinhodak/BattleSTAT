@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="false"
     android:orientation="vertical">
 
     <ProgressBar
@@ -16,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp" />
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp" />
 
 </RelativeLayout>

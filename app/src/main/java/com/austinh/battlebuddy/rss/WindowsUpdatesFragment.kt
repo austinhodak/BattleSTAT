@@ -12,14 +12,14 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.prof.rssparser.Article
-import com.prof.rssparser.Parser
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.R.layout
+import com.prof.rssparser.Article
+import com.prof.rssparser.Parser
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 
 class WindowsUpdatesFragment : Fragment() {
@@ -42,6 +42,8 @@ class WindowsUpdatesFragment : Fragment() {
             override fun onTaskCompleted(list: ArrayList<Article>) {
                 //what to do when the parsing is done
                 //the Array List contains all article's data. For example you can use it for your adapter.
+
+                list.sortByDescending { it.pubDate }
 
                 for (article in list) {
                     Log.d("RSS", article.title)

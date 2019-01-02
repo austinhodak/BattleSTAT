@@ -21,6 +21,20 @@ object Ranks {
         }
     }
 
+    fun getRankIcon(rank: Rank): Int {
+        return when (rank) {
+            Rank.UNKNOWN -> R.drawable.unranked
+            Rank.BEGINNER -> R.drawable.rank_icon_bronze
+            Rank.NOVICE -> R.drawable.rank_icon_silver
+            Rank.EXPERIENCED -> R.drawable.rank_icon_gold
+            Rank.SKILLED -> R.drawable.rank_icon_platinum
+            Rank.SPECIALIST -> R.drawable.rank_icon_diamond
+            Rank.EXPERT -> R.drawable.rank_icon_elite
+            Rank.SURVIVOR -> R.drawable.rank_icon_master
+            Rank.LONE_SURVIVOR -> R.drawable.rank_icon_grandmaster
+        }
+    }
+
     fun getRankColor(rank: Double): Int {
         val rankPoints = Math.floor(rank).toInt()
 
@@ -35,6 +49,20 @@ object Ranks {
             rankPoints in 1900..1999 -> R.color.rankMaster
             rankPoints >= 2000 -> R.color.timelineYellow
             else -> R.color.timelineGrey
+        }
+    }
+
+    fun getRankColor(rank: Rank): Int {
+        return when (rank) {
+            Rank.UNKNOWN -> R.color.timelineGrey
+            Rank.BEGINNER -> R.color.rankBronze
+            Rank.NOVICE -> R.color.timelineNavy
+            Rank.EXPERIENCED -> R.color.rankGold
+            Rank.SKILLED -> R.color.rankPlatinum
+            Rank.SPECIALIST -> R.color.rankDiamond
+            Rank.EXPERT -> R.color.rankElite
+            Rank.SURVIVOR -> R.color.rankMaster
+            Rank.LONE_SURVIVOR -> R.color.timelineYellow
         }
     }
 

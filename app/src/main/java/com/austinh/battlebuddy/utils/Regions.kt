@@ -4,14 +4,17 @@ object Regions {
 
 
     var xboxShardIDs = arrayOf("XBOX-AS", "XBOX-EU", "XBOX-NA", "XBOX-OC", "XBOX-SA")
+    var shortXboxShardIDs = arrayOf("as", "eu", "na", "oc", "sa")
     var xboxShardNames = arrayOf("Xbox Asia", "Xbox Europe", "Xbox North America", "Xbox Oceania", "Xbox South America")
 
-    var pcShardIDs = arrayOf("PC-KRJP", "PC-JP", "PC-NA", "PC-EU", "PC-RU", "PC-OC", "PC-KAKAO", "PC-SEA", "PC-SA", "PC-AS")
-    var pcShardNames = arrayOf("PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC Kakao", "PC South East Asia", "PC South and Central America", "PC Asia")
+    var pcShardIDs = arrayOf("PC-KRJP", "PC-JP", "PC-NA", "PC-EU", "PC-RU", "PC-OC", "PC-SEA", "PC-SA", "PC-AS")
+    var pcShardNames = arrayOf("PC Korea", "PC Japan", "PC North America", "PC Europe", "PC Russia", "PC Oceania", "PC South East Asia", "PC South and Central America", "PC Asia")
     var pcNewShardNames = arrayOf("Steam", "Kakao")
+    var pcShortShardIDs = arrayOf("krjp", "jp", "na", "eu", "ru", "oc", "sea", "sa", "as")
 
     var psnShardNames = arrayOf("PSN Asia", "PSN Europe", "PSN North America", "PSN Oceania")
     var psnShardIDs = arrayOf("PSN-AS", "PSN-EU", "PSN-NA", "PSN-OC")
+    var shortPSNShardIDs = arrayOf("as", "eu", "na", "oc")
 
     fun getRegionNames(shardID: String, seasonID: String?): Array<String> {
         if (getNewRegion(shardID) == Region.STEAM || getNewRegion(shardID) == Region.KAKAO) {
@@ -43,6 +46,15 @@ object Regions {
         }
 
         return emptyArray()
+    }
+
+    fun getRegionNames(platform: Platform): MutableList<String> {
+        return when (platform) {
+            Platform.KAKAO,
+            Platform.STEAM -> pcShardNames
+            Platform.XBOX -> xboxShardNames
+            Platform.PS4 -> psnShardNames
+        }.toMutableList()
     }
 
     fun getRegionIDs(shardID: String, seasonID: String?): Array<String> {
@@ -104,6 +116,15 @@ object Regions {
             Region.XBOX
         } else {
             Region.PS4
+        }
+    }
+
+    fun getShortRegionIDs(platform: Platform): Array<String> {
+        return when (platform) {
+            Platform.KAKAO,
+            Platform.STEAM -> pcShortShardIDs
+            Platform.XBOX -> shortXboxShardIDs
+            Platform.PS4 -> shortPSNShardIDs
         }
     }
 

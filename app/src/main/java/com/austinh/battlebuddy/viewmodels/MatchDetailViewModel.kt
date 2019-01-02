@@ -5,21 +5,19 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.volley.*
-import com.android.volley.toolbox.HttpHeaderParser
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
+import com.android.volley.toolbox.*
 import com.austinh.battlebuddy.models.*
 import com.austinh.battlebuddy.utils.Regions
 import com.austinh.battlebuddy.viewmodels.models.MatchData
 import com.austinh.battlebuddy.viewmodels.models.MatchModel
+import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.UnsupportedEncodingException
+import java.io.*
 import java.util.*
+import java.util.zip.GZIPInputStream
 
 class MatchDetailViewModel : ViewModel() {
     val mMatchData = MutableLiveData<MatchModel>()
@@ -68,10 +66,6 @@ class MatchDetailViewModel : ViewModel() {
                     return Response.error(ParseError(e))
                 }
 
-            }
-
-            override fun deliverError(error: VolleyError) {
-                super.deliverError(error)
             }
 
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
@@ -132,7 +126,61 @@ class MatchDetailViewModel : ViewModel() {
             }
         }
 
-        getTelemetryData(mVolleyQueue, matchModel, assetURL)
+        getTelemetryDataGZIP(mVolleyQueue, matchModel, assetURL)
+    }
+
+    private fun getTelemetryDataGZIP(mVolleyQueue: RequestQueue, matchModel: MatchModel, assetURL: String) {
+        val objectRequest = object : StringRequest(Request.Method.GET, assetURL, Response.Listener<String> {
+            parseTelemetryData(JSONArray(it), matchModel)
+        }, Response.ErrorListener {
+
+        }) {
+            override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
+                doAsync {
+
+                }
+                val output = StringBuilder()
+                try {
+                    val gStream = GZIPInputStream(ByteArrayInputStream(response.data))
+                    val reader = InputStreamReader(gStream)
+                    val inp = BufferedReader(reader, 16384)
+
+                    reader.forEachLine {
+                        output.append(it).append("\n")
+                    }
+
+                    reader.close()
+                    inp.close()
+                    gStream.close()
+                } catch (e: IOException) {
+                    return Response.error(ParseError())
+                }
+
+                return Response.success(output.toString(), HttpHeaderParser.parseCacheHeaders(response))
+            }
+
+            override fun parseNetworkError(volleyError: VolleyError): VolleyError {
+                if (volleyError.networkResponse == null || volleyError.networkResponse.statusCode == 404) {
+                    matchModel.error = volleyError.message
+                    mMatchData.value = matchModel
+                }
+
+                return super.parseNetworkError(volleyError)
+            }
+
+            override fun getHeaders(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["Accept-Encoding"] = "gzip"
+                return params
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        mVolleyQueue.add(objectRequest)
+
     }
 
     private fun getTelemetryData(mVolleyQueue: RequestQueue, matchModel: MatchModel, assetURL: String) {
@@ -177,15 +225,12 @@ class MatchDetailViewModel : ViewModel() {
 
             }
 
-            override fun deliverError(error: VolleyError) {
-                super.deliverError(error)
-            }
-
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
                 if (volleyError.networkResponse == null || volleyError.networkResponse.statusCode == 404) {
                     matchModel.error = volleyError.message
                     mMatchData.value = matchModel
                 }
+
                 return super.parseNetworkError(volleyError)
             }
 
@@ -201,7 +246,6 @@ class MatchDetailViewModel : ViewModel() {
         }
 
         mVolleyQueue.add(objectRequest)
-
     }
 
     private fun parseTelemetryData(json: JSONArray, matchModel: MatchModel) {
@@ -219,7 +263,7 @@ class MatchDetailViewModel : ViewModel() {
                     "LogPlayerTakeDamage" -> {
                         var item2 = Gson().fromJson(item.toString(), LogPlayerTakeDamage::class.java)
                         if (item.isNull("attacker")) {
-                            Log.d("TELEMETRY", "ATTACK NULL")
+                            //Log.d("TELEMETRY", "ATTACK NULL")
                             item2.attacker = LogCharacter()
                         }
                         matchModel.logPlayerTakeDamage.add(item2)
@@ -229,6 +273,21 @@ class MatchDetailViewModel : ViewModel() {
                     }
                     "LogMatchDefinition" -> {
                         matchModel.matchDefinition = Gson().fromJson(item.toString(), LogMatchDefinition::class.java)
+                    }
+                    "LogCarePackageSpawn" -> {
+                        matchModel.carePackageList.add(Gson().fromJson(item.toString(), LogCarePackageSpawn::class.java))
+                    }
+                    "LogGameStatePeriodic" -> {
+                        val gameState = Gson().fromJson(item.toString(), LogGamestatePeriodic::class.java).gameState
+                        val circle = SafeZoneCircle (
+                                position = gameState.poisonGasWarningPosition,
+                                radius = gameState.poisonGasWarningRadius
+                        )
+
+                        if (!matchModel.safeZoneList.contains(circle) && circle.position.isValidCirclePosition()) {
+                            matchModel.safeZoneList.add(circle)
+                            Log.d("CIRCLE", circle.toString())
+                        }
                     }
                 }
             }

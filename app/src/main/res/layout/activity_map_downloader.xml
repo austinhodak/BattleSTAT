@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/playerListToolbarWaterfall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_grey_900">
+
+            <LinearLayout
+                android:id="@+id/top_bar_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_vertical"
+                    android:text="Maps"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/playerListCord"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:id="@+id/playerListScrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="4dp"
+            android:scrollbars="none"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp">
+
+                    <Button
+                        android:id="@+id/erangelLow"
+                        style=""
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginEnd="4dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/erangelHigh"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView1" />
+
+                    <Button
+                        android:id="@+id/erangelHigh"
+                        style=""
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="62dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/erangelLow"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text="Erangel"
+                        android:textColor="#FFF"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView1"
+                        app:layout_constraintStart_toEndOf="@+id/imageView1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/erangel_icon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="LOW RES (1.7MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/erangelLow"
+                        app:layout_constraintStart_toStartOf="@+id/erangelLow"
+                        app:layout_constraintTop_toBottomOf="@+id/erangelLow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="HIGH RES (42MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/erangelHigh"
+                        app:layout_constraintStart_toStartOf="@+id/erangelHigh"
+                        app:layout_constraintTop_toBottomOf="@+id/erangelHigh" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/pill_divider_dark" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp">
+
+                    <Button
+                        android:id="@+id/miramarLow"
+                        style=""
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginEnd="4dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/miramarHigh"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView1" />
+
+                    <Button
+                        android:id="@+id/miramarHigh"
+                        style=""
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="62dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/miramarLow"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text="Miramar"
+                        android:textColor="#FFF"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView1"
+                        app:layout_constraintStart_toEndOf="@+id/imageView1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/cactu"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="LOW RES (0.6MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/miramarLow"
+                        app:layout_constraintStart_toStartOf="@+id/miramarLow"
+                        app:layout_constraintTop_toBottomOf="@+id/miramarLow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="HIGH RES (45.7MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/miramarHigh"
+                        app:layout_constraintStart_toStartOf="@+id/miramarHigh"
+                        app:layout_constraintTop_toBottomOf="@+id/miramarHigh" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/pill_divider_dark" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp">
+
+                    <Button
+                        android:id="@+id/sanhokLow"
+                        style=""
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginEnd="4dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/sanhokHigh"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+                    <Button
+                        android:id="@+id/sanhokHigh"
+                        style=""
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="62dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/sanhokLow"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text="Sanhok"
+                        android:textColor="#FFF"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                        app:layout_constraintStart_toEndOf="@+id/imageView2"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/sanhok_icon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="LOW RES (0.5MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/sanhokLow"
+                        app:layout_constraintStart_toStartOf="@+id/sanhokLow"
+                        app:layout_constraintTop_toBottomOf="@+id/sanhokLow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="HIGH RES (56.6MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/sanhokHigh"
+                        app:layout_constraintStart_toStartOf="@+id/sanhokHigh"
+                        app:layout_constraintTop_toBottomOf="@+id/sanhokHigh" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/pill_divider_dark" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp">
+
+                    <Button
+                        android:id="@+id/vikendiLow"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginEnd="4dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/vikendiHigh"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView1" />
+
+                    <Button
+                        android:id="@+id/vikendiHigh"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="62dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="@color/timelineOrange"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="Download"
+                        android:textColor="@color/timelineBG"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/vikendiLow"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text="Vikendi"
+                        android:textColor="#FFF"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView1"
+                        app:layout_constraintStart_toEndOf="@+id/imageView1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/snowflake"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="LOW RES (7MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/vikendiLow"
+                        app:layout_constraintStart_toStartOf="@+id/vikendiLow"
+                        app:layout_constraintTop_toBottomOf="@+id/vikendiLow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="HIGH RES (76MB)"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/vikendiHigh"
+                        app:layout_constraintStart_toStartOf="@+id/vikendiHigh"
+                        app:layout_constraintTop_toBottomOf="@+id/vikendiHigh" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="4dp"
+                    android:text="If both a low and high res version of a map is downloaded, high res will be used.\nLong press a downloaded map to delete."
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

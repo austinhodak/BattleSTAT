@@ -8,17 +8,17 @@ import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.firebase.database.*
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.gson.Gson
 import com.austinh.battlebuddy.models.MatchTop
+import com.austinh.battlebuddy.models.PlayerListModel
 import com.austinh.battlebuddy.models.PlayerStats
-import com.austinh.battlebuddy.models.PrefPlayer
 import com.austinh.battlebuddy.utils.Regions
 import com.austinh.battlebuddy.viewmodels.models.LeaderboardModel
 import com.austinh.battlebuddy.viewmodels.models.LeaderboardPlayer
 import com.austinh.battlebuddy.viewmodels.models.PlayerModel
+import com.google.firebase.database.*
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.UnsupportedEncodingException
@@ -34,46 +34,9 @@ class PlayerStatsViewModel : ViewModel() {
 
     var matchDocListeners = ArrayList<ListenerRegistration>()
 
-    fun getPlayerStats(playerID: String, regionID: String, seasonID: String, player: PrefPlayer) {
-        var searchShardID = "steam"
-        if (player.defaultShardID == "xbox") {
-            if (isSeasonNewFormat("xbox", seasonID)) {
-                searchShardID = "xbox"
-            } else if (player.oldXboxShard != regionID) {
-                if (regionID == "xbox") {
-                    searchShardID = "xbox-na"
-                } else
-                    searchShardID = regionID
-            } else {
-                searchShardID = player.oldXboxShard ?: "xbox-na"
-            }
-        } else if (player.defaultShardID == "psn") {
-            if (isSeasonNewFormat("psn", seasonID)) {
-                searchShardID = "psn"
-            } else if (player.oldXboxShard != regionID) {
-                if (regionID == "psn") {
-                    searchShardID = "psn-na"
-                } else
-                    searchShardID = regionID
-            } else {
-                searchShardID = player.oldXboxShard ?: "psn-na"
-            }
-        } else {
-            if (isSeasonNewFormat("steam", seasonID)) {
-                searchShardID = if (player.defaultShardID == "steam")
-                    "steam"
-                else "kakao"
-            } else if (regionID == "steam") {
-                searchShardID = "pc-na"
-            } else if (regionID == "kakao") {
-                searchShardID = "pc-kakao"
-            } else {
-                searchShardID = regionID
-            }
-        }
-
-        Log.d("GETTING PLAYER", "$playerID - $regionID - $seasonID - $searchShardID")
-        playerRef = FirebaseDatabase.getInstance().getReference("user_stats/$playerID/season_data/${searchShardID.toLowerCase()}/${seasonID.toLowerCase()}")
+    fun getPlayerStats(player: PlayerListModel) {
+        Log.d("GETTING PLAYER", "user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL().toLowerCase()}/${player.selectedSeason.codeString.toLowerCase()}")
+        playerRef = FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL().toLowerCase()}/${player.selectedSeason.codeString.toLowerCase()}")
         playerListener = playerRef?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -102,13 +65,18 @@ class PlayerStatsViewModel : ViewModel() {
         })
     }
 
-    fun getLeaderboards(regionID: String, gameMode: String, application: Context) {
+    fun getLeaderboards(player: PlayerListModel, application: Context) {
         val mVolleyQueue = Volley.newRequestQueue(application)
-        val url = "https://api.pubg.com/shards/${Regions.getNewRegionID(regionID)}/leaderboards/${gameMode.toLowerCase()}"
+        val url = "https://api.pubg.com/shards/${player.getDatabaseSearchURL()}/leaderboards/${player.selectedGamemode.id}"
+        Log.d("URL", url)
 
-        val leaderboardModel = LeaderboardModel(gameMode = gameMode)
+        val leaderboardModel = LeaderboardModel(gameMode = player.selectedGamemode)
 
         val objectRequest = object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener {
+            if (!it.has("included")) {
+                leaderboardData.postValue(leaderboardModel)
+                return@Listener
+            }
             for (i in 0 until it.getJSONArray("included").length()) {
                 leaderboardModel.playerList.add(Gson().fromJson(it.getJSONArray("included")[i].toString(), LeaderboardPlayer::class.java))
             }
@@ -152,10 +120,6 @@ class PlayerStatsViewModel : ViewModel() {
                     return Response.error(ParseError(e))
                 }
 
-            }
-
-            override fun deliverError(error: VolleyError) {
-                super.deliverError(error)
             }
 
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
