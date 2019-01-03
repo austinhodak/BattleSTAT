@@ -31,10 +31,10 @@
   **[] $VALUES;
   public *;
 }
--keepclassmembers class com.respondingio.battlegroundsbuddy.models.** {
+-keepclassmembers class com.austinh.battlebuddy.models.** {
   *;
 }
--keepclassmembers class com.respondingio.battlegroundsbuddy.** {
+-keepclassmembers class com.austinh.battlebuddy.** {
   *;
 }
 -assumenosideeffects class android.util.Log {

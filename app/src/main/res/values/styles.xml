@@ -229,6 +229,23 @@
 
     </style>
 
+    <style name="DropRoulette" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/timelineBG</item>
+        <item name="colorPrimaryDark">#171717</item>
+        <item name="colorAccent">@color/md_orange_500</item>
+
+        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/md_orange_500</item>
+
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+
+        <item name="md_background_color">@color/timelineBG</item>
+
+    </style>
+
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat">
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>

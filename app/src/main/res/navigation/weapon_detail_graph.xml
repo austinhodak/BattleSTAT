@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/weaponDetailTimelineStats"
-        android:name="com.respondingio.battlegroundsbuddy.weapondetail.WeaponDetailTimelineStats"
+        android:name="com.austinh.battlebuddy.weapondetail.WeaponDetailTimelineStats"
         android:label="WeaponDetailTimelineStats" >
         <action
             android:id="@+id/comments"
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/commentsFrag"
-        android:name="com.respondingio.battlegroundsbuddy.weapons.WeaponComments"
+        android:name="com.austinh.battlebuddy.weapons.WeaponComments"
         android:label="fragment_weapon_comments"
         tools:layout="@layout/fragment_weapon_comments" />
 </navigation>

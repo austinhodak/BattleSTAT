@@ -11,7 +11,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:theme="@style/ToolbarTheme"
-            android:id="@+id/weaponTimelineToolbar"
+            android:id="@+id/mapToolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/md_grey_900" />

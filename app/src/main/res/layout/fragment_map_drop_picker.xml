@@ -1,95 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/timelineBG">
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="88dp"
-        android:layout_marginEnd="4dp"
-        android:adjustViewBounds="true"
-        android:elevation="20dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/erangel"
-        app:layout_constraintBottom_toBottomOf="@+id/selectErangel"
-        app:layout_constraintEnd_toEndOf="@+id/selectErangel"
-        app:layout_constraintTop_toTopOf="@+id/selectErangel" />
-
-    <Button
-        android:id="@+id/selectErangel"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/mapToolbar"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/md_blue_900"
-        android:paddingRight="150dp"
-        android:text="ERANGEL"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="?actionBarSize"
+        android:background="@color/timelineBG"
+        android:theme="@style/ToolbarTheme"
+        app:title="Choose a Map" />
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="88dp"
-        android:layout_marginEnd="4dp"
-        android:adjustViewBounds="true"
-        android:elevation="20dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/miramar"
-        app:layout_constraintBottom_toBottomOf="@+id/button3"
-        app:layout_constraintEnd_toEndOf="@+id/button3"
-        app:layout_constraintTop_toTopOf="@+id/button3" />
-
-    <Button
-        android:id="@+id/button3"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/md_blue_grey_900"
-        android:paddingRight="150dp"
-        android:text="MIRAMAR"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mapToolbar">
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="88dp"
-        android:layout_marginEnd="4dp"
-        android:adjustViewBounds="true"
-        android:elevation="20dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/sanhok"
-        app:layout_constraintBottom_toBottomOf="@+id/button4"
-        app:layout_constraintEnd_toEndOf="@+id/button4"
-        app:layout_constraintTop_toTopOf="@+id/button4" />
+        <ImageView
+            android:id="@+id/erangel_image"
+            android:layout_width="150dp"
+            android:layout_height="88dp"
+            android:layout_marginEnd="4dp"
+            android:adjustViewBounds="true"
+            android:elevation="20dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/selectErangel"
+            app:layout_constraintEnd_toEndOf="@+id/selectErangel"
+            app:layout_constraintTop_toTopOf="@+id/selectErangel" />
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/md_teal_900"
-        android:paddingRight="150dp"
-        android:text="SANHOK"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        <Button
+            android:id="@+id/selectErangel"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/md_blue_900"
+            android:paddingRight="150dp"
+            android:text="ERANGEL"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/selectMiramar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <ImageView
+            android:id="@+id/miramar_image"
+            android:layout_width="150dp"
+            android:layout_height="88dp"
+            android:layout_marginEnd="4dp"
+            android:adjustViewBounds="true"
+            android:elevation="20dp"
+            android:rotation="180"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/selectMiramar"
+            app:layout_constraintEnd_toEndOf="@+id/selectMiramar"
+            app:layout_constraintTop_toTopOf="@+id/selectMiramar" />
+
+        <Button
+            android:id="@+id/selectMiramar"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/md_blue_grey_900"
+            android:paddingRight="150dp"
+            android:text="MIRAMAR"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/selectSanhok"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectErangel" />
+
+        <ImageView
+            android:id="@+id/sanhok_image"
+            android:layout_width="150dp"
+            android:layout_height="88dp"
+            android:layout_marginEnd="4dp"
+            android:adjustViewBounds="true"
+            android:elevation="20dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/selectSanhok"
+            app:layout_constraintEnd_toEndOf="@+id/selectSanhok"
+            app:layout_constraintTop_toTopOf="@+id/selectSanhok" />
+
+        <Button
+            android:id="@+id/selectSanhok"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/md_teal_900"
+            android:paddingRight="150dp"
+            android:text="SANHOK"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/selectVikendi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectMiramar" />
+
+        <ImageView
+            android:id="@+id/vikendi_image"
+            android:layout_width="150dp"
+            android:layout_height="88dp"
+            android:layout_marginEnd="4dp"
+            android:adjustViewBounds="true"
+            android:elevation="20dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/selectVikendi"
+            app:layout_constraintEnd_toEndOf="@+id/selectVikendi"
+            app:layout_constraintTop_toTopOf="@+id/selectVikendi" />
+
+        <Button
+            android:id="@+id/selectVikendi"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/md_grey_200"
+            android:paddingRight="150dp"
+            android:text="VIKENDI"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectSanhok" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

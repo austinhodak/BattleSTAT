@@ -6,21 +6,58 @@
     android:background="@color/timelineBG"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.hugocastelani.waterfalltoolbar.WaterfallToolbar
-        app:final_elevation="6dp"
-        app:scroll_final_elevation="6"
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/upgradeToolbarWaterfall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-            android:theme="@style/ToolbarTheme"
             android:id="@+id/upgradeToolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:background="@color/timelineBG" />
+            android:background="@color/timelineBG"
+            android:theme="@style/ToolbarTheme" />
 
-    </com.hugocastelani.waterfalltoolbar.WaterfallToolbar>
+        <com.google.android.material.tabs.TabLayout
+            android:visibility="gone"
+            android:id="@+id/stats_home_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_grey_900"
+            app:layout_scrollFlags="snap"
+            app:tabIndicator="@drawable/tab_indicator"
+            app:tabIndicatorColor="@color/timelineOrange"
+            app:tabIndicatorFullWidth="false"
+            app:tabInlineLabel="true"
+            app:tabSelectedTextColor="@color/timelineOrange"
+            app:tabTextAppearance="@style/TabText"
+            app:tabTextColor="#FFF"
+            app:tabUnboundedRipple="true">
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/level_1_helmet"
+                android:text="Level 1" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/level_2_helmet"
+                android:text="Level 2" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/level_3_helmet"
+                android:text="Level 3" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:paddingBottom="8dp"

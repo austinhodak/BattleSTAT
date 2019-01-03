@@ -5,22 +5,6 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.hugocastelani.waterfalltoolbar.WaterfallToolbar
-        app:final_elevation="6dp"
-        app:scroll_final_elevation="6"
-        android:id="@+id/weaponTimelineToolbarWaterfall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:theme="@style/ToolbarTheme"
-            android:id="@+id/weaponTimelineToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="#1B1B1B" />
-
-    </com.hugocastelani.waterfalltoolbar.WaterfallToolbar>
-
     <fragment
         android:id="@+id/weaponDetailNavHost"
         android:layout_width="match_parent"

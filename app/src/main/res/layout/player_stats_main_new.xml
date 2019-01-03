@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:descendantFocusability="blocksDescendants"
         android:id="@+id/statsFragList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -86,13 +87,48 @@
             app:timeline_radio_radius="15"
             app:timeline_type="item">
 
-            <com.respondingio.battlegroundsbuddy.views.CardCornerAlert
+            <com.austinh.battlebuddy.views.CardCornerAlert
                 android:id="@+id/stats_corner_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"></com.respondingio.battlegroundsbuddy.views.CardCornerAlert>
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_right_corner_box"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="6dp"
+                    android:src="@drawable/ic_access_time_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/last_updated_tv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/last_updated_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:text="1M AGO"
+                    android:textColor="#FFF"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/timelineSpecialIcons"
@@ -108,7 +144,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_arrow_drop_up_24dp"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
@@ -285,7 +321,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="4.52"
+                        android:text="0.00"
                         android:textColor="#FFF"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -338,7 +374,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="0"
+                        android:text="0%"
                         android:textColor="#FFF"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -509,7 +545,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="0"
+                        android:text="0%"
                         android:textColor="#FFF"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -861,7 +897,7 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/timeline_round"
             android:backgroundTint="@color/timelineBlue"
-            app:timeline_position="last"
+            app:timeline_position="middle"
             app:timeline_radio_outline_radius="23"
             app:timeline_radio_radius="15"
             app:timeline_type="item">
@@ -991,6 +1027,285 @@
 
         </pl.hypeapp.materialtimelineview.MaterialTimelineView>
 
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:timeline_position="middle"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="line">
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/timeline_round"
+            android:backgroundTint="@color/timelineRed"
+            app:timeline_position="middle"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="item">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/killReasonTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:text="DAMAGE"
+                    android:textColor="#FFF"
+                    android:textSize="8sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/top_extras2"
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
+
+                <ImageView
+                    android:id="@+id/killReasonIcon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="24dp"
+                    android:padding="3dp"
+                    android:src="@drawable/blood_2"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <LinearLayout
+                    android:id="@+id/top_extras2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statsTotalDamageDealt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0m"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Damage Dealt"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statsVehicleDestroys"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0m"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="Cars Destroyed"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0m"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Revives"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:timeline_position="middle"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="line">
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/timeline_round"
+            android:backgroundTint="@color/timelineNavy"
+            app:timeline_position="last"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="item">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/killReasonTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:text="TIMES"
+                    android:textColor="#FFF"
+                    android:textSize="8sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/top_extras2"
+                    app:layout_constraintStart_toStartOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/killReasonIcon" />
+
+                <ImageView
+                    android:id="@+id/killReasonIcon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="24dp"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_access_time_black_24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/killReasonTV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <LinearLayout
+                    android:id="@+id/top_extras2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/killReasonIcon"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statsLongestTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0m"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="Longest"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statsTotalTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0m"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Total"
+                            android:textColor="#BBFFFFFF"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
         <TextView
             android:id="@+id/statsLastUpdatedTop"
             android:layout_width="match_parent"
@@ -1002,6 +1317,7 @@
             android:textColor="@color/md_grey_500"
             android:textSize="11sp"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

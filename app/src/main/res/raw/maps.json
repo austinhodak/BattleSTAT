@@ -4,9 +4,6 @@
       "name": "Erangel",
       "logo": "erangel",
       "mapVector": "erangel",
-      "mapFilename": "map1shadows",
-      "mapBackgroundColour": "#2A5077",
-      "mapToolbarIconFilename": "erangelicon",
       "zones": [
         {
           "name": "Pochinki",
@@ -164,9 +161,6 @@
       "name": "Miramar",
       "logo": "miramar",
       "mapVector": "miramar",
-      "mapFilename": "map2shadows",
-      "mapBackgroundColour": "#134659",
-      "mapToolbarIconFilename": "miramaricon",
       "zones": [
         {
           "name": "Los Leones",
@@ -351,12 +345,176 @@
       ]
     },
     {
+      "name": "Vikendi",
+      "zones": [
+        {
+          "name": "Port",
+          "weight": 1.0,
+          "x": 382,
+          "y": 181
+        },
+        {
+          "name": "Zabava",
+          "weight": 1.0,
+          "x": 456,
+          "y": 198
+        },
+        {
+          "name": "Cosmodrome",
+          "weight": 1.0,
+          "x": 623,
+          "y": 245
+        },
+        {
+          "name": "Trevno",
+          "weight": 1.0,
+          "x": 776,
+          "y": 204
+        },
+        {
+          "name": "Coal Mine",
+          "weight": 1.0,
+          "x": 495,
+          "y": 299
+        },
+        {
+          "name": "Krichas",
+          "weight": 1.0,
+          "x": 277,
+          "y": 296
+        },
+        {
+          "name": "Peshkova",
+          "weight": 1.0,
+          "x": 795,
+          "y": 363
+        },
+        {
+          "name": "Goroka",
+          "weight": 1.0,
+          "x": 407,
+          "y": 391
+        },
+        {
+          "name": "Mount Kreznic",
+          "weight": 1.0,
+          "x": 534,
+          "y": 389
+        },
+        {
+          "name": "Dobro Mesto",
+          "weight": 1.0,
+          "x": 176,
+          "y": 413
+        },
+        {
+          "name": "Podvosto",
+          "weight": 1.0,
+          "x": 627,
+          "y": 456
+        },
+        {
+          "name": "Villa",
+          "weight": 1.0,
+          "x": 458,
+          "y": 499
+        },
+        {
+          "name": "Cement Factory",
+          "weight": 1.0,
+          "x": 713,
+          "y": 528
+        },
+        {
+          "name": "Lumber Yard",
+          "weight": 1.0,
+          "x": 811,
+          "y": 567
+        },
+        {
+          "name": "Tovar",
+          "weight": 1.0,
+          "x": 495,
+          "y": 580
+        },
+        {
+          "name": "Castle",
+          "weight": 1.0,
+          "x": 583,
+          "y": 583
+        },
+        {
+          "name": "Vihar",
+          "weight": 1.0,
+          "x": 215,
+          "y": 600
+        },
+        {
+          "name": "Movatra",
+          "weight": 1.0,
+          "x": 269,
+          "y": 607
+        },
+        {
+          "name": "Dino Park",
+          "weight": 1.0,
+          "x": 371,
+          "y": 624
+        },
+        {
+          "name": "Abbey",
+          "weight": 1.0,
+          "x": 467,
+          "y": 678
+        },
+        {
+          "name": "Sawmill",
+          "weight": 1.0,
+          "x": 303,
+          "y": 677
+        },
+        {
+          "name": "Hot Springs",
+          "weight": 1.0,
+          "x": 756,
+          "y": 703
+        },
+        {
+          "name": "Volnova",
+          "weight": 1.0,
+          "x": 601,
+          "y": 702
+        },
+        {
+          "name": "Cantra",
+          "weight": 1.0,
+          "x": 720,
+          "y": 726
+        },
+        {
+          "name": "Winery",
+          "weight": 1.0,
+          "x": 527,
+          "y": 793
+        },
+        {
+          "name": "Pilnec",
+          "weight": 1.0,
+          "x": 486,
+          "y": 799
+        },
+        {
+          "name": "Milnar",
+          "weight": 1.0,
+          "x": 351,
+          "y": 796
+        }
+      ]
+    },
+    {
       "name": "Sanhok",
       "logo": "sanhok",
       "mapVector": "sanhok",
-      "mapFilename": "map3shadows",
-      "mapBackgroundColour": "#184C47",
-      "mapToolbarIconFilename": "sanhokicon",
       "zones": [
         {
           "name": "Mongnai",
