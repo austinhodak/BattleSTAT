@@ -3,9 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/match_share"
-        android:icon="@drawable/ic_share_24dp"
+        android:id="@+id/match_download"
+        android:icon="@drawable/ic_cloud_download_24dp"
         android:title="Share"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/match_favorite"
+        android:icon="@drawable/ic_favorite_border_24dp"
+        android:title="Share"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/match_share"
+        android:icon="@drawable/ic_share_24dp"
+        android:title="Share" />
 
 </menu>

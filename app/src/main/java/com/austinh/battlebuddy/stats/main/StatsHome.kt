@@ -1,7 +1,9 @@
 package com.austinh.battlebuddy.stats.main
 
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,6 +17,7 @@ import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.models.Gamemode
 import com.austinh.battlebuddy.models.PlayerListModel
 import com.austinh.battlebuddy.premium.UpgradeActivity
+import com.austinh.battlebuddy.settings.SettingsActivity
 import com.austinh.battlebuddy.snacky.Snacky
 import com.austinh.battlebuddy.utils.*
 import com.austinh.battlebuddy.viewmodels.PlayerStatsViewModel
@@ -44,10 +47,14 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         ViewModelProviders.of(this).get(PlayerStatsViewModel::class.java)
     }
 
+    private var mSharedPreferences: SharedPreferences? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats_home)
         setSupportActionBar(toolbar)
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
@@ -338,7 +345,19 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
     override fun onResume() {
         super.onResume()
-        tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player!!, stats_bottom_nav?.selectedItemId!!)
+        if (mSharedPreferences != null) {
+            when (Gamemode.valueOf(mSharedPreferences!!.getString("default_gamemode", "SOLO")!!)) {
+                Gamemode.SOLO -> tabSelected("Solo", player!!, stats_bottom_nav?.selectedItemId!!)
+                Gamemode.SOLOFPP -> tabSelected("Solo FPP", player!!, stats_bottom_nav?.selectedItemId!!)
+                Gamemode.DUO -> tabSelected("Duo", player!!, stats_bottom_nav?.selectedItemId!!)
+                Gamemode.DUOFPP -> tabSelected("Duo FPP", player!!, stats_bottom_nav?.selectedItemId!!)
+                Gamemode.SQUAD -> tabSelected("Squad", player!!, stats_bottom_nav?.selectedItemId!!)
+                Gamemode.SQUADFPP -> tabSelected("Squad FPP", player!!, stats_bottom_nav?.selectedItemId!!)
+            }
+            stats_home_tabs?.getTabAt(Gamemode.valueOf(mSharedPreferences!!.getString("default_gamemode", "SOLO")!!).ordinal)?.select()
+        }
+        else
+            tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player!!, stats_bottom_nav?.selectedItemId!!)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -382,6 +401,9 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                         }
                         .title(text = "Change Season")
                         .show()
+            }
+            R.id.settings -> {
+                startActivity<SettingsActivity>()
             }
         }
         return true

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Defaults">
+
+        <ListPreference
+            android:defaultValue="solo"
+            android:entries="@array/gamemodes"
+            android:entryValues="@array/gamemodes_values"
+            android:key="default_gamemode"
+            android:summary="%s"
+            android:title="Default Gamemode" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
