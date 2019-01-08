@@ -4,12 +4,15 @@
     <item
         android:id="@+id/change_region"
         android:icon="@drawable/globe"
-        android:title="Change Region"
-        app:showAsAction="ifRoom" />
+        android:title="Change Region" />
 
     <item
         android:id="@+id/change_season"
         android:icon="@drawable/ic_event_24dp"
         android:title="Change Season"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/settings"
+        android:title="Preferences" />
 </menu>
