@@ -1,6 +1,7 @@
 package com.austinh.battlebuddy.viewmodels.models
 
 import android.content.Context
+import android.graphics.Color
 import android.text.format.DateUtils
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.map.Map
@@ -11,6 +12,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 data class MatchModel(
         var error: String? = null,
@@ -27,8 +29,13 @@ data class MatchModel(
         var logPlayerTakeDamage: ArrayList<LogPlayerTakeDamage> = ArrayList(),
         var logPlayerAttack: ArrayList<LogPlayerAttack> = ArrayList(),
         var matchDefinition: LogMatchDefinition? = null,
-        var carePackageList: ArrayList<LogCarePackageSpawn> = ArrayList(),
-        var safeZoneList: ArrayList<SafeZoneCircle> = ArrayList()
+        var carePackageList: ArrayList<LogCarePackageLand> = ArrayList(),
+        var safeZoneList: ArrayList<SafeZoneCircle> = ArrayList(),
+        var redZoneList: ArrayList<SafeZoneCircle> = ArrayList(),
+        var gameStates: ArrayList<LogGamestatePeriodic> = ArrayList(),
+        var logPlayerPositions: ArrayList<LogPlayerPosition> = ArrayList(),
+        var teamColors: HashMap<Int, Int> = HashMap(),
+        var logPlayerCreate: ArrayList<LogCharacter> = ArrayList()
 ) : Serializable {
 
     fun getMapIcon(): Int {
@@ -98,5 +105,16 @@ data class MatchModel(
             }
         }
         return null
+    }
+
+    fun randomizeTeamColors() {
+        for (team in rosterList) {
+            teamColors[team.attributes.stats.teamId] = getRandomColor()
+        }
+    }
+
+    private fun getRandomColor(): Int {
+        val rnd = Random()
+        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
     }
 }

@@ -29,6 +29,9 @@ import com.android.volley.toolbox.Volley
 import com.austinh.battlebuddy.BuildConfig
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.Telemetry
+import com.austinh.battlebuddy.models.MatchTop
+import com.austinh.battlebuddy.stats.matchdetails.replay.MatchGod
+import com.austinh.battlebuddy.stats.matchdetails.replay.ReplayActivity
 import com.austinh.battlebuddy.utils.Premium
 import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
 import com.austinh.battlebuddy.viewmodels.models.MatchModel
@@ -43,6 +46,7 @@ import com.mikepenz.materialdrawer.holder.StringHolder
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import nouri.`in`.goodprefslib.GoodPrefs
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import org.json.JSONException
 import java.net.URLEncoder
@@ -76,6 +80,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
     private var matchID: String? = null
     private var regionID: String? = null
+    private var match: MatchTop? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,20 +101,21 @@ class MatchDetailActivity : AppCompatActivity() {
             if (it == null) {
                 matchID = intent.getStringExtra("matchID")
                 regionID = intent.getStringExtra("regionID")
+
+                processIntent()
             } else {
                 matchID = it.link.getQueryParameter("matchId")
                 regionID = it.link.getQueryParameter("platform")
-                Log.d("MATCH", "${it.link} - $matchID - $regionID")
+
+                match_detail_toolbar?.menu?.findItem(R.id.match_favorite)?.isVisible = false
             }
 
             viewModel.mMatchData.observe(this, matchDataObserver)
             viewModel.getMatchData(application, regionID!!, matchID!!, currentPlayerID)
-
-            //if (currentPlayerID.isEmpty())
-            //mDrawer.setSelection(10)
         }.addOnFailureListener {
             matchID = intent.getStringExtra("matchID")
             regionID = intent.getStringExtra("regionID")
+            processIntent()
 
             viewModel.mMatchData.observe(this, matchDataObserver)
             viewModel.getMatchData(application, regionID!!, matchID!!, currentPlayerID)
@@ -163,7 +169,18 @@ class MatchDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun processIntent() {
+        match = intent.getSerializableExtra("match") as MatchTop
+        if (match?.isFavorite == true) {
+            match_detail_toolbar?.menu?.findItem(R.id.match_favorite)?.setIcon(R.drawable.ic_favorite_24dp)
+        } else {
+            match_detail_toolbar?.menu?.findItem(R.id.match_favorite)?.setIcon(R.drawable.ic_favorite_border_24dp)
+        }
+    }
+
     private fun matchDataLoaded(matchModel: MatchModel) {
+        MatchGod.match = matchModel
+
         match_loading_lottie?.pauseAnimation()
         match_loading_lottie?.visibility = View.GONE
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -342,8 +359,13 @@ class MatchDetailActivity : AppCompatActivity() {
                     }
                 }
                 footer {
-                    secondaryItem ("All Match Events") {
+                    secondaryItem ("2D Replay") {
                         icon = R.drawable.icons8_timeline
+                        selectable = false
+                        onClick { view, position, drawerItem ->
+                            startActivity<ReplayActivity>()
+                            false
+                        }
                     }
                 }
             }
@@ -354,20 +376,6 @@ class MatchDetailActivity : AppCompatActivity() {
         headerTimeTV = mDrawer.header.findViewById(R.id.header_ingame_name)
         headerRegionTV = mDrawer.header.findViewById(R.id.header_region)
         headerMapIV = mDrawer.header.findViewById(R.id.header_icon)
-
-        /*if (BuildConfig.DEBUG) {
-            drawer{
-                selectedItem = -1
-                gravity = Gravity.END
-                closeOnClick = false
-                toolbar = match_detail_toolbar
-                sectionHeader("Show In Map")
-                switchItem("Care Packages") {
-                    selectable = false
-                    icon = R.drawable.carepackage_open
-                }
-            }
-        }*/
     }
 
     private fun setupToolbar() {
