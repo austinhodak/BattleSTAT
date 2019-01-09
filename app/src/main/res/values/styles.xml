@@ -326,8 +326,13 @@
 
         <item name="android:statusBarColor">#171717</item>
 
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/PrefsTheme</item>
         <item name="alertDialogTheme">@style/AlertDialogStyle</item>
+    </style>
+
+    <style name="PrefsTheme" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
     </style>
 
     <style name="AlertDialogStyle" parent="Theme.AppCompat.Dialog">

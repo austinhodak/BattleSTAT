@@ -323,8 +323,8 @@ class MainActivityKT : AppCompatActivity() {
                 }
             }
             divider()
-            secondaryItem(R.string.drawer_title_about) {
-                icon = R.drawable.icons8_info
+            secondaryItem("Settings") {
+                icon = R.drawable.settings_icon
                 selectable = false
                 onClick { _ ->
                     /*LibsBuilder()
