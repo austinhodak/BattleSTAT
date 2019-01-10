@@ -342,22 +342,6 @@ class MainActivityKT : AppCompatActivity() {
                     true
                 }
             }
-            secondaryItem(R.string.drawer_title_alerts) {
-                icon = R.drawable.notification
-                selectable = false
-                onClick { _, _, _ ->
-                    startActivity<AlertManager>()
-                    true
-                }
-            }
-            secondaryItem(R.string.drawer_title_suggestion) {
-                icon = R.drawable.ic_love
-                selectable = false
-                onClick { _ ->
-                    BugReporting.invoke()
-                    true
-                }
-            }
             secondaryItem(R.string.drawer_title_share) {
                 icon = R.drawable.icons8_share
                 selectable = false
@@ -380,13 +364,13 @@ class MainActivityKT : AppCompatActivity() {
                         true
                     }
                 }
-            }
+            }/*
             secondaryItem("Test 2D Replay") {
                 onClick { _ ->
                     startActivity<MatchDetailActivity>("matchID" to "11cc5381-ff15-4bb8-bab9-55621b1389b5", "regionID" to "xbox")
                     false
                 }
-            }
+            }*/
         }
         mDrawer?.recyclerView?.isVerticalScrollBarEnabled = false
 

@@ -27,7 +27,9 @@ import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.FirebaseException
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.functions.FirebaseFunctionsException
 import kotlinx.android.synthetic.main.activity_stats_home.*
 import org.jetbrains.anko.startActivity
 
@@ -46,6 +48,8 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
     private val viewModel: PlayerStatsViewModel by lazy {
         ViewModelProviders.of(this).get(PlayerStatsViewModel::class.java)
     }
+
+    private var selectedTab: String? = null
 
     private var mSharedPreferences: SharedPreferences? = null
 
@@ -122,7 +126,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
             viewModel.playerData.observe(this, Observer<PlayerModel> {
                 playerModel = it
                 if (it.error != null && it.error == 1) {
-                    player!!.runGetStats()
+                    loadPlayerStats(selectedPlayer)
                 }
             })
 
@@ -179,60 +183,38 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
     private fun loadPlayerStats(selectedPlayer: PlayerListModel) {
         statsRefreshLayout?.isRefreshing = true
-        /*var shardID = ""
-        if (Regions.getNewRegion(selectedPlayer.selectedShardID) == Regions.Region.XBOX) {
-            if (selectedPlayer.isSeasonNewFormat(selectedPlayer.selectedShardID)) {
-                shardID = "xbox"
-            } else {
-                shardID = selectedPlayer.selectedShardID
-            }
-        } else if (Regions.getNewRegion(selectedPlayer.selectedShardID) == Regions.Region.PS4) {
-            if (selectedPlayer.isSeasonNewFormat(selectedPlayer.selectedShardID)) {
-                shardID = "psn"
-            } else if (selectedPlayer.selectedShardID == "psn") {
-                shardID = "psn-na"
-            } else {
-                shardID = selectedPlayer.selectedShardID
-            }
-        } else {
-            //PC
-            if (selectedPlayer.isSeasonNewFormat(selectedPlayer.selectedShardID)) {
-                if (Regions.getNewRegion(selectedPlayer.selectedShardID) == Regions.Region.STEAM) {
-                    shardID = "steam"
-                } else {
-                    shardID = "kakao"
-                }
-            } else {
-                if (selectedPlayer.selectedShardID == "steam") {
-                    shardID = "pc-na"
-                } else if (selectedPlayer.selectedShardID == "kakao") {
-                    shardID = "pc-kakao"
-                } else {
-                    shardID = selectedPlayer.selectedShardID
-                }
-            }
-        }*/
-
-        //Log.d("PLAYER LOAD", shardID)
 
         selectedPlayer.runGetStats().addOnSuccessListener {
             statsRefreshLayout?.isRefreshing = false
-        }.addOnFailureListener {
+        }.addOnFailureListener { exception ->
             statsRefreshLayout?.isRefreshing = false
+
+            if (exception is FirebaseFunctionsException) {
+                val code = exception.code
+                val details = exception.details
+
+                when (code) {
+                    FirebaseFunctionsException.Code.NOT_FOUND -> Snacky.builder().setActivity(this@StatsHome).error().setText("No stats available for selected season.").show()
+                    FirebaseFunctionsException.Code.RESOURCE_EXHAUSTED -> Snacky.builder().setActivity(this@StatsHome).error().setText("API Limit Reached. Try again in a few seconds.").show()
+                    else -> Snacky.builder().setActivity(this@StatsHome).error().setText("Error: ${exception.message}").show()
+                }
+            }
         }
 
+        if (!selectedPlayer.isLifetimeSelected)
         selectedPlayer.runGetMatches()
     }
 
     private fun tabSelected(gameMode: String, player: PlayerListModel, itemId: Int) {
+        selectedTab = gameMode
         when (gameMode) {
             "Solo" -> {
-                val fragment = if (itemId == R.id.your_stats_menu) {
+                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
                     MainStatsFragmentNew()
                 } else if (itemId == R.id.stats_leaderboards) {
                     LeaderboardFragment()
                 } else {
-                    MatchListFragmentNew()
+                    MatchListFragment()
                 }
 
                 player.selectedGamemode = Gamemode.SOLO
@@ -243,12 +225,12 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
             }
             "Solo FPP" -> {
-                val fragment = if (itemId == R.id.your_stats_menu) {
+                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
                     MainStatsFragmentNew()
                 } else if (itemId == R.id.stats_leaderboards) {
                     LeaderboardFragment()
                 } else {
-                    MatchListFragmentNew()
+                    MatchListFragment()
                 }
 
                 player.selectedGamemode = Gamemode.SOLOFPP
@@ -259,12 +241,12 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
             }
             "Duo" -> {
-                val fragment = if (itemId == R.id.your_stats_menu) {
+                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
                     MainStatsFragmentNew()
                 } else if (itemId == R.id.stats_leaderboards) {
                     LeaderboardFragment()
                 } else {
-                    MatchListFragmentNew()
+                    MatchListFragment()
                 }
 
                 player.selectedGamemode = Gamemode.DUO
@@ -275,12 +257,12 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
             }
             "Duo FPP" -> {
-                val fragment = if (itemId == R.id.your_stats_menu) {
+                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
                     MainStatsFragmentNew()
                 } else if (itemId == R.id.stats_leaderboards) {
                     LeaderboardFragment()
                 } else {
-                    MatchListFragmentNew()
+                    MatchListFragment()
                 }
 
                 player.selectedGamemode = Gamemode.DUOFPP
@@ -291,12 +273,12 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
             }
             "Squad" -> {
-                val fragment = if (itemId == R.id.your_stats_menu) {
+                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
                     MainStatsFragmentNew()
                 } else if (itemId == R.id.stats_leaderboards) {
                     LeaderboardFragment()
                 } else {
-                    MatchListFragmentNew()
+                    MatchListFragment()
                 }
 
                 player.selectedGamemode = Gamemode.SQUAD
@@ -307,12 +289,12 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
             }
             "Squad FPP" -> {
-                val fragment = if (itemId == R.id.your_stats_menu) {
+                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
                     MainStatsFragmentNew()
                 } else if (itemId == R.id.stats_leaderboards) {
                     LeaderboardFragment()
                 } else {
-                    MatchListFragmentNew()
+                    MatchListFragment()
                 }
 
                 player.selectedGamemode = Gamemode.SQUADFPP
@@ -328,8 +310,11 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
     private fun setupBottomNav(player: PlayerListModel) {
         if (player.isConsolePlayer()) {
             stats_bottom_nav?.menu?.removeItem(R.id.stats_leaderboards)
+            stats_bottom_nav?.menu?.removeItem(R.id.lifetime_stats)
         }
         stats_bottom_nav?.setOnNavigationItemSelectedListener {
+            player.isLifetimeSelected = it.itemId == R.id.lifetime_stats
+            viewModel.getPlayerStats(player)
             if (it.itemId == R.id.matches_menu) {
                 tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player, it.itemId)
                 //stats_home_tabs?.visibility = View.GONE
@@ -345,7 +330,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
     override fun onResume() {
         super.onResume()
-        if (mSharedPreferences != null) {
+        if (mSharedPreferences != null && selectedTab == null) {
             when (Gamemode.valueOf(mSharedPreferences!!.getString("default_gamemode", "SOLO")!!)) {
                 Gamemode.SOLO -> tabSelected("Solo", player!!, stats_bottom_nav?.selectedItemId!!)
                 Gamemode.SOLOFPP -> tabSelected("Solo FPP", player!!, stats_bottom_nav?.selectedItemId!!)
@@ -355,9 +340,11 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 Gamemode.SQUADFPP -> tabSelected("Squad FPP", player!!, stats_bottom_nav?.selectedItemId!!)
             }
             stats_home_tabs?.getTabAt(Gamemode.valueOf(mSharedPreferences!!.getString("default_gamemode", "SOLO")!!).ordinal)?.select()
-        }
-        else
+        } else if (selectedTab == null) {
             tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player!!, stats_bottom_nav?.selectedItemId!!)
+        } else {
+            tabSelected(selectedTab!!, player!!, stats_bottom_nav?.selectedItemId!!)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -373,7 +360,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 MaterialDialog(this@StatsHome)
                         .listItemsSingleChoice(items = Regions.getRegionNames(player!!.platform), initialSelection = selectedShard) { _, index, text ->
                             selectedShard = index
-                            //player?.selectedRegion = Regions.getRegionIDs(text, null)[Regions.getRegionNames(text, null).indexOf(text)].toLowerCase()
+
                             player?.selectedRegion = Regions.getShortRegionIDs(player!!.platform)[(Regions.getRegionNames(player!!.platform).indexOf(text))].toLowerCase()
 
                             viewModel.getPlayerStats(player!!)

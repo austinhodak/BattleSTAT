@@ -11,12 +11,13 @@
         android:title="Matches" />
 
     <item
-        android:id="@+id/stats_war_mode"
-        android:icon="@drawable/explosion"
-        android:title="War Mode"
-        android:visible="false" />
+        android:id="@+id/lifetime_stats"
+        android:icon="@drawable/time_history"
+        android:title="Lifetime"
+        android:visible="true" />
 
     <item
+        android:visible="false"
         android:id="@+id/stats_leaderboards"
         android:icon="@drawable/leaderboard_icon"
         android:title="Leaderboards" />

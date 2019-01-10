@@ -18,8 +18,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
 //      {Major} 0 {Minor} 0 {Patch} {0-Build}
-        versionCode 1050003
-        versionName "1.5.0-3"
+        versionCode 1050100
+        versionName "1.5.1"
         multiDexEnabled true
     }
     signingConfigs {

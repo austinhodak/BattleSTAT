@@ -1,6 +1,8 @@
 package com.austinh.battlebuddy.stats.matchdetails
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -30,15 +32,22 @@ import com.austinh.battlebuddy.BuildConfig
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.Telemetry
 import com.austinh.battlebuddy.models.MatchTop
+import com.austinh.battlebuddy.snacky.Snacky
 import com.austinh.battlebuddy.stats.matchdetails.replay.MatchGod
 import com.austinh.battlebuddy.stats.matchdetails.replay.ReplayActivity
+import com.austinh.battlebuddy.utils.Auth.getUser
 import com.austinh.battlebuddy.utils.Premium
+import com.austinh.battlebuddy.utils.Regions
 import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
 import com.austinh.battlebuddy.viewmodels.models.MatchModel
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import com.mikepenz.materialdrawer.Drawer
@@ -82,6 +91,8 @@ class MatchDetailActivity : AppCompatActivity() {
     private var regionID: String? = null
     private var match: MatchTop? = null
 
+    private var mLoadingSnack: Snackbar? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_detail)
@@ -94,6 +105,8 @@ class MatchDetailActivity : AppCompatActivity() {
 
         toolbar_title.text = "Your Match Stats"
 
+        mLoadingSnack = Snacky.builder().setDuration(Snacky.LENGTH_INDEFINITE).setActivity(this).setText("Loading telemetry, this might take a while...").build()
+
         //matchID = intent.getStringExtra("matchID")
         //regionID = intent.getStringExtra("regionID")
 
@@ -102,7 +115,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 matchID = intent.getStringExtra("matchID")
                 regionID = intent.getStringExtra("regionID")
 
-                processIntent()
+                //processIntent()
             } else {
                 matchID = it.link.getQueryParameter("matchId")
                 regionID = it.link.getQueryParameter("platform")
@@ -115,7 +128,8 @@ class MatchDetailActivity : AppCompatActivity() {
         }.addOnFailureListener {
             matchID = intent.getStringExtra("matchID")
             regionID = intent.getStringExtra("regionID")
-            processIntent()
+
+            //processIntent()
 
             viewModel.mMatchData.observe(this, matchDataObserver)
             viewModel.getMatchData(application, regionID!!, matchID!!, currentPlayerID)
@@ -128,6 +142,8 @@ class MatchDetailActivity : AppCompatActivity() {
 
         match_loading_lottie?.visibility = View.VISIBLE
         match_loading_lottie?.playAnimation()
+
+        mLoadingSnack?.show()
 
         GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) + 1))
 
@@ -176,10 +192,15 @@ class MatchDetailActivity : AppCompatActivity() {
         } else {
             match_detail_toolbar?.menu?.findItem(R.id.match_favorite)?.setIcon(R.drawable.ic_favorite_border_24dp)
         }
+
+        Log.d("FAVORITE", "PROCESSED")
+
     }
 
     private fun matchDataLoaded(matchModel: MatchModel) {
         MatchGod.match = matchModel
+
+        mLoadingSnack?.dismiss()
 
         match_loading_lottie?.pauseAnimation()
         match_loading_lottie?.visibility = View.GONE
@@ -438,6 +459,16 @@ class MatchDetailActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.match_detail_activity, menu)
+
+        if (intent != null && intent.hasExtra("match")) {
+            match = intent.getSerializableExtra("match") as MatchTop
+            if (match?.isFavorite == true) {
+                menu?.findItem(R.id.match_favorite)?.setIcon(R.drawable.ic_favorite_24dp)
+            } else {
+                menu?.findItem(R.id.match_favorite)?.setIcon(R.drawable.ic_favorite_border_24dp)
+            }
+        }
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -447,6 +478,30 @@ class MatchDetailActivity : AppCompatActivity() {
             R.id.match_share -> {
                 shareMatch()
                 return true
+            }
+            R.id.match_favorite -> {
+                Log.d("FAVORITE", "CLICKED ${match?.isFavorite}")
+
+                if (intent != null && intent.hasExtra("match") && match != null) {
+                    if (match?.isFavorite == true) {
+                        item.setIcon(R.drawable.ic_favorite_border_24dp)
+                        match?.isFavorite = false
+
+                        FirebaseDatabase.getInstance().getReference("user_stats/${intent.getStringExtra("playerID")
+                                ?: return true}/allMatches/${Regions.getNewRegionID(regionID!!)}/${match?.season}/matches/$matchID/favorites/${getUser().uid}").removeValue()
+                    } else {
+                        item.setIcon(R.drawable.ic_favorite_24dp)
+                        match?.isFavorite = true
+
+                        Log.d("FAVORITE", "user_stats/${intent.getStringExtra("playerID")
+                                ?: return true}/allMatches/${Regions.getNewRegionID(regionID!!)}/${match?.season}/matches/$matchID/favorites/${getUser().uid}")
+
+                        FirebaseDatabase.getInstance().getReference("user_stats/${intent.getStringExtra("playerID")
+                                ?: return true}/allMatches/${Regions.getNewRegionID(regionID!!)}/${match?.season}/matches/$matchID/favorites/${getUser().uid}").setValue(true)
+
+                        Snacky.builder().setActivity(this).setBackgroundColor(Color.WHITE).setIcon(R.drawable.ic_favorite_24dp).setText("Match Favorited!").setTextColor(Color.parseColor("#FF026A")).build().show()
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

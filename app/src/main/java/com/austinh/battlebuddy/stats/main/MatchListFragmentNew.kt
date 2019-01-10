@@ -158,7 +158,7 @@ class MatchListFragmentNew : Fragment() {
                 matchListModeTV?.text = "${resources.getStringArray(R.array.match_mode_dialog)[mPlayer.selectedMatchModes.ordinal]} (${children.size})"
 
                 for (child in children) {
-                    val matchTop = MatchTop(null, true, child.key!!, player.playerID, child.child("createdAt").value.toString())
+                    val matchTop = MatchTop(null, true, child.key!!, player.playerID, child.child("createdAt").value.toString(), season = player.selectedSeason.codeString)
                     if (child.hasChild("favorite") && child.child("favorite").value == true) {
                         matchTop.isFavorite = true
                     }

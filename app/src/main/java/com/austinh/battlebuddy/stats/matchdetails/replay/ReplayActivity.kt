@@ -25,6 +25,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.mikepenz.materialdrawer.Drawer
 import kotlinx.android.synthetic.main.activity_replay.*
 import net.idik.lib.slimadapter.SlimAdapter
+import org.jetbrains.anko.forEachChildWithIndex
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.topPadding
 import org.json.JSONException
@@ -99,45 +100,45 @@ class ReplayActivity : AppCompatActivity() {
             stopwatch.speedMultiplier = 0
             replaySettings.speedMultiplier = 1
             speed1X?.textColor = resources.getColor(R.color.md_orange_500)
-            forEachIndexed({ i, view ->
+            speedLayout.forEachChildWithIndex { i, view ->
                 if (i != speedLayout.indexOfChild(speed1X)) (view as TextView).textColor = resources.getColor(R.color.md_white_1000)
-            })
+            }
         }
 
         speed2X?.setOnClickListener {
             stopwatch.speedMultiplier = 2
             replaySettings.speedMultiplier = 2
             speed2X?.textColor = resources.getColor(R.color.md_orange_500)
-            forEachIndexed({ i, view ->
+            speedLayout.forEachChildWithIndex { i, view ->
                 if (i != speedLayout.indexOfChild(speed2X)) (view as TextView).textColor = resources.getColor(R.color.md_white_1000)
-            })
+            }
         }
 
         speed5X?.setOnClickListener {
             stopwatch.speedMultiplier = 5
             replaySettings.speedMultiplier = 5
             speed5X?.textColor = resources.getColor(R.color.md_orange_500)
-            forEachIndexed({ i, view ->
+            speedLayout.forEachChildWithIndex { i, view ->
                 if (i != speedLayout.indexOfChild(speed5X)) (view as TextView).textColor = resources.getColor(R.color.md_white_1000)
-            })
+            }
         }
 
         speed10X?.setOnClickListener {
             stopwatch.speedMultiplier = 10
             replaySettings.speedMultiplier = 10
             speed10X?.textColor = resources.getColor(R.color.md_orange_500)
-            forEachIndexed({ i, view ->
+            speedLayout.forEachChildWithIndex { i, view ->
                 if (i != speedLayout.indexOfChild(speed10X)) (view as TextView).textColor = resources.getColor(R.color.md_white_1000)
-            })
+            }
         }
 
         speed20X?.setOnClickListener {
             stopwatch.speedMultiplier = 20
             replaySettings.speedMultiplier = 20
             speed20X?.textColor = resources.getColor(R.color.md_orange_500)
-            forEachIndexed({ i, view ->
+            speedLayout.forEachChildWithIndex { i, view ->
                 if (i != speedLayout.indexOfChild(speed20X)) (view as TextView).textColor = resources.getColor(R.color.md_white_1000)
-            })
+            }
         }
     }
 

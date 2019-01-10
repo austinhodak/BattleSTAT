@@ -81,6 +81,7 @@ data class MatchModel(
     }
 
     fun getFormattedCreatedAt(): String {
+        if (attributes?.createdAt == null) return "Unknown Time"
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         sdf.timeZone = TimeZone.getTimeZone("GMT")
         var time: Long = 0
