@@ -97,6 +97,16 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.austinh.battlebuddy.stats.matchdetails.replay.ReplayActivity"
+            android:theme="@style/MatchDetailsTheme">
+        </activity>
+
+        <activity
+            android:name="com.austinh.battlebuddy.settings.SettingsActivity"
+            android:theme="@style/SettingsTheme">
+        </activity>
+
         <!--<meta-data-->
         <!--android:name="io.fabric.ApiKey"-->
         <!--android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" />-->
@@ -143,10 +153,6 @@
 
         <activity
             android:name="com.austinh.battlebuddy.stats.main.StatsHome"
-            android:theme="@style/PlayerListDialog" />
-
-        <activity
-            android:name="com.austinh.battlebuddy.SettingsActivity"
             android:theme="@style/PlayerListDialog" />
 
         <activity

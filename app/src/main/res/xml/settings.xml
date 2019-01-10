@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="SOLO"
+        android:entries="@array/gamemodes"
+        android:entryValues="@array/gamemodes_values"
+        android:icon="@drawable/ic_game_controller"
+        android:key="default_gamemode"
+        android:summary="%s"
+        android:title="Default Gamemode" />
+
+    <Preference
+        android:icon="@drawable/ic_bell"
+        android:key="manage_alerts"
+        android:title="Manage Alerts" />
+
+    <Preference
+        android:icon="@drawable/ic_map"
+        android:key="manage_maps"
+        android:title="Manage Maps" />
+
+    <PreferenceCategory android:title="Connect With Us">
+
+        <Preference
+            android:icon="@drawable/ic_discord"
+            android:key="discord"
+            android:title="Discord" />
+
+        <Preference
+            android:icon="@drawable/ic_twitter"
+            android:key="twitter"
+            android:title="Twitter" />
+
+        <Preference
+            android:icon="@drawable/ic_love"
+            android:key="feedback"
+            android:title="Send Feedback" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+
+        <Preference
+            android:icon="@drawable/ic_icons8_about"
+            android:key="about"
+            android:title="About" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

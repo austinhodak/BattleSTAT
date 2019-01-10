@@ -11,5 +11,6 @@ data class LogCharacter (
         val accountId: String = "",
         val isInBluezone: Boolean = false,
         val isInRedZone: Boolean = false,
-        val zone: List<String> = ArrayList()
+        val zone: List<String> = ArrayList(),
+        var color: Int? = null
 ) : Serializable

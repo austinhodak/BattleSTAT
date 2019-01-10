@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.austinh.battlebuddy.R
-import com.austinh.battlebuddy.models.LogCarePackageSpawn
+import com.austinh.battlebuddy.models.LogCarePackageLand
 import com.austinh.battlebuddy.models.LogItem
 import com.austinh.battlebuddy.utils.Telemetry
 import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
@@ -31,7 +31,7 @@ class CarePackageListFragment: Fragment() {
         ViewModelProviders.of(requireActivity()).get(MatchDetailViewModel::class.java)
     }
 
-    private var killFeedList: List<LogCarePackageSpawn> = ArrayList()
+    private var killFeedList: List<LogCarePackageLand> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //setHasOptionsMenu(true)
@@ -54,7 +54,7 @@ class CarePackageListFragment: Fragment() {
 
         kill_feed_rv.layoutManager = LinearLayoutManager(activity)
 
-        mAdapter  = SlimAdapter.create().attachTo(kill_feed_rv).register(R.layout.care_package_list_item, SlimInjector<LogCarePackageSpawn> { data, injector ->
+        mAdapter  = SlimAdapter.create().attachTo(kill_feed_rv).register(R.layout.care_package_list_item, SlimInjector<LogCarePackageLand> { data, injector ->
             val itemList = injector.findViewById<RecyclerView>(R.id.care_package_item_list)
             itemList.layoutManager = LinearLayoutManager(activity)
 

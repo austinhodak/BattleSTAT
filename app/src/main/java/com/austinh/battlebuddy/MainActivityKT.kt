@@ -33,9 +33,11 @@ import com.austinh.battlebuddy.models.SeasonStatsAll
 import com.austinh.battlebuddy.premium.UpgradeActivity
 import com.austinh.battlebuddy.profile.ProfileMain
 import com.austinh.battlebuddy.rss.HomeUpdatesFragment
+import com.austinh.battlebuddy.settings.SettingsActivity
 import com.austinh.battlebuddy.snacky.Snacky
 import com.austinh.battlebuddy.stats.PlayerListDialog
 import com.austinh.battlebuddy.stats.main.StatsHome
+import com.austinh.battlebuddy.stats.matchdetails.MatchDetailActivity
 import com.austinh.battlebuddy.utils.*
 import com.austinh.battlebuddy.weapons.HomeWeaponsFragment
 import com.bumptech.glide.Glide
@@ -50,8 +52,6 @@ import com.google.android.gms.ads.InterstitialAd
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.instabug.bug.BugReporting
-import com.mikepenz.aboutlibraries.Libs
-import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
@@ -323,11 +323,11 @@ class MainActivityKT : AppCompatActivity() {
                 }
             }
             divider()
-            secondaryItem(R.string.drawer_title_about) {
-                icon = R.drawable.icons8_info
+            secondaryItem("Settings") {
+                icon = R.drawable.settings_icon
                 selectable = false
                 onClick { _ ->
-                    LibsBuilder()
+                    /*LibsBuilder()
                             .withAboutIconShown(true)
                             .withAboutVersionShown(true)
                             .withActivityStyle(Libs.ActivityStyle.DARK)
@@ -337,23 +337,8 @@ class MainActivityKT : AppCompatActivity() {
                             .withAboutSpecial1Description("<a href=\"https://twitter.com/pubgbuddy\">Follow us on Twitter!</a>")
                             .withAboutSpecial2("Discord")
                             .withAboutSpecial2Description("<a href=\"https://discord.gg/5bbJNvx\">Join Our Discord!</a>")
-                            .start(this@MainActivityKT)
-                    true
-                }
-            }
-            secondaryItem(R.string.drawer_title_alerts) {
-                icon = R.drawable.notification
-                selectable = false
-                onClick { _, _, _ ->
-                    startActivity<AlertManager>()
-                    true
-                }
-            }
-            secondaryItem(R.string.drawer_title_suggestion) {
-                icon = R.drawable.ic_love
-                selectable = false
-                onClick { _ ->
-                    BugReporting.invoke()
+                            .start(this@MainActivityKT)*/
+                    startActivity<SettingsActivity>()
                     true
                 }
             }
@@ -379,7 +364,13 @@ class MainActivityKT : AppCompatActivity() {
                         true
                     }
                 }
-            }
+            }/*
+            secondaryItem("Test 2D Replay") {
+                onClick { _ ->
+                    startActivity<MatchDetailActivity>("matchID" to "11cc5381-ff15-4bb8-bab9-55621b1389b5", "regionID" to "xbox")
+                    false
+                }
+            }*/
         }
         mDrawer?.recyclerView?.isVerticalScrollBarEnabled = false
 

@@ -3,6 +3,7 @@ package com.austinh.battlebuddy.stats.main
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.text.format.DateUtils
@@ -64,6 +65,12 @@ class MainStatsFragmentNew : Fragment() {
         mSharedPreferences = activity!!.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
 
         val player: PlayerListModel = arguments!!.getSerializable("selectedPlayer") as PlayerListModel
+
+        timeline_top_card.backgroundTintList = if (player.isLifetimeSelected) {
+            ColorStateList.valueOf(resources.getColor(R.color.md_blue_grey_900))
+        } else {
+            ColorStateList.valueOf(resources.getColor(R.color.md_grey_850))
+        }
 
         viewModel.playerData.observe(this, Observer<PlayerModel> {
             handler.removeCallbacksAndMessages(null)

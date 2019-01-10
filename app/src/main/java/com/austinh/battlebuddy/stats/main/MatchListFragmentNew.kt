@@ -66,10 +66,9 @@ class MatchListFragmentNew : Fragment() {
             0 -> {
                 (activity!! as StatsHome).setTabVisibility(View.VISIBLE)
             }
-            1 -> {
-                (activity!! as StatsHome).setTabVisibility(View.GONE)
-            }
-            2 -> {
+            1,
+            2,
+            3 -> {
                 (activity!! as StatsHome).setTabVisibility(View.GONE)
             }
         }
@@ -89,6 +88,10 @@ class MatchListFragmentNew : Fragment() {
                             }
                             2 -> {
                                 mPlayer.selectedMatchModes = MatchModes.CUSTOM
+                                (activity!! as StatsHome).setTabVisibility(View.GONE)
+                            }
+                            3 -> {
+                                mPlayer.selectedMatchModes = MatchModes.FAVORITES
                                 (activity!! as StatsHome).setTabVisibility(View.GONE)
                             }
                         }
@@ -126,7 +129,10 @@ class MatchListFragmentNew : Fragment() {
 
         matchList.clear()
 
-        matchRef = mDatabase.reference.child("user_stats/${player.playerID}/allMatches/${player.platform.id}/${player.selectedSeason.codeString.toLowerCase()}/matches").orderByChild("matchType").equalTo(player.getGamemodeSearch())
+        matchRef = if (player.selectedMatchModes == MatchModes.FAVORITES) {
+            mDatabase.reference.child("user_stats/${player.playerID}/allMatches/${player.platform.id}/${player.selectedSeason.codeString.toLowerCase()}/matches").orderByChild("favorite").equalTo(true)
+        } else
+            mDatabase.reference.child("user_stats/${player.playerID}/allMatches/${player.platform.id}/${player.selectedSeason.codeString.toLowerCase()}/matches").orderByChild("matchType").equalTo(player.getGamemodeSearch())
         matchListener = matchRef!!.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -152,7 +158,10 @@ class MatchListFragmentNew : Fragment() {
                 matchListModeTV?.text = "${resources.getStringArray(R.array.match_mode_dialog)[mPlayer.selectedMatchModes.ordinal]} (${children.size})"
 
                 for (child in children) {
-                    val matchTop = MatchTop(null, true, child.key!!, player.playerID, child.child("createdAt").value.toString())
+                    val matchTop = MatchTop(null, true, child.key!!, player.playerID, child.child("createdAt").value.toString(), season = player.selectedSeason.codeString)
+                    if (child.hasChild("favorite") && child.child("favorite").value == true) {
+                        matchTop.isFavorite = true
+                    }
                     matchList.add(matchTop)
                 }
 
@@ -249,11 +258,17 @@ class MatchListFragmentNew : Fragment() {
                     val bottomNav = requireActivity().findViewById<CoordinatorLayout>(R.id.stats_home_coord)
                     Snacky.builder().setView(bottomNav).info().setText("Match data not available if older than 14 days.").show()
                 } else {
-                    startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                    startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId, "match" to data.getSerializable())
                 }
             } else {
-                startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId)
+                startActivity<MatchDetailActivity>("matchID" to data.matchKey, "playerID" to data.currentPlayer, "regionID" to data.match!!.shardId, "match" to data.getSerializable())
             }
+        }
+
+        if (data.isFavorite == true) {
+            injector.visible(R.id.match_favorite_icon)
+        } else {
+            injector.gone(R.id.match_favorite_icon)
         }
     }
 

@@ -78,14 +78,12 @@
 
             <ImageView
                 android:id="@+id/matchListSort"
-                android:layout_width="43dp"
+                android:layout_width="47.5dp"
                 android:layout_height="43dp"
-                android:layout_marginRight="4.5dp"
                 android:foreground="?attr/selectableItemBackground"
                 android:paddingLeft="11.5dp"
-                android:paddingRight="11.5dp"
+                android:paddingRight="16dp"
                 android:src="@drawable/ic_filter_list_24dp"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

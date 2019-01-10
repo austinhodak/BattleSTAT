@@ -76,13 +76,13 @@ class MatchMapFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.match_map, menu)
+        inflater.inflate(R.menu.match_map, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.match_map_drawer) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.match_map_drawer) {
             mRightDrawer?.openDrawer()
         }
         return super.onOptionsItemSelected(item)

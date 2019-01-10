@@ -35,8 +35,15 @@ class PlayerStatsViewModel : ViewModel() {
     var matchDocListeners = ArrayList<ListenerRegistration>()
 
     fun getPlayerStats(player: PlayerListModel) {
+        //Remove old listeners so no duplicating
+        if (playerListener != null && playerRef != null) playerRef?.removeEventListener(playerListener!!)
+
         Log.d("GETTING PLAYER", "user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL().toLowerCase()}/${player.selectedSeason.codeString.toLowerCase()}")
-        playerRef = FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL().toLowerCase()}/${player.selectedSeason.codeString.toLowerCase()}")
+        playerRef = if (player.isLifetimeSelected) {
+            FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL().toLowerCase()}/lifetime")
+        } else {
+            FirebaseDatabase.getInstance().getReference("user_stats/${player.playerID}/season_data/${player.getDatabaseSearchURL().toLowerCase()}/${player.selectedSeason.codeString.toLowerCase()}")
+        }
         playerListener = playerRef?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -154,43 +161,5 @@ class PlayerStatsViewModel : ViewModel() {
             playerRef?.removeEventListener(playerListener!!)
 
 
-    }
-
-    fun isSeasonNewFormat(shardID: String, season: String): Boolean {
-        val region = Regions.getNewRegion(shardID)
-        if (region == Regions.Region.KAKAO || region == Regions.Region.STEAM) {
-            return when (season) {
-                "pc-2018-01" -> true
-                "2018-01",
-                "2018-02",
-                "2018-03",
-                "2018-04",
-                "2018-05",
-                "2018-06",
-                "2018-07",
-                "2018-08",
-                "2018-09" -> false
-                else -> true
-            }
-        } else if (region == Regions.Region.XBOX) {
-            return when (season) {
-                "2018-08",
-                "2018-01",
-                "2018-02",
-                "2018-03",
-                "2018-04",
-                "2018-05",
-                "2018-06",
-                "2018-07" -> false
-                else -> true
-            }
-        } else if (region == Regions.Region.PS4) {
-            return when (season) {
-                "2018-09" -> false
-                else -> true
-            }
-        } else {
-            return true
-        }
     }
 }

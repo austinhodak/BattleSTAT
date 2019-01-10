@@ -218,8 +218,8 @@ enum class Map (var fileName: String) {
     ERANGEL_HIGH("Erangel_Main_High_Res.jpg"),
     MIRAMAR_LOW("Miramar_Main_Low_Res.jpg"),
     MIRAMAR_HIGH("Miramar_Main_High_Res.jpg"),
-    SANHOK_LOW("Savage_Main_Low_Res.jpg"),
-    SANHOK_HIGH("Savage_Main_High_Res.png"),
+    SANHOK_LOW("Sanhok_Main_Low_Res.jpg"),
+    SANHOK_HIGH("Sanhok_Main_High_Res.png"),
     VIKENDI_LOW("Vikendi_Main_Low_Res.png"),
-    VIKENDI_HIGH("Vikendi_Main_High_Res.png.png")
+    VIKENDI_HIGH("Vikendi_Main_High_Res.png")
 }

@@ -19,6 +19,7 @@
         android:layout_marginTop="4dp"
         android:hint="Default (50)"
         android:inputType="number"
+        android:maxLength="5"
         android:textColor="#FFF"
         android:textSize="14sp" />
 
@@ -36,6 +37,7 @@
         android:layout_marginTop="4dp"
         android:hint="Default (25ms)"
         android:inputType="number"
+        android:maxLength="5"
         android:textColor="#FFF"
         android:textSize="14sp" />
 
