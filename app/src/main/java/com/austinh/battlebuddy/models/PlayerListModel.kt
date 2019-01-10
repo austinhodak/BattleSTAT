@@ -24,7 +24,8 @@ data class PlayerListModel(
         var defaultGamemode: Gamemode = Gamemode.SOLO,
         var selectedGamemode: Gamemode = defaultGamemode,
         var isPlayerCurrentUser: Boolean = false,
-        var selectedMatchModes: MatchModes = MatchModes.NORMAL
+        var selectedMatchModes: MatchModes = MatchModes.NORMAL,
+        var isLifetimeSelected: Boolean = false
 ) : Serializable {
     fun getDatabaseSearchURL() : String {
         if (defaultConsoleRegion.isNullOrEmpty()) defaultConsoleRegion = "na"
@@ -100,8 +101,14 @@ data class PlayerListModel(
         val data = java.util.HashMap<String, Any>()
         data["playerID"] = this.playerID
         data["shardID"] = this.getDatabaseSearchURL()
-        data["seasonID"] = this.selectedSeason.codeString
+        data["seasonID"] = if (isLifetimeSelected) {
+            "lifetime"
+        } else {
+            this.selectedSeason.codeString
+        }
         data["platform"] = this.platform.id
+
+        Log.d("GETSTATS", data.toString())
 
         return FirebaseFunctions.getInstance().getHttpsCallable("getPlayerSeasonStats").call(data).continueWith { task ->
             val result = task.result?.data as Map<String, Any>

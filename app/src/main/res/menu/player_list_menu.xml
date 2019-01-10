@@ -6,6 +6,7 @@
         android:title="Bypass Cache" />
 
     <item
+        android:visible="false"
         android:id="@+id/maps_manager"
         android:title="Manage Maps" />
 

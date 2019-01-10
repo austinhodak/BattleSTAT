@@ -150,9 +150,9 @@ class KillFeedFragment: Fragment() {
         }).updateData(killFeedList)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.match_players, menu)
+        inflater.inflate(R.menu.match_players, menu)
     }
 
     override fun onDestroy() {
@@ -161,8 +161,8 @@ class KillFeedFragment: Fragment() {
         kill_feed_rv?.layoutManager = null
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.match_players_sort) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.match_players_sort) {
 //            MaterialDialog.Builder(requireActivity())
 //                    .title("Sort Kills")
 //                    .items(R.array.kill_feed_sort)

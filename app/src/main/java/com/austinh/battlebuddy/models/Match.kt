@@ -3,6 +3,7 @@ package com.austinh.battlebuddy.models
 import android.text.format.DateUtils
 import com.austinh.battlebuddy.R
 import com.google.firebase.firestore.IgnoreExtraProperties
+import java.io.Serializable
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -75,8 +76,16 @@ data class MatchTop (
         var isLoading: Boolean,
         var matchKey: String,
         var currentPlayer: String,
-        var createdAt: String
-) {
+        var createdAt: String,
+        var isFavorite: Boolean? = false,
+        var isDownloaded: Boolean? = false,
+        var season: String
+) : Serializable {
+    fun getSerializable() : MatchTop {
+        val match = this
+        match.match = null
+        return match
+    }
 
     /**
      * Gets participant data

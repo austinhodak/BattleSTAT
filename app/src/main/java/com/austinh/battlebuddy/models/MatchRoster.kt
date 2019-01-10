@@ -6,7 +6,8 @@ data class MatchRoster (
         val type: String,
         val relationships: Relationships,
         val id: String,
-        val attributes: RosterAttributes
+        val attributes: RosterAttributes,
+        var color: Int
 ) : Serializable
 
 data class RosterAttributes (

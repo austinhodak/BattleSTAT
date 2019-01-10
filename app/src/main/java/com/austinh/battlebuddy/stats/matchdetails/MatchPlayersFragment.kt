@@ -111,14 +111,14 @@ class MatchPlayersFragment : Fragment() {
         return distanceLong
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.match_players, menu)
+        inflater.inflate(R.menu.match_players, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d("OPTIONS", "SELECTED")
-        if (item?.itemId == R.id.match_players_sort) {
+        if (item.itemId == R.id.match_players_sort) {
             MaterialDialog(requireActivity())
                     .title(text = "Sort By")
                     .listItemsSingleChoice(R.array.players_sort, initialSelection = sortIndex) { _, position, text ->

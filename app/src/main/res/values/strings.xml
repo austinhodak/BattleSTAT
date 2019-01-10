@@ -60,6 +60,7 @@
         <item>Normal Matches</item>
         <item>Event Matches</item>
         <item>Custom Matches</item>
+        <item>❤️ Favorite Matches</item>
     </string-array>
 
     <string-array name="matches_sort">
@@ -101,4 +102,20 @@
     <string name="throwables" translatable="false">Throwables</string>
     <string name="melee">Melee</string>
 
+    <string-array name="gamemodes">
+        <item>Solo</item>
+        <item>Solo FPP</item>
+        <item>Duo</item>
+        <item>Duo FPP</item>
+        <item>Squad</item>
+        <item>Squad FPP</item>
+    </string-array>
+    <string-array name="gamemodes_values">
+        <item>SOLO</item>
+        <item>SOLOFPP</item>
+        <item>DUO</item>
+        <item>DUOFPP</item>
+        <item>SQUAD</item>
+        <item>SQUADFPP</item>
+    </string-array>
 </resources>

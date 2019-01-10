@@ -1,7 +1,7 @@
 package com.austinh.battlebuddy.viewmodels
 
 import android.app.Application
-import android.util.Log
+import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.volley.*
@@ -16,6 +16,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.zip.GZIPInputStream
 
@@ -125,6 +126,8 @@ class MatchDetailViewModel : ViewModel() {
                 }
             }
         }
+
+        matchModel.randomizeTeamColors()
 
         getTelemetryDataGZIP(mVolleyQueue, matchModel, assetURL)
     }
@@ -274,20 +277,63 @@ class MatchDetailViewModel : ViewModel() {
                     "LogMatchDefinition" -> {
                         matchModel.matchDefinition = Gson().fromJson(item.toString(), LogMatchDefinition::class.java)
                     }
+                    "LogPlayerCreate" -> {
+                        matchModel.logPlayerCreate.add(Gson().fromJson(item.toString(), LogPlayerCreate::class.java).character)
+                    }
                     "LogCarePackageSpawn" -> {
-                        matchModel.carePackageList.add(Gson().fromJson(item.toString(), LogCarePackageSpawn::class.java))
+                        //matchModel.carePackageList.add(Gson().fromJson(item.toString(), LogCarePackageSpawn::class.java))
+                    }
+                    "LogCarePackageLand" -> {
+                        matchModel.carePackageList.add(Gson().fromJson(item.toString(), LogCarePackageLand::class.java).doElapsedTime(matchModel.attributes!!.createdAt))
+                    }
+                    "LogPlayerPosition" -> {
+                        val logPosition = Gson().fromJson(item.toString(), LogPlayerPosition::class.java)
+                        matchModel.logPlayerPositions.add(logPosition)
                     }
                     "LogGameStatePeriodic" -> {
-                        val gameState = Gson().fromJson(item.toString(), LogGamestatePeriodic::class.java).gameState
-                        val circle = SafeZoneCircle (
+                        val periodic = Gson().fromJson(item.toString(), LogGamestatePeriodic::class.java)
+                        periodic.matchTime = matchModel.attributes!!.createdAt
+
+                        //val gameState = periodic.gameState
+
+                        //Do date.
+                        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                        sdf.timeZone = TimeZone.getTimeZone("GMT")
+
+                        val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                        sdf2.timeZone = TimeZone.getTimeZone("GMT")
+
+                        val matchStartDate = sdf.parse(matchModel.attributes?.createdAt)
+                        val killTime = sdf2.parse(periodic._D)
+
+                        val difference = killTime.time - matchStartDate.time
+
+                        /*val circle = SafeZoneCircle (
                                 position = gameState.poisonGasWarningPosition,
-                                radius = gameState.poisonGasWarningRadius
+                                radius = gameState.poisonGasWarningRadius,
+                                timeInMatch = difference / 1000
                         )
 
                         if (!matchModel.safeZoneList.contains(circle) && circle.position.isValidCirclePosition()) {
                             matchModel.safeZoneList.add(circle)
                             Log.d("CIRCLE", circle.toString())
                         }
+
+                        if (gameState.redZonePosition.isValidCirclePosition()) {
+                            val redZone = SafeZoneCircle(
+                                    position = gameState.redZonePosition,
+                                    radius = gameState.redZoneRadius,
+                                    timeInMatch = difference / 1000
+                            )
+
+                            if (!matchModel.redZoneList.contains(redZone)) {
+                                matchModel.redZoneList.add(redZone)
+                            }
+                        }*/
+
+                       // periodic.gameState.elapsedTime = difference
+
+                        matchModel.gameStates.add(periodic)
                     }
                 }
             }
@@ -296,5 +342,10 @@ class MatchDetailViewModel : ViewModel() {
 
             mMatchData.postValue(matchModel)
         }
+    }
+
+    private fun getRandomColor(): Int {
+        val rnd = Random()
+        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
     }
 }
