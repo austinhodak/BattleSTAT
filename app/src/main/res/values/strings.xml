@@ -60,7 +60,7 @@
         <item>Normal Matches</item>
         <item>Event Matches</item>
         <item>Custom Matches</item>
-        <item>⭐ Favorite Matches</item>
+        <item>❤️ Favorite Matches</item>
     </string-array>
 
     <string-array name="matches_sort">

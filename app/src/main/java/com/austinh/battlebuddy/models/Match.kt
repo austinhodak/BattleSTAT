@@ -78,9 +78,9 @@ data class MatchTop (
         var currentPlayer: String,
         var createdAt: String,
         var isFavorite: Boolean? = false,
-        var isDownloaded: Boolean? = false
+        var isDownloaded: Boolean? = false,
+        var season: String
 ) : Serializable {
-
     fun getSerializable() : MatchTop {
         val match = this
         match.match = null

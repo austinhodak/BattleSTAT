@@ -281,6 +281,10 @@ class PlayerListDialog : AppCompatActivity() {
                             .title(text = "Add Steam Player")
                             .noAutoDismiss()
                             .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                if (text.contains(regex = Regex("[.$#\\[\\]?/!@%^&*(){},<>;:'|]"))) {
+                                    dialog.getInputField()!!.error = "Invalid Characters in Player Name"
+                                    return@input
+                                }
                                 dialog.positiveButton(text = "Adding")
                                 dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
                                 dialog.getInputField()?.isEnabled = false
@@ -304,6 +308,10 @@ class PlayerListDialog : AppCompatActivity() {
                             .title(text = "Add Kakao Player")
                             .noAutoDismiss()
                             .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                if (text.contains(regex = Regex("[.$#\\[\\]?/!@%^&*(){},<>;:'|]"))) {
+                                    dialog.getInputField()!!.error = "Invalid Characters in Player Name"
+                                    return@input
+                                }
                                 dialog.positiveButton(text = "Adding")
                                 dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
                                 dialog.getInputField()?.isEnabled = false
@@ -331,6 +339,10 @@ class PlayerListDialog : AppCompatActivity() {
                                         .title(text = "Add Xbox Player (${Regions.shortXboxShardIDs[index].toUpperCase()})")
                                         .noAutoDismiss()
                                         .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                            if (text.contains(regex = Regex("[.$#\\[\\]?/!@%^&*(){},<>;:'|]"))) {
+                                                dialog.getInputField()!!.error = "Invalid Characters in Player Name"
+                                                return@input
+                                            }
                                             dialog.positiveButton(text = "Adding")
                                             dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
                                             dialog.getInputField()?.isEnabled = false
@@ -360,6 +372,10 @@ class PlayerListDialog : AppCompatActivity() {
                                         .title(text = "Add PS4 Player (${Regions.shortPSNShardIDs[index].toUpperCase()})")
                                         .noAutoDismiss()
                                         .input(hint = "Player Name (Case Sensitive)") { dialog, text ->
+                                            if (text.contains(regex = Regex("[.$#\\[\\]?/!@%^&*(){},<>;:'|]"))) {
+                                                dialog.getInputField()!!.error = "Invalid Characters in Player Name"
+                                                return@input
+                                            }
                                             dialog.positiveButton(text = "Adding")
                                             dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
                                             dialog.getInputField()?.isEnabled = false
