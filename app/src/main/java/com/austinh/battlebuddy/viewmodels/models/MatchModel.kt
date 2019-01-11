@@ -6,6 +6,7 @@ import android.text.format.DateUtils
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.map.Map
 import com.austinh.battlebuddy.models.*
+import com.austinh.battlebuddy.viewmodels.MatchDetailViewModel
 import java.io.File
 import java.io.Serializable
 import java.text.ParseException
@@ -16,12 +17,12 @@ import kotlin.collections.HashMap
 
 data class MatchModel(
         var error: String? = null,
-        var participantList: ArrayList<MatchParticipant> = ArrayList(),
-        var rosterList: ArrayList<MatchRoster> = ArrayList(),
-        var participantHash: HashMap<String, MatchParticipant> = HashMap(),
+        var participantList: ArrayList<MatchDetailViewModel.Participant> = ArrayList(),
+        var rosterList: ArrayList<MatchDetailViewModel.Roster> = ArrayList(),
+        var participantHash: HashMap<String, MatchDetailViewModel.Participant> = HashMap(),
         var attributes: MatchData? = null,
-        var currentPlayerRoster: MatchRoster? = null,
-        var currentPlayer: MatchParticipant? = null,
+        var currentPlayerRoster: MatchDetailViewModel.Roster? = null,
+        var currentPlayer: MatchDetailViewModel.Participant? = null,
         var killFeedList: ArrayList<LogPlayerKill> = ArrayList(),
         var currentPlayerID: String,
         var currentPlayerMatchID: String = "",
@@ -99,7 +100,7 @@ data class MatchModel(
         return ago as String
     }
 
-    fun getPlayerByAccountID(accountID: String) : MatchParticipant? {
+    fun getPlayerByAccountID(accountID: String) : MatchDetailViewModel.Participant? {
         for (player in participantList) {
             if (player.attributes.stats.playerId == accountID) {
                 return player
@@ -110,7 +111,7 @@ data class MatchModel(
 
     fun randomizeTeamColors() {
         for (team in rosterList) {
-            teamColors[team.attributes.stats.teamId] = getRandomColor()
+            teamColors[team.attributes.stats.teamId.toInt()] = getRandomColor()
         }
     }
 

@@ -42,7 +42,7 @@ class MatchPlayersFragment : Fragment() {
 
     }
 
-    private lateinit var sortedList: List<MatchParticipant>
+    private lateinit var sortedList: List<MatchDetailViewModel.Participant>
 
     private fun setupAdapter(matchModel: MatchModel) {
         var match = matchModel
@@ -101,7 +101,7 @@ class MatchPlayersFragment : Fragment() {
         return distance
     }
 
-    fun getTotalDistanceTravelledInM(data: MatchParticipant): Long {
+    fun getTotalDistanceTravelledInM(data: MatchDetailViewModel.Participant): Long {
         var distanceLong: Long = 0
 
         distanceLong += data.attributes.stats.rideDistance.toLong()

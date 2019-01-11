@@ -162,8 +162,10 @@ class WeaponDetailTimelineStats : Fragment() {
             mData.add(DamageItem(R.drawable.helmet_white, "No Helmet", damage = weapon.damageHead0))
         }
 
-        mData.add(LineSection("Attachments", "${weapon.attachments.size} Total"))
-        mData.add(AttachmentRV(weapon))
+        if (weapon.attachments.isNotEmpty()) {
+            mData.add(LineSection("Attachments", "${weapon.attachments.size} Total"))
+            mData.add(AttachmentRV(weapon))
+        }
 
         mData.add(LineSection("Sounds"))
         mData.add(SoundRV(weapon, it))

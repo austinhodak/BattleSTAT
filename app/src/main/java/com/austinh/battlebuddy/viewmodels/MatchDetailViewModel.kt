@@ -2,6 +2,8 @@ package com.austinh.battlebuddy.viewmodels
 
 import android.app.Application
 import android.graphics.Color
+import android.util.Log
+import android.util.TimingLogger
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.volley.*
@@ -10,6 +12,7 @@ import com.austinh.battlebuddy.models.*
 import com.austinh.battlebuddy.utils.Regions
 import com.austinh.battlebuddy.viewmodels.models.MatchData
 import com.austinh.battlebuddy.viewmodels.models.MatchModel
+import com.beust.klaxon.*
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.json.JSONArray
@@ -18,10 +21,13 @@ import org.json.JSONObject
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 import java.util.zip.GZIPInputStream
+import kotlin.reflect.KClass
 
 class MatchDetailViewModel : ViewModel() {
     val mMatchData = MutableLiveData<MatchModel>()
+    val timings = TimingLogger("GETMATCH", "START")
 
     fun getMatchData(application: Application, shardID: String, matchID: String, playerID: String) {
         val mVolleyQueue = Volley.newRequestQueue(application)
@@ -30,43 +36,14 @@ class MatchDetailViewModel : ViewModel() {
         val matchModel = MatchModel(currentPlayerID = playerID)
 
         val objectRequest = object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener {
+            timings.addSplit("Match Data Parsing")
             parseMatchData(it, matchModel, mVolleyQueue)
         }, Response.ErrorListener {
 
         }) {
-            override fun parseNetworkResponse(response: NetworkResponse): Response<JSONObject> {
-                try {
-                    var cacheEntry: Cache.Entry? = HttpHeaderParser.parseCacheHeaders(response)
-                    if (cacheEntry == null) {
-                        cacheEntry = Cache.Entry()
-                    }
-                    val cacheHitButRefreshed = (73 * 60 * 1000).toLong() // in 3 minutes cache will be hit, but also refreshed on background
-                    val cacheExpired = (72 * 60 * 60 * 1000).toLong() // in 24 hours this cache entry expires completely
-                    val now = System.currentTimeMillis()
-                    val softExpire = now + cacheHitButRefreshed
-                    val ttl = now + cacheExpired
-                    cacheEntry.data = response.data
-                    cacheEntry.softTtl = softExpire
-                    cacheEntry.ttl = ttl
-                    var headerValue: String? = response.headers["Date"]
-                    if (headerValue != null) {
-                        cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue)
-                    }
-                    headerValue = response.headers["Last-Modified"]
-                    if (headerValue != null) {
-                        cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue)
-                    }
-                    cacheEntry.responseHeaders = response.headers
-
-                    val jsonString = String(response.data) +
-                            HttpHeaderParser.parseCharset(response.headers)
-                    return Response.success(JSONObject(jsonString), cacheEntry)
-                } catch (e: UnsupportedEncodingException) {
-                    return Response.error(ParseError(e))
-                } catch (e: JSONException) {
-                    return Response.error(ParseError(e))
-                }
-
+            override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject> {
+                Log.d("RESPONSE", "HEADERS: ${response?.allHeaders}")
+                return super.parseNetworkResponse(response)
             }
 
             override fun parseNetworkError(volleyError: VolleyError): VolleyError {
@@ -85,63 +62,69 @@ class MatchDetailViewModel : ViewModel() {
                 params["Accept"] = "application/vnd.api+json"
                 return params
             }
-
-            override fun getBodyContentType(): String {
-                return "application/json"
-            }
         }
 
+        timings.addSplit("Match Data Added to Queue")
         mVolleyQueue.add(objectRequest)
     }
 
     private fun parseMatchData(json: JSONObject, matchModel: MatchModel, mVolleyQueue: RequestQueue) {
         matchModel.attributes = Gson().fromJson(json.getJSONObject("data")?.getJSONObject("attributes").toString(), MatchData::class.java)
 
-        var assetURL = ""
+        val klaxon = Klaxon()
+        Log.d("KLAXONREADER", "START:")
+        doAsync {
+            var URl = ""
+            JsonReader(StringReader(json.getJSONArray("included").toString())).use { reader ->
+                val result = arrayListOf<Item>()
+                reader.beginArray {
+                    while (reader.hasNext()) {
+                        val item = klaxon.parse<Item>(reader)
+                        if (item is Asset) {
+                            URl = item.attributes.URL
+                        }
 
-        for (i in 0 until json.getJSONArray("included")?.length()!!) {
-            val includedObject = json.getJSONArray("included").getJSONObject(i)
+                        if (item is Participant) {
+                            matchModel.participantList.add(item)
+                            matchModel.participantHash[item.id] = item
 
-            if (includedObject.getString("type") == "asset") {
-                assetURL = includedObject.getJSONObject("attributes").getString("URL")
-            } else if (includedObject.getString("type") == "participant") {
-                val participant = Gson().fromJson(includedObject.toString(), MatchParticipant::class.java)
-                matchModel.participantList.add(participant)
-                matchModel.participantHash[includedObject.getString("id")] = participant
+                            if (item.attributes.stats.playerId == matchModel.currentPlayerID) {
+                                matchModel.currentPlayer = item
+                                matchModel.currentPlayerMatchID = item.id
+                            }
+                        }
 
-                if (participant.attributes.stats.playerId == matchModel.currentPlayerID) {
-                    matchModel.currentPlayer = participant
-                    matchModel.currentPlayerMatchID = participant.id
+                        if (item is Roster) {
+                            matchModel.rosterList.add(item as Roster)
+                            if (item.relationships.participants.data.find { it.id == matchModel.currentPlayerMatchID } != null) {
+                                matchModel.currentPlayerRoster = item as Roster
+                            }
+                        }
+
+                        result.add(item ?: continue)
+                    }
                 }
-            } else if (includedObject.getString("type") == "roster") {
-                val roster: MatchRoster = Gson().fromJson(includedObject.toString(), MatchRoster::class.java)
-                matchModel.rosterList.add(roster)
+
+                Log.d("KLAXONREADER", "RESULT: ${result.size}")
+                timings.addSplit("Match Data Parsed, Starting Telem")
+                getTelemetryDataGZIP(mVolleyQueue, matchModel, URl)
             }
+
+            matchModel.randomizeTeamColors()
+
         }
-
-        for (roster in matchModel.rosterList) {
-            for (rosterItem in roster.relationships.participants.data) {
-                if (rosterItem.id == matchModel.currentPlayerMatchID) {
-                    matchModel.currentPlayerRoster = roster
-                }
-            }
-        }
-
-        matchModel.randomizeTeamColors()
-
-        getTelemetryDataGZIP(mVolleyQueue, matchModel, assetURL)
     }
 
     private fun getTelemetryDataGZIP(mVolleyQueue: RequestQueue, matchModel: MatchModel, assetURL: String) {
         val objectRequest = object : StringRequest(Request.Method.GET, assetURL, Response.Listener<String> {
+            timings.addSplit("Telem Parse Response")
             parseTelemetryData(JSONArray(it), matchModel)
         }, Response.ErrorListener {
 
         }) {
             override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
-                doAsync {
+                timings.addSplit("Telem Top Network Response ${response.headers["Content-Length"]}")
 
-                }
                 val output = StringBuilder()
                 try {
                     val gStream = GZIPInputStream(ByteArrayInputStream(response.data))
@@ -158,6 +141,8 @@ class MatchDetailViewModel : ViewModel() {
                 } catch (e: IOException) {
                     return Response.error(ParseError())
                 }
+
+                timings.addSplit("Telem Return Network Response")
 
                 return Response.success(output.toString(), HttpHeaderParser.parseCacheHeaders(response))
             }
@@ -182,6 +167,7 @@ class MatchDetailViewModel : ViewModel() {
             }
         }
 
+        timings.addSplit("Telem added to queue")
         mVolleyQueue.add(objectRequest)
 
     }
@@ -331,7 +317,7 @@ class MatchDetailViewModel : ViewModel() {
                             }
                         }*/
 
-                       // periodic.gameState.elapsedTime = difference
+                        // periodic.gameState.elapsedTime = difference
 
                         matchModel.gameStates.add(periodic)
                     }
@@ -340,12 +326,36 @@ class MatchDetailViewModel : ViewModel() {
 
             matchModel.killFeedList.sortedWith(compareBy { it._D })
 
+            timings.addSplit("Telem Done Parsing")
+
+            timings.dumpToLog()
+
             mMatchData.postValue(matchModel)
+
         }
     }
 
     private fun getRandomColor(): Int {
         val rnd = Random()
         return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+    }
+
+    @TypeFor(field = "type", adapter = MatchTypeAdapter::class)
+    open class Item(val type: String = "")
+
+    data class Asset(val id: String, val attributes: AssetAttributes) : Item() {
+        data class AssetAttributes(val URL: String)
+    }
+
+    data class Participant(val id: String, val attributes: MatchAttributes) : Item()
+    data class Roster(val id: String, val attributes: RosterAttributes, val relationships: Relationships) : Item()
+
+    class MatchTypeAdapter : TypeAdapter<Item> {
+        override fun classFor(type: Any): KClass<out Item> = when (type as String) {
+            "asset" -> Asset::class
+            "participant" -> Participant::class
+            "roster" -> Roster::class
+            else -> throw IllegalArgumentException("Unknown type: $type")
+        }
     }
 }
