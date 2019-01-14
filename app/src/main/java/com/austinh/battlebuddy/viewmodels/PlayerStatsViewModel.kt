@@ -60,12 +60,12 @@ class PlayerStatsViewModel : ViewModel() {
 
                 playerStats.lastUpdated = snapshot.child("lastUpdated").value as Long
 
-                playerStats.soloStats = snapshot.child("stats/solo").getValue(PlayerStats::class.java)
-                playerStats.soloFPPStats = snapshot.child("stats/solo-fpp").getValue(PlayerStats::class.java)
-                playerStats.duoStats = snapshot.child("stats/duo").getValue(PlayerStats::class.java)
-                playerStats.duoFPPStats = snapshot.child("stats/duo-fpp").getValue(PlayerStats::class.java)
-                playerStats.squadStats = snapshot.child("stats/squad").getValue(PlayerStats::class.java)
-                playerStats.squadFPPStats = snapshot.child("stats/squad-fpp").getValue(PlayerStats::class.java)
+                playerStats.soloStats = snapshot.child("stats/solo").getValue(PlayerStats::class.java) ?: PlayerStats()
+                playerStats.soloFPPStats = snapshot.child("stats/solo-fpp").getValue(PlayerStats::class.java)?: PlayerStats()
+                playerStats.duoStats = snapshot.child("stats/duo").getValue(PlayerStats::class.java)?: PlayerStats()
+                playerStats.duoFPPStats = snapshot.child("stats/duo-fpp").getValue(PlayerStats::class.java)?: PlayerStats()
+                playerStats.squadStats = snapshot.child("stats/squad").getValue(PlayerStats::class.java)?: PlayerStats()
+                playerStats.squadFPPStats = snapshot.child("stats/squad-fpp").getValue(PlayerStats::class.java)?: PlayerStats()
 
                 playerData.value = playerStats
             }

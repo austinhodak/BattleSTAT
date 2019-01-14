@@ -10,6 +10,15 @@
         android:summary="%s"
         android:title="Default Gamemode" />
 
+    <!--<ListPreference
+        android:defaultValue="METRIC"
+        android:entries="@array/distance_units"
+        android:entryValues="@array/distance_units_vals"
+        android:icon="@drawable/ic_ruler"
+        android:key="distance_measure"
+        android:summary="%s"
+        android:title="Distance Unit" />-->
+
     <Preference
         android:icon="@drawable/ic_bell"
         android:key="manage_alerts"

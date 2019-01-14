@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/change_region"
-        android:icon="@drawable/globe"
-        android:title="Change Region" />
+        android:id="@+id/compare_players"
+        android:icon="@drawable/ic_compare_arrows_dark_24dp"
+        android:title="Compare Players"
+        app:showAsAction="ifRoom|ifRoom" />
 
     <item
         android:id="@+id/change_season"
         android:icon="@drawable/ic_event_24dp"
         android:title="Change Season"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/change_region"
+        android:icon="@drawable/globe"
+        android:title="Change Region" />
 
     <item
         android:id="@+id/settings"

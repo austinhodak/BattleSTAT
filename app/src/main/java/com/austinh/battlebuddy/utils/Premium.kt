@@ -69,6 +69,7 @@ object Premium {
     }
 
     fun isPremiumUser() : Boolean {
+        return true
         return when {
             mSharedPreferences.getBoolean("premiumV1", false) -> true
             mSharedPreferences.getBoolean(Level.LEVEL_1.tag, false) -> true

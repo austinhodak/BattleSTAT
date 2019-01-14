@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/statsScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_grey_900"
+            app:layout_scrollFlags="scroll"
+            app:navigationIcon="@drawable/instabug_ic_back">
+
+            <LinearLayout
+                android:id="@+id/top_bar_linear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:gravity="center_vertical"
+                    android:text="Comparing Players"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/compare_player_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_grey_900"
+            app:layout_scrollFlags="snap"
+            app:tabGravity="center"
+            app:tabIndicator="@drawable/tab_indicator"
+            app:tabIndicatorColor="@color/timelineOrange"
+            app:tabIndicatorFullWidth="false"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/timelineOrange"
+            app:tabTextAppearance="@style/TabText"
+            app:tabTextColor="#FFF"
+            app:tabUnboundedRipple="true">
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Solo" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Solo FPP" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duo" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duo FPP" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Squad" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Squad FPP" />
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Overall" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/statsFragList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/timeline_round"
+                android:backgroundTint="@color/md_grey_850"
+                app:timeline_position="first"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="item">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/top_extras2"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/player1TopLL"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/card_left_bg"
+                        android:backgroundTint="@color/rankDiamond"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/player2TopLL"
+                        app:layout_constraintHorizontal_chainStyle="spread"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/player1Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="THExLEGENDxxx"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/player1Title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="GRANDMASTER"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/player2TopLL"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/card_right_bg"
+                        android:backgroundTint="@color/rankElite"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/player1TopLL"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/player2Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="shroud"
+                            android:textColor="#FFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/player2Title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ELITE"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:background="#1F000000"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/player2TopLL"
+                        app:layout_constraintStart_toEndOf="@+id/player1TopLL"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="line">
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/timeline_top_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/timeline_round"
+                android:backgroundTint="@color/md_grey_850"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_margin_start="43dp"
+                app:timeline_radio_radius="15"
+                android:focusableInTouchMode="true"
+                app:timeline_type="item">
+
+                <ImageView
+                    android:id="@+id/player1Icon"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:adjustViewBounds="true"
+                    android:paddingBottom="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/rank_icon_grandmaster"
+                    app:layout_constraintEnd_toStartOf="@+id/view7"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/player2Icon"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:adjustViewBounds="true"
+                    android:paddingBottom="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/rank_icon_diamond"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/view7"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/topCompareRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/player1Icon"></androidx.recyclerview.widget.RecyclerView>
+
+                <View
+                    android:id="@+id/view7"
+                    android:layout_width="120dp"
+                    android:layout_height="1dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:timeline_margin_start="43dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="line">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="67dp"
+                        android:src="@drawable/odometer"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="DISTANCE"
+                        android:textColor="#FFF"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView10"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/timeline_round"
+                android:backgroundTint="@color/timelineGreen"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                app:timeline_margin_start="43dp"
+                android:focusableInTouchMode="true"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="item">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/distanceCompareRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_margin_start="43dp"
+                app:timeline_radio_radius="15"
+                app:timeline_type="line">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="67dp"
+                        android:src="@drawable/dog_tag"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="KILLS"
+                        android:textColor="#FFF"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView10"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/timeline_round"
+                android:backgroundTint="@color/rankBronze"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                app:timeline_position="middle"
+                app:timeline_margin_start="43dp"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="item">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/killsCompareRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_margin_start="43dp"
+                app:timeline_radio_radius="15"
+                app:timeline_type="line">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="67dp"
+                        android:src="@drawable/bandage"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="HEALING"
+                        android:textColor="#FFF"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView10"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/timeline_round"
+                android:backgroundTint="@color/timelineBlue"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                app:timeline_margin_start="43dp"
+                android:paddingBottom="16dp"
+                app:timeline_position="middle"
+                android:focusableInTouchMode="true"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="item">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/healingCompareRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_margin_start="43dp"
+                app:timeline_radio_radius="15"
+                app:timeline_type="line">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="67dp"
+                        android:src="@drawable/blood_2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="DAMAGE"
+                        android:textColor="#FFF"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView10"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/timeline_round"
+                android:backgroundTint="@color/timelineRed"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_margin_start="43dp"
+                app:timeline_type="item">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/damageCompareRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:timeline_margin_start="43dp"
+                app:timeline_position="middle"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="line">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="67dp"
+                        android:src="@drawable/ic_access_time_black_24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="TIMES"
+                        android:textColor="#FFF"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView10"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/timeline_round"
+                android:backgroundTint="@color/timelineNavy"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:focusableInTouchMode="true"
+                app:timeline_margin_start="43dp"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                app:timeline_position="last"
+                app:timeline_radio_outline_radius="23"
+                app:timeline_radio_radius="15"
+                app:timeline_type="item">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/timesCompareRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+
+            </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
