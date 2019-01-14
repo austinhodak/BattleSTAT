@@ -152,6 +152,10 @@
             android:theme="@style/PlayerListDialog" />
 
         <activity
+            android:name="com.austinh.battlebuddy.stats.compare.ComparePlayersActivity"
+            android:theme="@style/PlayerListDialog" />
+
+        <activity
             android:name="com.austinh.battlebuddy.stats.main.StatsHome"
             android:theme="@style/PlayerListDialog" />
 

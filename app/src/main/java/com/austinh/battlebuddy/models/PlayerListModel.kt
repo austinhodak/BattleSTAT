@@ -25,7 +25,8 @@ data class PlayerListModel(
         var selectedGamemode: Gamemode = defaultGamemode,
         var isPlayerCurrentUser: Boolean = false,
         var selectedMatchModes: MatchModes = MatchModes.NORMAL,
-        var isLifetimeSelected: Boolean = false
+        var isLifetimeSelected: Boolean = false,
+        var isOverallStatsSelected: Boolean = false
 ) : Serializable {
     fun getDatabaseSearchURL() : String {
         if (defaultConsoleRegion.isNullOrEmpty()) defaultConsoleRegion = "na"

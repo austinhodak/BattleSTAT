@@ -1,5 +1,7 @@
 package com.austinh.battlebuddy.stats.main
 
+import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
@@ -8,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -19,6 +22,9 @@ import com.austinh.battlebuddy.models.PlayerListModel
 import com.austinh.battlebuddy.premium.UpgradeActivity
 import com.austinh.battlebuddy.settings.SettingsActivity
 import com.austinh.battlebuddy.snacky.Snacky
+import com.austinh.battlebuddy.stats.PlayerListDialog
+import com.austinh.battlebuddy.stats.compare.ComparePlayerModel
+import com.austinh.battlebuddy.stats.compare.ComparePlayersActivity
 import com.austinh.battlebuddy.utils.*
 import com.austinh.battlebuddy.viewmodels.PlayerStatsViewModel
 import com.austinh.battlebuddy.viewmodels.models.PlayerModel
@@ -27,7 +33,6 @@ import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.FirebaseException
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.functions.FirebaseFunctionsException
 import kotlinx.android.synthetic.main.activity_stats_home.*
@@ -117,6 +122,8 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 }
 
                 override fun onTabSelected(p0: TabLayout.Tab?) {
+                    stats_bottom_nav?.menu?.getItem(1)?.isEnabled = p0?.text != "Overall"
+
                     Log.d("TAB", p0?.text.toString())
                     tabSelected(p0?.text.toString(), selectedPlayer, stats_bottom_nav?.selectedItemId!!)
                 }
@@ -131,8 +138,6 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
             })
 
             setupBottomNav(selectedPlayer)
-
-            //Log.d("PLAYER", "${player?.isSeasonNewFormat(player?.defaultShardID!!)} --")
 
             statsRefreshLayout?.setOnRefreshListener {
                 var updateTimeout = 15
@@ -207,104 +212,32 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
     private fun tabSelected(gameMode: String, player: PlayerListModel, itemId: Int) {
         selectedTab = gameMode
-        when (gameMode) {
-            "Solo" -> {
-                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
-                    MainStatsFragmentNew()
-                } else if (itemId == R.id.stats_leaderboards) {
-                    LeaderboardFragment()
-                } else {
-                    MatchListFragment()
-                }
+        player.isOverallStatsSelected = gameMode == "Overall"
 
-                player.selectedGamemode = Gamemode.SOLO
-                val bundle = Bundle()
-                bundle.putSerializable("selectedPlayer", player)
-
-                fragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
-            }
-            "Solo FPP" -> {
-                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
-                    MainStatsFragmentNew()
-                } else if (itemId == R.id.stats_leaderboards) {
-                    LeaderboardFragment()
-                } else {
-                    MatchListFragment()
-                }
-
-                player.selectedGamemode = Gamemode.SOLOFPP
-                val bundle = Bundle()
-                bundle.putSerializable("selectedPlayer", player)
-
-                fragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
-            }
-            "Duo" -> {
-                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
-                    MainStatsFragmentNew()
-                } else if (itemId == R.id.stats_leaderboards) {
-                    LeaderboardFragment()
-                } else {
-                    MatchListFragment()
-                }
-
-                player.selectedGamemode = Gamemode.DUO
-                val bundle = Bundle()
-                bundle.putSerializable("selectedPlayer", player)
-
-                fragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
-            }
-            "Duo FPP" -> {
-                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
-                    MainStatsFragmentNew()
-                } else if (itemId == R.id.stats_leaderboards) {
-                    LeaderboardFragment()
-                } else {
-                    MatchListFragment()
-                }
-
-                player.selectedGamemode = Gamemode.DUOFPP
-                val bundle = Bundle()
-                bundle.putSerializable("selectedPlayer", player)
-
-                fragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
-            }
-            "Squad" -> {
-                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
-                    MainStatsFragmentNew()
-                } else if (itemId == R.id.stats_leaderboards) {
-                    LeaderboardFragment()
-                } else {
-                    MatchListFragment()
-                }
-
-                player.selectedGamemode = Gamemode.SQUAD
-                val bundle = Bundle()
-                bundle.putSerializable("selectedPlayer", player)
-
-                fragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
-            }
-            "Squad FPP" -> {
-                val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
-                    MainStatsFragmentNew()
-                } else if (itemId == R.id.stats_leaderboards) {
-                    LeaderboardFragment()
-                } else {
-                    MatchListFragment()
-                }
-
-                player.selectedGamemode = Gamemode.SQUADFPP
-                val bundle = Bundle()
-                bundle.putSerializable("selectedPlayer", player)
-
-                fragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
-            }
+        val mode = when (gameMode) {
+            "Solo" -> Gamemode.SOLO
+            "Solo FPP" -> Gamemode.SOLOFPP
+            "Duo" -> Gamemode.DUO
+            "Duo FPP" -> Gamemode.DUOFPP
+            "Squad" -> Gamemode.SQUAD
+            "Squad FPP" -> Gamemode.SQUADFPP
+            else -> Gamemode.SOLO
         }
+
+        val fragment = if (itemId == R.id.your_stats_menu || itemId == R.id.lifetime_stats) {
+            MainStatsFragmentNew()
+        } else if (itemId == R.id.stats_leaderboards) {
+            LeaderboardFragment()
+        } else {
+            MatchListFragment()
+        }
+
+        player.selectedGamemode = mode
+        val bundle = Bundle()
+        bundle.putSerializable("selectedPlayer", player)
+
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.stats_home_frame, fragment).commit()
     }
 
     private fun setupBottomNav(player: PlayerListModel) {
@@ -315,14 +248,16 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         stats_bottom_nav?.setOnNavigationItemSelectedListener {
             player.isLifetimeSelected = it.itemId == R.id.lifetime_stats
             viewModel.getPlayerStats(player)
+            (stats_home_tabs?.getChildAt(0) as ViewGroup).getChildAt(6).isEnabled = it.itemId != R.id.matches_menu
             if (it.itemId == R.id.matches_menu) {
                 tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player, it.itemId)
-                //stats_home_tabs?.visibility = View.GONE
-                //playerListToolbarWaterfall?.elevation = 0f
+
+                (stats_home_tabs?.getChildAt(0) as ViewGroup).getChildAt(6).alpha = 0.3f
             } else {
                 tabSelected(stats_home_tabs?.getTabAt(stats_home_tabs?.selectedTabPosition!!)?.text.toString(), player, it.itemId)
                 stats_home_tabs?.visibility = View.VISIBLE
-                //playerListToolbarWaterfall?.elevation = 15f
+
+                (stats_home_tabs?.getChildAt(0) as ViewGroup).getChildAt(6).alpha = 1f
             }
             true
         }
@@ -389,17 +324,28 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                         .title(text = "Change Season")
                         .show()
             }
-            R.id.settings -> {
-                startActivity<SettingsActivity>()
+            R.id.settings -> startActivity<SettingsActivity>()
+            R.id.compare_players -> {
+                val intent = Intent(this@StatsHome, PlayerListDialog::class.java)
+                intent.action = "pick"
+                startActivityForResult(intent, 1)
             }
         }
         return true
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                startActivity<ComparePlayersActivity>("firstPlayer" to ComparePlayerModel(player!!, playerModel!!), "secondPlayer" to data?.getSerializableExtra("selectedPlayer"), "gamemode" to player!!.selectedGamemode)
+            }
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         overridePendingTransition(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
-        // overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
     }
 
     fun setRefreshing(isRefreshing: Boolean) {

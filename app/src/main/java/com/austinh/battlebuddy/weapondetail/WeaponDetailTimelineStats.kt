@@ -204,7 +204,7 @@ class WeaponDetailTimelineStats : Fragment() {
 
     fun setupAdapter() {
         mAdapter = SlimAdapter.create().attachTo(timelineStatsRV).register<TopSection>(R.layout.weapon_timeline_top) { data, injector ->
-            Glide.with(this).load(FirebaseStorage.getInstance().getReferenceFromUrl(data.icon!!)).into(injector.findViewById(R.id.statsRankIcon))
+            Glide.with(this).load(FirebaseStorage.getInstance().getReferenceFromUrl(data.icon!!)).into(injector.findViewById(R.id.player1Icon))
             injector.text(R.id.statsPlayerName, data.title)
             injector.text(R.id.timelineSubtitle, data.subtitle)
             injector.text(R.id.timelineAmmo, data.ammo)

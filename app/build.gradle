@@ -18,8 +18,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
 //      {Major} 0 {Minor} 0 {Patch} {0-Build}
-        versionCode 1050100
-        versionName "1.5.1"
+        versionCode 1050200
+        versionName "1.5.2"
         multiDexEnabled true
     }
     signingConfigs {
@@ -195,6 +195,8 @@ dependencies {
     implementation 'com.google.ads.mediation:mopub:5.4.0.0'
 
     implementation "com.tonyodev.fetch2:fetch2:2.3.4"
+
+    implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
