@@ -252,14 +252,14 @@
                 android:background="@drawable/timeline_round"
                 android:backgroundTint="@color/md_grey_850"
                 android:clickable="true"
+                android:focusableInTouchMode="true"
                 android:foreground="?attr/selectableItemBackground"
                 android:orientation="vertical"
                 android:paddingBottom="16dp"
+                app:timeline_margin_start="43dp"
                 app:timeline_position="middle"
                 app:timeline_radio_outline_radius="23"
-                app:timeline_margin_start="43dp"
                 app:timeline_radio_radius="15"
-                android:focusableInTouchMode="true"
                 app:timeline_type="item">
 
                 <ImageView

@@ -106,7 +106,7 @@ class MainActivityKT : AppCompatActivity() {
             }
         }
 
-        checkConsent()
+        //checkConsent()
 
         setupDrawer()
 

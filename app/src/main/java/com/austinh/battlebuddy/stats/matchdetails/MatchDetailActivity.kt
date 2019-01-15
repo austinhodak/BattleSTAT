@@ -110,6 +110,8 @@ class MatchDetailActivity : AppCompatActivity() {
         //matchID = intent.getStringExtra("matchID")
         //regionID = intent.getStringExtra("regionID")
 
+        currentPlayerID = "account.${intent.getStringExtra("playerID") ?: ""}"
+
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
             if (it == null) {
                 matchID = intent.getStringExtra("matchID")
@@ -134,8 +136,6 @@ class MatchDetailActivity : AppCompatActivity() {
             viewModel.mMatchData.observe(this, matchDataObserver)
             viewModel.getMatchData(application, regionID!!, matchID!!, currentPlayerID)
         }
-
-        currentPlayerID = "account.${intent.getStringExtra("playerID") ?: ""}"
 
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)

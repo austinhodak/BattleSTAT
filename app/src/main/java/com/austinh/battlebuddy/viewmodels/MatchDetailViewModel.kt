@@ -95,10 +95,10 @@ class MatchDetailViewModel : ViewModel() {
                         }
 
                         if (item is Roster) {
-                            matchModel.rosterList.add(item as Roster)
-                            if (item.relationships.participants.data.find { it.id == matchModel.currentPlayerMatchID } != null) {
+                            matchModel.rosterList.add(item)
+                            /*if (item.relationships.participants.data.find { it.id == matchModel.currentPlayerMatchID } != null) {
                                 matchModel.currentPlayerRoster = item as Roster
-                            }
+                            }*/
                         }
 
                         result.add(item ?: continue)
@@ -108,6 +108,13 @@ class MatchDetailViewModel : ViewModel() {
                 Log.d("KLAXONREADER", "RESULT: ${result.size}")
                 timings.addSplit("Match Data Parsed, Starting Telem")
                 getTelemetryDataGZIP(mVolleyQueue, matchModel, URl)
+            }
+
+            for (roster in matchModel.rosterList) {
+                val find = roster.relationships.participants.data.find { it.id == matchModel.currentPlayerMatchID }
+                if (find != null) {
+                    matchModel.currentPlayerRoster = roster
+                }
             }
 
             matchModel.randomizeTeamColors()
@@ -324,7 +331,7 @@ class MatchDetailViewModel : ViewModel() {
                 }
             }
 
-            matchModel.killFeedList.sortedWith(compareBy { it._D })
+            matchModel.killFeedList.sortBy { it._D }
 
             timings.addSplit("Telem Done Parsing")
 

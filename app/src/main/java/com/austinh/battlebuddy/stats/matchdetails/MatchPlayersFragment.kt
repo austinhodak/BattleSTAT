@@ -51,7 +51,7 @@ class MatchPlayersFragment : Fragment() {
         sortedList = match.participantList.sortedWith(compareBy { it.attributes.stats.winPlace })
 
         match_players_rv.layoutManager = LinearLayoutManager(mActivity)
-        mAdapter = SlimAdapter.create().attachTo(match_players_rv).register(R.layout.match_players_listitem) { data: MatchParticipant, injector ->
+        mAdapter = SlimAdapter.create().attachTo(match_players_rv).register(R.layout.match_players_listitem) { data: MatchDetailViewModel.Participant, injector ->
             when (data.attributes.stats.deathType) {
                 "alive" -> injector.text(R.id.match_player_rating, "Alive")
                 "byplayer" -> injector.text(R.id.match_player_rating, "Killed By Player")
@@ -88,7 +88,7 @@ class MatchPlayersFragment : Fragment() {
         }.updateData(sortedList)
     }
 
-    private fun getTotalDistanceTravelled(data: MatchParticipant): String {
+    private fun getTotalDistanceTravelled(data: MatchDetailViewModel.Participant): String {
         val distance: String
         var distanceLong: Long = 0
 

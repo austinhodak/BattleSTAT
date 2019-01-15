@@ -48,7 +48,7 @@ class MatchTeamsFragment : Fragment() {
         sortedList = match.rosterList.sortedWith(compareBy { it.attributes.stats.rank }).toMutableList()
 
         stats_teams_rv.layoutManager = LinearLayoutManager(mActivity)
-        mAdapter = SlimAdapter.create().register(R.layout.match_roster_card) { data: MatchRoster, injector ->
+        mAdapter = SlimAdapter.create().register(R.layout.match_roster_card) { data: MatchDetailViewModel.Roster, injector ->
 
             injector.text(R.id.roster_card_place, "#${data.attributes.stats.rank}/${sortedList.size}")
 

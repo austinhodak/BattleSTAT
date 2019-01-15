@@ -198,13 +198,14 @@ class MatchPlayerStatsFragment : Fragment() {
 
         var damageList: MutableList<LogPlayerTakeDamage>
 
-       // Log.d("PLAYERID", "$playerID - ${match.currentPlayerID}")
+        Log.d("PLAYERID", "$playerID - ${match.currentPlayerID}")
 
         var id = match.currentPlayerID
         if (playerID != null) id = match.participantHash[playerID!!]!!.attributes.stats.playerId
 
         try {
             damageList = it.logPlayerTakeDamage.filter { it.attacker.accountId == id || it.victim.accountId == id && it.attacker.name.isNotEmpty() && it.victim.name.isNotEmpty() }.toMutableList()
+            damageList = damageList.filterNot { it.attacker.accountId == it.victim.accountId }.toMutableList()
             damageList = damageList.sortedWith(compareBy { it._D }).toMutableList()
 
             playerDamageRV.layoutManager = LinearLayoutManager(requireActivity())
