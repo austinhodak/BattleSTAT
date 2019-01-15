@@ -149,7 +149,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/statsRankIcon"
+                android:id="@+id/player1Icon"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginStart="12dp"
@@ -166,9 +166,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/statsRankIcon"
-                app:layout_constraintStart_toEndOf="@+id/statsRankIcon"
-                app:layout_constraintTop_toTopOf="@+id/statsRankIcon">
+                app:layout_constraintBottom_toBottomOf="@+id/player1Icon"
+                app:layout_constraintStart_toEndOf="@+id/player1Icon"
+                app:layout_constraintTop_toTopOf="@+id/player1Icon">
 
                 <TextView
                     android:id="@+id/statsPlayerName"
@@ -178,7 +178,7 @@
                     android:textColor="#FFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/statsRankIcon"
+                    app:layout_constraintStart_toEndOf="@+id/player1Icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextSwitcher
@@ -189,7 +189,7 @@
                     android:text="POINTS: 2,081"
                     android:textColor="#FFF"
                     android:textSize="13sp"
-                    app:layout_constraintStart_toEndOf="@+id/statsRankIcon"
+                    app:layout_constraintStart_toEndOf="@+id/player1Icon"
                     app:layout_constraintTop_toBottomOf="@+id/statsPlayerName" />
 
             </LinearLayout>
@@ -203,7 +203,7 @@
                 android:gravity="center"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                app:layout_constraintTop_toBottomOf="@+id/statsRankIcon">
+                app:layout_constraintTop_toBottomOf="@+id/player1Icon">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -1196,7 +1196,6 @@
             android:layout_height="72dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
             android:background="@drawable/timeline_round"
             android:backgroundTint="@color/timelineNavy"
             app:timeline_position="last"

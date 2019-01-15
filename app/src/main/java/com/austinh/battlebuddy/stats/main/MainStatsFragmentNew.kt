@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.android.synthetic.main.player_stats_main_new.*
+import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -58,24 +59,33 @@ class MainStatsFragmentNew : Fragment() {
 
     private var mSharedPreferences: SharedPreferences? = null
 
+    private var playerModel: PlayerModel? = null
+    private var isOverallStats = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mDatabase = FirebaseDatabase.getInstance().reference
         mFunctions = FirebaseFunctions.getInstance()
         mSharedPreferences = activity!!.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
 
-        val player: PlayerListModel = arguments!!.getSerializable("selectedPlayer") as PlayerListModel
+        val player = arguments!!.getSerializable("selectedPlayer") as PlayerListModel
+        isOverallStats = player.isOverallStatsSelected
 
-        timeline_top_card.backgroundTintList = if (player.isLifetimeSelected) {
-            ColorStateList.valueOf(resources.getColor(R.color.md_blue_grey_900))
-        } else {
-            ColorStateList.valueOf(resources.getColor(R.color.md_grey_850))
+        timeline_top_card.backgroundTintList = when {
+            player.isLifetimeSelected -> ColorStateList.valueOf(resources.getColor(R.color.md_blue_grey_900))
+            isOverallStats -> ColorStateList.valueOf(resources.getColor(R.color.md_blue_grey_900))
+            else -> ColorStateList.valueOf(resources.getColor(R.color.md_grey_850))
         }
 
         viewModel.playerData.observe(this, Observer<PlayerModel> {
+            playerModel = it
             handler.removeCallbacksAndMessages(null)
-            updateStats(it.getStatsByGamemode(player.selectedGamemode)!!)
-            statsKills.text = it.getStatsByGamemode(player.selectedGamemode)?.kills.toString()
+            if (player.isOverallStatsSelected) {
+                updateStats(it.getOverallStats())
+            } else {
+                updateStats(it.getStatsByGamemode(player.selectedGamemode)!!)
+            }
+
 
             if (it.lastUpdated != null && it.lastUpdated != 0.toLong()) {
                 val relTime = DateUtils
@@ -151,21 +161,39 @@ class MainStatsFragmentNew : Fragment() {
     private fun updateStats(stats: PlayerStats) {
         statsKills.text = stats.kills.toString()
 
-        statsRankIcon?.setImageResource(getRankIcon(stats.getRank()))
-        //statsPlayerName?.text = Ranks.getRankTitle(stats.rankPoints)
-        if (stats.getRank() != Rank.UNKNOWN)
-            statsPlayerName?.text = stats.getRank().title.toUpperCase() + " " + stats.getRankLevel()
-        else
-            statsPlayerName?.text = "UNRANKED"
+        if (isOverallStats) {
+            player1Icon?.setImageResource(getRankIcon(playerModel!!.getHighestRank()))
 
-        statsRankPoints?.setCurrentText("POINTS: ${formatter.format(Math.floor(stats.rankPoints).toInt())}")
+            if (playerModel!!.getHighestRank() != Rank.UNKNOWN)
+                statsPlayerName?.text = playerModel!!.getHighestRank().title.toUpperCase() + " " + playerModel!!.getHighestRankLevel()
+            else
+                statsPlayerName?.text = "UNRANKED"
 
+            statsRankPoints?.setCurrentText("POINTS: ${formatter.format(Math.floor(playerModel!!.getHighestRankPoints()).toInt())}")
+        } else {
+            player1Icon?.setImageResource(getRankIcon(stats.getRank()))
+
+            if (stats.getRank() != Rank.UNKNOWN)
+                statsPlayerName?.text = stats.getRank().title.toUpperCase() + " " + stats.getRankLevel()
+            else
+                statsPlayerName?.text = "UNRANKED"
+
+            statsRankPoints?.setCurrentText("POINTS: ${formatter.format(Math.floor(stats.rankPoints).toInt())}")
+        }
 
         val runnableCode = object : Runnable {
             override fun run() {
+                if (isOverallStats)
+                statsRankPoints?.setText("BEST POINTS: ${formatter.format(Math.floor(playerModel!!.getHighestBestRankPoints()).toInt())}")
+                else
                 statsRankPoints?.setText("BEST POINTS: ${formatter.format(Math.floor(stats.bestRankPoint).toInt())}")
 
-                val secondRun = Runnable { statsRankPoints?.setText("POINTS: ${formatter.format(Math.floor(stats.rankPoints).toInt())}") }
+                val secondRun = Runnable {
+                    if (isOverallStats)
+                    statsRankPoints?.setText("POINTS: ${formatter.format(Math.floor(playerModel!!.getHighestRankPoints()).toInt())}")
+                    else
+                    statsRankPoints?.setText("POINTS: ${formatter.format(Math.floor(stats.rankPoints).toInt())}")
+                }
 
                 handler.postDelayed(secondRun, 5000)
 
@@ -187,11 +215,13 @@ class MainStatsFragmentNew : Fragment() {
         if (stats.damageDealt != 0.0 && stats.roundsPlayed != 0) statsAvgDamage?.text = String.format("%.0f", Math.ceil(stats.damageDealt / stats.roundsPlayed.toDouble())) else  statsAvgDamage?.text = "0"
         if (stats.headshotKills != 0 && stats.kills != 0) statsHeadshotPct?.text = "${String.format("%.2f", (stats.headshotKills.toDouble() / stats.kills.toDouble()) * 100)}%" else statsHeadshotPct?.text = "0%"
 
-        statsRideDist?.text = "${String.format("%.0f", Math.ceil(stats.rideDistance))}m"
-        statsSwimDist?.text = "${String.format("%.0f", Math.ceil(stats.swimDistance))}m"
-        statsWalkDist?.text = "${String.format("%.0f", Math.ceil(stats.walkDistance))}m"
+        val unit = Unit.valueOf(defaultSharedPreferences.getString("distance_measure", "METRIC")!!)
 
-        statsLongestKill?.text = "${String.format("%.0f", Math.ceil(stats.longestKill))}m"
+        statsRideDist?.text = stats.getDistance(PlayerStats.Distance.RIDING, unit)
+        statsSwimDist?.text = stats.getDistance(PlayerStats.Distance.SWIMMING, unit)
+        statsWalkDist?.text = stats.getDistance(PlayerStats.Distance.WALKING, unit)
+
+        statsLongestKill?.text = stats.getDistance(PlayerStats.Distance.LONGEST_KILL, unit)
         statsRoadKills?.text = stats.roadKills.toString()
         statsTeamKills?.text = stats.teamKills.toString()
 
@@ -205,4 +235,9 @@ class MainStatsFragmentNew : Fragment() {
         statsTotalTime?.text = stats.getTotalTimeSurvived()
         statsLongestTime?.text = stats.getLongTimeSurvived()
     }
+}
+
+enum class Unit {
+    METRIC,
+    IMPERIAL
 }

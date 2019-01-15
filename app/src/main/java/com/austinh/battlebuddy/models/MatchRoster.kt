@@ -11,7 +11,7 @@ data class MatchRoster (
 ) : Serializable
 
 data class RosterAttributes (
-        val won: Boolean,
+        val won: String,
         val shardId: String,
         val stats: AttributesStats
 ) : Serializable
@@ -31,10 +31,10 @@ data class Participant (
 ) : Serializable
 
 data class Team (
-        val data: String
+        val data: String? = ""
 ) : Serializable
 
 data class AttributesStats (
         val rank: Int,
-        val teamId: Int
+        val teamId: Long
 ) : Serializable

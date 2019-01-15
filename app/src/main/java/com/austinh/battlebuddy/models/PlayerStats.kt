@@ -1,5 +1,6 @@
 package com.austinh.battlebuddy.models
 
+import com.austinh.battlebuddy.stats.main.Unit
 import com.austinh.battlebuddy.utils.Rank
 import com.google.firebase.database.IgnoreExtraProperties
 import java.io.Serializable
@@ -8,45 +9,50 @@ import kotlin.math.roundToLong
 
 @IgnoreExtraProperties
 data class PlayerStats(
-        val assists: Int = 0,
-        val boosts: Int = 0,
-        val dBNOs: Int = 0,
-        val dailyKills: Int = 0,
-        val damageDealt: Double = 0.0,
-        val days: Int = 0,
-        val headshotKills: Int = 0,
-        val heals: Int = 0,
-        val killPoints: Double = 0.0,
-        val kills: Int = 0,
-        val longestKill: Double = 0.0,
-        val longestTimeSurvived: Double = 0.0,
-        val losses: Int = 0,
-        val maxKillStreaks: Int = 0,
-        val revives: Int = 0,
-        val rideDistance: Double = 0.0,
-        val roadKills: Int = 0,
-        val roundMostKills: Int = 0,
-        val roundsPlayed: Int = 0,
-        val suicides: Int = 0,
-        val teamKills: Int = 0,
-        val timeSurvived: Double = 0.0,
-        val top10s: Int = 0,
-        val vehicleDestroys: Int = 0,
-        val walkDistance: Double = 0.0,
-        val weaponsAcquired: Int = 0,
-        val weeklyKills: Int = 0,
-        val winPoints: Double = 0.0,
-        val wins: Int = 0,
-        val rankPoints: Double = 0.0,
-        val bestRankPoint: Double = 0.0,
-        val dailyWins: Int = 0,
-        val swimDistance: Double = 0.0,
-        val weeklyWins: Int = 0,
-        val rankPointsTitle: String = ""
+        var assists: Int = 0,
+        var boosts: Int = 0,
+        var dBNOs: Int = 0,
+        var dailyKills: Int = 0,
+        var damageDealt: Double = 0.0,
+        var days: Int = 0,
+        var headshotKills: Int = 0,
+        var heals: Int = 0,
+        var killPoints: Double = 0.0,
+        var kills: Int = 0,
+        var longestKill: Double = 0.0,
+        var longestTimeSurvived: Double = 0.0,
+        var losses: Int = 0,
+        var maxKillStreaks: Int = 0,
+        var revives: Int = 0,
+        var rideDistance: Double = 0.0,
+        var roadKills: Int = 0,
+        var roundMostKills: Int = 0,
+        var roundsPlayed: Int = 0,
+        var suicides: Int = 0,
+        var teamKills: Int = 0,
+        var timeSurvived: Double = 0.0,
+        var top10s: Int = 0,
+        var vehicleDestroys: Int = 0,
+        var walkDistance: Double = 0.0,
+        var weaponsAcquired: Int = 0,
+        var weeklyKills: Int = 0,
+        var winPoints: Double = 0.0,
+        var wins: Int = 0,
+        var rankPoints: Double = 0.0,
+        var bestRankPoint: Double = 0.0,
+        var dailyWins: Int = 0,
+        var swimDistance: Double = 0.0,
+        var weeklyWins: Int = 0,
+        var rankPointsTitle: String = "0-0"
 ) : Serializable {
-    fun getRank() : Rank {
-        if (rankPointsTitle.isEmpty()) return Rank.UNKNOWN
-        val rankNum = rankPointsTitle.split("-")[0]
+    fun getRank(string: String? = null) : Rank {
+        val rankNum: String = if (string == null) {
+            if (rankPointsTitle.isEmpty()) return Rank.UNKNOWN
+            rankPointsTitle.split("-")[0]
+        } else {
+            string.split("-")[0]
+        }
+
         return when(rankNum) {
             "0" -> Rank.UNKNOWN
             "1" -> Rank.BEGINNER
@@ -60,11 +66,16 @@ data class PlayerStats(
         }
     }
 
-    fun getRankLevel(roman: Boolean = true) : String {
-        if (rankPointsTitle.isEmpty() || rankPointsTitle == "7-0") {
-            return ""
+    fun getRankLevel(roman: Boolean = true, rank: String? = null) : String {
+        val rankLevel: Int = if (rank == null) {
+            if (rankPointsTitle.isEmpty() || rankPointsTitle == "7-0") {
+                return ""
+            }
+            rankPointsTitle.split("-").toTypedArray()[1].toInt()
+        } else {
+            rank.split("-").toTypedArray()[1].toInt()
         }
-        val rankLevel = rankPointsTitle.split("-").toTypedArray()[1].toInt()
+
         if (roman) {
             return when (rankLevel) {
                 0 -> "0"
@@ -105,5 +116,29 @@ data class PlayerStats(
         val minutes = (time % 3600) / 60
         val seconds = time % 60
         return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    fun getDistance(which: Distance, unit: Unit = Unit.METRIC): String {
+        val value = when (which) {
+            Distance.RIDING -> rideDistance
+            Distance.SWIMMING -> swimDistance
+            Distance.WALKING -> walkDistance
+            Distance.LONGEST_KILL -> longestKill
+        }
+
+        return if (unit == Unit.METRIC) {
+            if (value < 10000) "${String.format("%.0f", Math.ceil(value))}m"
+            else "${String.format("%.2f", value / 1000)}km"
+        } else {
+            if (value < 10000) "${String.format("%.0f", Math.ceil(value * 1.094))}yd"
+            else "${String.format("%.2f", value / 1609.344)}mi"
+        }
+    }
+
+    enum class Distance {
+        RIDING,
+        SWIMMING,
+        WALKING,
+        LONGEST_KILL
     }
 }

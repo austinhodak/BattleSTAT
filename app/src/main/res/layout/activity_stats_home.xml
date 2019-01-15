@@ -98,11 +98,18 @@
                 android:layout_height="wrap_content"
                 android:text="Squad FPP" />
 
+            <com.google.android.material.tabs.TabItem
+                style="@style/Widget.MaterialComponents.TabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Overall" />
+
         </com.google.android.material.tabs.TabLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -122,6 +129,7 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_gravity="top"

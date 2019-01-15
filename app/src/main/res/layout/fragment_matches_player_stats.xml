@@ -65,7 +65,7 @@
                     android:textColor="#FFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/statsRankIcon"
+                    app:layout_constraintStart_toEndOf="@+id/player1Icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </LinearLayout>
@@ -1036,20 +1036,20 @@
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/top_extras2">
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
-                        android:background="@drawable/material_drawer_shadow_bottom" />
+                        android:background="@color/md_grey_850"
+                        android:foreground="@drawable/material_drawer_shadow_bottom" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/playerDamageRV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:background="@color/md_grey_850" />
+                        android:background="@color/md_grey_850"
+                        android:paddingBottom="4dp" />
 
                 </LinearLayout>
 

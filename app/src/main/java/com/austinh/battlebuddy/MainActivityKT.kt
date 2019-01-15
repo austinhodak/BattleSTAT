@@ -1,5 +1,6 @@
 package com.austinh.battlebuddy
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -36,6 +37,7 @@ import com.austinh.battlebuddy.rss.HomeUpdatesFragment
 import com.austinh.battlebuddy.settings.SettingsActivity
 import com.austinh.battlebuddy.snacky.Snacky
 import com.austinh.battlebuddy.stats.PlayerListDialog
+import com.austinh.battlebuddy.stats.compare.ComparePlayerModel
 import com.austinh.battlebuddy.stats.main.StatsHome
 import com.austinh.battlebuddy.stats.matchdetails.MatchDetailActivity
 import com.austinh.battlebuddy.utils.*
@@ -104,7 +106,7 @@ class MainActivityKT : AppCompatActivity() {
             }
         }
 
-        checkConsent()
+        //checkConsent()
 
         setupDrawer()
 
@@ -399,13 +401,17 @@ class MainActivityKT : AppCompatActivity() {
             val rankIcon = injector.findViewById<ImageView>(R.id.game_version_icon)
             val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
-            if (mSharedPreferences?.contains("playerRankNew-${player.playerID}") == true) {
+            if (mSharedPreferences?.contains("playerRankTitle-${player.playerID}") == true) {
+                val rank = Ranks.getRankBy(mSharedPreferences?.getString("playerRankTitle-${player.playerID}", "0-0")!!)
+
                 Glide.with(applicationContext)
-                        .load(Ranks.getRankIcon(Rank.valueOf(mSharedPreferences?.getString("playerRankNew-${player.playerID}", "UNKNOWN")!!.toUpperCase())))
-                        //.transition(DrawableTransitionOptions.withCrossFade(factory))
+                        .load(Ranks.getRankIcon(rank))
+                        //.load(Ranks.getRankIcon(Rank.valueOf(mSharedPreferences?.getString("playerRankTitle-${player.playerID}", "UNKNOWN")!!.toUpperCase())))
+                        .transition(DrawableTransitionOptions.withCrossFade(factory))
                         .into(rankIcon)
 
-                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(Rank.valueOf(mSharedPreferences?.getString("playerRankNew-${player.playerID}", "UNKNOWN")!!.toUpperCase()))))
+                cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(rank)))
+                injector.text(R.id.playerListSubtitle, rank.title + " " + Ranks.getRankLevel(rank = mSharedPreferences?.getString("playerRankTitle-${player.playerID}", "0-0")!!))
             } else {
                 injector.invisible(R.id.game_version_icon)
                 cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(0.0)))
@@ -438,31 +444,20 @@ class MainActivityKT : AppCompatActivity() {
                     injector.gone(R.id.player_pg)
 
                     val seasonStats = p0.getValue(SeasonStatsAll::class.java)!!
-                    var pointsList: MutableList<PlayerStats> = ArrayList()
-
-                    pointsList.add(seasonStats.solo)
-                    pointsList.add(seasonStats.`solo-fpp`)
-                    pointsList.add(seasonStats.duo)
-                    pointsList.add(seasonStats.`duo-fpp`)
-                    pointsList.add(seasonStats.squad)
-                    pointsList.add(seasonStats.`squad-fpp`)
-
-                    pointsList = pointsList.sortedWith(compareByDescending {
-                        it.getRank().order
-                    }).toMutableList()
 
                     injector.visible(R.id.game_version_icon)
 
                     Glide.with(applicationContext)
-                            .load(Ranks.getRankIcon(pointsList[0].getRank()))
+                            .load(Ranks.getRankIcon(seasonStats.getHighestRank()))
                             .transition(DrawableTransitionOptions.withCrossFade(factory))
                             .into(rankIcon)
 
-                    cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(pointsList[0].getRank())))
+                    cardView.setCardBackgroundColor(resources.getColor(Ranks.getRankColor(seasonStats.getHighestRank())))
 
-                    injector.text(R.id.playerListSubtitle, pointsList[0].getRank().title + " " + pointsList[0].getRankLevel())
+                    injector.text(R.id.playerListSubtitle, seasonStats.getHighestRank().title + " " + seasonStats.getHighestRankLevel())
 
-                    mSharedPreferences?.edit()?.putString("playerRankNew-${player.playerID}", pointsList[0].getRank().name)?.apply()
+                    mSharedPreferences?.edit()?.putString("playerRankTitle-${player.playerID}", seasonStats.getHighestRankTitle())?.apply()
+
                 }
             })
         }
@@ -627,6 +622,8 @@ class MainActivityKT : AppCompatActivity() {
                 }
 
                 mRightAdapter?.notifyDataSetChanged()
+
+                if (children.isNotEmpty())
                 mRightDrawer?.drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END)
             }
         })

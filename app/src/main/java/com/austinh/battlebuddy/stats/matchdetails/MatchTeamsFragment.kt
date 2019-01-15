@@ -41,19 +41,19 @@ class MatchTeamsFragment : Fragment() {
         })
     }
 
-    private lateinit var sortedList: MutableList<MatchRoster>
+    private lateinit var sortedList: MutableList<MatchDetailViewModel.Roster>
 
     private fun setupAdapter(match: MatchModel) {
         if (this::sortedList.isInitialized) sortedList.clear()
         sortedList = match.rosterList.sortedWith(compareBy { it.attributes.stats.rank }).toMutableList()
 
         stats_teams_rv.layoutManager = LinearLayoutManager(mActivity)
-        mAdapter = SlimAdapter.create().register(R.layout.match_roster_card) { data: MatchRoster, injector ->
+        mAdapter = SlimAdapter.create().register(R.layout.match_roster_card) { data: MatchDetailViewModel.Roster, injector ->
 
             injector.text(R.id.roster_card_place, "#${data.attributes.stats.rank}/${sortedList.size}")
 
             //TEAM PARTICIPANT LIST
-            val participants = ArrayList<MatchParticipant>()
+            val participants = ArrayList<MatchDetailViewModel.Participant>()
             for (i in data.relationships.participants.data) {
                 participants.add(match.participantHash[i.id]!!)
             }
@@ -61,7 +61,7 @@ class MatchTeamsFragment : Fragment() {
             val participantRV = injector.findViewById<RecyclerView>(R.id.roster_card_list)
             participantRV.layoutManager = LinearLayoutManager(mActivity)
 
-            SlimAdapter.create().register(R.layout.match_roster_player) { participant: MatchParticipant, participantInjector ->
+            SlimAdapter.create().register(R.layout.match_roster_player) { participant: MatchDetailViewModel.Participant, participantInjector ->
                 participantInjector.text(R.id.roster_player_name, participant.attributes.stats.name)
 
                 if (participants.indexOf(participant) == (participants.size - 1)) {

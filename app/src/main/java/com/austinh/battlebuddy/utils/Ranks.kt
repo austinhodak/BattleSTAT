@@ -82,4 +82,47 @@ object Ranks {
             else -> "RANK ERROR"
         }
     }
+
+    fun getRankBy(string: String) : Rank {
+        val rankNum = string.split("-")[0]
+
+        return when(rankNum) {
+            "0" -> Rank.UNKNOWN
+            "1" -> Rank.BEGINNER
+            "2" -> Rank.NOVICE
+            "3" -> Rank.EXPERIENCED
+            "4" -> Rank.SKILLED
+            "5" -> Rank.SPECIALIST
+            "6" -> Rank.EXPERT
+            "7" -> Rank.SURVIVOR
+            else -> Rank.UNKNOWN
+        }
+    }
+
+    fun getRankLevel(roman: Boolean = true, rank: String) : String {
+        if (rank.isEmpty()) return ""
+        val rankLevel = rank.split("-").toTypedArray()[1].toInt()
+
+        if (roman) {
+            return when (rankLevel) {
+                0 -> "0"
+                1 -> "I"
+                2 -> "II"
+                3 -> "III"
+                4 -> "IV"
+                5 -> "V"
+                else -> "0"
+            }
+        } else {
+            return when (rankLevel) {
+                0 -> "Level 0"
+                1 -> "Level 1"
+                2 -> "Level 2"
+                3 -> "Level 3"
+                4 -> "Level 4"
+                5 -> "Level 5"
+                else -> "Level 0"
+            }
+        }
+    }
 }
