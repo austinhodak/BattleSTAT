@@ -54,7 +54,6 @@ import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.holder.StringHolder
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import kotlinx.android.synthetic.main.activity_match_detail.*
-import nouri.`in`.goodprefslib.GoodPrefs
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import org.json.JSONException
@@ -145,7 +144,8 @@ class MatchDetailActivity : AppCompatActivity() {
 
         mLoadingSnack?.show()
 
-        GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) + 1))
+        //TODO UPDATE
+        //GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) + 1))
 
         mInterstitialAd.adUnitId = "ca-app-pub-2237535196399997/3817346965"
         if (!Premium.isAdFreeUser()) {
@@ -183,18 +183,6 @@ class MatchDetailActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun processIntent() {
-        match = intent.getSerializableExtra("match") as MatchTop
-        if (match?.isFavorite == true) {
-            match_detail_toolbar?.menu?.findItem(R.id.match_favorite)?.setIcon(R.drawable.ic_favorite_24dp)
-        } else {
-            match_detail_toolbar?.menu?.findItem(R.id.match_favorite)?.setIcon(R.drawable.ic_favorite_border_24dp)
-        }
-
-        Log.d("FAVORITE", "PROCESSED")
-
     }
 
     private fun matchDataLoaded(matchModel: MatchModel) {
@@ -241,22 +229,6 @@ class MatchDetailActivity : AppCompatActivity() {
             headerDivider = false
             stickyFooterShadow = false
             selectedItem = -1
-            /*primaryItem("Map") {
-                icon = R.drawable.map_96
-                onClick { _, _, _ ->
-                    isNavigatedDown = false
-                    val matchesPlayerStatsFragment = MatchMapFragment()
-                    supportFragmentManager.beginTransaction().replace(R.id.match_frame, matchesPlayerStatsFragment)
-                            .commit()
-
-                    updateToolbarElevation(15f)
-                    updateToolbarFlags(false)
-
-                    toolbar_title.text = "Map"
-                    false
-                }
-            }
-            divider()*/
             primaryItem("Your Match Stats") {
                 icon = R.drawable.icons8_person_male
                 identifier = 1
@@ -432,13 +404,13 @@ class MatchDetailActivity : AppCompatActivity() {
                 mDrawer.closeDrawer()
                 return
             } else if (!Premium.isAdFreeUser()) {
-                Log.d("LAUNCH", GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0).toString())
-                if (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) >= 3) {
-                    GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", 0)
+                //Log.d("LAUNCH", GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0).toString())
+                //if (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) >= 3) {
+                //    GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", 0)
 
-                    if (mInterstitialAd.isLoaded)
-                    mInterstitialAd.show()
-                }
+                //    if (mInterstitialAd.isLoaded)
+                //    mInterstitialAd.show()
+                //}
             }
             super.onBackPressed()
         }

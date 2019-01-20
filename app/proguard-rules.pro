@@ -49,3 +49,5 @@
 -keep class com.firebase.ui.auth.** { * ; }
 
 -keepnames class kotlinx.** { *; }
+
+-keep public class kotlin.reflect.jvm.internal.impl.** { public *; }

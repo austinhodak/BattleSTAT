@@ -366,10 +366,10 @@ class MainActivityKT : AppCompatActivity() {
                         true
                     }
                 }
-            }/*
-            secondaryItem("Test 2D Replay") {
+            }
+            /*secondaryItem("Test 2D Replay") {
                 onClick { _ ->
-                    startActivity<MatchDetailActivity>("matchID" to "11cc5381-ff15-4bb8-bab9-55621b1389b5", "regionID" to "xbox")
+                    startActivity<MatchDetailActivity>("matchID" to "f8d77d28-6fd1-4a62-a04f-a622291b540d", "regionID" to "xbox")
                     false
                 }
             }*/

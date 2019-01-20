@@ -17,7 +17,6 @@
         android:visible="true" />
 
     <item
-        android:visible="false"
         android:id="@+id/stats_leaderboards"
         android:icon="@drawable/leaderboard_icon"
         android:title="Leaderboards" />

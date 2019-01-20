@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.austinh.battlebuddy.R
 import com.austinh.battlebuddy.models.Gamemode
@@ -25,9 +27,12 @@ import com.austinh.battlebuddy.snacky.Snacky
 import com.austinh.battlebuddy.stats.PlayerListDialog
 import com.austinh.battlebuddy.stats.compare.ComparePlayerModel
 import com.austinh.battlebuddy.stats.compare.ComparePlayersActivity
+import com.austinh.battlebuddy.stats.compare.StatItem
 import com.austinh.battlebuddy.utils.*
 import com.austinh.battlebuddy.viewmodels.PlayerStatsViewModel
 import com.austinh.battlebuddy.viewmodels.models.PlayerModel
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayout
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
@@ -324,7 +329,21 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                         .title(text = "Change Season")
                         .show()
             }
-            R.id.settings -> startActivity<SettingsActivity>()
+            R.id.settings -> {
+                startActivity<SettingsActivity>()
+                /*val dialog = MaterialDialog(this)
+                        .customView(R.layout.dialog_quick_stats, noVerticalPadding = true)
+
+                val view = dialog.getCustomView()
+
+                val flexBox = view!!.findViewById<FlexboxLayout>(R.id.statsBox)
+                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Wins", statValue = "14"))
+                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Top 10s", statValue = "26"))
+                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Kills", statValue = "800"))
+                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Headshots", statValue = "254"))
+                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "K/D", statValue = "5.30"))
+                dialog.show()*/
+            }
             R.id.compare_players -> {
                 val intent = Intent(this@StatsHome, PlayerListDialog::class.java)
                 intent.action = "pick"

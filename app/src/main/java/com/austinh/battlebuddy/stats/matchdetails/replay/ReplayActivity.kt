@@ -195,6 +195,11 @@ class ReplayActivity : AppCompatActivity() {
     private fun updateMap() {
         replaySettings.elapsedSeconds = currentProgress.toLong()
         replay_map.updateMap(replaySettings)
+
+        val gameState = match.gameStates.findLast { it.gameState.elapsedTime <= currentProgress.toLong() }
+
+        if (gameState != null)
+        replayAliveTV?.text = "${gameState!!.gameState.numAlivePlayers} Alive • ${gameState!!.gameState.numAliveTeams} Teams"
     }
 
     private fun setupMap() {

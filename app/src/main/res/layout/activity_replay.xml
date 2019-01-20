@@ -12,13 +12,14 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+
+        android:background="@color/md_grey_900"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/replay_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_grey_900"
             android:visibility="visible"
             app:title="Match Details"
             app:titleTextColor="@color/md_light_primary_text">
@@ -44,6 +45,15 @@
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/replayAliveTV"
+            android:textColor="@color/md_white_1000"
+            android:layout_margin="8dp"
+            android:paddingLeft="8dp"
+            android:text="99 Alive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

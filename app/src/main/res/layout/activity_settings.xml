@@ -8,9 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/playerListToolbarWaterfall"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:final_elevation="6dp"
-        app:scroll_final_elevation="6">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

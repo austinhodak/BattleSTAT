@@ -73,7 +73,7 @@
         android:textSize="12sp"
         android:textStyle="bold" />
 
-    <com.jaredrummler.materialspinner.MaterialSpinner
+    <!--<com.jaredrummler.materialspinner.MaterialSpinner
         android:id="@+id/region_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
         android:layout_marginRight="16dp"
         app:ms_arrow_tint="#FFF"
         app:ms_background_color="@color/timelineBG"
-        app:ms_text_color="#FFF" />
+        app:ms_text_color="#FFF" />-->
 
     <TextView
         android:id="@+id/textView6"

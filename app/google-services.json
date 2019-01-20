@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "657603154051-gr459hl7s3ojpqnmn8d82c4k5d14b8va.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.austinh.battlebuddy",
+            "certificate_hash": "3b5c1745a36b063138d552cf3dd14a9049cc2cdc"
+          }
+        },
+        {
           "client_id": "657603154051-rhbvvlare14fcfgi246p3u2fpeb58r0h.apps.googleusercontent.com",
           "client_type": 3
         }

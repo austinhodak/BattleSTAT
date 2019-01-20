@@ -185,7 +185,8 @@
     </style>
 
     <style name="WeaponChipText" parent="TextAppearance.MaterialComponents.Chip">
-        <item name="android:fontFamily">@font/work_sans_semibold</item>
+        <item name="android:fontFamily">@font/roboto_condensed_bold</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
     <style name="TabText" parent="TextAppearance.MaterialComponents.Chip">

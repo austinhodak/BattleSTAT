@@ -1,6 +1,7 @@
 package com.austinh.battlebuddy.stats
 
 import android.app.Activity
+import android.app.job.JobScheduler
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -400,6 +401,8 @@ class PlayerListDialog : AppCompatActivity() {
             Premium.Level.LEVEL_2 -> playerListLimitTV.text = "LIMIT OF 15 PLAYERS  \uD83C\uDF57"
             else -> playerListLimitTV.text = "UNLIMITED PLAYERS 4 U!  \uD83C\uDF57"
         }
+
+        var jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
     }
 
     private fun addExistingPlayerToUser(playerID: String, platform: Platform, playerName: String, regionID: String? = null) {

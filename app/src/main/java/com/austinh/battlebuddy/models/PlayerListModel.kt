@@ -28,6 +28,12 @@ data class PlayerListModel(
         var isLifetimeSelected: Boolean = false,
         var isOverallStatsSelected: Boolean = false
 ) : Serializable {
+
+    /**
+     * Gets the region for the database
+     * @returns String for region
+     */
+
     fun getDatabaseSearchURL() : String {
         if (defaultConsoleRegion.isNullOrEmpty()) defaultConsoleRegion = "na"
 

@@ -8,6 +8,7 @@ data class LogGamestate (
         val numAliveTeams: Int,
         val numJoinPlayers: Int,
         val numStartPlayers: Int,
+        val numAlivePlayers: Int,
         val safetyZonePosition: LogLocation,
         val safetyZoneRadius: Double,
         val poisonGasWarningPosition: LogLocation,

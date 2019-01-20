@@ -54,7 +54,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.instabug.bug.BugReporting
 import com.instabug.library.Instabug
-import com.marcoscg.ratedialog.RateDialog
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.materialdrawer.AccountHeader
@@ -128,8 +127,6 @@ class MainActivity : AppCompatActivity() {
 
         setupDrawer()
         //setupNewDrawer()
-
-        RateDialog.with(this, 1, 5)
 
         updatePremiumStuff()
 

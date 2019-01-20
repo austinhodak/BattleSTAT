@@ -18,11 +18,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.instabug.library.Instabug
 import com.instabug.library.invocation.InstabugInvocationEvent
 import com.instabug.library.ui.onboarding.WelcomeMessage
-import com.mopub.common.MoPub
-import com.mopub.common.SdkConfiguration
-import com.squareup.leakcanary.LeakCanary
 import io.fabric.sdk.android.Fabric
-import nouri.`in`.goodprefslib.GoodPrefs
 import org.jetbrains.anko.doAsync
 
 class Application : MultiDexApplication() {
@@ -32,7 +28,7 @@ class Application : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        if (LeakCanary.isInAnalyzerProcess(this)) return
+        //if (LeakCanary.isInAnalyzerProcess(this)) return
 
         if (BuildConfig.VERSION_NAME.contains("Beta", true)) {
             //LeakCanary.install(this)
@@ -87,15 +83,11 @@ class Application : MultiDexApplication() {
 
         MobileAds.initialize(this, "ca-app-pub-2237535196399997~6448924321")
 
-        GoodPrefs.init(applicationContext)
+        //GoodPrefs.init(applicationContext)
 
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
             Log.d("TOKEN", "${it.id} -- ${it.token}")
         }
-
-        val sdkConfiguration = SdkConfiguration.Builder("b2141eb1c39d46df951f51a439d8185a").build()
-
-        MoPub.initializeSdk(this, sdkConfiguration, null)
 
     }
 
