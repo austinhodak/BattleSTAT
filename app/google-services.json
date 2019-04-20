@@ -1,192 +1,47 @@
 {
   "project_info": {
-    "project_number": "657603154051",
-    "firebase_url": "https://pubg-center.firebaseio.com",
-    "project_id": "pubg-center",
-    "storage_bucket": "pubg-center.appspot.com"
+    "project_number": "244493793819",
+    "firebase_url": "https://battlegrounds-battle-buddy.firebaseio.com",
+    "project_id": "battlegrounds-battle-buddy",
+    "storage_bucket": "battlegrounds-battle-buddy.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:657603154051:android:c7ee5de01c5e5212",
+        "mobilesdk_app_id": "1:244493793819:android:1418db5fc3bab7c5",
         "android_client_info": {
-          "package_name": "com.austinh.battlebuddy"
+          "package_name": "com.ahcjapps.battlebuddy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "657603154051-k37tr744aus4ifo5614bc9ec1ejhd4od.apps.googleusercontent.com",
+          "client_id": "244493793819-htns96ekjkq16fouuu1vt1do1tugeefg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.austinh.battlebuddy",
-            "certificate_hash": "154f6d97ade7e7f0da830aa7d0a871188f1c4283"
-          }
-        },
-        {
-          "client_id": "657603154051-89cdhlat313iug7jer1st4jgt1fgpeac.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.austinh.battlebuddy",
-            "certificate_hash": "310208e08bd180abb5ea3bc38ecc6f5c24a97466"
-          }
-        },
-        {
-          "client_id": "657603154051-gr459hl7s3ojpqnmn8d82c4k5d14b8va.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.austinh.battlebuddy",
+            "package_name": "com.ahcjapps.battlebuddy",
             "certificate_hash": "3b5c1745a36b063138d552cf3dd14a9049cc2cdc"
           }
         },
         {
-          "client_id": "657603154051-rhbvvlare14fcfgi246p3u2fpeb58r0h.apps.googleusercontent.com",
+          "client_id": "244493793819-n4sj7tbc8mdfeaov6jkofnmdfj2g1g9v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDUlIu8jHbiVnIJ5lGtBILI9FszSDCo1_g"
+          "current_key": "AIzaSyD26Ga-0k5GcB4N5eGmUj07t3-YPn1B3sc"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "657603154051-rhbvvlare14fcfgi246p3u2fpeb58r0h.apps.googleusercontent.com",
+              "client_id": "244493793819-n4sj7tbc8mdfeaov6jkofnmdfj2g1g9v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:657603154051:android:673a2b8fbb1d230d",
-        "android_client_info": {
-          "package_name": "com.respondingio.battlegroundsbuddy"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "657603154051-268ul3irk4n62q57j01q9isif3b3gr8a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.respondingio.battlegroundsbuddy",
-            "certificate_hash": "84e3f75c30ef529ef544ba7667857ba0c86fd1f6"
-          }
-        },
-        {
-          "client_id": "657603154051-bik849v8larcpno5nsjo1atl85tegn0q.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.respondingio.battlegroundsbuddy",
-            "certificate_hash": "154f6d97ade7e7f0da830aa7d0a871188f1c4283"
-          }
-        },
-        {
-          "client_id": "657603154051-toasb3mrm15o0jb91f89if2k00r5sa48.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.respondingio.battlegroundsbuddy",
-            "certificate_hash": "90976707d5172dba04d557b803fe91151638b194"
-          }
-        },
-        {
-          "client_id": "657603154051-rhbvvlare14fcfgi246p3u2fpeb58r0h.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDUlIu8jHbiVnIJ5lGtBILI9FszSDCo1_g"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "657603154051-rhbvvlare14fcfgi246p3u2fpeb58r0h.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      },
-      "admob_app_id": "ca-app-pub-1946691221734928~8934220899"
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:657603154051:android:8748503b6f41cfce",
-        "android_client_info": {
-          "package_name": "com.respondingio.companionpubg"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "657603154051-p15diuh10ta5vmvs376o5amn5valgs74.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.respondingio.companionpubg",
-            "certificate_hash": "84e3f75c30ef529ef544ba7667857ba0c86fd1f6"
-          }
-        },
-        {
-          "client_id": "657603154051-0f7pft1hk8uodkarrgqq84er04el19hs.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.respondingio.companionpubg",
-            "certificate_hash": "154f6d97ade7e7f0da830aa7d0a871188f1c4283"
-          }
-        },
-        {
-          "client_id": "657603154051-f51euph15qb4eq24m464v9c6tt0agg59.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.respondingio.companionpubg",
-            "certificate_hash": "90976707d5172dba04d557b803fe91151638b194"
-          }
-        },
-        {
-          "client_id": "657603154051-rhbvvlare14fcfgi246p3u2fpeb58r0h.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDUlIu8jHbiVnIJ5lGtBILI9FszSDCo1_g"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "657603154051-rhbvvlare14fcfgi246p3u2fpeb58r0h.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      },
-      "admob_app_id": "ca-app-pub-1946691221734928~7874171119"
     }
   ],
   "configuration_version": "1"

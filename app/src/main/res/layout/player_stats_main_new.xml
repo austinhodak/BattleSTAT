@@ -87,7 +87,7 @@
             app:timeline_radio_radius="15"
             app:timeline_type="item">
 
-            <com.austinh.battlebuddy.views.CardCornerAlert
+            <com.ahcjapps.battlebuddy.views.CardCornerAlert
                 android:id="@+id/stats_corner_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

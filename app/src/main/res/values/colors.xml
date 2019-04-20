@@ -28,7 +28,7 @@
     <color name="rankPlatinum">@color/timelineGreen</color>
     <color name="rankDiamond">@color/timelineBlue</color>
     <color name="rankElite">#663399</color>
-    <color name="rankMaster">#daa520</color>
+    <color name="rankMaster">#DAA520</color>
     <color name="rankGrand">#ffd700</color>
 
 </resources>

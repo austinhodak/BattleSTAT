@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/attribute_top"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/chip_white"
+    android:backgroundTint="@color/timelineGreen"
+    android:elevation="1dp"
+    android:fontFamily="@font/roboto_condensed_bold"
+    android:paddingLeft="8dp"
+    android:paddingTop="4dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="4dp"
+    android:gravity="center_vertical" >
+
+    <!--<ImageView-->
+        <!--android:src="@drawable/instabug_ic_plus"-->
+        <!--android:layout_width="20dp"-->
+        <!--android:layout_height="20dp" />-->
+
+    <TextView
+        android:id="@+id/attribute_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:text="- 20% Recoil Pattern"
+        android:textColor="@color/material_drawer_primary_text"
+        android:textSize="12sp" />
+
+</LinearLayout>

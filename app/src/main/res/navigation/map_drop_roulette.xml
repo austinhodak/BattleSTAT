@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/mapDropRoulettePicker"
-        android:name="com.austinh.battlebuddy.map.MapDropRoulettePicker"
+        android:name="com.ahcjapps.battlebuddy.map.MapDropRoulettePicker"
         android:label="MapDropRoulettePicker" >
         <action
             android:id="@+id/mapSelected"
@@ -17,6 +17,6 @@
     </fragment>
     <fragment
         android:id="@+id/mapDropRouletteMap"
-        android:name="com.austinh.battlebuddy.map.MapDropRouletteMap"
+        android:name="com.ahcjapps.battlebuddy.map.MapDropRouletteMap"
         android:label="MapDropRouletteMap" />
 </navigation>

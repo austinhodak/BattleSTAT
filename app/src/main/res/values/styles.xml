@@ -23,6 +23,8 @@
 
         <item name="android:statusBarColor">#171717</item>
 
+        <item name="md_color_button_text">@color/md_orange_700</item>
+
     </style>
 
     <style name="AppThemeLight" parent="MaterialDrawerTheme.Light">
@@ -36,6 +38,8 @@
         <item name="tab_underline">@color/md_grey_900</item>
 
         <item name="android:textColor">@color/md_light_primary_text</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
     <style name="CompareTheme" parent="MaterialDrawerTheme.Light">
@@ -50,6 +54,8 @@
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="android:statusBarColor">@android:color/white</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
     <style name="Profile" parent="MaterialDrawerTheme">
@@ -63,6 +69,8 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
     <style name="AppTheme.Launcher">
@@ -81,6 +89,8 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
 
@@ -118,6 +128,8 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
 
@@ -143,6 +155,8 @@
 
         <item name="md_background_color">@color/timelineBG</item>
         <item name="md_corner_radius">4dp</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
 
     </style>
 
@@ -175,6 +189,7 @@
 
         <item name="android:statusBarColor">#171717</item>
 
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
     <style name="WeaponHome" parent="Theme.AppCompat.Light.NoActionBar" >
@@ -228,6 +243,7 @@
 
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
 
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
     <style name="DropRoulette" parent="Theme.AppCompat.NoActionBar">
@@ -244,6 +260,8 @@
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
 
         <item name="md_background_color">@color/timelineBG</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
 
     </style>
 
@@ -297,6 +315,7 @@
 
         <item name="md_background_color">@color/timelineBG</item>
         <item name="md_corner_radius">4dp</item>
+        <item name="md_color_button_text">@color/md_orange_700</item>
 
     </style>
 
@@ -329,6 +348,7 @@
 
         <item name="preferenceTheme">@style/PrefsTheme</item>
         <item name="alertDialogTheme">@style/AlertDialogStyle</item>
+        <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
 
     <style name="PrefsTheme" parent="PreferenceThemeOverlay.v14.Material">

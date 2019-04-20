@@ -2,6 +2,7 @@
 <resources>
     <item name="fab_view_comments" type="id"/>
     <item name="fab_compare" type="id"/>
+    <item name="fab_detailed" type="id"/>
 
     <item name="fab_new_steam" type="id" />
     <item name="fab_new_kakao" type="id" />

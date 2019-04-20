@@ -125,6 +125,7 @@
                 android:backgroundTint="@color/md_grey_850"
                 app:timeline_position="first"
                 app:timeline_radio_outline_radius="23"
+                app:timeline_margin_start="43dp"
                 app:timeline_radio_radius="15"
                 app:timeline_type="item">
 
@@ -236,6 +237,7 @@
                 android:layout_marginRight="8dp"
                 app:timeline_position="middle"
                 app:timeline_radio_outline_radius="23"
+                app:timeline_margin_start="43dp"
                 app:timeline_radio_radius="15"
                 app:timeline_type="line">
 

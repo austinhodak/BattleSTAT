@@ -19,6 +19,25 @@
             android:theme="@style/HomeToolbarTheme"
             app:title="Weapons" />
 
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdgeLength="10dp"
+            android:requiresFadingEdge="horizontal"
+            android:scrollbars="none">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/homePlayersRV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingLeft="8dp"
+                android:scrollbars="none">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </HorizontalScrollView>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout

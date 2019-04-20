@@ -33,6 +33,7 @@
                     android:gravity="center_vertical"
                     android:text="Player Stats"
                     android:textColor="#FFF"
+                    android:singleLine="true"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -144,7 +145,7 @@
         android:background="@color/md_grey_900"
         app:itemIconTint="@drawable/tab_colored"
         app:itemTextColor="@drawable/tab_colored"
-        app:layout_behavior="com.austinh.battlebuddy.BottomNavigationBehavior"
+        app:layout_behavior="com.ahcjapps.battlebuddy.BottomNavigationBehavior"
         app:menu="@menu/stats_home">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
