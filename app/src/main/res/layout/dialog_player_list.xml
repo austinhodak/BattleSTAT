@@ -98,14 +98,14 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/playerListScan"
-            android:onClick="launchScanner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
             android:layout_margin="16dp"
+            android:onClick="launchScanner"
             android:src="@drawable/ic_photo_camera_black_24dp"
-            app:backgroundTint="@color/md_green_A700"
             android:visibility="gone"
+            app:backgroundTint="@color/md_green_A700"
             app:fabSize="mini" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

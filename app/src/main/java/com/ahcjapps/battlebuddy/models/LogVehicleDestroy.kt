@@ -1,5 +1,7 @@
 package com.ahcjapps.battlebuddy.models
 
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryInterface
+
 data class LogVehicleDestroy (
         val attackerId: String,
         val attacker: LogCharacter,
@@ -9,4 +11,4 @@ data class LogVehicleDestroy (
         val distance: Double,
         val _D: String,
         val _T: String
-)
+) : TelemetryInterface

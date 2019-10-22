@@ -11,9 +11,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import co.zsmb.materialdrawerkt.builders.drawer
+import co.zsmb.materialdrawerkt.builders.footer
+import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
+import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
+import co.zsmb.materialdrawerkt.draweritems.divider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.ahcjapps.battlebuddy.R
@@ -35,13 +41,17 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.functions.FirebaseFunctionsException
+import com.mikepenz.materialdrawer.Drawer
+import kotlinx.android.synthetic.main.activity_new_home.*
 import kotlinx.android.synthetic.main.activity_stats_home.*
+import org.jetbrains.anko.find
 import org.jetbrains.anko.startActivity
 
 class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
     private var player: PlayerListModel? = null
     private var playerModel: PlayerModel? = null
+    private var mDrawer: Drawer? = null
 
     private var selectedSeason = 0
     private var selectedShard = 0
@@ -77,11 +87,70 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         mRewardedVideoAd?.rewardedVideoAdListener = this
 
         if (!Premium.isUserLevel3() || !Premium.isUserLevel2()) {
-            mRewardedVideoAd?.loadAd("ca-app-pub-2237535196399997/3853662528",
+            mRewardedVideoAd?.loadAd("ca-app-pub-1646739421365093/9274148507",
                     Ads.getAdBuilder())
         }
 
         receiveIntent()
+
+       /* mDrawer = drawer {
+            headerDivider = false
+            headerViewRes = R.layout.main_drawer_header
+            toolbar = find(R.id.toolbar)
+            primaryItem(R.string.drawer_title_stats_enw) {
+                icon = R.drawable.chart_color
+                onClick { _ ->
+                    startActivity<PlayerListDialog>()
+                    true
+                }
+            }
+            primaryItem("Lifetime Stats") {
+                icon = R.drawable.icons8_time_span_96
+                onClick { _ ->
+                    true
+                }
+            }
+            primaryItem("Matches") {
+                icon = R.drawable.icons8_firing_gun_96
+                onClick { _ ->
+                    true
+                }
+            }
+            primaryItem("Leaderboards") {
+                icon = R.drawable.icons8_leaderboard_96
+                onClick { _ ->
+                    true
+                }
+            }
+            divider()
+            primaryItem("Weapon Progression") {
+                icon = R.drawable.icons8_assault_rifle_96
+                onClick { _ ->
+                    true
+                }
+            }
+            footer {
+                secondaryItem ("2019 Season 1") {
+                    icon = R.drawable.icons8_calendar_96
+                    //description = "2019 Season 1"
+                    onClick { _ ->
+                        true
+                    }
+                }
+                secondaryItem ("Xbox North America") {
+                    icon = R.drawable.icons8_globe_96
+                    //description = "Xbox North America"
+                    onClick { _ ->
+                        true
+                    }
+                }
+            }
+        }
+
+        val headerText = mDrawer?.header?.findViewById<TextView>(R.id.header_name)
+        headerText?.text = player?.playerName
+
+        val levelText = mDrawer?.header?.findViewById<TextView>(R.id.header_upgrade)*/
     }
 
     private fun receiveIntent() {
@@ -170,7 +239,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                                         }.show()
                             }.build().show()
                 } else {
-                    mRewardedVideoAd?.loadAd("ca-app-pub-3940256099942544/5224354917",
+                    mRewardedVideoAd?.loadAd("ca-app-pub-1646739421365093/9274148507",
                             Ads.getAdBuilder())
 
                     statsRefreshLayout?.isRefreshing = false
@@ -373,7 +442,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
             hasReward = false
         }
 
-        mRewardedVideoAd?.loadAd("ca-app-pub-2237535196399997/3853662528",
+        mRewardedVideoAd?.loadAd("ca-app-pub-1646739421365093/9274148507",
                 Ads.getAdBuilder())
     }
 

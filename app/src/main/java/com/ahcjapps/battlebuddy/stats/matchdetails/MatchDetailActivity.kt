@@ -101,7 +101,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
         toolbar_title.text = "Your Match Stats"
 
-        mLoadingSnack = Snacky.builder().setDuration(Snacky.LENGTH_INDEFINITE).setActivity(this).setText("Loading telemetry, this might take a while...").build()
+        mLoadingSnack = Snacky.builder().setDuration(Snacky.LENGTH_INDEFINITE).setActivity(this).setText("Loading telemetry...").build()
 
         //matchID = intent.getStringExtra("matchID")
         //regionID = intent.getStringExtra("regionID")
@@ -144,7 +144,7 @@ class MatchDetailActivity : AppCompatActivity() {
         //TODO UPDATE
         //GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) + 1))
 
-        mInterstitialAd.adUnitId = "ca-app-pub-2237535196399997/3817346965"
+        mInterstitialAd.adUnitId = "ca-app-pub-1646739421365093/5536840201"
         if (!Premium.isAdFreeUser()) {
             //mInterstitialAd.loadAd(Ads.getAdBuilder())
         }
@@ -152,7 +152,7 @@ class MatchDetailActivity : AppCompatActivity() {
         if (!Premium.isAdFreeUser()) {
             val statsBanner = AdView(this)
             statsBanner.adSize = com.google.android.gms.ads.AdSize.BANNER
-            statsBanner.adUnitId = "ca-app-pub-2237535196399997/7373448592"
+            statsBanner.adUnitId = "ca-app-pub-1646739421365093/4415330222"
             //statsBanner.loadAd(Ads.getAdBuilder())
             statsBanner.adListener = object : AdListener() {
                 override fun onAdLoaded() {
@@ -187,10 +187,6 @@ class MatchDetailActivity : AppCompatActivity() {
 
         mLoadingSnack?.dismiss()
 
-        match_loading_lottie?.pauseAnimation()
-        match_loading_lottie?.visibility = View.GONE
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
         headerMapIV?.setImageDrawable(resources.getDrawable(matchModel.getMapIcon()))
 
         try {
@@ -216,7 +212,11 @@ class MatchDetailActivity : AppCompatActivity() {
             mDrawer.setSelection(10)
         }
 
-        mDrawer.addStickyFooterItem(SecondaryDrawerItem().withName("Match Ping: ${capitalize(matchModel.matchDefinition!!.PingQuality)} Quality").withEnabled(false).withSelectable(false))
+        mDrawer.addStickyFooterItem(SecondaryDrawerItem().withName("Match Ping: ${capitalize(matchModel.eventList!!.getMatchDefinition().PingQuality)} Quality").withEnabled(false).withSelectable(false))
+
+        match_loading_lottie?.pauseAnimation()
+        match_loading_lottie?.visibility = View.GONE
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     private fun setupDrawer() {

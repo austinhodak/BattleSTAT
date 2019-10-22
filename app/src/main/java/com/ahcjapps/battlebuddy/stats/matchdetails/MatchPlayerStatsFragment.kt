@@ -23,6 +23,7 @@ import com.ahcjapps.battlebuddy.viewmodels.MatchDetailViewModel
 import com.ahcjapps.battlebuddy.viewmodels.models.MatchModel
 import kotlinx.android.synthetic.main.fragment_matches_player_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -104,8 +105,7 @@ class MatchPlayerStatsFragment : Fragment() {
 
         val killsList = ArrayList<LogPlayerKill>()
 
-        for (kill in match.killFeedList) {
-            //Log.d("MATCH", "ID: $playerID - ${kill.killer.accountId}")
+        for (kill in match.eventList.getKills()) {
             if (playerID == null) {
                 if (kill.killer.accountId == match.currentPlayerID) {
                     killsList.add(kill)
@@ -194,17 +194,14 @@ class MatchPlayerStatsFragment : Fragment() {
     }
 
     private fun setupAndFillDamage(it: MatchModel) {
-        val match = it
 
         var damageList: MutableList<LogPlayerTakeDamage>
 
-        Log.d("PLAYERID", "$playerID - ${match.currentPlayerID}")
-
-        var id = match.currentPlayerID
-        if (playerID != null) id = match.participantHash[playerID!!]!!.attributes.stats.playerId
+        var id = it.currentPlayerID
+        if (playerID != null) id = it.participantHash[playerID!!]!!.attributes.stats.playerId
 
         try {
-            damageList = it.logPlayerTakeDamage.filter { it.attacker.accountId == id || it.victim.accountId == id && it.attacker.name.isNotEmpty() && it.victim.name.isNotEmpty() }.toMutableList()
+            damageList = it.eventList.getTakeDamages().filter { it.attacker != null && it.attacker.accountId != null }.filter { it.attacker.accountId == id || it.victim.accountId == id && it.attacker.name.isNotEmpty() && it.victim.name.isNotEmpty() }.toMutableList()
             damageList = damageList.filterNot { it.attacker.accountId == it.victim.accountId }.toMutableList()
             damageList = damageList.sortedWith(compareBy { it._D }).toMutableList()
 
@@ -258,7 +255,7 @@ class MatchPlayerStatsFragment : Fragment() {
                 sdf.timeZone = TimeZone.getTimeZone("GMT")
                 val sdf2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                 sdf2.timeZone = TimeZone.getTimeZone("GMT")
-                val matchStartDate = sdf.parse(match.attributes?.createdAt)
+                val matchStartDate = sdf.parse(it.attributes?.createdAt)
                 val killTime = sdf2.parse(data._D)
 
                 var difference = killTime.time - matchStartDate.time
@@ -288,7 +285,6 @@ class MatchPlayerStatsFragment : Fragment() {
                 injector.text(R.id.kill_feed_distance, "$damageString • ${data.damage.roundToInt()} DMG")
 
                 val sideBarHeight = 60.0 * ((data.victim.health.roundToInt() - data.damage.roundToInt()) / 100.0)
-                Log.d("SIDEBAR", "${(data.victim.health.roundToInt() - data.damage.roundToInt()) / 100.0}")
 
                 val damageBar = injector.findViewById<View>(R.id.damagebar)
                 val params = RelativeLayout.LayoutParams(getDp(3f), getDp(sideBarHeight.toFloat()))
@@ -300,13 +296,14 @@ class MatchPlayerStatsFragment : Fragment() {
                     damageBar?.visibility = View.VISIBLE
                 }
 
-                if (match.getPlayerByAccountID(data.victim.accountId)?.id == playerID || data.victim.accountId == match.currentPlayerID) {
+                if (it.getPlayerByAccountID(data.victim.accountId)?.id == playerID || data.victim.accountId == it.currentPlayerID) {
                     damageBar.setBackgroundColor(resources.getColor(R.color.timelineRed))
                 } else {
                     damageBar.setBackgroundColor(resources.getColor(R.color.md_white_1000))
                 }
             }
         } catch (e: Exception) {
+            Timber.e(e)
         }
     }
 
@@ -355,8 +352,8 @@ class MatchPlayerStatsFragment : Fragment() {
 
 
         try {
-            val playerAttacks = matchModel.logPlayerAttack.filter { it.attacker.accountId == stats.playerId }
-            val playerDamageAttacks = matchModel.logPlayerTakeDamage.filter { it.attacker.accountId == stats.playerId }
+            val playerAttacks = matchModel.eventList.getPlayerAttacks().filter { it.attacker != null && it.attacker.accountId == stats.playerId }
+            val playerDamageAttacks = matchModel.eventList.getTakeDamages().filter { it.attacker != null && it.attacker.accountId == stats.playerId }
             damageTotalAttacks?.text = "${playerAttacks.size}"
             damageTotalDamageAttacks?.text = "${playerDamageAttacks.size}"
         } catch (e: Exception) {

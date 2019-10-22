@@ -13,6 +13,69 @@
         android:orientation="vertical"
         android:paddingBottom="8dp">
 
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/timeline_round"
+            android:backgroundTint="@color/md_grey_850"
+            app:timeline_position="first"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="item">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/statsPlayerName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="THExLEGEND"
+                    android:textColor="#FFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/statsWinPlace"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/statsWinPlace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="#100"
+                    android:textColor="#FFF"
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            app:timeline_position="middle"
+            app:timeline_radio_outline_radius="23"
+            app:timeline_radio_radius="15"
+            app:timeline_type="line">
+
+        </pl.hypeapp.materialtimelineview.MaterialTimelineView>
+
         <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -20,66 +83,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/timeline_round"
-            android:backgroundTint="@color/md_grey_850"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
+            android:backgroundTint="@color/timelineNavy"
+            android:clickable="false"
             android:orientation="vertical"
-            android:paddingBottom="21dp"
-            app:timeline_position="first"
+            android:paddingBottom="24dp"
+            app:timeline_position="middle"
             app:timeline_radio_outline_radius="23"
             app:timeline_radio_radius="15"
             app:timeline_type="item">
-
-            <TextView
-                android:id="@+id/statsWinPlace"
-                android:layout_width="45dp"
-                android:layout_height="30dp"
-                android:background="@drawable/alert_text_box_blue"
-                android:fontFamily="@font/roboto_condensed_bold"
-                android:gravity="center"
-                android:text="#100"
-                android:textColor="#FFF"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/statsPlayerName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="THExLEGEND"
-                    android:textColor="#FFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/player1Icon"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </LinearLayout>
 
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -302,6 +326,7 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/top_div2"
                 tools:layout_editor_absoluteX="0dp">
 

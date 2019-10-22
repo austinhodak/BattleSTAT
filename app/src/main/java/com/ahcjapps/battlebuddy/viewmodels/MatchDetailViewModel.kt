@@ -10,11 +10,16 @@ import com.android.volley.*
 import com.android.volley.toolbox.*
 import com.ahcjapps.battlebuddy.models.*
 import com.ahcjapps.battlebuddy.utils.Regions
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryInterface
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryInterfaceDeserializer
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryList
 import com.ahcjapps.battlebuddy.viewmodels.models.MatchData
 import com.ahcjapps.battlebuddy.viewmodels.models.MatchModel
 import com.beust.klaxon.*
+import com.github.kittinunf.fuel.httpGet
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -23,10 +28,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
+import com.google.gson.GsonBuilder
+import timber.log.Timber
+import kotlin.collections.ArrayList
+
 
 class MatchDetailViewModel : ViewModel() {
     val mMatchData = MutableLiveData<MatchModel>()
-    val timings = TimingLogger("GETMATCH", "START")
+
 
     fun getMatchData(application: Application, shardID: String, matchID: String, playerID: String) {
         val mVolleyQueue = Volley.newRequestQueue(application)
@@ -34,37 +43,76 @@ class MatchDetailViewModel : ViewModel() {
 
         val matchModel = MatchModel(currentPlayerID = playerID)
 
-        val objectRequest = object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener {
-            timings.addSplit("Match Data Parsing")
-            parseMatchData(it, matchModel, mVolleyQueue)
-        }, Response.ErrorListener {
+        val timings = TimingLogger("GETMATCH", "START")
 
-        }) {
-            override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject> {
-                Log.d("RESPONSE", "HEADERS: ${response?.allHeaders}")
-                return super.parseNetworkResponse(response)
-            }
+        url.httpGet().header(mapOf("Accept" to "application/vnd.api+json")).responseString { request, response, result ->
 
-            override fun parseNetworkError(volleyError: VolleyError): VolleyError {
-                if (volleyError.networkResponse == null || volleyError.networkResponse.statusCode == 404) {
-                    matchModel.error = volleyError.message
-                    try {
-                        mMatchData.postValue(matchModel)
-                    } catch (e: Exception) {
+            timings.addSplit("Match received")
+            Timber.d("Got match response.")
+
+            val obj = JSONObject(result.get())
+
+
+            matchModel.attributes = Gson().fromJson(obj.getJSONObject("data")?.getJSONObject("attributes").toString(), MatchData::class.java)
+
+            var assetURL = ""
+
+            Timber.d("Starting included parsing.")
+
+            for (i in 0 until obj.getJSONArray("included").length()) {
+                val item = obj.getJSONArray("included").getJSONObject(i)
+                when (item.getString("type")) {
+                    "asset" -> {
+                        assetURL = Gson().fromJson(item.toString(), Asset::class.java).attributes.URL
+                    }
+                    "participant" -> {
+                        val participant = Gson().fromJson(item.toString(), MatchParticipant::class.java)
+                        matchModel.participantList.add(participant)
+                        matchModel.participantHash[participant.id] = participant
+
+                        if (participant.attributes.stats.playerId == matchModel.currentPlayerID) {
+                            matchModel.currentPlayer = participant
+                            matchModel.currentPlayerMatchID = participant.id
+                        }
+                    }
+                    "roster" -> {
+                        val roster = Gson().fromJson(item.toString(), MatchRoster::class.java)
+                        matchModel.rosterList.add(roster)
                     }
                 }
-                return super.parseNetworkError(volleyError)
             }
 
-            override fun getHeaders(): Map<String, String> {
-                val params = HashMap<String, String>()
-                params["Accept"] = "application/vnd.api+json"
-                return params
+            for (roster in matchModel.rosterList) {
+                val find = roster.relationships.participants.data.find { it.id == matchModel.currentPlayerMatchID }
+                if (find != null) {
+                    matchModel.currentPlayerRoster = roster
+                }
+            }
+
+            matchModel.randomizeTeamColors()
+
+            timings.addSplit("Match parsed getting telem.")
+
+            Timber.d("Getting telemetry.")
+
+            assetURL.httpGet().responseString { request, response, result ->
+                timings.addSplit("Telem received")
+                Timber.d("Got telemetry.")
+                val builder = GsonBuilder()
+
+                builder.registerTypeAdapter(TelemetryInterface::class.java, TelemetryInterfaceDeserializer())
+                val gson = builder.create()
+
+                val result2 = gson.fromJson(result.get(), TelemetryList::class.java)
+                Timber.d("SIZE: ${result2.size}")
+
+                matchModel.eventList = result2
+
+                timings.addSplit("Telem parsed")
+                mMatchData.postValue(matchModel)
+                timings.dumpToLog()
             }
         }
-
-        timings.addSplit("Match Data Added to Queue")
-        mVolleyQueue.add(objectRequest)
     }
 
     private fun parseMatchData(json: JSONObject, matchModel: MatchModel, mVolleyQueue: RequestQueue) {
@@ -83,7 +131,7 @@ class MatchDetailViewModel : ViewModel() {
                             URl = item.attributes.URL
                         }
 
-                        if (item is Participant) {
+                        /*if (item is Participant) {
                             matchModel.participantList.add(item)
                             matchModel.participantHash[item.id] = item
 
@@ -91,10 +139,10 @@ class MatchDetailViewModel : ViewModel() {
                                 matchModel.currentPlayer = item
                                 matchModel.currentPlayerMatchID = item.id
                             }
-                        }
+                        }*/
 
                         if (item is Roster) {
-                            matchModel.rosterList.add(item)
+                            //matchModel.rosterList.add(item)
                             /*if (item.relationships.participants.data.find { it.id == matchModel.currentPlayerMatchID } != null) {
                                 matchModel.currentPlayerRoster = item as Roster
                             }*/
@@ -105,8 +153,21 @@ class MatchDetailViewModel : ViewModel() {
                 }
 
                 Log.d("KLAXONREADER", "RESULT: ${result.size}")
-                timings.addSplit("Match Data Parsed, Starting Telem")
-                getTelemetryDataGZIP(mVolleyQueue, matchModel, URl)
+
+                URl.httpGet().responseString { request, response, result ->
+                    val builder = GsonBuilder()
+
+                    builder.registerTypeAdapter(TelemetryInterface::class.java, TelemetryInterfaceDeserializer())
+                    val gson = builder.create()
+
+                    val result2 = gson.fromJson(result.get(), TelemetryList::class.java)
+                    Timber.d("SIZE: ${result2.size}")
+
+                    matchModel.eventList = result2
+                    mMatchData.postValue(matchModel)
+                }
+
+                //getTelemetryDataGZIP(mVolleyQueue, matchModel, URl)
             }
 
             for (roster in matchModel.rosterList) {
@@ -123,13 +184,25 @@ class MatchDetailViewModel : ViewModel() {
 
     private fun getTelemetryDataGZIP(mVolleyQueue: RequestQueue, matchModel: MatchModel, assetURL: String) {
         val objectRequest = object : StringRequest(Request.Method.GET, assetURL, Response.Listener<String> {
-            timings.addSplit("Telem Parse Response")
-            parseTelemetryData(JSONArray(it), matchModel)
+
+            val builder = GsonBuilder()
+
+            builder.registerTypeAdapter(TelemetryInterface::class.java, TelemetryInterfaceDeserializer())
+            val gson = builder.create()
+
+            val result2 = gson.fromJson(it, TelemetryList::class.java)
+
+            Timber.d(result2.getKills().toString())
+            Timber.d("DONE!")
+
+            matchModel.eventList = result2
+            mMatchData.postValue(matchModel)
+            //parseTelemetryData(JSONArray(it), matchModel)
         }, Response.ErrorListener {
 
         }) {
             override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
-                timings.addSplit("Telem Top Network Response ${response.headers["Content-Length"]}")
+
 
                 val output = StringBuilder()
                 try {
@@ -148,7 +221,6 @@ class MatchDetailViewModel : ViewModel() {
                     return Response.error(ParseError())
                 }
 
-                timings.addSplit("Telem Return Network Response")
 
                 return Response.success(output.toString(), HttpHeaderParser.parseCacheHeaders(response))
             }
@@ -173,14 +245,21 @@ class MatchDetailViewModel : ViewModel() {
             }
         }
 
-        timings.addSplit("Telem added to queue")
         mVolleyQueue.add(objectRequest)
 
     }
 
     private fun getTelemetryData(mVolleyQueue: RequestQueue, matchModel: MatchModel, assetURL: String) {
         val objectRequest = object : JsonArrayRequest(Request.Method.GET, assetURL, null, Response.Listener {
-            parseTelemetryData(it, matchModel)
+            val builder = GsonBuilder()
+
+            builder.registerTypeAdapter(TelemetryInterface::class.java, TelemetryInterfaceDeserializer())
+            val gson = builder.create()
+
+            val result2 = gson.fromJson(it.toString(), TelemetryList::class.java)
+            //parseTelemetryData(it, matchModel)
+            Timber.d("DONE!")
+            mMatchData.postValue(matchModel)
         }, Response.ErrorListener {
 
         }) {
@@ -244,6 +323,7 @@ class MatchDetailViewModel : ViewModel() {
     }
 
     private fun parseTelemetryData(json: JSONArray, matchModel: MatchModel) {
+
         doAsync {
             for (i in 0 until json.length()) {
                 var item = json.getJSONObject(i)
@@ -332,18 +412,9 @@ class MatchDetailViewModel : ViewModel() {
 
             matchModel.killFeedList.sortBy { it._D }
 
-            timings.addSplit("Telem Done Parsing")
-
-            timings.dumpToLog()
 
             mMatchData.postValue(matchModel)
-
         }
-    }
-
-    private fun getRandomColor(): Int {
-        val rnd = Random()
-        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
     }
 
     @TypeFor(field = "type", adapter = MatchTypeAdapter::class)
@@ -354,6 +425,7 @@ class MatchDetailViewModel : ViewModel() {
     }
 
     data class Participant(val id: String, val attributes: MatchAttributes) : Item()
+
     data class Roster(val id: String, val attributes: RosterAttributes, val relationships: Relationships) : Item()
 
     class MatchTypeAdapter : TypeAdapter<Item> {

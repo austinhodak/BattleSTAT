@@ -1,5 +1,6 @@
 package com.ahcjapps.battlebuddy.map
 
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -122,6 +123,7 @@ class MapDownloadActivity : AppCompatActivity() {
             Status.COMPLETED -> {
                 buttonMaps[map]?.text = "DOWNLOADED"
                 buttonMaps[map]?.isEnabled = true
+                buttonMaps[map]?.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.md_green_500))
             }
             Status.QUEUED -> {
                 buttonMaps[map]?.text = "QUEUED"

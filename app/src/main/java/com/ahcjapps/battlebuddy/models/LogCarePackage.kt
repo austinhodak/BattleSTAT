@@ -1,6 +1,7 @@
 package com.ahcjapps.battlebuddy.models
 
 import android.util.Log
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryInterface
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,7 +16,7 @@ data class LogCarePackageLand (
         val itemPackage: LogCarePackage,
         val _D: String,
         val _T: String
-) {
+) : TelemetryInterface {
     fun doElapsedTime(createdAt: String) : LogCarePackageLand {
         //Do date.
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -69,7 +70,7 @@ data class LogCarePackageSpawn (
         val itemPackage: LogCarePackage,
         val _D: String,
         val _T: String
-) {
+) : TelemetryInterface {
     fun getTimeString(createdAt: String): String {
         //Do date.
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")

@@ -116,10 +116,9 @@
         <item name="colorPrimaryDark">@color/md_deep_orange_700</item>
         <item name="colorAccent">@color/md_amber_900</item>
 
-        <item name="material_drawer_selected_text">@color/md_orange_A700</item>
-
-        <item name="material_drawer_selected">#EEEEEE</item>
-        <item name="material_drawer_background">@color/timelineBG</item>
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+        <item name="material_drawer_selected">#1FF57C00</item>
+        <item name="material_drawer_background">@color/md_grey_900</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
 
@@ -130,6 +129,8 @@
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
 
         <item name="md_color_button_text">@color/md_orange_700</item>
+
+
     </style>
 
 
@@ -295,18 +296,22 @@
 
     <style name="FirebaseUI.Text.HintText" parent="@style/FirebaseUI.EditText" />
 
-    <style name="PlayerListDialog" parent="Theme.AppCompat.NoActionBar">
+    <style name="PlayerListDialog" parent="MaterialDrawerTheme">
         <item name="colorPrimary">@color/timelineBG</item>
         <item name="colorPrimaryDark">#171717</item>
         <item name="colorAccent">@color/timelineOrange</item>
 
-        <item name="material_drawer_selected_text">@color/md_amber_700</item>
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+        <item name="material_drawer_selected">#1FF57C00</item>
+        <item name="material_drawer_background">@color/md_grey_900</item>
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <item name="android:colorButtonNormal">@color/accent</item>
 
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+
+        <item name="android:textColor">@color/md_dark_primary_text</item>
 
         <!-- This is important! Don't forget to set window background -->
         <item name="android:windowBackground">@color/timelineBG</item>

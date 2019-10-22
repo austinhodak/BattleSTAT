@@ -10,7 +10,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" />
 
     <application
@@ -24,22 +26,28 @@
         android:theme="@style/AppTheme.Launcher"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".stats.scanner.ScannedResults" android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".stats.scanner.ScannedResults"
+            android:theme="@style/AppTheme" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
         <activity android:name=".MainActivity" />
+
         <activity
             android:name=".damage_calculator.DamageCalcActivity"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".weapons.CompareWeaponActivity"
             android:theme="@style/CompareTheme" />
+
         <activity
             android:name=".weapons.CompareWeaponPicker"
             android:theme="@style/PickerTheme" />
+
         <activity
             android:name=".damage_calculator.DamageCalcPicker"
             android:theme="@style/AppTheme" />
@@ -47,9 +55,11 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/grandmaster_noti" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -61,6 +71,7 @@
         </service>
 
         <activity android:name=".info.TimerActivity" />
+
         <activity
             android:name=".weapons.WeaponDamageChart"
             android:theme="@style/AppTheme" />
@@ -90,15 +101,17 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".stats.matchdetails.replay.ReplayActivity"
-            android:theme="@style/MatchDetailsTheme"></activity>
+            android:theme="@style/MatchDetailsTheme" />
+
         <activity
             android:name=".settings.SettingsActivity"
-            android:theme="@style/SettingsTheme"></activity> <!-- <meta-data -->
-        <!-- android:name="io.fabric.ApiKey" -->
-        <!-- android:value="71fe4f6439eabeb63524778f52e28a9cbcd9e4c7" /> -->
+            android:theme="@style/SettingsTheme" /> <!-- <meta-data -->
+
         <activity android:name=".stats.matchdetails.KillFeedListMap" /> <!-- START NEW STUFF -->
+
         <activity
             android:name=".MainActivityKT"
             android:label="Battle Buddy">
@@ -108,36 +121,46 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".weapondetail.WeaponDetailTimeline"
             android:theme="@style/WeaponTimeline" />
+
         <activity
             android:name=".premium.UpgradeActivity"
             android:theme="@style/WeaponTimeline" />
+
         <activity
             android:name=".map.MapDropRouletteActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="Map Drop Roulette"
             android:screenOrientation="portrait"
             android:theme="@style/DropRoulette" />
+
         <activity
             android:name=".stats.PlayerListDialog"
             android:theme="@style/PlayerListDialog" />
+
         <activity
             android:name=".AlertManager"
             android:theme="@style/PlayerListDialog" />
+
         <activity
             android:name=".map.MapDownloadActivity"
             android:theme="@style/PlayerListDialog" />
+
         <activity
             android:name=".stats.compare.ComparePlayersActivity"
             android:theme="@style/PlayerListDialog" />
+
         <activity
             android:name=".stats.main.StatsHome"
             android:theme="@style/PlayerListDialog" />
+
         <activity
             android:name=".profile.ProfileMain"
             android:theme="@style/PlayerListDialog" />
+
         <activity
             android:name=".profile.ProfilePicPicker"
             android:theme="@style/PlayerListDialog" />
@@ -153,14 +176,17 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1646739421365093~2508030809" />
 
-        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="${enableCrashReporting}" />
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${enableCrashReporting}" />
+
     </application>
 
 </manifest>

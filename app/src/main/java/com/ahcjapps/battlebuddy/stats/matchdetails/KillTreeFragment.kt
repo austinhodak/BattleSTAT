@@ -70,7 +70,7 @@ class KillTreeFragment : Fragment() {
                 nodeList.add(Node(player.attributes.stats.name))
             }
 
-            var killList = match.killFeedList.reversed().filterNot { it.killer.accountId == it.victim.accountId }
+            var killList = match.eventList.getKills().reversed().filterNot { it.killer.accountId == it.victim.accountId }
             for (kill in killList) {
                 if (kill.killer.name.isEmpty()) {
                     //Kill was bluezone or not player, remove from list.

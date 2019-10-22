@@ -1,5 +1,6 @@
 package com.ahcjapps.battlebuddy
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -22,6 +23,11 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.expandable.expandableItem
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.ahcjapps.battlebuddy.ammo.HomeAmmoList
 import com.ahcjapps.battlebuddy.attachments.HomeAttachmentsFragment
 import com.ahcjapps.battlebuddy.info.ControlsFragment
@@ -48,15 +54,25 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.ads.consent.*
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.functions.FirebaseFunctions
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import kotlinx.android.synthetic.main.activity_new_home.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.idik.lib.slimadapter.SlimAdapter
+import org.jetbrains.anko.act
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
+import timber.log.Timber
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.*
@@ -92,6 +108,8 @@ class MainActivityKT : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_home)
         setSupportActionBar(newHomeToolbar)
+
+        if (!isGooglePlayServicesAvailable(this)) return
 
         mSharedPreferences = this.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
 
@@ -156,6 +174,8 @@ class MainActivityKT : AppCompatActivity() {
         if (FirebaseAuth.getInstance().currentUser == null) {
             FirebaseAuth.getInstance().signInAnonymously().addOnSuccessListener {
                 checkLogin()
+            }.addOnFailureListener {
+                Timber.e(it)
             }
             return
         }
@@ -320,11 +340,26 @@ class MainActivityKT : AppCompatActivity() {
                 primaryItem(R.string.drawer_title_update) {
                     icon = R.drawable.rss
                     onClick { _ ->
-                        //MediationTestSuite.launch(this@MainActivityKT, "ca-app-pub-1946691221734928~8934220899")
-
                         newHomeToolbar?.title = "RSS Feed"
                         supportFragmentManager.beginTransaction().replace(R.id.mainFrame, HomeUpdatesFragment()).commit()
                         updateToolbarElevation(15f)
+
+                        /*MaterialDialog(this@MainActivityKT)
+                                .title(text = "Link Overwolf App")
+                                .noAutoDismiss()
+                                .input(hint = "Overwolf Link Code") { dialog, text ->
+                                    dialog.positiveButton(text = "Linking")
+                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                                    dialog.getInputField()?.isEnabled = false
+
+                                    linkOverwolf(text.toString()).addOnSuccessListener {
+                                        dialog.dismiss()
+                                    }.addOnFailureListener {
+                                        toast(it.message ?: "")
+                                    }
+                                }
+                                .positiveButton(text = "Add")
+                                .show()*/
                         false
                     }
                 }
@@ -334,17 +369,6 @@ class MainActivityKT : AppCompatActivity() {
                 icon = R.drawable.settings_icon
                 selectable = false
                 onClick { _ ->
-                    /*LibsBuilder()
-                            .withAboutIconShown(true)
-                            .withAboutVersionShown(true)
-                            .withActivityStyle(Libs.ActivityStyle.DARK)
-                            .withActivityTitle("Battlegrounds Battle Buddy")
-                            .withAboutDescription("")
-                            .withAboutSpecial1("Twitter")
-                            .withAboutSpecial1Description("<a href=\"https://twitter.com/pubgbuddy\">Follow us on Twitter!</a>")
-                            .withAboutSpecial2("Discord")
-                            .withAboutSpecial2Description("<a href=\"https://discord.gg/5bbJNvx\">Join Our Discord!</a>")
-                            .start(this@MainActivityKT)*/
                     startActivity<SettingsActivity>()
                     true
                 }
@@ -668,9 +692,10 @@ class MainActivityKT : AppCompatActivity() {
         val requestCode = 123
 
         val providers: List<AuthUI.IdpConfig> = Arrays.asList(
+                AuthUI.IdpConfig.GoogleBuilder().build(),
+                AuthUI.IdpConfig.TwitterBuilder().build(),
                 AuthUI.IdpConfig.EmailBuilder().build(),
-                AuthUI.IdpConfig.PhoneBuilder().build(),
-                AuthUI.IdpConfig.GoogleBuilder().build())
+                AuthUI.IdpConfig.PhoneBuilder().build())
 
         startActivityForResult(
                 AuthUI.getInstance()
@@ -790,6 +815,29 @@ class MainActivityKT : AppCompatActivity() {
             }
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun isGooglePlayServicesAvailable(activity: Activity): Boolean {
+        val googleApiAvailability = GoogleApiAvailability.getInstance()
+        val status = googleApiAvailability.isGooglePlayServicesAvailable(activity)
+        if (status != ConnectionResult.SUCCESS) {
+            if (googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(activity, status, 2400).show()
+            }
+            return false
+        }
+        return true
+    }
+
+    private fun linkOverwolf(code: String): Task<String> {
+        val data = HashMap<String, Any>()
+        data["uniqueCode"] = code
+
+        return FirebaseFunctions.getInstance().getHttpsCallable("linkOverwolfCode").call(data).continueWith { task ->
+            val result = task.result
+                    ?.data as String
+            result
         }
     }
 }

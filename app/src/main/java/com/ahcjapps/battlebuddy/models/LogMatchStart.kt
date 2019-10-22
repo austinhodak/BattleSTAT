@@ -1,5 +1,7 @@
 package com.ahcjapps.battlebuddy.models
 
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryInterface
+
 data class LogMatchStart (
         val mapName: String,
         val weatherId: String,
@@ -11,4 +13,4 @@ data class LogMatchStart (
         val blueZoneCustomOptions: String,
         val _D: String,
         val _T: String
-)
+) : TelemetryInterface

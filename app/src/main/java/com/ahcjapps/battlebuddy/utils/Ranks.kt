@@ -100,7 +100,7 @@ object Ranks {
     }
 
     fun getRankLevel(roman: Boolean = true, rank: String) : String {
-        if (rank.isEmpty()) return ""
+        if (rank.isEmpty() || rank == "7-0" || rank == "6-0") return ""
         val rankLevel = rank.split("-").toTypedArray()[1].toInt()
 
         if (roman) {

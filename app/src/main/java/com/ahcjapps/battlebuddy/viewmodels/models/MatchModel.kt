@@ -7,6 +7,7 @@ import com.ahcjapps.battlebuddy.R
 import com.ahcjapps.battlebuddy.map.Map
 import com.ahcjapps.battlebuddy.models.*
 import com.ahcjapps.battlebuddy.viewmodels.MatchDetailViewModel
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryList
 import java.io.File
 import java.io.Serializable
 import java.text.ParseException
@@ -17,12 +18,12 @@ import kotlin.collections.HashMap
 
 data class MatchModel(
         var error: String? = null,
-        var participantList: ArrayList<MatchDetailViewModel.Participant> = ArrayList(),
-        var rosterList: ArrayList<MatchDetailViewModel.Roster> = ArrayList(),
-        var participantHash: HashMap<String, MatchDetailViewModel.Participant> = HashMap(),
+        var participantList: ArrayList<MatchParticipant> = ArrayList(),
+        var rosterList: ArrayList<MatchRoster> = ArrayList(),
+        var participantHash: HashMap<String, MatchParticipant> = HashMap(),
         var attributes: MatchData? = null,
-        var currentPlayerRoster: MatchDetailViewModel.Roster? = null,
-        var currentPlayer: MatchDetailViewModel.Participant? = null,
+        var currentPlayerRoster: MatchRoster? = null,
+        var currentPlayer: MatchParticipant? = null,
         var killFeedList: ArrayList<LogPlayerKill> = ArrayList(),
         var currentPlayerID: String,
         var currentPlayerMatchID: String = "",
@@ -36,7 +37,8 @@ data class MatchModel(
         var gameStates: ArrayList<LogGamestatePeriodic> = ArrayList(),
         var logPlayerPositions: ArrayList<LogPlayerPosition> = ArrayList(),
         var teamColors: HashMap<Int, Int> = HashMap(),
-        var logPlayerCreate: ArrayList<LogCharacter> = ArrayList()
+        var logPlayerCreate: ArrayList<LogCharacter> = ArrayList(),
+        var eventList: TelemetryList = TelemetryList()
 ) : Serializable {
 
     fun getMapIcon(): Int {
@@ -100,7 +102,7 @@ data class MatchModel(
         return ago as String
     }
 
-    fun getPlayerByAccountID(accountID: String) : MatchDetailViewModel.Participant? {
+    fun getPlayerByAccountID(accountID: String) : MatchParticipant? {
         for (player in participantList) {
             if (player.attributes.stats.playerId == accountID) {
                 return player

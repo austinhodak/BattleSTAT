@@ -68,7 +68,7 @@ data class PlayerStats(
 
     fun getRankLevel(roman: Boolean = true, rank: String? = null) : String {
         val rankLevel: Int = if (rank == null) {
-            if (rankPointsTitle.isEmpty() || rankPointsTitle == "7-0") {
+            if (rankPointsTitle.isEmpty() || rankPointsTitle == "7-0" || rankPointsTitle == "6-0") {
                 return ""
             }
             rankPointsTitle.split("-").toTypedArray()[1].toInt()

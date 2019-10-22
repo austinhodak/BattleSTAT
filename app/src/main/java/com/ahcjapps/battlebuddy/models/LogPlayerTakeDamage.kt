@@ -1,5 +1,7 @@
 package com.ahcjapps.battlebuddy.models
 
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryInterface
+
 data class LogPlayerTakeDamage (
         val attackId: Int,
         var attacker: LogCharacter,
@@ -10,4 +12,4 @@ data class LogPlayerTakeDamage (
         val damageCauserName: String,
         val _D: String,
         val _T: String
-)
+) : TelemetryInterface

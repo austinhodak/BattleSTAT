@@ -50,7 +50,7 @@ class CarePackageListFragment: Fragment() {
 
     private fun setupAdapter(matchModel: MatchModel?) {
 
-        killFeedList = matchModel!!.carePackageList.sortedBy { it._D }
+        killFeedList = matchModel!!.eventList.getCarePackageLands().sortedBy { it._D }
 
         kill_feed_rv.layoutManager = LinearLayoutManager(activity)
 

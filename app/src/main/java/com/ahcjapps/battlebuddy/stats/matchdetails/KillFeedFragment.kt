@@ -51,7 +51,7 @@ class KillFeedFragment: Fragment() {
         var match = matchModel
         if (arguments!= null &&  arguments!!.containsKey("match")) match = arguments!!.getSerializable("match") as MatchModel
 
-        killFeedList = match!!.killFeedList
+        killFeedList = match!!.eventList.getKills().sortedBy { it._D }
 
         kill_feed_rv.layoutManager = LinearLayoutManager(activity)
 

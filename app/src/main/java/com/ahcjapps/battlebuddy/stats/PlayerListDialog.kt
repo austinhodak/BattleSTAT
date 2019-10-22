@@ -414,7 +414,7 @@ class PlayerListDialog : AppCompatActivity() {
 
         var jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 
-        /*playerListScan?.setOnClickListener {
+        playerListScan?.setOnClickListener {
             Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
                 takePictureIntent.resolveActivity(packageManager)?.also {
                     val photoFile: File? = try {
@@ -434,7 +434,7 @@ class PlayerListDialog : AppCompatActivity() {
                     }
                 }
             }
-        }*/
+        }
     }
 
     var currentPhotoPath: String? = ""

@@ -1,5 +1,6 @@
 package com.ahcjapps.battlebuddy.models
 
+import com.ahcjapps.battlebuddy.viewmodels.json.TelemetryInterface
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,7 +24,7 @@ data class LogGamestatePeriodic (
         val _T: String,
         var matchTime: String,
         var common: Common
-) {
+) : TelemetryInterface {
     fun getRedzoneCircle(): SafeZoneCircle {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         sdf.timeZone = TimeZone.getTimeZone("GMT")
