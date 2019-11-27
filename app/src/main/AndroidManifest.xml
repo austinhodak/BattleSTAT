@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.ahcjapps.battlebuddy">
+    package="com.brokenstrawapps.battlebuddy">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.vending.BILLING" />
@@ -16,7 +16,7 @@
         android:required="false" />
 
     <application
-        android:name=".Application"
+        android:name="com.brokenstrawapps.battlebuddy.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,29 +27,29 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".stats.scanner.ScannedResults"
+            android:name="com.brokenstrawapps.battlebuddy.stats.scanner.ScannedResults"
             android:theme="@style/AppTheme" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name="com.brokenstrawapps.battlebuddy.MainActivity" />
 
         <activity
-            android:name=".damage_calculator.DamageCalcActivity"
+            android:name="com.brokenstrawapps.battlebuddy.damage_calculator.DamageCalcActivity"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".weapons.CompareWeaponActivity"
+            android:name="com.brokenstrawapps.battlebuddy.weapons.CompareWeaponActivity"
             android:theme="@style/CompareTheme" />
 
         <activity
-            android:name=".weapons.CompareWeaponPicker"
+            android:name="com.brokenstrawapps.battlebuddy.weapons.CompareWeaponPicker"
             android:theme="@style/PickerTheme" />
 
         <activity
-            android:name=".damage_calculator.DamageCalcPicker"
+            android:name="com.brokenstrawapps.battlebuddy.damage_calculator.DamageCalcPicker"
             android:theme="@style/AppTheme" />
 
         <meta-data
@@ -64,26 +64,22 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <service android:name=".FirebaseIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
 
-        <activity android:name=".info.TimerActivity" />
+
+        <activity android:name="com.brokenstrawapps.battlebuddy.info.TimerActivity" />
 
         <activity
-            android:name=".weapons.WeaponDamageChart"
+            android:name="com.brokenstrawapps.battlebuddy.weapons.WeaponDamageChart"
             android:theme="@style/AppTheme" />
 
-        <service android:name=".info.TimerService" />
+        <service android:name="com.brokenstrawapps.battlebuddy.info.TimerService" />
 
-        <receiver android:name=".info.AlarmReceiver" />
+        <receiver android:name="com.brokenstrawapps.battlebuddy.info.AlarmReceiver" />
 
-        <activity android:name=".SocialLinksActivity" />
+        <activity android:name="com.brokenstrawapps.battlebuddy.SocialLinksActivity" />
 
         <activity
-            android:name=".stats.matchdetails.MatchDetailActivity"
+            android:name="com.brokenstrawapps.battlebuddy.stats.matchdetails.MatchDetailActivity"
             android:theme="@style/MatchDetailsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -103,17 +99,17 @@
         </activity>
 
         <activity
-            android:name=".stats.matchdetails.replay.ReplayActivity"
+            android:name="com.brokenstrawapps.battlebuddy.stats.matchdetails.replay.ReplayActivity"
             android:theme="@style/MatchDetailsTheme" />
 
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="com.brokenstrawapps.battlebuddy.settings.SettingsActivity"
             android:theme="@style/SettingsTheme" /> <!-- <meta-data -->
 
-        <activity android:name=".stats.matchdetails.KillFeedListMap" /> <!-- START NEW STUFF -->
+        <activity android:name="com.brokenstrawapps.battlebuddy.stats.matchdetails.KillFeedListMap" /> <!-- START NEW STUFF -->
 
         <activity
-            android:name=".MainActivityKT"
+            android:name="com.brokenstrawapps.battlebuddy.MainActivityKT"
             android:label="Battle Buddy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -123,46 +119,46 @@
         </activity>
 
         <activity
-            android:name=".weapondetail.WeaponDetailTimeline"
+            android:name="com.brokenstrawapps.battlebuddy.weapondetail.WeaponDetailTimeline"
             android:theme="@style/WeaponTimeline" />
 
         <activity
-            android:name=".premium.UpgradeActivity"
+            android:name="com.brokenstrawapps.battlebuddy.premium.UpgradeActivity"
             android:theme="@style/WeaponTimeline" />
 
         <activity
-            android:name=".map.MapDropRouletteActivity"
+            android:name="com.brokenstrawapps.battlebuddy.map.MapDropRouletteActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="Map Drop Roulette"
             android:screenOrientation="portrait"
             android:theme="@style/DropRoulette" />
 
         <activity
-            android:name=".stats.PlayerListDialog"
+            android:name="com.brokenstrawapps.battlebuddy.stats.PlayerListDialog"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".AlertManager"
+            android:name="com.brokenstrawapps.battlebuddy.AlertManager"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".map.MapDownloadActivity"
+            android:name="com.brokenstrawapps.battlebuddy.map.MapDownloadActivity"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".stats.compare.ComparePlayersActivity"
+            android:name="com.brokenstrawapps.battlebuddy.stats.compare.ComparePlayersActivity"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".stats.main.StatsHome"
+            android:name="com.brokenstrawapps.battlebuddy.stats.main.StatsHome"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".profile.ProfileMain"
+            android:name="com.brokenstrawapps.battlebuddy.profile.ProfileMain"
             android:theme="@style/PlayerListDialog" />
 
         <activity
-            android:name=".profile.ProfilePicPicker"
+            android:name="com.brokenstrawapps.battlebuddy.profile.ProfilePicPicker"
             android:theme="@style/PlayerListDialog" />
 
         <meta-data
@@ -171,7 +167,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.ahcjapps.battlebuddy.fileprovider"
+            android:authorities="com.brokenstrawapps.battlebuddy.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

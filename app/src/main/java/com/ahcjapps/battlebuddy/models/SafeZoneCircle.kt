@@ -1,9 +1,0 @@
-package com.ahcjapps.battlebuddy.models
-
-import java.io.Serializable
-
-data class SafeZoneCircle (
-        val position: LogLocation,
-        var radius: Double,
-        var timeInMatch: Long? = null
-) : Serializable

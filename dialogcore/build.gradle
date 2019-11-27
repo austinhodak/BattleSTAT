@@ -1,0 +1,40 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply from: '../dependencies.gradle'
+apply plugin: "com.github.ben-manes.versions"
+
+ext.shard = 'core'
+apply from: '../bintrayconfig.gradle'
+
+android {
+  compileSdkVersion versions.compileSdk
+  buildToolsVersion versions.buildTools
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+    targetSdkVersion versions.compileSdk
+    versionCode versions.publishVersionCode
+    versionName versions.publishVersion
+  }
+
+  sourceSets {
+    main.res.srcDirs = [
+        'src/main/res',
+        'src/main/res-public'
+    ]
+  }
+
+  compileOptions {
+    kotlinOptions.freeCompilerArgs += ['-module-name', "com.afollestad.material-dialogs:core"]
+  }
+}
+
+dependencies {
+  api 'com.android.support:support-annotations:' + versions.supportLib
+  api 'com.android.support:appcompat-v7:' + versions.supportLib
+
+  implementation 'com.android.support:recyclerview-v7:' + versions.supportLib
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + versions.kotlin
+}
+
+apply from: '../spotless.gradle'

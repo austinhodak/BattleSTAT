@@ -57,7 +57,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.ahcjapps.battlebuddy.views.ReplayMap
+    <com.brokenstrawapps.battlebuddy.views.ReplayMap
         android:id="@+id/replay_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

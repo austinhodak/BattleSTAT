@@ -1,0 +1,44 @@
+<!-- See https://material.io/archive/guidelines/components/dialogs.html#dialogs-specs -->
+<resources>
+
+  <dimen name="md_dialog_default_corner_radius">2dp</dimen>
+  <dimen name="md_dialog_max_width">356dp</dimen>
+  <dimen name="md_dialog_vertical_margin">52dp</dimen>
+  <dimen name="md_dialog_horizontal_margin">32dp</dimen>
+
+  <dimen name="md_dialog_title_layout_margin_bottom">20dp</dimen>
+  <dimen name="md_dialog_frame_margin_vertical">24dp</dimen>
+  <dimen name="md_dialog_frame_margin_vertical_less">16dp</dimen>
+  <dimen name="md_dialog_frame_margin_horizontal">24dp</dimen>
+
+  <dimen name="md_action_button_frame_padding_neutral">18dp</dimen>
+  <dimen name="md_action_button_frame_padding">8dp</dimen>
+
+  <dimen name="md_action_button_height">36dp</dimen>
+  <dimen name="md_action_button_min_width">64dp</dimen>
+  <dimen name="md_action_button_padding_horizontal">8dp</dimen>
+  <dimen name="md_action_button_spacing">8dp</dimen>
+  <dimen name="md_action_button_corner_radius">2dp</dimen>
+  <dimen name="md_action_button_textsize">14sp</dimen>
+
+  <dimen name="md_stacked_action_button_height">48dp</dimen>
+  <dimen name="md_stacked_action_button_padding_horizontal">16dp</dimen>
+
+  <dimen name="md_title_textsize">20sp</dimen>
+  <dimen name="md_message_textsize">16sp</dimen>
+
+  <dimen name="md_icon_margin">12dp</dimen>
+  <dimen name="md_icon_size">42dp</dimen>
+
+  <dimen name="md_listitem_vertical_margin">12dp</dimen>
+  <dimen name="md_listitem_vertical_margin_choice">8dp</dimen>
+  <dimen name="md_listitem_textsize">16sp</dimen>
+  <dimen name="md_listitem_height">48dp</dimen>
+  <dimen name="md_listitem_control_margin">6dp</dimen>
+  <dimen name="md_listitem_margin_left">24dp</dimen>
+
+  <dimen name="md_checkbox_prompt_margin_horizontal">16dp</dimen>
+  <dimen name="md_checkbox_prompt_margin_vertical">10dp</dimen>
+  <dimen name="md_divider_height">1dp</dimen>
+
+</resources>

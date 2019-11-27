@@ -67,9 +67,7 @@
             app:timeline_top_radio_color="@color/timelineBG"
             app:timeline_type="line" />
 
-        <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <pl.hypeapp.materialtimelineview.MaterialTimelineView
             android:id="@+id/timeline_top_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,7 +85,7 @@
             app:timeline_radio_radius="15"
             app:timeline_type="item">
 
-            <com.ahcjapps.battlebuddy.views.CardCornerAlert
+            <com.brokenstrawapps.battlebuddy.views.CardCornerAlert
                 android:id="@+id/stats_corner_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -148,9 +146,44 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/rankL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/rankRibbon"
+                    android:layout_width="80dp"
+                    android:layout_height="37dp"
+                    android:adjustViewBounds="true"
+                    android:paddingBottom="3dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ribbon_beginner"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/rankMedal"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:layout_marginTop="-10dp"
+                    app:layout_constraintEnd_toEndOf="@+id/game_version_icon"
+                    app:layout_constraintStart_toStartOf="@+id/game_version_icon"
+                    app:layout_constraintTop_toBottomOf="@+id/game_version_icon"
+                    app:srcCompat="@drawable/beginner_02" />
+
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/player1Icon"
                 android:layout_width="80dp"
+                android:visibility="invisible"
                 android:layout_height="80dp"
                 android:layout_marginStart="12dp"
                 android:adjustViewBounds="true"
@@ -166,9 +199,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/player1Icon"
-                app:layout_constraintStart_toEndOf="@+id/player1Icon"
-                app:layout_constraintTop_toTopOf="@+id/player1Icon">
+                app:layout_constraintBottom_toBottomOf="@+id/rankL"
+                app:layout_constraintStart_toEndOf="@+id/rankL"
+                app:layout_constraintTop_toTopOf="@+id/rankL">
 
                 <TextView
                     android:id="@+id/statsPlayerName"
@@ -178,7 +211,7 @@
                     android:textColor="#FFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/player1Icon"
+                    app:layout_constraintStart_toEndOf="@+id/rankL"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextSwitcher
@@ -189,7 +222,7 @@
                     android:text="POINTS: 2,081"
                     android:textColor="#FFF"
                     android:textSize="13sp"
-                    app:layout_constraintStart_toEndOf="@+id/player1Icon"
+                    app:layout_constraintStart_toEndOf="@+id/rankL"
                     app:layout_constraintTop_toBottomOf="@+id/statsPlayerName" />
 
             </LinearLayout>
@@ -203,7 +236,7 @@
                 android:gravity="center"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                app:layout_constraintTop_toBottomOf="@+id/player1Icon">
+                app:layout_constraintTop_toBottomOf="@+id/rankL">
 
                 <LinearLayout
                     android:layout_width="0dp"

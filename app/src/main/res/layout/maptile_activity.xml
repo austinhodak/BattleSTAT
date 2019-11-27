@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.ahcjapps.battlebuddy.views.TelemetryMapVIew
+    <com.brokenstrawapps.battlebuddy.views.TelemetryMapVIew
         android:id="@+id/pinview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

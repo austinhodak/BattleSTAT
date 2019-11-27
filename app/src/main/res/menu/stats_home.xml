@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/matches_menu"
-        android:icon="@drawable/gun_firing"
+        android:icon="@drawable/icons8_scoreboard_"
         android:title="Matches" />
 
     <item
@@ -20,5 +20,10 @@
         android:id="@+id/stats_leaderboards"
         android:icon="@drawable/leaderboard_icon"
         android:title="Leaderboards" />
+
+    <item
+        android:id="@+id/stats_weapon_mastery"
+        android:icon="@drawable/icons8_assault_rifle"
+        android:title="Mastery" />
 
 </menu>

@@ -14,7 +14,7 @@
         android:background="@color/timelineBG"
         android:theme="@style/ToolbarTheme" />
 
-    <com.ahcjapps.battlebuddy.map.MapDropImage
+    <com.brokenstrawapps.battlebuddy.map.MapDropImage
         android:id="@+id/dropMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

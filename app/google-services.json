@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "244493793819",
-    "firebase_url": "https://battlegrounds-battle-buddy.firebaseio.com",
-    "project_id": "battlegrounds-battle-buddy",
-    "storage_bucket": "battlegrounds-battle-buddy.appspot.com"
+    "project_number": "563426283360",
+    "firebase_url": "https://battlegrounds-buddy-2fe99.firebaseio.com",
+    "project_id": "battlegrounds-buddy-2fe99",
+    "storage_bucket": "battlegrounds-buddy-2fe99.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:244493793819:android:1418db5fc3bab7c5",
+        "mobilesdk_app_id": "1:563426283360:android:828769e350dabb2626d805",
         "android_client_info": {
-          "package_name": "com.ahcjapps.battlebuddy"
+          "package_name": "com.brokenstrawapps.battlebuddy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "244493793819-htns96ekjkq16fouuu1vt1do1tugeefg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ahcjapps.battlebuddy",
-            "certificate_hash": "3b5c1745a36b063138d552cf3dd14a9049cc2cdc"
-          }
-        },
-        {
-          "client_id": "244493793819-n4sj7tbc8mdfeaov6jkofnmdfj2g1g9v.apps.googleusercontent.com",
+          "client_id": "563426283360-8fek2nc36iu08mjekrpan9ju7lqdmq58.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD26Ga-0k5GcB4N5eGmUj07t3-YPn1B3sc"
+          "current_key": "AIzaSyCn9k6gmAVR6mOyKFk0U_FxcB2-8C6GGhU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "244493793819-n4sj7tbc8mdfeaov6jkofnmdfj2g1g9v.apps.googleusercontent.com",
+              "client_id": "563426283360-8fek2nc36iu08mjekrpan9ju7lqdmq58.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

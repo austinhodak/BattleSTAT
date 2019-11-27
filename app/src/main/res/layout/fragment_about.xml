@@ -114,7 +114,7 @@
                             app:layout_constraintVertical_bias="0.0" />
 
                         <ImageView
-                            android:id="@+id/game_version_icon"
+                            android:id="@+id/rankRibbon"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_marginStart="24dp"
@@ -194,7 +194,7 @@
                             app:layout_constraintVertical_bias="0.0" />
 
                         <ImageView
-                            android:id="@+id/game_version_icon"
+                            android:id="@+id/rankRibbon"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_marginStart="24dp"
@@ -265,7 +265,7 @@
                             app:layout_constraintVertical_bias="0.0" />
 
                         <ImageView
-                            android:id="@+id/game_version_icon"
+                            android:id="@+id/rankRibbon"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_marginStart="24dp"
