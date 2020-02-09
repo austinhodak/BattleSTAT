@@ -33,9 +33,11 @@ class MapDownloadActivity : AppCompatActivity() {
         buttonMaps[Map.SANHOK_HIGH] = sanhokHigh
         buttonMaps[Map.VIKENDI_LOW] = vikendiLow
         buttonMaps[Map.VIKENDI_HIGH] = vikendiHigh
+        buttonMaps[Map.KARAKIN_LOW] = karakinLow
+        buttonMaps[Map.KARAKIN_HIGH] = karakinHigh
 
         toolbar.setNavigationOnClickListener { onBackPressed() }
-        toolbar.navigationIconResource = R.drawable.instabug_ic_back
+        toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
 
         val fetchConfiguration = FetchConfiguration.Builder(this)
                 .setDownloadConcurrentLimit(4)
@@ -223,5 +225,7 @@ enum class Map (var fileName: String) {
     SANHOK_LOW("Sanhok_Main_Low_Res.png"),
     SANHOK_HIGH("Sanhok_Main_High_Res.png"),
     VIKENDI_LOW("Vikendi_Main_Low_Res.png"),
-    VIKENDI_HIGH("Vikendi_Main_High_Res.png")
+    VIKENDI_HIGH("Vikendi_Main_High_Res.png"),
+    KARAKIN_LOW("Karakin_Main_Low_Res.png"),
+    KARAKIN_HIGH("Karakin_Main_High_Res.png")
 }

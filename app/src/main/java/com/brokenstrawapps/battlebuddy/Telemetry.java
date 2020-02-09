@@ -295,6 +295,7 @@ public class Telemetry {
         object.put("psn-na", "PSN NA");
         object.put("psn-oc", "PSN OC");
         object.put("psn", "PSN");
+        object.put("console", "CONSOLE");
         return object;
     }
 

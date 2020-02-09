@@ -72,7 +72,7 @@ public class CompareWeaponPicker extends AppCompatActivity {
 
         title.setText("Compare With " + getIntent().getStringExtra("weapon_name"));
 
-        mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
+        mSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", MODE_PRIVATE);
 
         firstWeapon = getIntent().getStringExtra("firstWeapon");
 

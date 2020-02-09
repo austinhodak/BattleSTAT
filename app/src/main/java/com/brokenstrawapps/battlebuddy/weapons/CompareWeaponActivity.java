@@ -160,7 +160,7 @@ public class CompareWeaponActivity extends AppCompatActivity {
         super.onStart();
         title.setText("Comparing Weapons");
 
-        mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
+        mSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", MODE_PRIVATE);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

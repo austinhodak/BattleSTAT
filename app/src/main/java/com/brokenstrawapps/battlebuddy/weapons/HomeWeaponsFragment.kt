@@ -55,7 +55,7 @@ class HomeWeaponsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        mSharedPreferences = requireActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE)
+        mSharedPreferences = requireActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", MODE_PRIVATE)
         return inflater.inflate(R.layout.fragment_home_weapons, container, false)
     }
 
@@ -103,7 +103,7 @@ class HomeWeaponsFragment : Fragment() {
         tabs?.setupWithViewPager(viewpager)
 
         if (activity != null) {
-            val sharedPreferences = requireActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE)
+            val sharedPreferences = requireActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", MODE_PRIVATE)
             val favs = sharedPreferences.getStringSet("favoriteWeapons", null)
             if (favs != null && !favs.isEmpty()) {
                 tabs?.addTab(tabs?.newTab()?.setCustomView(R.layout.tab_fav)!!, 0)

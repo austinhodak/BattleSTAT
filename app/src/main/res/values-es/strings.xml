@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Battle Buddy</string>
+    <string name="app_name">BattleSTAT</string>
     <string name="drawer_title_update">Actualizaciones</string>
     <string name="drawer_title_weapons">Armas</string>
     <string name="drawer_title_upgrade">Mejorar</string>

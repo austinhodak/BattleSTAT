@@ -124,6 +124,19 @@ data class PlayerListModel(
         }
     }
 
+
+    fun runGetMastery():  Task<Map<String, Any>> {
+        val data = HashMap<String, Any>()
+        data["playerID"] = this.playerID
+        data["platformID"] = this.platform.id
+
+        return FirebaseFunctions.getInstance().getHttpsCallable("getPlayerWeaponMasteryData").call(data).continueWith { task ->
+            val result = task.result?.data as Map<String, Any>
+            Log.d("REQUEST", result.toString())
+            result
+        }
+    }
+
     /**
      * Gets all the players stats, including season and matches
      */

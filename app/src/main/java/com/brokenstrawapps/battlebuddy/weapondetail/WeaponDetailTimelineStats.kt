@@ -32,7 +32,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.storage.FirebaseStorage
-import com.instabug.bug.BugReporting
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import kotlinx.android.synthetic.main.fragment_weapon_timeline_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
@@ -213,7 +212,6 @@ class WeaponDetailTimelineStats : Fragment() {
                 browse(weapon.wiki)
             }
             if (it.itemId == R.id.weaponFeedback) {
-                BugReporting.invoke()
             }
             return@setOnMenuItemClickListener true
         }

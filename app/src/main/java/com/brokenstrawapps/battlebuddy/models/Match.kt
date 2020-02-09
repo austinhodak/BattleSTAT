@@ -29,6 +29,7 @@ data class Match (
             "Savage_Main" -> R.drawable.ic_palm_tree
             "Erangel_Main" -> R.drawable.ic_tree
             "Desert_Main" -> R.drawable.ic_cactus
+            "Summerland_Main" -> R.drawable.canyon_white
             else -> R.drawable.snowflake_white
         }
     }

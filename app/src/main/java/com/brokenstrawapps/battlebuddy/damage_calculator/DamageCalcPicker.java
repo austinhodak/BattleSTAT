@@ -65,7 +65,7 @@ public class DamageCalcPicker extends AppCompatActivity {
 
         //title.setText("Damage Calculator");
 
-        mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
+        mSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", MODE_PRIVATE);
 
         firstWeapon = getIntent().getStringExtra("firstWeapon");
 

@@ -38,11 +38,11 @@ class ComparePlayersActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
+        overridePendingTransition(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
         setContentView(R.layout.player_compare_main_stats)
 
         setSupportActionBar(toolbar)
-        toolbar.navigationIconResource = R.drawable.instabug_ic_back
+        toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         setupAdapters()

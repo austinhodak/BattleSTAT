@@ -18,7 +18,7 @@ class AlertManager : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
+        overridePendingTransition(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
         setContentView(R.layout.dialog_alert_manager)
 
         val enabledColor = resources.getColor(R.color.timelineGreen)
@@ -29,9 +29,9 @@ class AlertManager : AppCompatActivity() {
 
         if (intent.action != null) {
             toolbar_title?.text = "Pick a Player"
-            toolbar.navigationIconResource = R.drawable.instabug_ic_close
+            toolbar.navigationIconResource = R.drawable.ic_close_24dp
         } else {
-            toolbar.navigationIconResource = R.drawable.instabug_ic_back
+            toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
         }
 
         toolbar.setNavigationOnClickListener { onBackPressed() }

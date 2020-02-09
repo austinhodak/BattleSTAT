@@ -274,7 +274,7 @@ class MatchListFragmentNew : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mSharedPreferences = requireActivity().getSharedPreferences("com.austinh.battlebuddy", android.content.Context.MODE_PRIVATE)
+        mSharedPreferences = requireActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", android.content.Context.MODE_PRIVATE)
         mDatabase = FirebaseDatabase.getInstance()
         mFunctions = FirebaseFunctions.getInstance()
         mFirestore = FirebaseFirestore.getInstance()

@@ -11,25 +11,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.iid.FirebaseInstanceId
-import com.instabug.library.Instabug
-import com.instabug.library.invocation.InstabugInvocationEvent
-import com.instabug.library.ui.onboarding.WelcomeMessage
 import timber.log.Timber
 
 class Application : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-
-        if (BuildConfig.VERSION_NAME.contains("Beta", true)) {
-            Instabug.Builder(this, "33e193600a878be09243378fd2a0aa05")
-                    .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT)
-                    .build()
-        } else {
-            Instabug.Builder(this, "b78ba0c060ea6b8883b4de328ca0ed93")
-                    .setInvocationEvents(InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT)
-                    .build()
-        }
 
         if (BuildConfig.DEBUG) {
             initDebug()
@@ -39,8 +26,6 @@ class Application : MultiDexApplication() {
 
         Premium.init(applicationContext)
 
-        Instabug.setWelcomeMessageState(WelcomeMessage.State.DISABLED)
-        Instabug.setPrimaryColor(resources.getColor(R.color.md_red_500))
 
         FirebaseApp.getInstance()
 
@@ -69,7 +54,7 @@ class Application : MultiDexApplication() {
 
         Ads.init(applicationContext)
 
-        MobileAds.initialize(this, "ca-app-pub-1646739421365093~2508030809")
+        MobileAds.initialize(this, "ca-app-pub-2981302488834327~6662457919")
 
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
             Timber.d("${it.id} -- ${it.token}")

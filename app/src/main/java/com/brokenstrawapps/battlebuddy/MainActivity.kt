@@ -20,6 +20,7 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingResult
 import com.brokenstrawapps.battlebuddy.R.string
 import com.brokenstrawapps.battlebuddy.ammo.HomeAmmoList
 import com.brokenstrawapps.battlebuddy.attachments.HomeAttachmentsFragment
@@ -52,8 +53,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.instabug.bug.BugReporting
-import com.instabug.library.Instabug
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.materialdrawer.AccountHeader
@@ -117,8 +116,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mSharedPreferences = this.getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
-        newSharedPreferences = this.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
+        mSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
+        newSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
 
         setSupportActionBar(main_toolbar)
         toolbar_title.text = getString(R.string.drawer_title_weapons)
@@ -131,24 +130,25 @@ class MainActivity : AppCompatActivity() {
         updatePremiumStuff()
 
         billingClient = BillingClient.newBuilder(this).setListener { responseCode, purchases ->
-            if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+            if (responseCode.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                 for (purchase in purchases) {
                     Premium.handlePurchase(purchase)
                 }
 
                 updatePremiumStuff()
-            } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            } else if (responseCode.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
                 // Handle an error caused by a user cancelling the purchase flow.
             } else {
                 // Handle any other error codes.
             }
         }.build()
 
+
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingServiceDisconnected() {}
 
-            override fun onBillingSetupFinished(responseCode: Int) {
-                if (responseCode == BillingClient.BillingResponse.OK) {
+            override fun onBillingSetupFinished(responseCode: BillingResult) {
+                if (responseCode.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The billing client is ready. You can query purchases here.
                     val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
                     for (purchase in purchases.purchasesList) {
@@ -428,7 +428,7 @@ class MainActivity : AppCompatActivity() {
                                 .withAboutIconShown(true)
                                 .withAboutVersionShown(true)
                                 .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                                .withActivityTitle("Battlegrounds Battle Buddy")
+                                .withActivityTitle("BattleSTAT")
                                 .withAboutDescription("")
                                 .start(this)
                     }
@@ -455,7 +455,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     if (drawerItem.identifier.toString() == "501") {
-                        BugReporting.invoke()
+                        //BugReporting.invoke()
 
                         logDrawerEvent("feedback")
                     }
@@ -469,8 +469,8 @@ class MainActivity : AppCompatActivity() {
                     if (drawerItem.identifier.toString() == "502") {
                         val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                         sharingIntent.type = "text/plain"
-                        val shareBody = "https://play.google.com/store/apps/details?id=com.austinh.battlebuddy"
-                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out Battlegrounds Battle Buddy on the Google Play Store!")
+                        val shareBody = "https://play.google.com/store/apps/details?id=com.brokenstrawapps.battlebuddy"
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out BattleSTAT: Stats for PUBG on the Google Play Store!")
                         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
                         startActivity(sharingIntent)
                     }
@@ -604,12 +604,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun notifySignedOut() {
         val header = headerResult.profiles[0]
-        header.withName("Battle Buddy")
+        header.withName("BattleSTAT")
         headerResult.updateProfile(header)
 
         result.removeItem(90002)
 
-        Instabug.logoutUser()
+        //Instabug.logoutUser()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -791,7 +791,7 @@ class MainActivity : AppCompatActivity() {
         val headerText = result.header.findViewById<TextView>(R.id.header_name)
 
         levelText.text = Premium.getLevelText(Premium.getUserLevel())
-        headerText.text = "Battle Buddy"
+        headerText.text = "BattleSTAT"
 
         FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {

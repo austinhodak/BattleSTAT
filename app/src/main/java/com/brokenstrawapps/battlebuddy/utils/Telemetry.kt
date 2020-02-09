@@ -42,4 +42,12 @@ object Telemetry {
         damateTypes = JSONObject(objectString)
         return damateTypes!!
     }
+
+    fun getMedals(context: Context): JSONObject {
+        if (damateTypes!= null) return damateTypes!!
+
+        val objectString: String = context.resources.openRawResource(R.raw.medal_name).bufferedReader().use { it.readText() }
+        damateTypes = JSONObject(objectString)
+        return damateTypes!!
+    }
 }

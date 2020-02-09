@@ -68,7 +68,7 @@ class MainStatsFragmentNew : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mDatabase = FirebaseDatabase.getInstance().reference
         mFunctions = FirebaseFunctions.getInstance()
-        mSharedPreferences = activity!!.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
+        mSharedPreferences = activity!!.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
 
         val player = arguments!!.getSerializable("selectedPlayer") as PlayerListModel
         isOverallStats = player.isOverallStatsSelected

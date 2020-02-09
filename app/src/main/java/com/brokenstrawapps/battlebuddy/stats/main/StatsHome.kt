@@ -88,7 +88,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         mRewardedVideoAd?.rewardedVideoAdListener = this
 
         if (!Premium.isUserLevel3() || !Premium.isUserLevel2()) {
-            mRewardedVideoAd?.loadAd("ca-app-pub-1646739421365093/9274148507",
+            mRewardedVideoAd?.loadAd("ca-app-pub-2981302488834327/7468079609",
                     Ads.getAdBuilder())
         }
 
@@ -238,6 +238,8 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 }
             })
 
+            viewModel.getPlayerWeaponMastery(player!!)
+
             setupBottomNav(selectedPlayer)
 
             statsRefreshLayout?.setOnRefreshListener {
@@ -271,7 +273,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                                         }.show()
                             }.build().show()
                 } else {
-                    mRewardedVideoAd?.loadAd("ca-app-pub-1646739421365093/9274148507",
+                    mRewardedVideoAd?.loadAd("ca-app-pub-2981302488834327/7592396200",
                             Ads.getAdBuilder())
 
                     statsRefreshLayout?.isRefreshing = false
@@ -309,6 +311,8 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
 
         if (!selectedPlayer.isLifetimeSelected)
         selectedPlayer.runGetMatches()
+
+        selectedPlayer.runGetMastery()
     }
 
     private fun tabSelected(gameMode: String, player: PlayerListModel, itemId: Int) {
@@ -454,11 +458,11 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
                 val view = dialog.getCustomView()
 
                 val flexBox = view!!.findViewById<FlexboxLayout>(R.id.statsBox)
-                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Wins", statValue = "14"))
-                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Top 10s", statValue = "26"))
-                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Kills", statValue = "800"))
-                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "Headshots", statValue = "254"))
-                flexBox.addView(com.austinh.battlebuddy.views.StatItem(this, statName = "K/D", statValue = "5.30"))
+                flexBox.addView(com.brokenstrawapps.battlebuddy.views.StatItem(this, statName = "Wins", statValue = "14"))
+                flexBox.addView(com.brokenstrawapps.battlebuddy.views.StatItem(this, statName = "Top 10s", statValue = "26"))
+                flexBox.addView(com.brokenstrawapps.battlebuddy.views.StatItem(this, statName = "Kills", statValue = "800"))
+                flexBox.addView(com.brokenstrawapps.battlebuddy.views.StatItem(this, statName = "Headshots", statValue = "254"))
+                flexBox.addView(com.brokenstrawapps.battlebuddy.views.StatItem(this, statName = "K/D", statValue = "5.30"))
                 dialog.show()*/
             }
             R.id.compare_players -> {
@@ -495,7 +499,7 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
             hasReward = false
         }
 
-        mRewardedVideoAd?.loadAd("ca-app-pub-1646739421365093/9274148507",
+        mRewardedVideoAd?.loadAd("ca-app-pub-2981302488834327/7592396200",
                 Ads.getAdBuilder())
     }
 

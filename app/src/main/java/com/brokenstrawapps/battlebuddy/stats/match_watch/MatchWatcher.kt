@@ -39,7 +39,7 @@ class MatchWatcher : JobService() {
         val seasonID = params.extras.getString("seasonID")
         val lastSix = params.extras.getString("lastSix")
 
-        FirebaseDatabase.getInstance().reference.child("user_stats/$playerID/allMatches/$platformID/${seasonID.toLowerCase()}/matches").orderByChild("createdAt").limitToLast(5).addValueEventListener(object : ValueEventListener {
+        FirebaseDatabase.getInstance().reference.child("user_stats/$playerID/allMatches/$platformID/${seasonID?.toLowerCase()}/matches").orderByChild("createdAt").limitToLast(5).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }

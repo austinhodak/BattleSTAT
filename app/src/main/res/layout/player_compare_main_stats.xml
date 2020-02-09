@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@color/md_grey_900"
             app:layout_scrollFlags="scroll"
-            app:navigationIcon="@drawable/instabug_ic_back">
+            app:navigationIcon="@drawable/ic_arrow_back_24dp">
 
             <LinearLayout
                 android:id="@+id/top_bar_linear"

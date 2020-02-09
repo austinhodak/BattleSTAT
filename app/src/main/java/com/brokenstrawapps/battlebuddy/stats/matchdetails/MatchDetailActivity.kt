@@ -144,7 +144,7 @@ class MatchDetailActivity : AppCompatActivity() {
         //TODO UPDATE
         //GoodPrefs.getInstance().saveInt("matchDetailLaunchCount", (GoodPrefs.getInstance().getInt("matchDetailLaunchCount", 0) + 1))
 
-        mInterstitialAd.adUnitId = "ca-app-pub-1646739421365093/5536840201"
+        mInterstitialAd.adUnitId = "ca-app-pub-2981302488834327/1026987854"
         if (!Premium.isAdFreeUser()) {
             //mInterstitialAd.loadAd(Ads.getAdBuilder())
         }
@@ -152,7 +152,7 @@ class MatchDetailActivity : AppCompatActivity() {
         if (!Premium.isAdFreeUser()) {
             val statsBanner = AdView(this)
             statsBanner.adSize = com.google.android.gms.ads.AdSize.BANNER
-            statsBanner.adUnitId = "ca-app-pub-1646739421365093/4415330222"
+            statsBanner.adUnitId = "ca-app-pub-2981302488834327/6726392316"
             //statsBanner.loadAd(Ads.getAdBuilder())
             statsBanner.adListener = object : AdListener() {
                 override fun onAdLoaded() {
@@ -212,7 +212,7 @@ class MatchDetailActivity : AppCompatActivity() {
             mDrawer.setSelection(10)
         }
 
-        mDrawer.addStickyFooterItem(SecondaryDrawerItem().withName("Match Ping: ${capitalize(matchModel.eventList!!.getMatchDefinition().PingQuality)} Quality").withEnabled(false).withSelectable(false))
+        mDrawer.addStickyFooterItem(SecondaryDrawerItem().withIdentifier(10001).withName("Match Ping: ${capitalize(matchModel.eventList!!.getMatchDefinition().PingQuality)} Quality").withEnabled(false).withSelectable(false))
 
         match_loading_lottie?.pauseAnimation()
         match_loading_lottie?.visibility = View.GONE
@@ -478,7 +478,8 @@ class MatchDetailActivity : AppCompatActivity() {
 
     private fun shareMatch() {
         Log.d("MATCH URI", createShareUri(matchID!!, regionID!!).toString())
-        createDynamicUri(createShareUri(matchID!!, regionID!!))
+        toast("This feature will be back soon, standby!")
+        //createDynamicUri(createShareUri(matchID!!, regionID!!))
     }
 
     private fun createShareUri(matchId: String, shardId: String): Uri {
@@ -492,7 +493,7 @@ class MatchDetailActivity : AppCompatActivity() {
 
         val firstURL = URLEncoder.encode("http://www.pubgbuddy.gg/match?matchId=$matchId&platform=$platformString", "UTF-8")
 
-        val url = "https://pubgbuddy.page.link/?link=$firstURL&apn=com.austinh.battlebuddy&amv=10401000"
+        val url = "https://pubgbuddy.page.link/?link=$firstURL&apn=com.brokenstrawapps.battlebuddy&amv=10401000"
         return Uri.parse(url)
     }
 
@@ -503,7 +504,7 @@ class MatchDetailActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val shortLink = task.result?.shortLink
-                        val msg = "Check out my @PUBG Match on Battle Buddy (@PUBGBuddy): $shortLink"
+                        val msg = "Check out my @PUBG Match on BattleSTAT (@PUBGBuddy): $shortLink"
                         val sendIntent = Intent()
                         sendIntent.action = Intent.ACTION_SEND
                         sendIntent.putExtra(Intent.EXTRA_TEXT, msg)

@@ -19,11 +19,11 @@ class ProfileMain : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
+        overridePendingTransition(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
         setContentView(R.layout.fragment_about)
         setSupportActionBar(toolbar)
 
-        toolbar.navigationIconResource = R.drawable.instabug_ic_back
+        toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         val user = FirebaseAuth.getInstance().currentUser ?: return
@@ -56,7 +56,7 @@ class ProfileMain : AppCompatActivity() {
 
     private fun updateProfile() {
         val user = FirebaseAuth.getInstance().currentUser ?: return
-        profileDisplayName?.text = user.displayName ?: "Battle Buddy"
+        profileDisplayName?.text = user.displayName ?: "BattleSTAT"
         profileEmail?.text = user.email ?: "No Email"
         profilePhone?.text = user.phoneNumber ?: "No Phone Number"
     }

@@ -18,8 +18,8 @@ object Premium {
     lateinit var billingClient: BillingClient
 
     fun init(context: Context) {
-        mOldSharedPreferences = context.getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
-        mSharedPreferences = context.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
+        mOldSharedPreferences = context.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
+        mSharedPreferences = context.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
         setupBilling(context)
 
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) { getIAPs() }
@@ -28,22 +28,22 @@ object Premium {
 
     private fun setupBilling(context: Context) {
         billingClient = BillingClient.newBuilder(context).setListener { responseCode, purchases ->
-            if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+            if (responseCode.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                 for (purchase in purchases) {
                     handlePurchase(purchase)
                 }
-            } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            } else if (responseCode.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
                 // Handle an error caused by a user cancelling the purchase flow.
             } else {
                 // Handle any other error codes.
             }
-        }.build()
+        }.enablePendingPurchases().build()
 
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingServiceDisconnected() {}
 
-            override fun onBillingSetupFinished(responseCode: Int) {
-                if (responseCode == BillingClient.BillingResponse.OK) {
+            override fun onBillingSetupFinished(responseCode: BillingResult) {
+                if (responseCode.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The billing client is ready. You can query purchases here.
                     val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
                     for (purchase in purchases.purchasesList) {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/timelineBG"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/timelineBG">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/upgradeToolbarWaterfall"
@@ -38,21 +38,18 @@
                 style="@style/Widget.MaterialComponents.TabLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/level_1_helmet"
                 android:text="Level 1" />
 
             <com.google.android.material.tabs.TabItem
                 style="@style/Widget.MaterialComponents.TabLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/level_2_helmet"
                 android:text="Level 2" />
 
             <com.google.android.material.tabs.TabItem
                 style="@style/Widget.MaterialComponents.TabLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/level_3_helmet"
                 android:text="Level 3" />
 
         </com.google.android.material.tabs.TabLayout>
@@ -71,8 +68,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
+
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:layout_marginLeft="8dp"
@@ -84,8 +81,7 @@
 
             </pl.hypeapp.materialtimelineview.MaterialTimelineView>
 
-            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_marginLeft="8dp"
@@ -127,8 +123,7 @@
 
             </pl.hypeapp.materialtimelineview.MaterialTimelineView>
 
-            <pl.hypeapp.materialtimelineview.MaterialTimelineView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <pl.hypeapp.materialtimelineview.MaterialTimelineView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -161,8 +156,7 @@
                         android:textStyle="bold" />
 
 
-                    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -196,8 +190,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -231,8 +224,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -266,9 +258,10 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/level1Buy"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:textColor="#FFF"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
@@ -460,9 +453,10 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/level2Buy"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:textColor="#FFF"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
@@ -655,9 +649,10 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/level3Buy"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:textColor="#FFF"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"

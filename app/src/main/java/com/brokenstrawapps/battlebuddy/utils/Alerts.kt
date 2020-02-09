@@ -7,7 +7,7 @@ object Alerts {
     lateinit var mSharedPreferences: SharedPreferences
 
     fun init(context: Context) {
-        mSharedPreferences = context.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
+        mSharedPreferences = context.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
     }
 
     /**

@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.brokenstrawapps.battlebuddy.R
+import com.brokenstrawapps.battlebuddy.models.PlayerListModel
 import com.brokenstrawapps.battlebuddy.utils.Premium
+import com.brokenstrawapps.battlebuddy.utils.Weapons
 import com.brokenstrawapps.battlebuddy.weapons.MainWeaponsList
 import com.google.android.gms.ads.AdListener
 import kotlinx.android.synthetic.main.fragment_home_weapons.*
@@ -18,11 +20,13 @@ import java.util.*
 
 class MasteryTabsFragment : Fragment() {
 
-    private val mStringArray = ArrayList<String>()
+    private val mStringArray = ArrayList<Weapons.CATEGORY>()
 
     internal inner class ViewPagerAdapter
 
     (manager: FragmentManager) : FragmentPagerAdapter(manager) {
+
+        val player = arguments!!.getSerializable("selectedPlayer") as PlayerListModel
 
         override fun getCount(): Int {
             return mStringArray.size
@@ -34,6 +38,8 @@ class MasteryTabsFragment : Fragment() {
             currentFragment = MasteryWeaponListFragment()
 
             bundle.putInt("pos", position)
+            bundle.putSerializable("category", mStringArray[position])
+            bundle.putSerializable("player", player)
             /*if (tabs?.tabCount == 10 && position == 0) {
                 bundle.putBoolean("isFavoriteTab", true)
             } else if (tabs?.tabCount == 10) {
@@ -47,7 +53,7 @@ class MasteryTabsFragment : Fragment() {
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            return mStringArray[position]
+            return mStringArray[position].title
         }
     }
 
@@ -56,7 +62,7 @@ class MasteryTabsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        mSharedPreferences = requireActivity().getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
+        mSharedPreferences = requireActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
         return inflater.inflate(R.layout.fragment_mastery_tabs, container, false)
     }
 
@@ -85,6 +91,9 @@ class MasteryTabsFragment : Fragment() {
     }
 
     private fun setupTabs() {
+
+        val list = Weapons.CATEGORY.values()
+
         val title = arrayOf(
                 getString(R.string.assault_rifles),
                 getString(R.string.sniper_rifles),
@@ -96,15 +105,16 @@ class MasteryTabsFragment : Fragment() {
                 getString(R.string.throwables),
                 getString(R.string.melee), "Misc"
         )
-        mStringArray.addAll(Arrays.asList(*title))
+
+        mStringArray.addAll(list)
 
         val adapter = ViewPagerAdapter(childFragmentManager)
         viewpager?.adapter = adapter
 
         tabs?.setupWithViewPager(viewpager)
 
-        if (activity != null) {
-            val sharedPreferences = requireActivity().getSharedPreferences("com.austinhodak.pubgcenter", Context.MODE_PRIVATE)
+        /*if (activity != null) {
+            val sharedPreferences = requireActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
             val favs = sharedPreferences.getStringSet("favoriteWeapons", null)
             if (favs != null && !favs.isEmpty()) {
                 tabs?.addTab(tabs?.newTab()?.setCustomView(R.layout.tab_fav)!!, 0)
@@ -117,6 +127,6 @@ class MasteryTabsFragment : Fragment() {
                 mStringArray.add(0, String(Character.toChars(emoji)))
                 adapter.notifyDataSetChanged()
             }
-        }
+        }*/
     }
 }

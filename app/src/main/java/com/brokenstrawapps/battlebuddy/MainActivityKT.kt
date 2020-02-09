@@ -101,7 +101,7 @@ class MainActivityKT : AppCompatActivity() {
 
         if (!isGooglePlayServicesAvailable(this)) return
 
-        mSharedPreferences = this.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
+        mSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
 
         if (intent != null) {
             if (intent.hasExtra("url")) {
@@ -120,7 +120,7 @@ class MainActivityKT : AppCompatActivity() {
         if (!Premium.isAdFreeUser()) {
             val adView = com.google.android.gms.ads.AdView(this)
             adView.adSize = com.google.android.gms.ads.AdSize.BANNER
-            adView.adUnitId = "ca-app-pub-1646739421365093/5872560744"
+            adView.adUnitId = "ca-app-pub-2981302488834327/2723212900"
             adView.loadAd(Ads.getAdBuilder())
             adView.adListener = object : AdListener() {
                 override fun onAdLoaded() {
@@ -151,7 +151,7 @@ class MainActivityKT : AppCompatActivity() {
             val launchCount = mSharedPreferences?.getInt("launchCount", 0) ?: 0
             if (launchCount >= 2) {
                 mInterstitialAd = InterstitialAd(this)
-                mInterstitialAd?.adUnitId = "ca-app-pub-1646739421365093/5680989051"
+                mInterstitialAd?.adUnitId = "ca-app-pub-2981302488834327/3844722887"
                 mInterstitialAd?.loadAd(Ads.getAdBuilder())
             }
 
@@ -173,7 +173,7 @@ class MainActivityKT : AppCompatActivity() {
         Auth.setupAccount(FirebaseAuth.getInstance().currentUser)
 
         if (Auth.isUserAnon()) {
-            headerText?.text = "Battle Buddy"
+            headerText?.text = "BattleSTAT"
 
             mDrawer?.removeAllStickyFooterItems()
             mDrawer?.addStickyFooterItem(signInDrawerItem)
@@ -181,7 +181,7 @@ class MainActivityKT : AppCompatActivity() {
             mDrawer?.removeItem(2)
         } else {
             //User is NOT ANON
-            headerText?.text = Auth.getUser().displayName ?: "Battle Buddy"
+            headerText?.text = Auth.getUser().displayName ?: "BattleSTAT"
             mDrawer?.removeAllStickyFooterItems()
 
             if (!mDrawer?.drawerItems!!.contains(logoutDrawerItem))
@@ -370,7 +370,7 @@ class MainActivityKT : AppCompatActivity() {
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBody = "https://play.google.com/store/apps/details?id=com.ahcjapps.battlebuddy"
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out Battlegrounds Battle Buddy on the Google Play Store!")
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out BattleSTAT: Stats for PUBG on the Google Play Store!")
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
                     startActivity(sharingIntent)
                     true
@@ -490,7 +490,7 @@ class MainActivityKT : AppCompatActivity() {
         val pubgName = mDrawer?.header?.findViewById<TextView>(R.id.header_ingame_name)
 
         levelText?.text = Premium.getLevelText(Premium.getUserLevel())
-        headerText?.text = FirebaseAuth.getInstance().currentUser?.displayName ?: "Battle Buddy"
+        headerText?.text = FirebaseAuth.getInstance().currentUser?.displayName ?: "BattleSTAT"
         pubgName?.text = ""
 
         FirebaseDatabase.getInstance().getReference("users/${FirebaseAuth.getInstance().currentUser?.uid}/pubgAccountID").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -683,7 +683,7 @@ class MainActivityKT : AppCompatActivity() {
 
         val providers: List<AuthUI.IdpConfig> = Arrays.asList(
                 AuthUI.IdpConfig.GoogleBuilder().build(),
-                AuthUI.IdpConfig.TwitterBuilder().build(),
+                //AuthUI.IdpConfig.TwitterBuilder().build(),
                 AuthUI.IdpConfig.EmailBuilder().build(),
                 AuthUI.IdpConfig.PhoneBuilder().build())
 

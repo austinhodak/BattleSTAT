@@ -10,10 +10,10 @@
         <action
             android:id="@+id/mapSelected"
             app:destination="@id/mapDropRouletteMap"
-            app:enterAnim="@anim/instabug_fadein"
-            app:exitAnim="@anim/instabug_fadeout"
-            app:popEnterAnim="@anim/instabug_fadein"
-            app:popExitAnim="@anim/instabug_fadeout" />
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/mapDropRouletteMap"

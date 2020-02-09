@@ -45,6 +45,7 @@ data class MatchModel(
             "Savage_Main" -> R.drawable.sanhok_icon
             "Erangel_Main" -> R.drawable.erangel_icon
             "Desert_Main" -> R.drawable.cactu
+            "Summerland_Main" -> R.drawable.canyon_color
             else -> R.drawable.snowflake
         }
     }
@@ -70,6 +71,13 @@ data class MatchModel(
                     Map.MIRAMAR_HIGH.fileName
                 } else {
                     Map.MIRAMAR_LOW.fileName
+                }
+            }
+            "Summerland_Main" -> {
+                if (File(context.filesDir, Map.KARAKIN_HIGH.fileName).exists()) {
+                    Map.KARAKIN_HIGH.fileName
+                } else {
+                    Map.KARAKIN_LOW.fileName
                 }
             }
             else -> {

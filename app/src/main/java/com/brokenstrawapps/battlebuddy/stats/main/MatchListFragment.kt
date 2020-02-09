@@ -40,7 +40,7 @@ class MatchListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mSharedPreferences = requireActivity().getSharedPreferences("com.austinh.battlebuddy", android.content.Context.MODE_PRIVATE)
+        mSharedPreferences = requireActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", android.content.Context.MODE_PRIVATE)
         if (arguments != null && arguments!!.containsKey("selectedPlayer")) {
             mPlayer = arguments!!.getSerializable("selectedPlayer") as PlayerListModel
         }

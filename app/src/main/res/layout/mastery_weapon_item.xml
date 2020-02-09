@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/imageView15"
+                android:id="@+id/mastery_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginStart="12dp"
@@ -34,6 +35,7 @@
                 app:srcCompat="@drawable/mastery_master" />
 
             <ImageView
+                android:id="@+id/medal"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="8dp"
@@ -44,14 +46,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <com.qhutch.elevationimageview.ElevationImageView
                 android:id="@+id/weapon_icon"
+                app:elevation="5dp"
+                android:elevation="5dp"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:src="@drawable/weapon_vss"
-                app:layout_constraintStart_toEndOf="@+id/imageView15"
+                app:layout_constraintStart_toEndOf="@+id/mastery_icon"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -79,15 +83,27 @@
                 app:layout_constraintStart_toEndOf="@+id/weapon_icon"
                 app:layout_constraintTop_toBottomOf="@+id/weapon_title" />
 
-            <View
-                android:layout_width="50dp"
-                android:layout_height="2dp"
+            <LinearLayout
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weapon_icon"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
-                android:background="#E6AF2C"
-                android:visibility="visible"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weapon_icon" />
+                android:layout_marginEnd="12dp"
+                android:layout_width="match_parent"
+                android:weightSum="100"
+                android:layout_height="2dp">
+
+                <View
+                    android:id="@+id/divider_color"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:background="#E6AF2C"
+                    android:visibility="visible"
+                    android:layout_weight="50"/>
+
+            </LinearLayout>
 
             <View
                 android:id="@+id/divider"
@@ -115,6 +131,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/divider">
 
                 <LinearLayout
+                    android:id="@+id/ll"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -122,7 +139,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/statsHeadshots"
+                        android:id="@+id/killsTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -132,6 +149,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/t"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Kills"
@@ -141,6 +159,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -148,7 +167,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/statsHeadshots"
+                        android:id="@+id/knocksTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -158,6 +177,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@id/t"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Knocks"
@@ -167,6 +187,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -174,7 +195,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/statsHeadshots"
+                        android:id="@+id/damageTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -184,6 +205,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@id/t"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Damage"
@@ -193,6 +215,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -200,7 +223,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/statsHeadshots"
+                        android:id="@+id/headshotsTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -210,6 +233,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@id/t"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Headshots"
@@ -221,6 +245,7 @@
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
@@ -253,6 +278,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
+                        android:id="@id/t"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -260,7 +286,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/statsHeadshots"
+                            android:id="@+id/defeatsTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -270,6 +296,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@id/t"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Defeats"
@@ -279,6 +306,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@id/t"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -286,7 +314,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/statsKD"
+                            android:id="@+id/longestDefeatTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -296,6 +324,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@id/t"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Longest Defeat"
@@ -307,6 +336,7 @@
                 </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -314,533 +344,23 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/timeline_round"
                     android:backgroundTint="@color/md_grey_800"
-                    android:paddingBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-                    <TextView
-                        android:id="@+id/textView32"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/medalRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_marginTop="8dp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Medals"
-                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <LinearLayout
-                        android:id="@+id/l1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/l2"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView32">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medaldoublekill" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Double"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medaltriplekill" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Triple"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medalquadkill" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Quad"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medalfrenzy" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Frenzy"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medalrampage" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Rampage"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medalannihilation" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Annihilation"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/l2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/l1"
-                        app:layout_constraintTop_toBottomOf="@+id/textView32">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medaldeadeye" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Deadeye"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medalassassin" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Assassin"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medalfirstblood" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="First Blood"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medallastmanstanding" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginEnd="15dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Last Man Standing"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medallongshot" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Longshot"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <ImageView
-                                android:id="@+id/imageView16"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/medalpunisher" />
-
-                            <TextView
-                                android:id="@+id/textView33"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_bold"
-                                android:text="Bulletstorm"
-                                app:layout_constraintBottom_toTopOf="@+id/textView34"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_chainStyle="packed" />
-
-                            <TextView
-                                android:id="@+id/textView34"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="x222"
-                                android:textColor="#E6AF2C"
-                                android:textSize="12sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                                app:layout_constraintTop_toBottomOf="@+id/textView33" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

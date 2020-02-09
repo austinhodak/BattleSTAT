@@ -5,15 +5,17 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.brokenstrawapps.battlebuddy"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         //{Major} {Minor} {Patch} {0-Build}
-        versionCode 200010
-        versionName "2.0.1"
+        versionCode 100101
+        versionName "1.0.0-PRE"
         multiDexEnabled true
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
     }
     signingConfigs {
         release {
@@ -56,45 +58,45 @@ dependencies {
     implementation project(":slimadapter")
     implementation project(":graphview")
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.50"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.61"
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     //Firebase
-    implementation "com.google.firebase:firebase-core:17.2.1"
-    implementation "com.google.firebase:firebase-storage:19.1.0"
+    implementation "com.google.firebase:firebase-core:17.2.2"
+    implementation "com.google.firebase:firebase-storage:19.1.1"
     implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
-    implementation "com.google.firebase:firebase-auth:19.1.0"
-    implementation "com.google.firebase:firebase-firestore:21.3.0"
+    implementation "com.google.firebase:firebase-auth:19.2.0"
+    implementation "com.google.firebase:firebase-firestore:21.4.0"
     implementation "com.google.firebase:firebase-ads:18.3.0"
-    implementation "com.google.firebase:firebase-messaging:20.0.1"
-    implementation "com.google.firebase:firebase-config:19.0.3"
-    implementation "com.google.firebase:firebase-perf:19.0.2"
+    implementation "com.google.firebase:firebase-messaging:20.1.0"
+    implementation "com.google.firebase:firebase-config:19.1.1"
+    implementation "com.google.firebase:firebase-perf:19.0.5"
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
-    implementation "com.google.firebase:firebase-database:19.2.0"
-    implementation 'com.google.firebase:firebase-functions:19.0.1'
+    implementation "com.google.firebase:firebase-database:19.2.1"
+    implementation 'com.google.firebase:firebase-functions:19.0.2'
 
-    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.2'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.3'
     implementation 'com.google.firebase:firebase-dynamic-links:19.0.0'
 
+    implementation 'com.qhutch.elevationimageview:elevationimageview:2.4'
     //Support
     //implementation 'com.google.android.gms:play-services-ads:16.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
 
-    implementation 'androidx.browser:browser:1.0.0'
+    implementation 'androidx.browser:browser:1.2.0'
     implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation "androidx.annotation:annotation:1.0.2"
-    implementation "com.google.android.material:material:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "androidx.annotation:annotation:1.1.0"
+    implementation "com.google.android.material:material:1.1.0"
     implementation "androidx.constraintlayout:constraintlayout:1.1.3"
 
     implementation 'androidx.preference:preference:1.1.0'
 
-    implementation "android.arch.navigation:navigation-fragment:1.0.0"
+    implementation 'androidx.navigation:navigation-fragment:2.3.0-alpha01'
     // use -ktx for Kotlin
-    implementation "android.arch.navigation:navigation-ui:1.0.0" // use -ktx for Kotlin
+    implementation 'androidx.navigation:navigation-ui:2.3.0-alpha01' // use -ktx for Kotlin
 
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
@@ -117,7 +119,7 @@ dependencies {
     implementation 'com.prof.rssparser:rssparser:1.4.4'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.google.android.ads.consent:consent-library:1.0.7'
+    implementation 'com.google.android.ads.consent:consent-library:1.0.8'
     implementation 'com.android.volley:volley:1.1.1'
 
     implementation 'com.facebook.android:facebook-login:4.38.1'
@@ -126,22 +128,21 @@ dependencies {
 
     implementation "com.airbnb.android:lottie:2.6.1"
 
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation 'com.afollestad.material-dialogs:input:2.7.0'
 
-    implementation 'com.instabug.library:instabug:8.2.2'
-
-    implementation 'com.android.billingclient:billing:1.2'
+    implementation 'com.android.billingclient:billing:2.1.0'
 
     implementation 'pl.hypeapp:materialtimelineview:1.1'
 
     implementation "com.leinardi.android:speed-dial:2.0.0"
+    implementation 'com.android.billingclient:billing-ktx:2.1.0'
 
     implementation("com.twitter.sdk.android:twitter-core:3.3.0@aar") { transitive = true }
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
 
     implementation 'com.facebook.android:audience-network-sdk:5.1.0'
 

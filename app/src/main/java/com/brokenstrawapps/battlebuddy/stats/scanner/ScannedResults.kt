@@ -46,11 +46,11 @@ class ScannedResults : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scanned_results)
         setSupportActionBar(toolbar)
-        toolbar.navigationIconResource = R.drawable.instabug_ic_back
+        toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         if (intent.hasExtra("path")) {
-            loadModel(intent.extras.getString("path"))
+            loadModel(intent.extras?.getString("path").toString())
         }
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {

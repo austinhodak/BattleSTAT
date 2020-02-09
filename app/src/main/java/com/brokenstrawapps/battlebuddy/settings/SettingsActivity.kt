@@ -7,7 +7,6 @@ import androidx.preference.PreferenceFragmentCompat
 import com.brokenstrawapps.battlebuddy.AlertManager
 import com.brokenstrawapps.battlebuddy.R
 import com.brokenstrawapps.battlebuddy.map.MapDownloadActivity
-import com.instabug.bug.BugReporting
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -21,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         setSupportActionBar(toolbar)
-        toolbar.navigationIconResource = R.drawable.instabug_ic_back
+        toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         supportFragmentManager.beginTransaction()
@@ -39,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             findPreference<Preference>("feedback")?.setOnPreferenceClickListener {
-                BugReporting.invoke()
+
                 true
             }
 
@@ -63,7 +62,7 @@ class SettingsActivity : AppCompatActivity() {
                         .withAboutIconShown(true)
                         .withAboutVersionShown(true)
                         .withActivityStyle(Libs.ActivityStyle.DARK)
-                        .withActivityTitle("Battlegrounds Battle Buddy")
+                        .withActivityTitle("BattleSTAT")
                         .withAboutDescription("")
                         .start(activity)
 

@@ -110,7 +110,7 @@
 
         <activity
             android:name="com.brokenstrawapps.battlebuddy.MainActivityKT"
-            android:label="Battle Buddy">
+            android:label="BattleSTAT">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -177,7 +177,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1646739421365093~2508030809" />
+            android:value="ca-app-pub-2981302488834327~6662457919" />
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"

@@ -116,7 +116,7 @@ public class TimerFragment extends Fragment {
         setHasOptionsMenu(true);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mSharedPreferences = getActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", MODE_PRIVATE);
 
         if (mSharedPreferences.contains("timer_last") && mSharedPreferences.contains("timer_sys") && mSharedPreferences.contains("timer_running")) {
             if (mSharedPreferences.getLong("timer_last", 0) == 0 || mSharedPreferences.getLong("timer_sys", 0) == 0) {

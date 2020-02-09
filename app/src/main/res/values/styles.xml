@@ -231,7 +231,7 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
     </style>
 
-    <style name="WeaponTimeline" parent="Theme.AppCompat.NoActionBar">
+    <style name="WeaponTimeline" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/timelineBG</item>
         <item name="colorPrimaryDark">#171717</item>
         <item name="colorAccent">@color/colorAccent</item>

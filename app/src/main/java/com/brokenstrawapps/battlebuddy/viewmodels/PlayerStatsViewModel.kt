@@ -13,9 +13,12 @@ import com.brokenstrawapps.battlebuddy.models.PlayerListModel
 import com.brokenstrawapps.battlebuddy.models.PlayerStats
 import com.brokenstrawapps.battlebuddy.viewmodels.models.LeaderboardModel
 import com.brokenstrawapps.battlebuddy.viewmodels.models.LeaderboardPlayer
+import com.brokenstrawapps.battlebuddy.viewmodels.models.MasteryModel
 import com.brokenstrawapps.battlebuddy.viewmodels.models.PlayerModel
 import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import org.json.JSONException
@@ -24,6 +27,8 @@ import java.io.UnsupportedEncodingException
 import java.util.*
 
 class PlayerStatsViewModel : ViewModel() {
+    val masteryData = MutableLiveData<MasteryModel>()
+
     val playerData = MutableLiveData<PlayerModel>()
     val leaderboardData = MutableLiveData<LeaderboardModel>()
     val matchesList = MutableLiveData<MutableList<MatchTop>>()
@@ -32,6 +37,8 @@ class PlayerStatsViewModel : ViewModel() {
     var playerRef: DatabaseReference? = null
 
     var matchDocListeners = ArrayList<ListenerRegistration>()
+
+    var masteryListener: ListenerRegistration? = null
 
     fun getPlayerStats(player: PlayerListModel) {
         //Remove old listeners so no duplicating
@@ -73,7 +80,7 @@ class PlayerStatsViewModel : ViewModel() {
 
     fun getLeaderboards(player: PlayerListModel, application: Context) {
         val mVolleyQueue = Volley.newRequestQueue(application)
-        val url = "https://api.pubg.com/shards/${player.getDatabaseSearchURL()}/leaderboards/${player.selectedGamemode.id}?page[number]=0"
+        val url = "https://api.pubg.com/shards/${player.getDatabaseSearchURL()}/leaderboards/division.bro.official.${player.selectedSeason.codeString}/${player.selectedGamemode.id}"
         Log.d("URL", url)
 
         val leaderboardModel = LeaderboardModel(gameMode = player.selectedGamemode)
@@ -160,5 +167,37 @@ class PlayerStatsViewModel : ViewModel() {
             playerRef?.removeEventListener(playerListener!!)
 
 
+    }
+
+    fun getPlayerWeaponMastery(player: PlayerListModel) {
+        masteryListener?.remove()
+
+        val docRef = FirebaseFirestore.getInstance().collection("players").document(player.playerID)
+        masteryListener = docRef.addSnapshotListener { snapshot, e ->
+            var mastery = MasteryModel()
+            if (e != null) {
+                mastery.weaponMaster?.error = 2
+                masteryData.value = mastery
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                mastery = snapshot.toObject(MasteryModel::class.java)!!
+                Log.d("MASTERY", mastery.toString())
+                Log.d("MASTERY", snapshot.toString())
+                masteryData.value = mastery
+            } else {
+                //Call to get data.
+                val data = HashMap<String, Any>()
+                data["playerID"] = player.playerID
+                data["platformID"] = player.platform.id
+
+                FirebaseFunctions.getInstance().getHttpsCallable("getPlayerWeaponMasteryData").call(data).continueWith { task ->
+
+                }.addOnSuccessListener {
+
+                }
+            }
+        }
     }
 }

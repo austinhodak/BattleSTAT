@@ -72,18 +72,18 @@ class PlayerListDialog : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overridePendingTransition(R.anim.instabug_fadein, R.anim.instabug_fadeout)
+        overridePendingTransition(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
         setContentView(R.layout.dialog_player_list)
 
-        mSharedPreferences = this.getSharedPreferences("com.austinh.battlebuddy", Context.MODE_PRIVATE)
+        mSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
         mDatabase = FirebaseDatabase.getInstance()
         setSupportActionBar(toolbar)
 
         if (intent.action != null) {
             toolbar_title?.text = "Pick a Player"
-            toolbar.navigationIconResource = R.drawable.instabug_ic_close
+            toolbar.navigationIconResource = R.drawable.ic_close_24dp
         } else {
-            toolbar.navigationIconResource = R.drawable.instabug_ic_back
+            toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
         }
 
         toolbar.setNavigationOnClickListener { onBackPressed() }
@@ -469,7 +469,7 @@ class PlayerListDialog : AppCompatActivity() {
     private fun createImageFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
                 "JPEG_${timeStamp}_", /* prefix */
                 ".jpg", /* suffix */

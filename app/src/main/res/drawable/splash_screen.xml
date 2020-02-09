@@ -4,7 +4,7 @@
     <item android:drawable="@color/md_grey_900" />
 
     <item>
-        <bitmap android:src="@drawable/icon_text_small" android:gravity="center" />
+        <bitmap android:src="@drawable/logo_large" android:gravity="center" />
     </item>
 
 </layer-list>

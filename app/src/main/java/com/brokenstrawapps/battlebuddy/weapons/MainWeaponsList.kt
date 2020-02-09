@@ -45,7 +45,7 @@ class MainWeaponsList : Fragment() {
     override fun onStart() {
         super.onStart()
         pg?.visibility = View.VISIBLE
-        mSharedPreferences = requireActivity().getSharedPreferences("com.austinhodak.pubgcenter", MODE_PRIVATE)
+        mSharedPreferences = requireActivity().getSharedPreferences("com.brokenstrawapps.battlebuddy", MODE_PRIVATE)
         setupAdapter(arguments?.getInt("pos")!!)
     }
 

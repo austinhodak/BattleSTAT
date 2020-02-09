@@ -7,9 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.*
 import com.brokenstrawapps.battlebuddy.MainActivityKT
 import com.brokenstrawapps.battlebuddy.R
 import com.brokenstrawapps.battlebuddy.utils.Premium
@@ -32,7 +30,7 @@ class UpgradeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         billingClient = BillingClient.newBuilder(this).setListener { responseCode, purchases ->
-            if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+            if (responseCode.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                 for (purchase in purchases) {
                     Premium.handlePurchase(purchase)
 
@@ -59,18 +57,18 @@ class UpgradeActivity : AppCompatActivity() {
                 mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
                 System.exit(0)
                 finish()
-            } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            } else if (responseCode.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
                 // Handle an error caused by a user cancelling the purchase flow.
             } else {
                 // Handle any other error codes.
             }
-        }.build()
+        }.enablePendingPurchases().build()
 
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingServiceDisconnected() {}
 
-            override fun onBillingSetupFinished(responseCode: Int) {
-                if (responseCode == BillingClient.BillingResponse.OK) {
+            override fun onBillingSetupFinished(responseCode: BillingResult) {
+                if (responseCode.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The billing client is ready. You can query purchases here.
                     val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
                     for (purchase in purchases.purchasesList) {
@@ -98,8 +96,7 @@ class UpgradeActivity : AppCompatActivity() {
 
         level1Buy?.setOnClickListener {
             val flowParams = BillingFlowParams.newBuilder()
-                    .setSku("level_1")
-                    .setType(BillingClient.SkuType.INAPP)
+                    .setSkuDetails(SkuDetails("level_1"))
                     .build()
 
             billingClient.launchBillingFlow(this@UpgradeActivity, flowParams)
@@ -107,8 +104,7 @@ class UpgradeActivity : AppCompatActivity() {
 
         level2Buy?.setOnClickListener {
             val flowParams = BillingFlowParams.newBuilder()
-                    .setSku("level_2")
-                    .setType(BillingClient.SkuType.INAPP)
+                    .setSkuDetails(SkuDetails("level_2"))
                     .build()
 
             billingClient.launchBillingFlow(this@UpgradeActivity, flowParams)
@@ -116,8 +112,7 @@ class UpgradeActivity : AppCompatActivity() {
 
         level3Buy?.setOnClickListener {
             val flowParams = BillingFlowParams.newBuilder()
-                    .setSku("level_3")
-                    .setType(BillingClient.SkuType.INAPP)
+                    .setSkuDetails(SkuDetails("level_3"))
                     .build()
 
             billingClient.launchBillingFlow(this@UpgradeActivity, flowParams)

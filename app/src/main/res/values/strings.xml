@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Battle Buddy</string>
+    <string name="app_name">BattleSTAT</string>
 
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
@@ -28,7 +28,7 @@
 
     <string name="beta" translatable="false"><b>β</b></string>
 
-    <string name="upgrade" translatable="false"><b>With Battle Buddy Premium</b> you get the following features:\n• Remove Ads (Except Watch to Refresh)\n• Reduce Stat Refresh Limit to 2 Minutes\n• Lots of more benefits in the future!</string>
+    <string name="upgrade" translatable="false"><b>With BattleSTAT Premium</b> you get the following features:\n• Remove Ads (Except Watch to Refresh)\n• Reduce Stat Refresh Limit to 2 Minutes\n• Lots of more benefits in the future!</string>
 
     <string name="statsOnBoarding" translatable="false">We are proud to introduce a new feature called <b>Player Stats</b>!\n\nYou can now view your (or anyone\'s) stats and matches! Please keep in mind this is in beta, we will be adding more features soon!\n\n<i>Only PC and Xbox stats are available, nobody can get PUBG Mobile stats yet (blame Tencent).</i>\n\n<b>Now go get some chicken dinners and have fun!</b></string>
 
