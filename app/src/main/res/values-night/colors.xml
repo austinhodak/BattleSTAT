@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#202020</color>
+    <color name="colorPrimaryDark">@color/md_grey_900</color>
+    <color name="colorAccent">#ff9100</color>
+
+    <color name="mapDownloadBtn">@color/md_orange_500</color>
+    <color name="tabSelected">@color/md_orange_500</color>
+
+    <color name="material_drawer_background">@color/md_grey_900</color>
+
+    <color name="tab_selected">@color/timelineOrange</color>
+
+    <color name="background">#121212</color>
+    <color name="cardBackground">#1D1D1D</color>
+    <color name="dashboardMenuBG">#1f1f1f</color>
+
+    <color name="bottomCardRounded">@color/md_grey_850</color>
+
+    <color name="primaryText">#FFF</color>
+    <color name="primaryText87">#DEFFFFFF</color>
+    <color name="primaryText60">#99FFFFFF</color>
+    <color name="primaryText38">#61FFFFFF</color>
+
+    <color name="divider">@color/md_dark_dividers</color>
+</resources>

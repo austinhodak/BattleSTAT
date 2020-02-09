@@ -8,6 +8,8 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:background="@drawable/timeline_round_blue"
+    app:timeline_bottom_radio_color="@color/primaryText"
+    app:timeline_top_radio_color="@color/primaryText"
     app:timeline_position="middle"
     app:timeline_radio_outline_radius="23"
     app:timeline_radio_radius="15"

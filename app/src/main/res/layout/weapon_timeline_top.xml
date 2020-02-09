@@ -15,7 +15,8 @@
     app:timeline_position="first"
     app:timeline_radio_outline_radius="23"
     app:timeline_radio_radius="15"
-    app:timeline_top_radio_color="@color/md_white_1000"
+    app:timeline_top_radio_color="@color/primaryText"
+    app:timeline_bottom_radio_color="@color/primaryText"
     app:timeline_type="item">
 
     <LinearLayout

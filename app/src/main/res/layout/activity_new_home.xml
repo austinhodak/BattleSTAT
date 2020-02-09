@@ -15,7 +15,7 @@
             android:id="@+id/newHomeToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_grey_900"
+            android:background="@color/colorPrimary"
             android:theme="@style/HomeToolbarTheme"
             app:title="Weapons" />
 
@@ -45,13 +45,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/timelineBG" />
+        android:background="@color/background" />
 
     <LinearLayout
         android:id="@+id/newHomeTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/timelineBG"
+        android:background="@color/background"
         android:gravity="center_horizontal"
         android:orientation="vertical" />
 

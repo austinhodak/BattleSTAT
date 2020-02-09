@@ -1,5 +1,6 @@
 package com.brokenstrawapps.battlebuddy
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,8 +8,12 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.brokenstrawapps.battlebuddy.models.PrefPlayer
 import com.brokenstrawapps.battlebuddy.utils.Alerts
 import kotlinx.android.synthetic.main.dialog_alert_manager.*
+import kotlinx.android.synthetic.main.dialog_alert_manager.toolbar
+import kotlinx.android.synthetic.main.dialog_alert_manager.toolbar_title
+import kotlinx.android.synthetic.main.dialog_player_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.appcompat.v7.navigationIconResource
+import org.jetbrains.anko.configuration
 
 class AlertManager : AppCompatActivity() {
 
@@ -31,7 +36,11 @@ class AlertManager : AppCompatActivity() {
             toolbar_title?.text = "Pick a Player"
             toolbar.navigationIconResource = R.drawable.ic_close_24dp
         } else {
-            toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
+            if (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+                toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
+            } else {
+                toolbar.navigationIconResource = R.drawable.ic_arrow_back_black_24dp
+            }
         }
 
         toolbar.setNavigationOnClickListener { onBackPressed() }

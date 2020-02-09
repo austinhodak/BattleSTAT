@@ -7,6 +7,9 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     app:timeline_position="middle"
+    app:timeline_line_color="@color/primaryText"
+    app:timeline_bottom_radio_color="@color/primaryText"
+    app:timeline_top_radio_color="@color/primaryText"
     app:timeline_radio_outline_radius="23"
     app:timeline_radio_radius="15"
     app:timeline_type="line">
@@ -27,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Testing"
-            android:textColor="#FFF"
+            android:textColor="@color/primaryText87"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -37,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:text="Test"
-            android:textColor="#BBFFFFFF"
+            android:textColor="@color/primaryText60"
             android:textSize="12sp" />
 
     </LinearLayout>

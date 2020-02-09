@@ -12,7 +12,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="4dp"
-        app:cardBackgroundColor="@color/md_grey_850"
+        app:cardBackgroundColor="@color/cardBackground"
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="AUG A3"
-                android:textColor="#FFF"
+                android:textColor="@color/primaryText87"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/weapon_subtitle"
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="5.56mm"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textColor="@color/primaryText60"
                 app:layout_constraintBottom_toBottomOf="@+id/weapon_icon"
                 app:layout_constraintStart_toEndOf="@+id/weapon_icon"
                 app:layout_constraintTop_toBottomOf="@+id/weapon_title" />
@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:text="@string/range"
-                        android:textColor="#BBFFFFFF"
+                        android:textColor="@color/primaryText60"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -140,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:text="@string/body_damage"
-                        android:textColor="#BBFFFFFF"
+                        android:textColor="@color/primaryText60"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -169,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:text="@string/head_damage"
-                        android:textColor="#BBFFFFFF"
+                        android:textColor="@color/primaryText60"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 

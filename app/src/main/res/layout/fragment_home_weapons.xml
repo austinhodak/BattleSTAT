@@ -17,12 +17,12 @@
             android:layout_height="wrap_content"
             app:tabGravity="center"
             app:tabIndicator="@drawable/tab_indicator"
-            app:tabIndicatorColor="@color/timelineOrange"
+            app:tabIndicatorColor="@color/tab_selected"
             app:tabIndicatorFullWidth="false"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/timelineOrange"
+            app:tabSelectedTextColor="@color/tab_selected"
             app:tabTextAppearance="@style/TabText"
-            app:tabTextColor="#FFF"
+            app:tabTextColor="@color/primaryText87"
             app:tabUnboundedRipple="true" />
 
     </com.google.android.material.appbar.AppBarLayout>

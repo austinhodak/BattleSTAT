@@ -13,7 +13,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="4dp"
-        app:cardBackgroundColor="@color/md_grey_850"
+        app:cardBackgroundColor="@color/cardBackground"
         app:cardCornerRadius="5dp">
 
         <RelativeLayout
@@ -63,7 +63,7 @@
                         android:paddingTop="2dp"
                         android:paddingRight="4dp"
                         android:paddingBottom="2dp"
-                        android:textColor="#FFF"
+                        android:textColor="@color/primaryText87"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -94,7 +94,7 @@
                     android:paddingTop="2dp"
                     android:paddingRight="4dp"
                     android:paddingBottom="2dp"
-                    android:textColor="#FFF"
+                    android:textColor="@color/primaryText60"
                     android:textSize="13sp" />
 
             </LinearLayout>

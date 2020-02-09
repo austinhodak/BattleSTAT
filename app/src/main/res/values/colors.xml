@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/md_grey_900</color>
-    <color name="colorPrimaryDark">@color/md_grey_900</color>
+    <color name="colorPrimary">@color/md_orange_500</color>
+    <color name="colorPrimaryDark">@color/md_orange_700</color>
     <color name="colorAccent">#ff9100</color>
+
+    <color name="mapDownloadBtn">@color/md_orange_100</color>
+    <color name="tabSelected">@color/md_black_1000</color>
 
     <color name="primary700">#293944</color>
     <color name="primary800">#1B2327</color>
     <color name="primary600">#3B525F</color>
     <color name="secondary500">#F3981D</color>
-
 
     <color name="timelineDark">#171717</color>
     <color name="timelineBG">#1B1B1B</color>
@@ -31,4 +33,20 @@
     <color name="rankMaster">#DAA520</color>
     <color name="rankGrand">#ffd700</color>
 
+    <color name="material_drawer_background">#F9F9F9</color>
+
+    <color name="tab_selected">#000</color>
+
+    <color name="primaryText">#000</color>
+    <color name="primaryText87">#DE000000</color>
+    <color name="primaryText60">#99000000</color>
+    <color name="primaryText38">#61000000</color>
+
+    <color name="bottomCardRounded">@color/md_grey_100</color>
+    <color name="background">@color/md_light_background</color>
+    <color name="cardBackground">#FFF</color>
+
+    <color name="dashboardMenuBG">#FFF</color>
+
+    <color name="divider">@color/md_light_dividers</color>
 </resources>

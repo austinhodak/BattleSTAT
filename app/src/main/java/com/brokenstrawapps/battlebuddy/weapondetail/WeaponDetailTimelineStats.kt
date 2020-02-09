@@ -2,6 +2,7 @@ package com.brokenstrawapps.battlebuddy.weapondetail
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -33,11 +34,14 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.storage.FirebaseStorage
 import com.leinardi.android.speeddial.SpeedDialActionItem
+import kotlinx.android.synthetic.main.dialog_player_list.*
 import kotlinx.android.synthetic.main.fragment_weapon_timeline_stats.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimInjector
 import net.idik.lib.slimadapter.animators.FadeInAnimator
+import org.jetbrains.anko.appcompat.v7.navigationIconResource
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.support.v4.browse
 import pl.hypeapp.materialtimelineview.MaterialTimelineView
 import java.io.File
@@ -85,25 +89,25 @@ class WeaponDetailTimelineStats : Fragment() {
 
         setupAdapter()
 
-        timelineStatsRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 15) {
-                    if (weaponFAB != null && weaponFAB.isOpen) {
-                        weaponFAB?.close(true)
-                    }
-                    weaponFAB?.hide()
-                }
-                else if (dy < -15)
-                    weaponFAB?.show()
-            }
-        })
+//        timelineStatsRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                if (dy > 15) {
+//                    if (weaponFAB != null && weaponFAB.isOpen) {
+//                        weaponFAB?.close(true)
+//                    }
+//                    weaponFAB?.hide()
+//                }
+//                else if (dy < -15)
+//                    weaponFAB?.show()
+//            }
+//        })
 
-        weaponFAB.addActionItem(SpeedDialActionItem.Builder(R.id.fab_view_comments, R.drawable.ic_message_dark_24dp)
-                .setFabBackgroundColor(resources.getColor(R.color.md_grey_850))
-                .setLabel("View Comments")
-                .setLabelColor(resources.getColor(R.color.md_light_blue_A400))
-                .setLabelBackgroundColor(resources.getColor(R.color.md_grey_850))
-                .create())
+//        weaponFAB.addActionItem(SpeedDialActionItem.Builder(R.id.fab_view_comments, R.drawable.ic_message_dark_24dp)
+//                .setFabBackgroundColor(resources.getColor(R.color.md_grey_850))
+//                .setLabel("View Comments")
+//                .setLabelColor(resources.getColor(R.color.md_light_blue_A400))
+//                .setLabelBackgroundColor(resources.getColor(R.color.md_grey_850))
+//                .create())
 
         /*weaponFAB.addActionItem(SpeedDialActionItem.Builder(R.id.fab_compare, R.drawable.ic_compare_arrows_black_24dp)
                 .setFabBackgroundColor(resources.getColor(R.color.md_grey_850))
@@ -129,6 +133,11 @@ class WeaponDetailTimelineStats : Fragment() {
 
             weaponTimelineToolbar?.title = requireActivity().intent.getStringExtra("weaponName")
             weaponTimelineToolbar?.setNavigationIcon(R.drawable.ic_arrow_back_24dp)
+            if (requireActivity().configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+                weaponTimelineToolbar?.setNavigationIcon(R.drawable.ic_arrow_back_24dp)
+            } else {
+                weaponTimelineToolbar?.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            }
             weaponTimelineToolbar?.setNavigationOnClickListener {
                 requireActivity().onBackPressed()
             }
@@ -186,7 +195,7 @@ class WeaponDetailTimelineStats : Fragment() {
 
         mAdapter.updateData(mData)
 
-        weaponFAB.setOnActionSelectedListener { item ->
+        /*weaponFAB.setOnActionSelectedListener { item ->
             when (item.id) {
                 R.id.fab_view_comments -> {
                     weaponFAB.close(true)
@@ -205,7 +214,7 @@ class WeaponDetailTimelineStats : Fragment() {
                 }
             }
             true
-        }
+        }*/
 
         weaponTimelineToolbar?.setOnMenuItemClickListener {
             if (it.itemId == R.id.wiki) {
@@ -332,9 +341,9 @@ class WeaponDetailTimelineStats : Fragment() {
             intent.putExtra("damageBody", weapon!!.child("damageBody0").value.toString().toDouble())
             intent.putExtra("damageHead", weapon!!.child("damageHead0").value.toString().toDouble())
 
-            timeline.setOnClickListener {
-                startActivity(intent)
-            }
+//            timeline.setOnClickListener {
+//                startActivity(intent)
+//            }
         }.register<AttachmentRV>(R.layout.timeline_attachment_list) { data, injector ->
             val attachmentRV = injector.findViewById<RecyclerView>(R.id.timelineAttachmentRV)
             attachmentRV.layoutManager = LinearLayoutManager(requireContext())

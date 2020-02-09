@@ -15,9 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_grey_900"
-            app:layout_scrollFlags="scroll"
-            app:navigationIcon="@drawable/ic_arrow_back_24dp">
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll">
 
             <LinearLayout
                 android:id="@+id/top_bar_linear"
@@ -32,7 +31,7 @@
                     android:layout_marginRight="12dp"
                     android:gravity="center_vertical"
                     android:text="Player Stats"
-                    android:textColor="#FFF"
+                    android:textColor="@color/primaryText"
                     android:singleLine="true"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -41,6 +40,7 @@
                     android:id="@+id/toolbar_image"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:tint="@color/primaryText"
                     android:src="@drawable/windows_white" />
 
             </LinearLayout>
@@ -51,17 +51,17 @@
             android:id="@+id/stats_home_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_grey_900"
-            app:layout_scrollFlags="snap"
+            android:background="@color/colorPrimary"
             app:tabGravity="center"
             app:tabIndicator="@drawable/tab_indicator"
-            app:tabIndicatorColor="@color/timelineOrange"
+            app:tabIndicatorColor="@color/tab_selected"
             app:tabIndicatorFullWidth="false"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/timelineOrange"
+            app:tabSelectedTextColor="@color/tab_selected"
             app:tabTextAppearance="@style/TabText"
-            app:tabTextColor="#FFF"
-            app:tabUnboundedRipple="true">
+            app:tabTextColor="@color/primaryText87"
+            app:tabUnboundedRipple="true"
+            app:layout_scrollFlags="snap">
 
             <com.google.android.material.tabs.TabItem
                 style="@style/Widget.MaterialComponents.TabLayout"
@@ -142,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/md_grey_900"
+        android:background="@color/colorPrimary"
         app:itemIconTint="@drawable/tab_colored"
         app:itemTextColor="@drawable/tab_colored"
         app:layout_behavior="com.brokenstrawapps.battlebuddy.BottomNavigationBehavior"

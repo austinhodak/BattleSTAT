@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
         android:defaultValue="SOLO"
@@ -18,11 +19,13 @@
         android:key="distance_measure"
         android:summary="%s"
         android:title="Distance Unit" />-->
-
+<!--
     <Preference
         android:icon="@drawable/ic_bell"
         android:key="manage_alerts"
-        android:title="Manage Alerts" />
+        android:title="Manage Alerts"
+        android:visibility="gone"
+        tools:visibility="gone" />-->
 
     <Preference
         android:icon="@drawable/ic_map"

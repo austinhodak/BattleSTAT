@@ -3,6 +3,7 @@ package com.brokenstrawapps.battlebuddy.stats.main
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -44,6 +45,12 @@ import com.google.gson.Gson
 import com.mikepenz.materialdrawer.Drawer
 import kotlinx.android.synthetic.main.activity_new_home.*
 import kotlinx.android.synthetic.main.activity_stats_home.*
+import kotlinx.android.synthetic.main.activity_stats_home.playerListToolbarWaterfall
+import kotlinx.android.synthetic.main.activity_stats_home.toolbar
+import kotlinx.android.synthetic.main.activity_stats_home.toolbar_title
+import kotlinx.android.synthetic.main.dialog_player_list.*
+import org.jetbrains.anko.appcompat.v7.navigationIconResource
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.startActivity
 import org.json.JSONObject
 import java.util.HashMap
@@ -73,6 +80,12 @@ class StatsHome : AppCompatActivity(), RewardedVideoAdListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats_home)
         setSupportActionBar(toolbar)
+
+        if (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+            toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
+        } else {
+            toolbar.navigationIconResource = R.drawable.ic_arrow_back_black_24dp
+        }
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 

@@ -1,6 +1,7 @@
 package com.brokenstrawapps.battlebuddy.map
 
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -10,7 +11,10 @@ import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
 import com.tonyodev.fetch2core.Func
 import kotlinx.android.synthetic.main.activity_map_downloader.*
+import kotlinx.android.synthetic.main.activity_map_downloader.toolbar
+import kotlinx.android.synthetic.main.dialog_player_list.*
 import org.jetbrains.anko.appcompat.v7.navigationIconResource
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.toast
 import java.io.File
 
@@ -37,7 +41,11 @@ class MapDownloadActivity : AppCompatActivity() {
         buttonMaps[Map.KARAKIN_HIGH] = karakinHigh
 
         toolbar.setNavigationOnClickListener { onBackPressed() }
-        toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
+        if (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+            toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
+        } else {
+            toolbar.navigationIconResource = R.drawable.ic_arrow_back_black_24dp
+        }
 
         val fetchConfiguration = FetchConfiguration.Builder(this)
                 .setDownloadConcurrentLimit(4)

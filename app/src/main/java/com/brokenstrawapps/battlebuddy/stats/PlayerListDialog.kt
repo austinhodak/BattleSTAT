@@ -50,6 +50,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.appcompat.v7.navigationIconResource
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.startActivity
 import java.io.File
 import java.io.IOException
@@ -81,9 +82,17 @@ class PlayerListDialog : AppCompatActivity() {
 
         if (intent.action != null) {
             toolbar_title?.text = "Pick a Player"
-            toolbar.navigationIconResource = R.drawable.ic_close_24dp
+            if (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+                toolbar.navigationIconResource = R.drawable.ic_close_24dp
+            } else {
+                toolbar.navigationIconResource = R.drawable.ic_close_black_24dp
+            }
         } else {
-            toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
+            if (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+                toolbar.navigationIconResource = R.drawable.ic_arrow_back_24dp
+            } else {
+                toolbar.navigationIconResource = R.drawable.ic_arrow_back_black_24dp
+            }
         }
 
         toolbar.setNavigationOnClickListener { onBackPressed() }

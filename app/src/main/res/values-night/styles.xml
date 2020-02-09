@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="MaterialDrawerTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="tab_underline">@color/colorAccent</item>
+
+        <item name="android:textColor">@color/md_dark_primary_text</item>
+
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+
+        <item name="material_drawer_selected">#1FF57C00</item>
+
+        <item name="material_drawer_background">@color/md_grey_900</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
+
+    </style>
+
+    <style name="HomeTheme" parent="MaterialDrawerTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#171717</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="tab_underline">@color/colorAccent</item>
+
+        <item name="android:textColor">@color/md_dark_primary_text</item>
+
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+
+        <item name="material_drawer_selected">#1FF57C00</item>
+
+        <item name="material_drawer_background">@color/material_drawer_background</item>
+
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+
+        <item name="md_color_button_text">@color/md_orange_700</item>
+    </style>
+
+    <style name="PlayerListDialog" parent="MaterialDrawerTheme">
+        <item name="colorPrimary">@color/timelineBG</item>
+        <item name="colorPrimaryDark">#171717</item>
+        <item name="colorAccent">@color/timelineOrange</item>
+
+        <item name="material_drawer_selected_text">@color/md_orange_700</item>
+        <item name="material_drawer_selected">#1FF57C00</item>
+        <item name="material_drawer_background">@color/md_grey_900</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+
+        <item name="android:colorButtonNormal">@color/accent</item>
+
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+
+        <item name="android:textColor">@color/md_dark_primary_text</item>
+
+        <!-- This is important! Don't forget to set window background -->
+        <item name="android:windowBackground">@color/timelineBG</item>
+
+        <item name="android:statusBarColor">#171717</item>
+
+        <item name="md_background_color">@color/timelineBG</item>
+        <item name="md_corner_radius">4dp</item>
+        <item name="md_color_button_text">@color/md_orange_700</item>
+
+    </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="colorControlNormal">@color/primaryText</item>
+    </style>
+
+    <style name="WeaponTimeline" parent="AppTheme">
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+    </style>
+
+    <style name="SettingsTheme" parent="AppTheme">
+        <item name="preferenceTheme">@style/PrefsTheme</item>
+        <item name="alertDialogTheme">@style/AlertDialogStyle</item>
+    </style>
+
+    <style name="AlertDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/primaryText87</item>
+        <item name="android:background">@color/timelineBG</item>
+        <item name="android:popupBackground">@color/timelineBG</item>
+        <item name="android:windowBackground">@color/timelineBG</item>
+    </style>
+
+</resources>

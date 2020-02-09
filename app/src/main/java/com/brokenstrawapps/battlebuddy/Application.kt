@@ -1,5 +1,7 @@
 package com.brokenstrawapps.battlebuddy
 
+import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import com.brokenstrawapps.battlebuddy.utils.Ads
 import com.brokenstrawapps.battlebuddy.utils.Premium
@@ -17,6 +19,10 @@ class Application : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+
+        val mSharedPreferences = this.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
+
+        AppCompatDelegate.setDefaultNightMode(if(mSharedPreferences.getBoolean("darkMode", true)) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 
         if (BuildConfig.DEBUG) {
             initDebug()

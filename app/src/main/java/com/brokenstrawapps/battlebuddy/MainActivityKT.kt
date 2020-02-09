@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -23,6 +25,7 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.expandable.expandableItem
+import co.zsmb.materialdrawerkt.draweritems.switchable.secondarySwitchItem
 import com.brokenstrawapps.battlebuddy.ammo.HomeAmmoList
 import com.brokenstrawapps.battlebuddy.attachments.HomeAttachmentsFragment
 import com.brokenstrawapps.battlebuddy.info.ControlsFragment
@@ -61,6 +64,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import kotlinx.android.synthetic.main.activity_new_home.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.browse
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.startActivity
 import timber.log.Timber
 import java.net.MalformedURLException
@@ -283,7 +287,7 @@ class MainActivityKT : AppCompatActivity() {
                 icon = R.drawable.icons8_view_more_96
                 selectable = false
                 divider()
-                primaryItem(R.string.drawer_title_controls) {
+                /*primaryItem(R.string.drawer_title_controls) {
                     icon = R.drawable.icons8_game_controller_96
                     onClick { _ ->
                         newHomeToolbar?.title = "Controls"
@@ -291,7 +295,7 @@ class MainActivityKT : AppCompatActivity() {
                         updateToolbarElevation(15f)
                         false
                     }
-                }
+                }*/
                 /*primaryItem(R.string.drawer_title_damagecalc) {
                     icon = R.drawable.shield
                     selectable = false
@@ -317,7 +321,7 @@ class MainActivityKT : AppCompatActivity() {
                         true
                     }
                 }
-                primaryItem(R.string.drawer_title_timer) {
+                /*primaryItem(R.string.drawer_title_timer) {
                     icon = R.drawable.stopwatch
                     onClick { _ ->
                         newHomeToolbar?.title = "Match Timer"
@@ -326,7 +330,7 @@ class MainActivityKT : AppCompatActivity() {
                         false
                     }
 
-                }
+                }*/
                 primaryItem(R.string.drawer_title_update) {
                     icon = R.drawable.rss
                     onClick { _ ->
@@ -384,6 +388,15 @@ class MainActivityKT : AppCompatActivity() {
                         startActivity<UpgradeActivity>()
                         true
                     }
+                }
+            }
+            secondarySwitchItem("Dark Mode") {
+                icon = R.drawable.icons8_moon
+                selectable = false
+                checked = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+                onSwitchChanged { drawerItem, button, isEnabled ->
+                    mSharedPreferences?.edit()?.putBoolean("darkMode", isEnabled)?.apply()
+                    AppCompatDelegate.setDefaultNightMode(if (isEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
                 }
             }
             /*secondaryItem("Test 2D Replay") {

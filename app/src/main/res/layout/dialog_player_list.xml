@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_grey_900">
+            android:background="@color/colorPrimary">
 
             <LinearLayout
                 android:id="@+id/top_bar_linear"
@@ -30,7 +30,7 @@
                     android:fontFamily="sans-serif"
                     android:gravity="center_vertical"
                     android:text="Players"
-                    android:textColor="#FFF"
+                    android:textColor="@color/primaryText"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:visibility="visible" />
