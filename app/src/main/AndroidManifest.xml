@@ -34,8 +34,6 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name="com.brokenstrawapps.battlebuddy.MainActivity" />
-
         <activity
             android:name="com.brokenstrawapps.battlebuddy.damage_calculator.DamageCalcActivity"
             android:theme="@style/AppTheme" />
@@ -75,8 +73,6 @@
         <service android:name="com.brokenstrawapps.battlebuddy.info.TimerService" />
 
         <receiver android:name="com.brokenstrawapps.battlebuddy.info.AlarmReceiver" />
-
-        <activity android:name="com.brokenstrawapps.battlebuddy.SocialLinksActivity" />
 
         <activity
             android:name="com.brokenstrawapps.battlebuddy.stats.matchdetails.MatchDetailActivity"

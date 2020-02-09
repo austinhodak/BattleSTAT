@@ -8,29 +8,15 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fb424918801284779</string>
     <!-- Twitter consumer key and secret -->
 
-    <string name="desc_provided" translatable="false">DESCRIPTION &amp; STATS \nFROM GAMEPEDIA.COM</string>
-    <string name="best_loadout_assault_weapon" translatable="false">Because the assault loadout is focused heavily on damage, we recommend using the AKM. It has a ton of damage behind it with decent range and accuracy, meaning you can engage from mid range effectively while dealing good damage. The AKM is actually pretty decent up close too, which handles a lot of the negatives of our sidearm pick.</string>
     <string name="drawer_title_update">RSS Feeds</string>
     <string name="drawer_title_weapons">Weapons</string>
     <string name="drawer_title_attachments">Attachments</string>
     <string name="drawer_title_ammo">Ammo</string>
     <string name="drawer_title_consumables">Consumables</string>
     <string name="drawer_title_equipment">Equipment</string>
-    <string name="drawer_title_controls">Controls</string>
-    <string name="drawer_title_timer">Match Timer</string>
-    <string name="drawer_title_bestloadouts" translatable="false">Best Loadouts</string>
-    <string name="drawer_title_about">About</string>
-    <string name="drawer_title_damagecalc">Damage Calculator</string>
     <string name="drawer_title_maps">Maps</string>
-    <string name="drawer_title_suggestion">Send Feedback</string>
     <string name="drawer_title_share">Share App</string>
 
-
-    <string name="beta" translatable="false"><b>β</b></string>
-
-    <string name="upgrade" translatable="false"><b>With BattleSTAT Premium</b> you get the following features:\n• Remove Ads (Except Watch to Refresh)\n• Reduce Stat Refresh Limit to 2 Minutes\n• Lots of more benefits in the future!</string>
-
-    <string name="statsOnBoarding" translatable="false">We are proud to introduce a new feature called <b>Player Stats</b>!\n\nYou can now view your (or anyone\'s) stats and matches! Please keep in mind this is in beta, we will be adding more features soon!\n\n<i>Only PC and Xbox stats are available, nobody can get PUBG Mobile stats yet (blame Tencent).</i>\n\n<b>Now go get some chicken dinners and have fun!</b></string>
 
     <string-array name="players_sort">
         <item>Win Place</item>
@@ -41,20 +27,7 @@
         <item>Longest Kill</item>
     </string-array>
 
-    <string-array name="kill_feed_sort">
-        <item>Players Left</item>
-        <item>Kill Number</item>
-        <item>Killer Name</item>
-        <item>Victim Name</item>
-    </string-array>
-
     <string name="match_list_empty" translatable="false">NO MATCHES FOUND \nMATCHES MAY TAKE UP TO 15 MINUTES AFTER GAME END TO SHOW HERE</string>
-
-    <string-array name="profile_game_versions">
-        <item>PC</item>
-        <item>Xbox</item>
-        <item>Mobile</item>
-    </string-array>
 
     <string-array name="match_mode_dialog">
         <item>Normal Matches</item>
@@ -72,8 +45,6 @@
         <item>Map</item>
     </string-array>
 
-    <string name="pts">Public Test Server matches and stats are not available, this is a limitation of the official API, please contact Bluehole if you\'d like to see PTS stats added!</string>
-
     <string name="twitter_consumer_key" translatable="false">4EfsZFNLMEsmTkNzi8q8Ed5SF</string>
     <string name="twitter_consumer_secret" translatable="false">0gSSdkB80mC00KDE6wa6h5MCEMXOuX4K0WjULP4UglVYL4MlOn</string>
     <string name="drawer_title_upgrade">Upgrade</string>
@@ -81,20 +52,8 @@
     <string name="drawer_title_stats_enw">Battle Stats</string>
     <string name="drawer_title_vehicles">Vehicles</string>
     <string name="drawer_title_more">More</string>
-    <string name="drawer_title_alerts">Manage Alerts</string>
-    <string name="drawer_title_logout">Logout</string>
-    <string name="profile_title">Your Profile</string>
-    <string name="profile_display_name">Display Name</string>
-    <string name="profile_email">Email</string>
-    <string name="profile_phone">Phone Number</string>
-    <string name="are_you_sure">Are you sure?</string>
-    <string name="sign_out">This will sign you out, you can always log back in later.</string>
-    <string name="sign_out_text">Sign Out</string>
-    <string name="nevermind">Nevermind</string>
-    <string name="profile_bottom">PROFILE WILL BE EDITABLE SOON</string>
-    <string name="range">RANGE</string>
-    <string name="body_damage">BODY DAMAGE</string>
-    <string name="head_damage">HEAD DAMAGE</string>
+    <string name="body_damage">BODY DMG</string>
+    <string name="head_damage">HEAD DMG</string>
     <string name="assault_rifles">Assault Rifles</string>
     <string name="sniper_rifles">Sniper Rifles</string>
     <string name="shotguns">Shotguns</string>
@@ -119,12 +78,4 @@
         <item>SQUADFPP</item>
     </string-array>
 
-    <string-array name="distance_units">
-        <item>Metric</item>
-        <item>Imperial</item>
-    </string-array>
-    <string-array name="distance_units_vals">
-        <item>METRIC</item>
-        <item>IMPERIAL</item>
-    </string-array>
 </resources>

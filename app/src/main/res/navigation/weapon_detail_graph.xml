@@ -27,9 +27,4 @@
         android:name="com.brokenstrawapps.battlebuddy.weapons.WeaponComments"
         android:label="fragment_weapon_comments"
         tools:layout="@layout/fragment_weapon_comments" />
-    <fragment
-        android:id="@+id/detailedFrag"
-        android:name="com.brokenstrawapps.battlebuddy.weapondetail.DetailedStatsFragment"
-        android:label="fragment_detailed_stats"
-        tools:layout="@layout/fragment_detailed_stats" />
 </navigation>

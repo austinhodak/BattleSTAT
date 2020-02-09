@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -21,110 +22,65 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:paddingBottom="5dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/medal_1st"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
                 android:id="@+id/weapon_icon"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 android:src="@drawable/weapon_vss"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/weapon_title"
+            <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="AUG A3"
-                android:textColor="@color/primaryText87"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/weapon_subtitle"
-                app:layout_constraintStart_toEndOf="@+id/weapon_icon"
-                app:layout_constraintTop_toTopOf="@+id/weapon_icon"
-                app:layout_constraintVertical_chainStyle="packed" />
-
-            <TextView
-                android:id="@+id/weapon_subtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="5.56mm"
-                android:textColor="@color/primaryText60"
+                android:orientation="vertical"
+                android:paddingRight="4dp"
                 app:layout_constraintBottom_toBottomOf="@+id/weapon_icon"
                 app:layout_constraintStart_toEndOf="@+id/weapon_icon"
-                app:layout_constraintTop_toBottomOf="@+id/weapon_title" />
+                app:layout_constraintTop_toTopOf="@+id/weapon_icon">
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/pill_divider_dark"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weapon_icon" />
+                <TextView
+                    android:id="@+id/weapon_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AUG A3"
+                    android:textColor="@color/primaryText87"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/weapon_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5.56mm"
+                    android:textColor="@color/primaryText60" />
+
+            </LinearLayout>
+
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:gravity="right"
+                android:paddingRight="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/weapon_icon"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider">
-
-                <LinearLayout
-                    android:id="@+id/range_parent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:id="@+id/weapon_range"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1000M"
-                        android:textColor="@color/md_green_A400"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-condensed"
-                        android:text="@string/range"
-                        android:textColor="@color/primaryText60"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
+                app:layout_constraintStart_toEndOf="@+id/linearLayout"
+                app:layout_constraintTop_toTopOf="@+id/weapon_icon">
 
                 <LinearLayout
                     android:id="@+id/body_parent"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
 
                     <TextView
                         android:id="@+id/weapon_body_dmg"
@@ -148,12 +104,12 @@
 
                 <LinearLayout
                     android:id="@+id/head_parent"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="4dp">
 
                     <TextView
                         android:id="@+id/weapon_head_dmg"
@@ -180,92 +136,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:orientation="vertical"
-            android:paddingTop="12dp"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp">
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/weapon_miramar"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="4dp"
-                        android:src="@drawable/cactu"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/weapon_parachute"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="4dp"
-                        android:src="@drawable/ic_parachute"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/weapon_trophy"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="4dp"
-                        android:src="@drawable/icons8_trophy"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/weapon_sanhok"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sanhok_icon"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/weapon_like"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="4dp"
-                        android:src="@drawable/ic_favorite_24dp"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/weapon_fav"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="4dp"
-                        android:src="@drawable/ic_star_gold_24dp"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

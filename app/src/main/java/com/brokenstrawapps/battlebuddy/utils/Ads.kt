@@ -12,7 +12,7 @@ object Ads {
     private const val ADS_CONSENT = "personalized_ads_enabled"
 
     fun init(context: Context) {
-        mSharedPreferences = context.getSharedPreferences("com.ahcjapps.battlebuddy", Context.MODE_PRIVATE)
+        mSharedPreferences = context.getSharedPreferences("com.brokenstrawapps.battlebuddy", Context.MODE_PRIVATE)
     }
 
 
@@ -26,11 +26,11 @@ object Ads {
             bundle.putString("npa", "1")
             return AdRequest.Builder()
                     .addNetworkExtrasBundle(AdMobAdapter::class.java, bundle)
-                    .addTestDevice("FBE7B6C060C778D1A44EF3F2184E089B")
+                    .addTestDevice("C056F91F1F8DDD938A0ADC1D97436D8C")
                     .build()
         }
         return AdRequest.Builder()
-                .addTestDevice("FBE7B6C060C778D1A44EF3F2184E089B")
+                .addTestDevice("C056F91F1F8DDD938A0ADC1D97436D8C")
                 .build()
     }
 

@@ -461,7 +461,7 @@ class PlayerListDialog : AppCompatActivity() {
                     photoFile?.also {
                         val photoURI: Uri = FileProvider.getUriForFile(
                                 this,
-                                "com.ahcjapps.battlebuddy.fileprovider",
+                                "com.brokenstrawapps.battlebuddy.fileprovider",
                                 it
                         )
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)

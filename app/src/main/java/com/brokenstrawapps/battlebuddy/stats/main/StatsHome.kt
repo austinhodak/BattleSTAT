@@ -20,7 +20,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.brokenstrawapps.battlebuddy.R
 import com.brokenstrawapps.battlebuddy.models.Gamemode
-import com.brokenstrawapps.battlebuddy.models.MasteryWeaponData
 import com.brokenstrawapps.battlebuddy.models.PlayerListModel
 import com.brokenstrawapps.battlebuddy.premium.UpgradeActivity
 import com.brokenstrawapps.battlebuddy.settings.SettingsActivity
@@ -38,21 +37,15 @@ import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
-import com.google.gson.Gson
 import com.mikepenz.materialdrawer.Drawer
-import kotlinx.android.synthetic.main.activity_new_home.*
 import kotlinx.android.synthetic.main.activity_stats_home.*
 import kotlinx.android.synthetic.main.activity_stats_home.playerListToolbarWaterfall
 import kotlinx.android.synthetic.main.activity_stats_home.toolbar
 import kotlinx.android.synthetic.main.activity_stats_home.toolbar_title
-import kotlinx.android.synthetic.main.dialog_player_list.*
 import org.jetbrains.anko.appcompat.v7.navigationIconResource
 import org.jetbrains.anko.configuration
 import org.jetbrains.anko.startActivity
-import org.json.JSONObject
 import java.util.HashMap
 
 class StatsHome : AppCompatActivity(), RewardedVideoAdListener {

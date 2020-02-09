@@ -9,7 +9,6 @@
 
     <color name="primary700">#293944</color>
     <color name="primary800">#1B2327</color>
-    <color name="primary600">#3B525F</color>
     <color name="secondary500">#F3981D</color>
 
     <color name="timelineDark">#171717</color>
@@ -25,7 +24,6 @@
     <color name="timelineRed">@color/md_red_400</color>
 
     <color name="rankBronze">#cd7f32</color>
-    <color name="rankSilver">#c0c0c0</color>
     <color name="rankGold">@color/timelineRed</color>
     <color name="rankPlatinum">@color/timelineGreen</color>
     <color name="rankDiamond">@color/timelineBlue</color>
@@ -40,13 +38,9 @@
     <color name="primaryText">#000</color>
     <color name="primaryText87">#DE000000</color>
     <color name="primaryText60">#99000000</color>
-    <color name="primaryText38">#61000000</color>
 
-    <color name="bottomCardRounded">@color/md_grey_100</color>
     <color name="background">@color/md_light_background</color>
     <color name="cardBackground">#FFF</color>
-
-    <color name="dashboardMenuBG">#FFF</color>
 
     <color name="divider">@color/md_light_dividers</color>
 </resources>

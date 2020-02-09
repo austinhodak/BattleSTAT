@@ -32,7 +32,6 @@ class Application : MultiDexApplication() {
 
         Premium.init(applicationContext)
 
-
         FirebaseApp.getInstance()
 
         val settings = FirebaseFirestoreSettings.Builder()

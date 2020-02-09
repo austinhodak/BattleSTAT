@@ -5,19 +5,16 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
-import com.brokenstrawapps.battlebuddy.models.PrefPlayer
 import com.brokenstrawapps.battlebuddy.utils.Alerts
 import kotlinx.android.synthetic.main.dialog_alert_manager.*
 import kotlinx.android.synthetic.main.dialog_alert_manager.toolbar
 import kotlinx.android.synthetic.main.dialog_alert_manager.toolbar_title
-import kotlinx.android.synthetic.main.dialog_player_list.*
 import net.idik.lib.slimadapter.SlimAdapter
 import org.jetbrains.anko.appcompat.v7.navigationIconResource
 import org.jetbrains.anko.configuration
 
 class AlertManager : AppCompatActivity() {
 
-    private var players: MutableList<PrefPlayer> = ArrayList()
     lateinit var mAdapter: SlimAdapter
     private var userAccountID = ""
 

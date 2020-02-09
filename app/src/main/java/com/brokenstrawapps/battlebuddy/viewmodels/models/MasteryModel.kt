@@ -86,7 +86,7 @@ data class MasteryModel(
                         in 70..79 -> R.drawable.mastery_professional
                         in 80..89 -> R.drawable.mastery_expert
                         in 90..99 -> R.drawable.mastery_ace
-                        in Int.MAX_VALUE downTo 100 -> R.drawable.mastery_master
+                        in 100..200 -> R.drawable.mastery_master
                         else -> R.drawable.mastery_newbie
                     }
                 }
@@ -103,7 +103,7 @@ data class MasteryModel(
                         in 70..79 -> "Professional"
                         in 80..89 -> "Expert"
                         in 90..99 -> "Ace"
-                        in Int.MAX_VALUE downTo 100 ->"Master"
+                        in 100..200 ->"Master"
                         else -> "Newbie"
                     }
                 }

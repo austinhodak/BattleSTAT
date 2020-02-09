@@ -43,7 +43,7 @@ import org.jetbrains.anko.support.v4.toast
 import java.util.ArrayList
 import kotlin.math.roundToLong
 
-class MasteryWeaponListFragment  : Fragment() {
+class MasteryWeaponListFragment : Fragment() {
 
     private val viewModel: PlayerStatsViewModel by lazy {
         ViewModelProviders.of(requireActivity()).get(PlayerStatsViewModel::class.java)
@@ -94,7 +94,7 @@ class MasteryWeaponListFragment  : Fragment() {
             Glide.with(this)
                     .asDrawable()
                     .load(gsReference)
-                    .apply(RequestOptions().placeholder(R.drawable.icons8_rifle).override(150,150))
+                    .apply(RequestOptions().placeholder(R.drawable.icons8_rifle).override(150, 150))
                     .transition(DrawableTransitionOptions.withCrossFade(factory))
                     .into(injector.findViewById(R.id.weapon_icon))
 
@@ -141,7 +141,8 @@ class MasteryWeaponListFragment  : Fragment() {
                 return@register
             }
 
-            if (!adView.isLoading) {}
+            if (!adView.isLoading) {
+            }
             //adView.loadAd(Ads.getAdBuilder())
         }
 

@@ -1,6 +1,8 @@
 package com.brokenstrawapps.battlebuddy.utils
 
 import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -33,5 +35,17 @@ object Database {
                 }
             })
         }
+    }
+
+    fun getFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
+
+    fun getRealtime(): FirebaseDatabase {
+        return FirebaseDatabase.getInstance()
+    }
+
+    fun getStorage(): FirebaseStorage {
+        return FirebaseStorage.getInstance()
     }
 }

@@ -56,6 +56,8 @@ class KillFeedListMap : Activity() {
             Map.SANHOK_LOW -> 3.41333333
             Map.VIKENDI_LOW -> 3.072
             Map.SANHOK_HIGH -> 0.5
+            Map.KARAKIN_HIGH -> 0.25
+            Map.KARAKIN_LOW -> 1.666
             else -> 1.0
         }
 

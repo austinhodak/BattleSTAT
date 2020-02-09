@@ -14,14 +14,10 @@
 
     <color name="background">#121212</color>
     <color name="cardBackground">#1D1D1D</color>
-    <color name="dashboardMenuBG">#1f1f1f</color>
-
-    <color name="bottomCardRounded">@color/md_grey_850</color>
 
     <color name="primaryText">#FFF</color>
     <color name="primaryText87">#DEFFFFFF</color>
     <color name="primaryText60">#99FFFFFF</color>
-    <color name="primaryText38">#61FFFFFF</color>
 
     <color name="divider">@color/md_dark_dividers</color>
 </resources>

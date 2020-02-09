@@ -145,7 +145,7 @@
         android:background="@color/colorPrimary"
         app:itemIconTint="@drawable/tab_colored"
         app:itemTextColor="@drawable/tab_colored"
-        app:layout_behavior="com.brokenstrawapps.battlebuddy.BottomNavigationBehavior"
+        app:layout_behavior="com.brokenstrawapps.battlebuddy.views.BottomNavigationBehavior"
         app:menu="@menu/stats_home">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>

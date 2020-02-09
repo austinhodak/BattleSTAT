@@ -27,21 +27,6 @@
 
     </style>
 
-    <style name="AppThemeLight" parent="MaterialDrawerTheme.Light">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/md_orange_600</item>
-        <item name="colorPrimaryDark">@color/md_orange_700</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="material_drawer_selected_text">@color/md_amber_700</item>
-
-        <item name="tab_underline">@color/md_grey_900</item>
-
-        <item name="android:textColor">@color/md_light_primary_text</item>
-
-        <item name="md_color_button_text">@color/md_orange_700</item>
-    </style>
-
     <style name="CompareTheme" parent="MaterialDrawerTheme.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -54,21 +39,6 @@
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="android:statusBarColor">@android:color/white</item>
-
-        <item name="md_color_button_text">@color/md_orange_700</item>
-    </style>
-
-    <style name="Profile" parent="MaterialDrawerTheme">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/md_indigo_500</item>
-        <item name="colorPrimaryDark">@color/md_indigo_700</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="material_drawer_selected_text">@color/md_amber_700</item>
-
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
-
-        <item name="android:colorButtonNormal">@color/accent</item>
 
         <item name="md_color_button_text">@color/md_orange_700</item>
     </style>
@@ -96,42 +66,6 @@
 
 
     <!-- set the rounded drawable as background to your bottom sheet -->
-    <style name="BottomSheet" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bg_bottom_sheet_dialog_fragment</item>
-    </style>
-
-    <style name="BaseBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
-        <item name="bottomSheetStyle">@style/BottomSheet</item>
-
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
-    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
-
-
-    <style name="MainStatsTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">#e65100</item>
-        <item name="colorPrimaryDark">@color/md_deep_orange_700</item>
-        <item name="colorAccent">@color/md_amber_900</item>
-
-        <item name="material_drawer_selected_text">@color/md_orange_700</item>
-        <item name="material_drawer_selected">#1FF57C00</item>
-        <item name="material_drawer_background">@color/md_grey_900</item>
-
-        <item name="android:colorButtonNormal">@color/accent</item>
-
-        <item name="android:statusBarColor">@color/md_deep_orange_800</item>
-
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
-
-        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
-
-        <item name="md_color_button_text">@color/md_orange_700</item>
-
-
-    </style>
 
 
     <style name="MatchDetailsTheme" parent="MaterialDrawerTheme">
@@ -165,9 +99,6 @@
         <item name="android:tint">@color/primaryText</item>
     </style>
 
-    <style name="MapTileActivity" parent="MaterialDrawerTheme.Light.DarkToolbar">
-    </style>
-
     <style name="HomeTheme" parent="MaterialDrawerTheme.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -193,18 +124,6 @@
         <item name="md_color_button_text">@color/md_orange_700</item>
 
         <item name="android:windowLightStatusBar">true</item>
-    </style>
-
-    <style name="WeaponHome" parent="Theme.AppCompat.Light.NoActionBar" >
-        <item name="colorPrimary">@color/primary700</item>
-        <item name="colorPrimaryDark">@color/md_grey_300</item>
-        <item name="colorAccent">@color/secondary500</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
-
-    <style name="WeaponChipText" parent="TextAppearance.MaterialComponents.Chip">
-        <item name="android:fontFamily">@font/roboto_condensed_bold</item>
-        <item name="android:textSize">10sp</item>
     </style>
 
     <style name="TabText" parent="TextAppearance.MaterialComponents.Chip">
@@ -272,21 +191,6 @@
         <item name="android:windowBackground">@color/timelineBG</item>
     </style>
 
-    <style name="FirebaseUI.EditText">
-        <item name="android:paddingBottom">14dp</item>
-        <item name="android:paddingTop">14dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="colorControlActivated">@color/md_white_1000</item>
-        <item name="colorControlHighlight">@color/md_white_1000</item>
-        <item name="android:textColorHint">@color/md_white_1000</item>
-        <item name="android:textColor">@color/md_white_1000</item>
-    </style>
-
-    <style name="FirebaseUI.Text.TextInputLayout" parent="@style/FirebaseUI.EditText" />
-
-    <style name="FirebaseUI.Text.HintText" parent="@style/FirebaseUI.EditText" />
-
     <style name="PlayerListDialog" parent="MaterialDrawerTheme.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -312,11 +216,6 @@
 
         <item name="android:windowLightStatusBar">true</item>
 
-    </style>
-
-    <style name="StatsBottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="android:fontFamily">@font/work_sans_medium</item>
-        <item name="android:textAppearance">@style/TabText</item>
     </style>
 
     <style name="HomeToolbarTheme" parent="ThemeOverlay.AppCompat">

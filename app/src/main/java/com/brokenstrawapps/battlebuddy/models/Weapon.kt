@@ -31,8 +31,3 @@ data class Weapon(
         val sanhok_only: Boolean = false,
         val TBS: String = "--"
 )
-
-data class WeaponStat(
-        var statName: String,
-        var statValue: String
-)

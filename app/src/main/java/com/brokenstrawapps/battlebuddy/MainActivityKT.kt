@@ -26,16 +26,12 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.expandable.expandableItem
 import co.zsmb.materialdrawerkt.draweritems.switchable.secondarySwitchItem
-import com.brokenstrawapps.battlebuddy.ammo.HomeAmmoList
-import com.brokenstrawapps.battlebuddy.attachments.HomeAttachmentsFragment
-import com.brokenstrawapps.battlebuddy.info.ControlsFragment
-import com.brokenstrawapps.battlebuddy.info.TimerFragment
+import com.brokenstrawapps.battlebuddy.info.*
 import com.brokenstrawapps.battlebuddy.map.MapDropRouletteActivity
 import com.brokenstrawapps.battlebuddy.models.PlayerListModel
 import com.brokenstrawapps.battlebuddy.models.PlayerStats
 import com.brokenstrawapps.battlebuddy.models.SeasonStatsAll
 import com.brokenstrawapps.battlebuddy.premium.UpgradeActivity
-import com.brokenstrawapps.battlebuddy.profile.ProfileMain
 import com.brokenstrawapps.battlebuddy.rss.HomeUpdatesFragment
 import com.brokenstrawapps.battlebuddy.settings.SettingsActivity
 import com.brokenstrawapps.battlebuddy.snacky.Snacky
@@ -90,7 +86,7 @@ class MainActivityKT : AppCompatActivity() {
             .withName("Profile")
             .withIdentifier(2)
             .withOnDrawerItemClickListener { view, position, drawerItem ->
-                startActivity<ProfileMain>()
+
                 true
             }
 
@@ -121,7 +117,7 @@ class MainActivityKT : AppCompatActivity() {
             setupRightDrawer()
 
 
-        if (!Premium.isAdFreeUser()) {
+        //if (!Premium.isAdFreeUser()) {
             val adView = com.google.android.gms.ads.AdView(this)
             adView.adSize = com.google.android.gms.ads.AdSize.BANNER
             adView.adUnitId = "ca-app-pub-2981302488834327/2723212900"
@@ -160,7 +156,7 @@ class MainActivityKT : AppCompatActivity() {
             }
 
             mSharedPreferences?.edit()?.putInt("launchCount", launchCount + 1)?.apply()
-        }
+        //}
     }
 
     private fun checkLogin() {
@@ -373,7 +369,7 @@ class MainActivityKT : AppCompatActivity() {
                 onClick { _ ->
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
-                    val shareBody = "https://play.google.com/store/apps/details?id=com.ahcjapps.battlebuddy"
+                    val shareBody = "https://play.google.com/store/apps/details?id=com.brokenstrawapps.battlebuddy"
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out BattleSTAT: Stats for PUBG on the Google Play Store!")
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
                     startActivity(sharingIntent)

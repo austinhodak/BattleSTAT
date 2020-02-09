@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ShadowView">
-        <attr name="android:gravity" />
-    </declare-styleable>
-
     <attr format="color" name="tab_underline"/>
 </resources>

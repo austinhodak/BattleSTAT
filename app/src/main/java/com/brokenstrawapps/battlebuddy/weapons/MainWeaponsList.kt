@@ -83,7 +83,6 @@ class MainWeaponsList : Fragment() {
 
             if (data.damageBody0.isNotEmpty()) {
                 injector.text(R.id.weapon_body_dmg, data.damageBody0)
-                injector.visible(R.id.divider)
             } else {
                 injector.text(R.id.weapon_body_dmg, "N/A")
                 injector.gone(R.id.body_parent)
@@ -91,13 +90,12 @@ class MainWeaponsList : Fragment() {
 
             if (data.damageHead0.isNotEmpty()) {
                 injector.text(R.id.weapon_head_dmg, data.damageHead0)
-                injector.visible(R.id.divider)
             } else {
                 injector.text(R.id.weapon_head_dmg, "N/A")
                 injector.gone(R.id.head_parent)
             }
 
-            if (data.range.isNotEmpty() && data.range != "--") {
+            /*if (data.range.isNotEmpty() && data.range != "--") {
                 val range = data.range
                 val split = range.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 injector.text(R.id.weapon_range, split[1] + "M")
@@ -105,46 +103,12 @@ class MainWeaponsList : Fragment() {
             } else {
                 injector.text(R.id.weapon_range, "N/A")
                 injector.gone(R.id.range_parent)
-            }
+            }*/
 
             injector.clicked(R.id.card_top) {
                 //startActivity<WeaponDetailsActivity>("weaponPath" to doc.reference.path, "weaponName" to data.weapon_name, "weaponKey" to doc.id, "weaponClass" to weaponClass)
                 //startActivity<WeaponHome>("weaponPath" to doc.reference.path, "weaponClass" to weaponClass, "weaponName" to data.weapon_name, "weaponKey" to doc.id)
                 startActivity<WeaponDetailTimeline>("weaponPath" to doc.ref.toString(), "weaponName" to data.weapon_name, "weaponKey" to doc.key, "weaponClass" to weaponClass)
-            }
-
-            injector.gone(R.id.weapon_fav)
-            /*if (favoriteWeapons != null && favoriteWeapons.contains(doc.reference.path)) {
-                injector.visible(R.id.weapon_fav)
-            }*/
-
-            injector.gone(R.id.weapon_like)
-            /*if (mSharedPreferences?.contains("${doc.reference.path}-like")!! && mSharedPreferences!!.getBoolean("${doc.reference.path}-like", false)) {
-                injector.visible(R.id.weapon_like)
-            }*/
-
-            injector.gone(R.id.weapon_parachute)
-            injector.gone(R.id.weapon_trophy)
-            injector.gone(R.id.weapon_miramar)
-            injector.gone(R.id.weapon_sanhok)
-
-            if (data.airDropOnly) {
-                Glide.with(this).load(R.drawable.ic_parachute).into(injector.findViewById(R.id.weapon_parachute))
-                injector.visible(R.id.weapon_parachute)
-            }
-
-            if (data.bestInClass) {
-                Glide.with(this).load(R.drawable.icons8_trophy).into(injector.findViewById(R.id.weapon_trophy))
-                injector.visible(R.id.weapon_trophy)
-            }
-
-            if (data.miramar_only) {
-                Glide.with(this).load(R.drawable.cactu).into(injector.findViewById(R.id.weapon_miramar))
-                injector.visible(R.id.weapon_miramar)
-            }
-
-            if (data.sanhok_only) {
-               injector.visible(R.id.weapon_sanhok)
             }
         }.register(R.layout.list_adview) { adUnitId: String, injector ->
             val adView = AdView(requireActivity())
